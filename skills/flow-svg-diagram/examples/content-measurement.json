@@ -1,0 +1,47 @@
+{
+  "kind": "roundedRect",
+  "width": 260,
+  "content": [
+    {
+      "blocks": [
+        {
+          "type": "title",
+          "text": "订单 API"
+        },
+        {
+          "type": "paragraph",
+          "text": "接收订单请求"
+        }
+      ]
+    },
+    {
+      "blocks": [
+        {
+          "type": "title",
+          "text": "订单 API"
+        },
+        {
+          "type": "list",
+          "marker": "bullet",
+          "items": [
+            {
+              "body": "校验用户明确给出的字段",
+              "auxiliary": "仅作内容尺寸演示，不代表业务事实"
+            },
+            {
+              "body": "显示较长的处理状态说明",
+              "tags": [
+                {
+                  "text": "示例",
+                  "style": {
+                    "shape": "pill"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "title": "教学示例：汇聚与处理瓶颈",
+  "theme": "light",
+  "viewport": {
+    "width": 1300,
+    "height": 580
+  },
+  "nodes": [
+    {
+      "id": "a",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 30,
+      "width": 140,
+      "height": 100,
+      "label": "来源 A"
+    },
+    {
+      "id": "b",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 240,
+      "width": 140,
+      "height": 100,
+      "label": "来源 B"
+    },
+    {
+      "id": "c",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 450,
+      "width": 140,
+      "height": 100,
+      "label": "来源 C"
+    },
+    {
+      "id": "queue",
+      "kind": "roundedRect",
+      "x": 490,
+      "y": 240,
+      "width": 150,
+      "height": 100,
+      "label": "汇聚队列\n容量未知"
+    },
+    {
+      "id": "worker",
+      "kind": "roundedRect",
+      "x": 760,
+      "y": 240,
+      "width": 250,
+      "height": 100,
+      "label": "单个处理者\n每秒 2 项（设定）"
+    },
+    {
+      "id": "result",
+      "kind": "roundedRect",
+      "x": 1130,
+      "y": 240,
+      "width": 140,
+      "height": 100,
+      "label": "处理结果"
+    }
+  ],
+  "edges": [
+    {
+      "id": "a-in",
+      "from": "a",
+      "to": "queue",
+      "label": "每秒 1 项（设定）",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "b-in",
+      "from": "b",
+      "to": "queue",
+      "label": "每秒 1 项（设定）",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "c-in",
+      "from": "c",
+      "to": "queue",
+      "label": "每秒 1 项（设定）",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "consume",
+      "from": "queue",
+      "to": "worker",
+      "label": "依次取出",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "out",
+      "from": "worker",
+      "to": "result",
+      "label": "完成项",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    }
+  ],
+  "scenes": [],
+  "typography": {
+    "nodeLabel": 26,
+    "edgeLabel": 24,
+    "flowLabel": 20
+  }
+}

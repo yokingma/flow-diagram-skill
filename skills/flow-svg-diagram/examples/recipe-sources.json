@@ -1,0 +1,7 @@
+[
+  {
+    "kind": "prompt",
+    "reference": "FlowSVG recipe teaching setups, 2026-10-31",
+    "description": "Invented teaching examples, not production system facts. Layered example preserves layered-architecture teaching membership and cross-layer relation directions; relationship-note nodes annotate the existing arrows and are not business entities. Process-return extends the basic collect/review/archive setup with explicitly invented review-pass, needs-changes and resubmission conditions. Content cards compare three authoring concerns; their horizontal arrangement does not add runtime dependencies. No retry limits, delays, capacity or deployment/trust facts are asserted."
+  }
+]

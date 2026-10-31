@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "title": "分层与侧栏配方 · 教学设定",
+  "theme": "light",
+  "viewport": {
+    "width": 1280,
+    "height": 1080
+  },
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "layer-ingress",
+      "kind": "group",
+      "x": 60,
+      "y": 90,
+      "width": 760,
+      "height": 230,
+      "label": "接入层 · 教学设定"
+    },
+    {
+      "id": "ingress-gateway",
+      "kind": "roundedRect",
+      "parentId": "layer-ingress",
+      "x": 30,
+      "y": 72,
+      "width": 240,
+      "height": 135,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "入口网关"
+          },
+          {
+            "type": "paragraph",
+            "text": "接收外部请求并转交给示例服务"
+          }
+        ]
+      }
+    },
+    {
+      "id": "request-router",
+      "kind": "roundedRect",
+      "parentId": "layer-ingress",
+      "x": 390,
+      "y": 72,
+      "width": 240,
+      "height": 135,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "请求路由"
+          },
+          {
+            "type": "paragraph",
+            "text": "按示例规则选择下一层的处理入口"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layer-domain",
+      "kind": "group",
+      "x": 60,
+      "y": 430,
+      "width": 760,
+      "height": 280,
+      "label": "领域层 · 教学设定"
+    },
+    {
+      "id": "domain-api",
+      "kind": "roundedRect",
+      "parentId": "layer-domain",
+      "x": 30,
+      "y": 78,
+      "width": 240,
+      "height": 165.875,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单服务"
+          },
+          {
+            "type": "paragraph",
+            "text": "编排示例用例与领域规则"
+          },
+          {
+            "type": "paragraph",
+            "text": "具体业务约束仍需外部资料确认",
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "domain-worker",
+      "kind": "roundedRect",
+      "parentId": "layer-domain",
+      "x": 390,
+      "y": 78,
+      "width": 240,
+      "height": 145.625,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "任务协调器"
+          },
+          {
+            "type": "paragraph",
+            "text": "展示另一列领域处理能力"
+          },
+          {
+            "type": "paragraph",
+            "text": "调度顺序与失败策略未知",
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "layer-data",
+      "kind": "group",
+      "x": 60,
+      "y": 820,
+      "width": 760,
+      "height": 200,
+      "label": "数据层 · 教学设定"
+    },
+    {
+      "id": "primary-store",
+      "kind": "cylinder",
+      "parentId": "layer-data",
+      "x": 30,
+      "y": 70,
+      "width": 240,
+      "height": 100,
+      "label": "订单存储"
+    },
+    {
+      "id": "analytics-store",
+      "kind": "cylinder",
+      "parentId": "layer-data",
+      "x": 390,
+      "y": 70,
+      "width": 240,
+      "height": 100,
+      "label": "分析存储"
+    },
+    {
+      "id": "governance",
+      "kind": "group",
+      "x": 900,
+      "y": 90,
+      "width": 320,
+      "height": 930,
+      "label": "治理侧栏 · 教学设定",
+      "style": {
+        "dashed": true
+      }
+    },
+    {
+      "id": "policy",
+      "kind": "roundedRect",
+      "parentId": "governance",
+      "x": 35,
+      "y": 90,
+      "width": 250,
+      "height": 169.25,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "策略记录"
+          },
+          {
+            "type": "paragraph",
+            "text": "示例：记录审核、访问和变更约束"
+          },
+          {
+            "type": "paragraph",
+            "text": "不表示运行时调用依赖",
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observability",
+      "kind": "roundedRect",
+      "parentId": "governance",
+      "x": 35,
+      "y": 350,
+      "width": 250,
+      "height": 160,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "可观测性记录"
+          },
+          {
+            "type": "paragraph",
+            "text": "示例：说明审查和记录范围"
+          },
+          {
+            "type": "paragraph",
+            "text": "未声明的依赖保持未知",
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "relation-note-1",
+      "kind": "rect",
+      "x": 500,
+      "y": 340,
+      "width": 280,
+      "height": 70,
+      "label": "请求方向（示例）",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "relation-note-2",
+      "kind": "rect",
+      "x": 500,
+      "y": 730,
+      "width": 280,
+      "height": 70,
+      "label": "数据方向（示例）",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "ingress-to-domain",
+      "from": "layer-ingress",
+      "to": "layer-domain",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "domain-to-data",
+      "from": "layer-domain",
+      "to": "layer-data",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ],
+  "scenes": []
+}

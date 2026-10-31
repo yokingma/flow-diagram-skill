@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "title": "教学示例：查询请求与响应",
+  "theme": "light",
+  "viewport": {
+    "width": 700,
+    "height": 410
+  },
+  "nodes": [
+    {
+      "id": "client",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 100,
+      "width": 180,
+      "height": 150,
+      "label": "客户端"
+    },
+    {
+      "id": "service",
+      "kind": "roundedRect",
+      "x": 400,
+      "y": 100,
+      "width": 250,
+      "height": 150,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "查询服务"
+          },
+          {
+            "type": "paragraph",
+            "text": "等待查询请求。"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "request",
+      "from": "client",
+      "to": "service",
+      "label": "查询请求",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "response",
+      "from": "service",
+      "to": "client",
+      "label": "返回结果",
+      "fromPort": "bottom",
+      "toPort": "bottom",
+      "route": "curved"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "query",
+      "label": "一次成功查询（教学设定）",
+      "beats": [
+        {
+          "durationMs": 1000,
+          "caption": "教学设定：客户端发送一次查询；未定义超时或失败分支。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "request",
+              "direction": "forward",
+              "text": "查询"
+            }
+          ]
+        },
+        {
+          "durationMs": 1200,
+          "caption": "教学设定：服务得到结果，然后返回客户端。",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "service",
+              "value": {
+                "content": {
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "查询服务"
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "结果已就绪。"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "响应沿独立的返回连线发送；箭头与传递方向一致。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "response",
+              "direction": "forward",
+              "text": "结果"
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "本教学路径结束；图中未声明其他业务结果。",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  }
+}

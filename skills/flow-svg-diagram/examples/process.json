@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "title": "资料处理流程",
+  "theme": "light",
+  "viewport": {
+    "width": 820,
+    "height": 250
+  },
+  "nodes": [
+    {
+      "id": "collect",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 80,
+      "width": 180,
+      "height": 90,
+      "label": "收集资料"
+    },
+    {
+      "id": "review",
+      "kind": "roundedRect",
+      "x": 320,
+      "y": 80,
+      "width": 180,
+      "height": 90,
+      "label": "审查资料"
+    },
+    {
+      "id": "archive",
+      "kind": "roundedRect",
+      "x": 610,
+      "y": 80,
+      "width": 180,
+      "height": 90,
+      "label": "归档资料"
+    }
+  ],
+  "edges": [
+    {
+      "id": "submit",
+      "from": "collect",
+      "to": "review",
+      "label": "提交审查",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "archive-reviewed",
+      "from": "review",
+      "to": "archive",
+      "label": "完成审查后归档",
+      "fromPort": "right",
+      "toPort": "left"
+    }
+  ],
+  "scenes": []
+}

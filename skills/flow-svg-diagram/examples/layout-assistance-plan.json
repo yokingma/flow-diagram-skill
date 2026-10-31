@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "strategy": "layered",
+  "canvas": {
+    "width": 1400,
+    "padding": 30
+  },
+  "defaults": {
+    "groupPadding": 20,
+    "headingHeight": 36
+  },
+  "gaps": {
+    "layer": 34,
+    "row": 28,
+    "column": 20,
+    "sidebar": 36
+  },
+  "layers": [
+    {
+      "type": "layer",
+      "id": "layer-1",
+      "gap": 16,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-01",
+            "card-02"
+          ]
+        },
+        "summary-1"
+      ]
+    },
+    {
+      "type": "layer",
+      "id": "layer-2",
+      "gap": 16,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-03",
+            "card-04"
+          ]
+        },
+        "summary-2"
+      ]
+    },
+    {
+      "type": "layer",
+      "id": "layer-3",
+      "gap": 16,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-05",
+            "card-06"
+          ]
+        },
+        "summary-3"
+      ]
+    },
+    {
+      "type": "layer",
+      "id": "layer-4",
+      "gap": 16,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-07",
+            "card-08"
+          ]
+        },
+        "summary-4"
+      ]
+    },
+    {
+      "type": "layer",
+      "id": "layer-5",
+      "gap": 18,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-09",
+            "card-10"
+          ]
+        },
+        {
+          "type": "row",
+          "gap": 30,
+          "children": [
+            "card-11",
+            "card-12"
+          ]
+        },
+        "summary-5"
+      ]
+    },
+    {
+      "type": "layer",
+      "id": "control-plane",
+      "gap": 20,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        {
+          "type": "row",
+          "gap": 20,
+          "children": [
+            "control-a",
+            "control-b"
+          ]
+        }
+      ]
+    }
+  ],
+  "sidebar": {
+    "side": "right",
+    "layout": {
+      "type": "column",
+      "id": "sidebar",
+      "gap": 22,
+      "padding": 20,
+      "headingHeight": 36,
+      "children": [
+        "side-1",
+        "side-2",
+        "side-3",
+        "side-4",
+        "side-5"
+      ]
+    }
+  },
+  "overrides": {
+    "control-plane": {
+      "x": 60,
+      "y": 1720,
+      "padding": 20,
+      "headingHeight": 36,
+      "gap": 20
+    }
+  },
+  "edges": {
+    "flow-1": {
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    "flow-2": {
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    "flow-3": {
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    "flow-4": {
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  }
+}

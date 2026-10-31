@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "title": "双副本部署",
+  "theme": "light",
+  "viewport": {
+    "width": 900,
+    "height": 480
+  },
+  "nodes": [
+    {
+      "id": "host-a",
+      "kind": "group",
+      "x": 300,
+      "y": 20,
+      "width": 260,
+      "height": 200,
+      "label": "主机 A"
+    },
+    {
+      "id": "host-b",
+      "kind": "group",
+      "x": 300,
+      "y": 260,
+      "width": 260,
+      "height": 200,
+      "label": "主机 B"
+    },
+    {
+      "id": "router",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 190,
+      "width": 150,
+      "height": 90,
+      "label": "负载均衡"
+    },
+    {
+      "id": "replica-a",
+      "kind": "roundedRect",
+      "parentId": "host-a",
+      "x": 40,
+      "y": 80,
+      "width": 180,
+      "height": 90,
+      "label": "服务副本 A"
+    },
+    {
+      "id": "replica-b",
+      "kind": "roundedRect",
+      "parentId": "host-b",
+      "x": 40,
+      "y": 80,
+      "width": 180,
+      "height": 90,
+      "label": "服务副本 B"
+    },
+    {
+      "id": "database",
+      "kind": "cylinder",
+      "x": 710,
+      "y": 190,
+      "width": 160,
+      "height": 100,
+      "label": "共享数据库"
+    }
+  ],
+  "edges": [
+    {
+      "id": "route-a",
+      "from": "router",
+      "to": "replica-a",
+      "label": "分发",
+      "route": "orthogonal",
+      "fromPort": "top",
+      "toPort": "left"
+    },
+    {
+      "id": "route-b",
+      "from": "router",
+      "to": "replica-b",
+      "label": "分发",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "write-a",
+      "from": "replica-a",
+      "to": "database",
+      "label": "读写",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "top"
+    },
+    {
+      "id": "write-b",
+      "from": "replica-b",
+      "to": "database",
+      "label": "读写",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "bottom"
+    }
+  ],
+  "scenes": []
+}

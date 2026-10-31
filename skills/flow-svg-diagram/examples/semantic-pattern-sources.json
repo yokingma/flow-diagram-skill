@@ -1,0 +1,50 @@
+[
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: request-response",
+    "scope": "examples/request-response.json",
+    "description": "教学设定：客户端向查询服务发送一次查询，服务得到结果并返回；不定义超时或失败。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: retry-state",
+    "scope": "examples/retry-state.json",
+    "description": "教学设定：临时错误且尝试次数小于 3 时等待再试；成功退出；执行尝试遇临时错误且已达 3 次时失败退出。次数含首次尝试；等待时长和非临时错误处理未知。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: fan-in-bottleneck",
+    "scope": "examples/fan-in-bottleneck.json",
+    "description": "教学设定：A/B/C 各每秒到达 1 项；单个处理者每秒处理 2 项，输出完成项；队列容量与满队列策略未知。仅说明持续供给下的速率差，不模拟队列长度、丢弃或延迟。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: staged-data-processing",
+    "scope": "examples/staged-data-processing.json",
+    "description": "教学设定：原始记录先清洗格式错误，再按日期计数并形成日报；错误记录去向、数据量、耗时未知。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: architecture",
+    "scope": "examples/architecture.json",
+    "description": "教学设定：客户端位于订单服务边界外；订单 API 与订单存储位于边界内；API 接收提交订单并保存订单。不表示主机、进程、信任域或部署副本。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: layered architecture",
+    "scope": "examples/layered-architecture.json",
+    "description": "教学设定：接入层、领域层和数据层各有多列示例对象；治理侧栏用虚线边框标注审查与策略说明。层序不等于调用时间顺序，分组不自动代表部署或信任边界，治理关系不声明未提供的运行时依赖。标题留白、行高、列间距和连线标签净空是按本示例字体测量与排布的已验证起点。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: process",
+    "scope": "examples/process.json",
+    "description": "教学设定：收集资料后提交审查，完成审查后归档；未定义驳回、重试、并行或耗时。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: layout assistance",
+    "scope": "examples/layout-assistance.json",
+    "description": "教学设定：五层仅用于阅读顺序；四条连线表示教学关联。两行内容卡片、横向控制面和中文密集文本用于演示重复几何计算，不表示生产系统、调用时间顺序或真实运行依赖。"
+  }
+]

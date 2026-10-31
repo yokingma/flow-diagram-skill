@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "title": "教学示例：分阶段记录处理",
+  "theme": "light",
+  "viewport": {
+    "width": 1280,
+    "height": 310
+  },
+  "nodes": [
+    {
+      "id": "raw",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 110,
+      "width": 150,
+      "height": 90,
+      "label": "原始记录"
+    },
+    {
+      "id": "clean",
+      "kind": "roundedRect",
+      "x": 340,
+      "y": 110,
+      "width": 180,
+      "height": 90,
+      "label": "清洗\n去除格式错误"
+    },
+    {
+      "id": "aggregate",
+      "kind": "roundedRect",
+      "x": 700,
+      "y": 110,
+      "width": 180,
+      "height": 90,
+      "label": "按日期汇总\n计算记录数"
+    },
+    {
+      "id": "report",
+      "kind": "roundedRect",
+      "x": 1060,
+      "y": 110,
+      "width": 180,
+      "height": 90,
+      "label": "日报\n日期与记录数"
+    }
+  ],
+  "edges": [
+    {
+      "id": "raw-clean",
+      "from": "raw",
+      "to": "clean",
+      "label": "原始记录",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "clean-aggregate",
+      "from": "clean",
+      "to": "aggregate",
+      "label": "有效记录",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    },
+    {
+      "id": "aggregate-report",
+      "from": "aggregate",
+      "to": "report",
+      "label": "日期计数",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight"
+    }
+  ],
+  "scenes": [],
+  "typography": {
+    "nodeLabel": 26,
+    "edgeLabel": 24,
+    "flowLabel": 20
+  }
+}

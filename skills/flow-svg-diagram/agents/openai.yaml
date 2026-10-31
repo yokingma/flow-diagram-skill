@@ -1,0 +1,3 @@
+interface:
+  display_name: "Flow SVG Diagram"
+  short_description: "Create executable diagrams for systems and processes"

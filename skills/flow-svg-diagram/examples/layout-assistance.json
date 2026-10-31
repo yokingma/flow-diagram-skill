@@ -1,0 +1,490 @@
+{
+  "version": 1,
+  "title": "高密度分层布局教学设定",
+  "theme": "light",
+  "viewport": {
+    "width": 1400,
+    "height": 1500
+  },
+  "typography": {
+    "nodeLabel": 18,
+    "edgeLabel": 16,
+    "flowLabel": 14
+  },
+  "nodes": [
+    {
+      "id": "layer-1",
+      "kind": "group",
+      "x": 60,
+      "y": 80,
+      "width": 900,
+      "height": 220,
+      "label": "阅读层 1 · 教学设定"
+    },
+    {
+      "id": "layer-2",
+      "kind": "group",
+      "x": 60,
+      "y": 330,
+      "width": 900,
+      "height": 220,
+      "label": "阅读层 2 · 教学设定"
+    },
+    {
+      "id": "layer-3",
+      "kind": "group",
+      "x": 60,
+      "y": 580,
+      "width": 900,
+      "height": 220,
+      "label": "阅读层 3 · 教学设定"
+    },
+    {
+      "id": "layer-4",
+      "kind": "group",
+      "x": 60,
+      "y": 830,
+      "width": 900,
+      "height": 220,
+      "label": "阅读层 4 · 教学设定"
+    },
+    {
+      "id": "layer-5",
+      "kind": "group",
+      "x": 60,
+      "y": 1080,
+      "width": 900,
+      "height": 220,
+      "label": "阅读层 5 · 教学设定"
+    },
+    {
+      "id": "card-01",
+      "kind": "roundedRect",
+      "parentId": "layer-1",
+      "x": 40,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 01"
+          },
+          {
+            "type": "paragraph",
+            "text": "这是第 1 层的中文教学内容，用于验证稳定的几何重排。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-02",
+      "kind": "roundedRect",
+      "parentId": "layer-1",
+      "x": 350,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 02"
+          },
+          {
+            "type": "paragraph",
+            "text": "内容修改后仍保留对象、关系和语义顺序。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-03",
+      "kind": "roundedRect",
+      "parentId": "layer-2",
+      "x": 40,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 03"
+          },
+          {
+            "type": "paragraph",
+            "text": "这是第 2 层的中文教学内容，用于验证稳定的几何重排。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-04",
+      "kind": "roundedRect",
+      "parentId": "layer-2",
+      "x": 350,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 04"
+          },
+          {
+            "type": "paragraph",
+            "text": "内容修改后仍保留对象、关系和语义顺序。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-05",
+      "kind": "roundedRect",
+      "parentId": "layer-3",
+      "x": 40,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 05"
+          },
+          {
+            "type": "paragraph",
+            "text": "这是第 3 层的中文教学内容，用于验证稳定的几何重排。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-06",
+      "kind": "roundedRect",
+      "parentId": "layer-3",
+      "x": 350,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 06"
+          },
+          {
+            "type": "paragraph",
+            "text": "内容修改后仍保留对象、关系和语义顺序。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-07",
+      "kind": "roundedRect",
+      "parentId": "layer-4",
+      "x": 40,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 07"
+          },
+          {
+            "type": "paragraph",
+            "text": "这是第 4 层的中文教学内容，用于验证稳定的几何重排。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-08",
+      "kind": "roundedRect",
+      "parentId": "layer-4",
+      "x": 350,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 08"
+          },
+          {
+            "type": "paragraph",
+            "text": "内容修改后仍保留对象、关系和语义顺序。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-09",
+      "kind": "roundedRect",
+      "parentId": "layer-5",
+      "x": 40,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 09"
+          },
+          {
+            "type": "paragraph",
+            "text": "第五层两行内容卡片，用于验证中文内容增长。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-10",
+      "kind": "roundedRect",
+      "parentId": "layer-5",
+      "x": 350,
+      "y": 60,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 10"
+          },
+          {
+            "type": "paragraph",
+            "text": "第五层两行内容卡片，用于验证中文内容增长。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-11",
+      "kind": "roundedRect",
+      "parentId": "layer-5",
+      "x": 40,
+      "y": 170,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 11"
+          },
+          {
+            "type": "paragraph",
+            "text": "第五层两行内容卡片，用于验证中文内容增长。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "card-12",
+      "kind": "roundedRect",
+      "parentId": "layer-5",
+      "x": 350,
+      "y": 170,
+      "width": 250,
+      "height": 130,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "卡片 12"
+          },
+          {
+            "type": "paragraph",
+            "text": "第五层两行内容卡片，用于验证中文内容增长。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "summary-1",
+      "kind": "rect",
+      "parentId": "layer-1",
+      "x": 700,
+      "y": 170,
+      "width": 160,
+      "height": 34,
+      "label": "层 1 摘要"
+    },
+    {
+      "id": "summary-2",
+      "kind": "rect",
+      "parentId": "layer-2",
+      "x": 700,
+      "y": 170,
+      "width": 160,
+      "height": 34,
+      "label": "层 2 摘要"
+    },
+    {
+      "id": "summary-3",
+      "kind": "rect",
+      "parentId": "layer-3",
+      "x": 700,
+      "y": 170,
+      "width": 160,
+      "height": 34,
+      "label": "层 3 摘要"
+    },
+    {
+      "id": "summary-4",
+      "kind": "rect",
+      "parentId": "layer-4",
+      "x": 700,
+      "y": 170,
+      "width": 160,
+      "height": 34,
+      "label": "层 4 摘要"
+    },
+    {
+      "id": "summary-5",
+      "kind": "rect",
+      "parentId": "layer-5",
+      "x": 700,
+      "y": 170,
+      "width": 160,
+      "height": 34,
+      "label": "层 5 摘要"
+    },
+    {
+      "id": "control-plane",
+      "kind": "group",
+      "x": 60,
+      "y": 1330,
+      "width": 900,
+      "height": 120,
+      "label": "横向控制面 · 教学设定"
+    },
+    {
+      "id": "control-a",
+      "kind": "rect",
+      "parentId": "control-plane",
+      "x": 30,
+      "y": 44,
+      "width": 180,
+      "height": 44,
+      "label": "观测与审查"
+    },
+    {
+      "id": "control-b",
+      "kind": "rect",
+      "parentId": "control-plane",
+      "x": 250,
+      "y": 44,
+      "width": 180,
+      "height": 44,
+      "label": "策略与变更"
+    },
+    {
+      "id": "sidebar",
+      "kind": "group",
+      "x": 1010,
+      "y": 80,
+      "width": 300,
+      "height": 1370,
+      "label": "说明侧栏 · 教学设定"
+    },
+    {
+      "id": "side-1",
+      "kind": "rect",
+      "parentId": "sidebar",
+      "x": 30,
+      "y": 40,
+      "width": 240,
+      "height": 50,
+      "label": "侧栏说明 1"
+    },
+    {
+      "id": "side-2",
+      "kind": "rect",
+      "parentId": "sidebar",
+      "x": 30,
+      "y": 270,
+      "width": 240,
+      "height": 50,
+      "label": "侧栏说明 2"
+    },
+    {
+      "id": "side-3",
+      "kind": "rect",
+      "parentId": "sidebar",
+      "x": 30,
+      "y": 500,
+      "width": 240,
+      "height": 50,
+      "label": "侧栏说明 3"
+    },
+    {
+      "id": "side-4",
+      "kind": "rect",
+      "parentId": "sidebar",
+      "x": 30,
+      "y": 730,
+      "width": 240,
+      "height": 50,
+      "label": "侧栏说明 4"
+    },
+    {
+      "id": "side-5",
+      "kind": "rect",
+      "parentId": "sidebar",
+      "x": 30,
+      "y": 960,
+      "width": 240,
+      "height": 50,
+      "label": "侧栏说明 5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "flow-1",
+      "from": "layer-1",
+      "to": "layer-2",
+      "label": "教学关联一",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "flow-2",
+      "from": "layer-2",
+      "to": "layer-3",
+      "label": "教学关联二",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "flow-3",
+      "from": "layer-3",
+      "to": "layer-4",
+      "label": "教学关联三",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "flow-4",
+      "from": "layer-4",
+      "to": "layer-5",
+      "label": "教学关联四",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ],
+  "scenes": []
+}

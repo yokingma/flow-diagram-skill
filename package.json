@@ -1,0 +1,20 @@
+{
+  "name": "flow-svg-diagram-skills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "doctor": "node skills/flow-svg-diagram/scripts/flowsvg.mjs doctor"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "playwright-core": "1.58.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}
