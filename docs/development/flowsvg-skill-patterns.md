@@ -1,0 +1,122 @@
+# FlowSVG skill implementation patterns
+
+## Edge-label pattern diagnosis
+
+Use already wrapped public label lines and their baseline coordinates for conservative short-line risks, without a second text-width estimator or private path parser. Keep inspection finite and identity bound to the label field.
+
+## Partial review validity
+
+Keep source requirements separate from capture facts. Detect recursive reuse cycles with the current operation locator and entry ID, since distinct operations can share one original capture. Only verified captures retain active evidence IDs; invalid registrations carry their failure reason and exact-condition recapture action. Separate request planning from environment execution. Persist complete valid evidence requests before browser lookup; reject malformed settings before writing. Verify stored combined observations per entry, retain valid materials and all invalid-entry issues, and carry saved invalid facts in an explicit result object through every aggregation path. Invalid historical observations with issues retain an explicit needs-user-decision quality requirement; image loss cannot resolve an issue.
+
+## On-demand evidence
+
+Keep design snapshots, capture operations and actual-viewing attestations separate. Plan the complete required surface set before starting a browser. Verify both actual source and screenshot identities; capture only missing conditions. Preserve terminal partial outcomes and logical surface coverage independently from the number of captures. Screenshot damage invalidates coverage, while source or identity corruption blocks adoption.
+
+Ordinary skill tasks retain only the final diagram and portable report after success. Full task history is an explicit user choice.
+
+Validate review-only CLI options at the command boundary. Unsupported commands must report an option-scope error instead of silently ignoring evidence input.
+
+Keep file delivery eligibility separate from quality coverage. Once validation, compilation and every requested file succeed, optional browser or visual failures remain in the report while finalization can publish the complete files.
+
+This project maintenance document covers the CLI in `skills/flow-svg-diagram/scripts/`. It is outside the skill installation unit; see the [maintenance guide](flowsvg-skill-maintenance.md) for verification and installation boundaries.
+
+## Read-only validation
+
+`validation.mjs` reads a draft once or verifies an explicitly selected saved source. It returns the shared `document-checks.mjs` validation/compilation results and the same finite layout diagnosis without allocating history or calling `saveReport`. Keep `revision: null`, an exact input hash and `validation.snapshotCreated: false`. `validation.sourceRevision` identifies only an explicitly verified saved input; newly computed diagnostics still use `sourceRevision: null`. Formal decisions require a saved authoring report. Runtime cache preparation remains independent of diagram persistence.
+
+## Layout diagnostics and measurement estimates
+
+Keep diagnostic `nextStep` text aligned with [the authorization and decision rules](../../skills/flow-svg-diagram/references/diagnostics-and-revisions.md). Already authorized mechanical corrections can proceed; changes to meaning or outside the current authorization require a user decision. Preserve warning identities, severity and formal decision verification when updating action text.
+
+Use public SDK frame `contentLayout.lines` to count distinct baseline `y` positions for deterministic structural estimates. Share ordinary-label measurement in `label-measurement.mjs`: read public `labelLines` and calibrate line spacing with a two-line public frame at the same width and typography. SDK frames retain overflowing lines, so a minimal probe height is sufficient. The pinned baseline reserves 24 vertical units for ordinary labels. Keep this baseline constant next to the calibration and update both with a verified SDK upgrade. Label overflow reasons reuse this estimator at the sampled node width and label; diagnostic code never reads private compiled-diagram state. Do not infer rows from height/font or count marker/tag fragments separately. Keep the method label explicit and exclude graph-internal labels and browser glyph pixels. Warning groups summarize related records only; exact issue IDs and times in `diagnostics` remain the decision seam.
+
+## Layout command
+
+`layout.mjs` validates source fields and the independent plan, measures planned structured-content and label-only nodes at their final widths, and runs public SDK checks on the geometry result before publishing a new draft. Its warning context binds the output hash with a null source revision; use a subsequent saved `author` report before recording decisions. `atomic-draft.mjs` shares complete temporary-file publication between layout and height backfill. Check cancellation before the hard link and never replace an existing target.
+
+## Layout-plan validation
+
+Keep `layout-plan.mjs` pure and independent of SDK installation. Its validation interface returns field-level diagnostics and does not mutate the plan or draft. Run public SDK draft validation separately before layout. A group primitive changes the local coordinate scope only when its ID names an existing group; anonymous rows and columns preserve the enclosing semantic parent. Overrides accept geometry only. Reject group spacing overrides unless their target is expanded as a group container in the plan. Unassigned nodes keep their existing geometry. See the [versioned contract](../../skills/flow-svg-diagram/references/layout-plan.md).
+
+## Layout plan workflow
+
+Use the single workflow in [static-layout](../../skills/flow-svg-diagram/references/static-layout.md#layout-plan-workflow) for draft, measurement, layout, validation, author/review and finalization. Keep Agent semantic choices separate from deterministic geometry. The layout-assistance examples are teaching data: five layers establish reading order only, and four edges are teaching relations; they do not imply production facts or call timing.
+
+## Layered teaching examples
+
+The pure layout geometry boundary changes only viewport dimensions, node geometry and explicitly selected edge route/port fields. Plan order controls placement; document arrays retain their original order. Resolve measurement widths before calling the SDK. Use the greater of authored height, default height and measured height as the automatic height floor while preserving exact height overrides. Derive expanded-group widths from child bounds before label measurement; group width does not depend on measured heights. Validate group measurements against that derived width and include the group's own required height when arranging later layers. Expanded groups include unmanaged children's local bounds. Override-only nodes keep unspecified geometry and are not implicitly measured. Missing canvas dimensions grow from the input viewport; explicit dimensions stay fixed and later checks retain overflow warnings.
+
+Keep layered architecture examples explicit about semantics. Use groups for named explanatory layers, leave room for headings, place at least two columns on a shared row, and label every cross-layer relation whose direction matters. A governance sidebar may use dashed annotation edges, but its labels must say when the relation is explanatory and not a runtime dependency. Document that layer order is a reading aid rather than call order and that grouping does not establish deployment or trust boundaries without source evidence. Measure structured content and initial labels from the draft with the document typography, apply only supported height increases to a new draft, and inspect every requested final artifact independently.
+
+- Treat the installed Node CLI as the behavior boundary. Tests copy the complete skill outside the repository and inspect commands, reports, artifacts and visible side effects.
+- `runtime.mjs` owns prerequisite checks, installation locking, temporary environments, complete-cache verification and isolated public ESM resolution. SDK imports happen only after preparation succeeds.
+- `reports.mjs` owns atomic version reservation, byte-preserving draft snapshots and report serialization. Each authoring invocation owns one new revision; the ordinary skill workflow keeps those revisions inside its temporary task workspace.
+- `finalize.mjs` collects final files through unchanged source/theme/SDK ancestry, verifies static image identities, publishes a portable summary through staging/rollback, and cleans only a canonical `.diagrams/.work/<name>/<task-id>` directory after publication. Missing exports or changed bytes preserve the workspace and previous delivery; `--keep-work` is explicit.
+- `final-delivery.mjs` publishes only complete default authoring results from `.diagrams/.history` to `.diagrams/<name>` through a temporary directory; explicit output roots keep revision-only behavior and failed deliveries do not replace the final copy.
+- `workflow.mjs` coordinates saved input through public SDK field/reference validation and compilation. Successful checks pass the same parsed snapshot and compiled public diagram to downstream stages. Each stage records only completed checks; field errors prevent compilation.
+- Guidance checks cover source scope, decision boundaries and inspection records in existing report fields. Keep these documentation checks separate from installed-CLI behavior acceptance.
+- stdout contains one structured result. stderr carries progress. A validated document is not a finished diagram delivery or a visual approval.
+- Verify the exact registry SDK package through the manifest and npm lockfile before installation, and verify cached configuration/resolver bytes before executing cached code.
+- Installation source and integrity belong to the versioned runtime manifest and npm lockfile. The runtime selects one exact registry package; a declared compatibility range is for maintenance validation and never drives dynamic installation.
+
+- `delivery.mjs` uses public `flowsvg/node.renderHtml`, `flowsvg/node.exportPng` and the compiled diagram's public `renderSvg`. HTML is paused with controls; HTML/SVG require no browser, PNG uses prepared Chrome/Chromium.
+- `measurement.mjs` calls public `measureNodeContent` for one fixed width, one or several content versions, a top-level batch of independent nodes, or a complete diagram draft. Draft mode associates initial labels and initial/animated replacement content with node IDs, uses the draft typography and width, rejects animated size changes and unresolved diagnostics, and publishes a separate atomic height-filled copy only when `--output` is explicit. Independent single inputs can compare a label with structured content versions and return their largest required height. Top-level batch labels retain their established metadata meaning. Complete diagram nodes retain the public SDK label/content mutual-exclusion rule. It never mutates the source or overwrites an existing target; backfill only increases heights and does not arrange geometry.
+- Snapshot source metadata before SDK preparation. Treat metadata as the author's evidence record, not as permission to read referenced sources. Record draft SHA-256 to identify the bytes consumed by validation and exports.
+- Keep `completion.delivery` independent from `completion.quality` and individual checks. A requested export failure preserves earlier complete files and marks delivery incomplete. Actual browser product tests remain separate from model visual approval.
+
+- `preview-plan.mjs` ranks compiled-beat point candidates deterministically. Overview is an explicitly labeled camera-only inspection projection; timeline points preserve authored actions. Fixed bounds and omitted candidates describe partial coverage.
+- `browser.mjs` detects prepared executables and resolves the explicit public Playwright dependency inside the isolated runtime. An explicit path never silently falls back.
+- `previews.mjs` owns its entire browser/context/page lifecycle, fixes rendering time/theme/viewport/font readiness, and registers only complete PNGs. Capture leaves visual inspection unperformed; screenshot failure preserves completed default exports.
+- `visual-review.mjs` validates model-supplied actual-viewing attestation and observations against original screenshot bytes and unchanged input/theme/SDK in an explicit parent. When these options are used through `author`, review belongs to that author revision and identifies the original image scope. Ordinary HTML/preview observations use independent `review`. New captures remain unviewed.
+- `diagnostics.mjs` uses public `evaluateAt` frames and on-demand `diagnoseAt` at actual compiled beat boundaries and transition/midpoint times. Existing frame checks use visible sibling rectangles, parent containment and the full-view camera; active focus is intentional cropping. The three new geometry checks use only SDK-owned shapes, paths and text estimates. Finite coverage is separate from visual screenshot sampling.
+- `revisions.mjs` resolves only an explicit parent under the selected diagram, snapshots historical bytes into a new version, and retains original issues and actual user decisions. Parent SHA-256 distinguishes saved evidence from external edits. No diagnostic changes geometry or grants approval.
+- `gif-delivery.mjs` calls only public `flowsvg/node.exportGif`, with task theme, a prepared executable path, cancellation signal and stderr progress. Validate prepared executable access and file type before launching. The SDK owns its isolated browser and cleanup; no browser connection is borrowed from callers.
+- GIF option JSON is read once; task-only theme/browser/signal/progress are outside that file. Keep SDK planning, limits, rendering and encoding in the SDK.
+- Export stages append completed artifacts after complete writes. `workflow.mjs` alone marks all requested exports complete; optional GIF failure cannot erase earlier JSON/HTML or claim the full request succeeded. Exclusive GIF creation preserves externally created destination files.
+
+- `browser.mjs` owns shared selection and executable preflight for previews and GIF. GIF maps unusable explicit paths to its export diagnostics and passes the selected path to the public SDK.
+- After static export, attempt requested GIF, previews and review recording independently. Record noncancellation failures and continue; cancellation stops later stages. Final delivery depends on requested/completed files, so preview success cannot hide a missing GIF and preview failure cannot erase a completed GIF.
+
+- Consumer acceptance copies the full installation unit outside the workspace and consumes only its CLI and installed public Playwright entry. It requires Node/npm and an explicitly prepared browser.
+- Platform evidence records real execution, exact versions, lockfile/harness hashes, artifact hashes and required check outcomes. Missing or unexecuted required checks remain incomplete and exit nonzero. CI definitions, generated screenshots and local SDK tarballs do not establish OS execution, model visual approval or registry distribution readiness.
+
+- Static file identity binds original revision, input bytes, installed SDK version/integrity, rendering parameters and actual file SHA-256. Evidence reads registered file bytes under canonical revision paths; it never substitutes a diagram re-render.
+- Keep artifact evidence and actual artifact reviews separate from sampled screenshots; each review names the evidence revision and original artifact revision independently.
+
+- `export-manifest.mjs` owns byte-preserving batch selection and whole-manifest preflight. It consumes the actual isolated SDK identity and compiled timeline, then delegates each named image to `delivery.mjs`.
+- A batch preallocates factual `exports` rows after whole-plan validation. Cancellation marks the active item and leaves later rows unexecuted; per-format completion requires all rows to succeed. Static artifact identities and target-size evidence are shared by single and named outputs.
+- Artifact evidence gives each display surface its own task page and closes it after capture. Decode the registered file image, scale it to the requested canvas dimensions, composite the opaque backdrop, and encode that canvas directly as PNG. Chromium screenshot readback can retain corrupt image tiles even on a fresh page. The identity-bound fonts metadata records the capture method. Pixel regressions decode natural pixels and independently calculate bilinear sampling and alpha composition.
+
+- `diagnostics.mjs` combines the four existing public-frame checks with public `diagnoseAt` at finite samples. SDK geometry and text estimates stay in the SDK. `issue-identity.mjs` hashes the complete source/SDK/visual/time/key context; new decisions reference one verified source revision and issue ID, never a code/object fallback.
+
+- `decision-records.mjs` verifies the explicit parent ancestry, original issue history, canonical file scope, source bytes and full hashed identity before recording a new exact decision. Saved decisions retain original context even when the current draft changes. Historical records without IDs are never rewritten or used as broad fallback authorization.
+
+- The multiline-edge-label correction uses a newly built, independently installed SDK development archive. Keep archive bytes, manifest integrity and npm lock integrity synchronized, and record the new identity in separate evidence without rewriting prior diagnostic/decision contexts. Archive SRI for that earlier correction: `sha512-7Lv5gvU3sn8sdsZXOuJhcQbxWz78ud5Hc3AfoFN1Uim5CnHCvL3eqKVZKFSK3WXsHq8cqhaMb/8Uvbtbg/sJZg==`. Same-original-edge-label halo-only self-contact is handled in the SDK; the skill keeps consuming public warnings without local filtering.
+
+- The current registry baseline follows the structured-content finite-geometry correction. Keep the exact package version and integrity synchronized across the manifest and npm lockfile; verify a fresh copied CLI and its installed public SDK before recording a new identity. Preserve earlier evidence and issue contexts under their original SDK integrity.
+
+## Required delivery coverage
+
+Treat file completion and quality coverage as separate facts. The installed CLI records structural checks, the actual offline HTML states, and each requested SVG/PNG display surface in `qualityCoverage`. Native intrinsic dimensions and the resolved theme backdrop are the defaults when no display size is specified. Review-only revisions carry the parent delivery request and artifact identities so earlier static files cannot disappear from the required set. Unresolved or deferred warnings remain `needs-user-decision`; missing browser or actual viewing remains `incomplete`.
+
+Missing static evidence must identify the artifact ID, expected display dimensions and carrying backdrop, then give explicit artifact-preview settings and the capture/view/review steps. Ordinary sampled previews do not cover actual static files. Do not infer or inherit display settings from preview dimensions.
+
+## High-density layout acceptance
+
+Use fictional fixture content with explicit layer groups, rows, sidebars and control planes. Compare semantic fields and source bytes across repeated plans. Preserve layout warnings and keep target-size artifact and HTML viewing attestations separate from CLI test results.
+
+## Read-only review preparation
+
+`review-contract.mjs` owns the complete strict shape for preview, HTML and formal-image review inputs. Source-specific readers retain identity checks. `review-preflight.mjs` validates all supplied inputs and source bytes before any author revision allocation or expensive execution; it exposes verified materials for independent review recording. Author preflight also checks the effective theme before runtime preparation. Template generation uses the same identity readers, writes only a new file in the same canonical task workspace, and keeps actual viewing false with observations blank. Never treat template identity verification as a viewing attestation.
+
+## Independent observations and report projection
+
+Keep `v###` for real saved diagram production and `review-<sha256>` for append-only observations. Independent review consumes source preflight and complete actual-file/screenshot identity without author, compiler, renderer or browser calls. Normalize accepted semantic inputs before computing the ID; publish a complete record exclusively, and revalidate the existing record/source on duplicate reuse.
+
+`readSavedRevisions` is the shared unchanged-context ancestry reader. `loadReviewRecords` revalidates each applicable immutable record and its actual source/evidence. `aggregateReviews` returns an in-memory report clone; finalization keeps its original file collector and publishes the projection. Match HTML by actual delivered hash, target display and requested point ID/time. Preserve the selected required set; repeated source attestations count once and retain source hashes. Union every unresolved issue rather than choosing the last clean observation. Keep considered/adopted record IDs explicit. Corrupted applicable records fail closed and preserve recovery files.
+
+## Independent formal-image observations
+
+`artifact-review-source.mjs` resolves the explicit evidence source separately from the real diagram subject. `loadArtifactEvidenceSource` returns its hash-bound locator and actual source context; `verifyArtifactReviewEntries` verifies settings, original artifact identity and actual evidence bytes. Review preflight, templates and stored-record verification share this interface. Evidence source IDs never occupy `revision.id`.
+
+`review-projection.mjs` unions every requested evidence surface from same-context ancestry and applicable sources before evaluating viewing. Different observations for one evidence ID retain all attestations and issues. `finalize.mjs` preserves full portable surface identity rather than reducing it to dimensions and hashes. `loadReviewRecords` also revalidates saved authoring artifact observations before their status can enter a projection.

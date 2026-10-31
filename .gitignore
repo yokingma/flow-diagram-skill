@@ -1,4 +1,5 @@
 node_modules/
 .diagrams/
-.scratch/
 authoring-skill-evidence.json
+.DS_Store
+/acceptance/

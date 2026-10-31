@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "title": "订单服务架构",
+  "theme": "light",
+  "viewport": {
+    "width": 800,
+    "height": 360
+  },
+  "nodes": [
+    {
+      "id": "orders",
+      "kind": "group",
+      "x": 230,
+      "y": 30,
+      "width": 540,
+      "height": 300,
+      "label": "订单服务"
+    },
+    {
+      "id": "client",
+      "kind": "roundedRect",
+      "x": 30,
+      "y": 140,
+      "width": 150,
+      "height": 90,
+      "label": "客户端"
+    },
+    {
+      "id": "api",
+      "kind": "roundedRect",
+      "parentId": "orders",
+      "x": 30,
+      "y": 110,
+      "width": 180,
+      "height": 140,
+      "content": {
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单 API"
+          },
+          {
+            "type": "paragraph",
+            "text": "接收订单请求"
+          }
+        ]
+      }
+    },
+    {
+      "id": "store",
+      "kind": "cylinder",
+      "parentId": "orders",
+      "x": 320,
+      "y": 110,
+      "width": 170,
+      "height": 140,
+      "label": "订单存储"
+    }
+  ],
+  "edges": [
+    {
+      "id": "request",
+      "from": "client",
+      "to": "api",
+      "label": "提交订单",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "persist",
+      "from": "api",
+      "to": "store",
+      "label": "保存订单",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    }
+  ],
+  "scenes": [],
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  }
+}

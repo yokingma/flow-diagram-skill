@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "title": "短路径关系标签 · 重构教学样本",
+  "viewport": {
+    "width": 760,
+    "height": 600
+  },
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "from",
+      "kind": "rect",
+      "x": 100,
+      "y": 60,
+      "width": 220,
+      "height": 100,
+      "label": "上游模块"
+    },
+    {
+      "id": "to",
+      "kind": "rect",
+      "x": 350,
+      "y": 60,
+      "width": 220,
+      "height": 100,
+      "label": "下游模块"
+    }
+  ],
+  "edges": [
+    {
+      "id": "relation",
+      "from": "from",
+      "to": "to",
+      "label": "跨层调用关系说明文字",
+      "visible": true,
+      "fromPort": "right",
+      "toPort": "left"
+    }
+  ],
+  "scenes": []
+}

@@ -9,10 +9,15 @@
     "node": ">=20"
   },
   "scripts": {
-    "doctor": "node skills/flow-svg-diagram/scripts/flowsvg.mjs doctor"
+    "doctor": "node skills/flow-svg-diagram/scripts/flowsvg.mjs doctor",
+    "test:guides": "vitest run tests/authoring-skill-guidance.test.ts tests/authoring-skill-layered-example.test.ts",
+    "test:skill": "vitest run tests/authoring-skill",
+    "test": "pnpm test:skill",
+    "verify:consumer": "node scripts/verify-authoring-skill.mjs"
   },
   "devDependencies": {
     "@types/node": "22.19.1",
+    "gifuct-js": "2.1.2",
     "playwright-core": "1.58.2",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
