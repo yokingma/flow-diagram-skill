@@ -1,34 +1,15 @@
-# Domain Docs
+# Domain documentation
 
-How the engineering skills should consume this repo's domain documentation when exploring the codebase.
+Before changing a domain contract or terminology, read [GLOSSARY.md](../../GLOSSARY.md) and the relevant decisions in [docs/adr](../adr/README.md). Use the glossary's terms in issues, design notes, code, and tests. Surface a conflict with an accepted ADR before changing its contract.
 
-## Before exploring, read these
+## Repository boundaries
 
-- **`GLOSSARY.md`** at the repo root, if it exists.
-- **`docs/adr/`**: read ADRs that touch the area you're about to work in.
+- `skills/flow-svg-diagram/` is the complete installation unit: Agent guidance, host metadata, scripts, references, examples, runtime resources, and license.
+- `tests/` and `tests/fixtures/` own independent regression coverage and its inputs.
+- `scripts/` contains repository acceptance tooling.
+- `docs/` contains human guides, maintenance guidance, architecture decisions, and recorded acceptance.
+- Root `PATTERNS.md` and `CHANGELOG.md` describe independent repository conventions and releases.
 
-If these files don't exist, **proceed silently**. Don't flag their absence or suggest creating them upfront. The `/domain-modeling` skill creates them when terms or decisions get resolved.
+The SDK is a separately versioned public dependency. Its document model, rendering, playback, and export APIs remain SDK responsibilities. Use the versioned SDK manuals linked from the glossary when assessing that boundary; installed execution uses the bundled references and pinned runtime rather than a sibling source checkout.
 
-## File structure
-
-This repo uses a single-context layout:
-
-```text
-/
-├── GLOSSARY.md
-├── docs/adr/
-│   └── 0001-example-decision.md
-└── src/
-```
-
-The glossary and ADR directory are created only when needed.
-
-## Use the glossary's vocabulary
-
-When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, or a test name), use the term as defined in `GLOSSARY.md`. Don't drift to synonyms the glossary explicitly avoids.
-
-If the concept isn't in the glossary yet, reconsider whether it reflects the project's language or note a real gap for `/domain-modeling`.
-
-## Flag ADR conflicts
-
-If your output contradicts an existing ADR, surface the conflict explicitly instead of silently overriding the decision.
+When a task establishes a new domain term or architecture decision, record it in the glossary or an ADR and add it to the relevant index. Finish when the affected documents agree on the actor, conditions, and observable outcome, with any unresolved contract conflict stated explicitly.

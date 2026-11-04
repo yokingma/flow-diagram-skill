@@ -2,6 +2,24 @@
 
 Choose a pattern by the relationship the reader must understand. Patterns can be combined and do not restrict supported diagrams or layouts. Every bundled scenario below is an invented teaching setup, not evidence about a real system. [Source metadata](../examples/semantic-pattern-sources.json) states its directions, conditions, quantities and unknowns. Use the matching record when adapting a sample; replace teaching assumptions with the user's evidence before describing a real system.
 
+## Choose by the reader's question
+
+| Reader's question | Structure to consider | Relationship requirement |
+| --- | --- | --- |
+| What is the goal, and what resources are available? | Goal, participants and resource-status cards | Distinguish available, proposed and unknown resources; availability does not establish authorization or model access. |
+| What capabilities exist, and who owns them? | Responsibility layers or a capability inventory | Parallel cards can stand without edges; membership and layer order do not establish call order. |
+| What functions does a system provide? | Function matrix with a shared-capability band | Grouping compares functions; draw dependencies only when sources establish them. |
+| How do inputs become useful outputs? | Source → transformation → use channels | Label what is mapped, transferred or transformed at each boundary. |
+| How is work completed and improved? | Process with conditions, outcomes and returns | Keep direct replies, rejected work and conditional returns traceable. |
+| What was requested, and what returned? | [Request and response](#request-and-response) | Read required inputs and static-state choices; retain both directions. |
+| When does work retry or terminate? | [Retry and state transition](#retry-and-state-transition) | Read conditions, attempt counting and terminal-state requirements. |
+| Where does combined demand exceed capacity? | [Fan-in and bottleneck](#fan-in-and-bottleneck) | Read rate units, queue semantics and unknown overload behavior. |
+| How does data change at each stage? | [Staged data processing](#staged-data-processing) | Read boundary inputs, transformations and outputs. |
+| What belongs inside each system boundary? | [System architecture](#system-architecture-with-boundaries) | Read boundary meanings, membership and crossing directions. |
+| How do layers and shared columns relate? | [Layered architecture](#layered-architecture-with-teaching-boundaries) | Read layer semantics, relation directions and sidebar ownership. |
+
+Treat the table as a selection aid, not a requirement to use these exact compositions. For a capability inventory, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges) and use [recipe-capability-overview.json](../examples/recipe-capability-overview.json). For source mapping and business cards, use [the source/service recipe](visual-design.md#source-mapping-and-service-cards). Their [teaching sources](../examples/recipe-sources.json) state invented facts and unknowns separately from these relation-focused examples.
+
 ## Request and response
 
 Use this pattern when the reader must distinguish an initiating request from its returned result.

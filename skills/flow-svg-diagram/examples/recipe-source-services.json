@@ -1,0 +1,475 @@
+{
+  "version": 1,
+  "title": "来源转化与业务卡片 · 教学设定",
+  "theme": "light",
+  "viewport": {
+    "width": 1280,
+    "height": 560
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "source-heading",
+      "kind": "rect",
+      "x": 32,
+      "y": 20,
+      "width": 384,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "需求来源",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-heading",
+      "kind": "rect",
+      "x": 536,
+      "y": 20,
+      "width": 712,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "业务服务",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "sources",
+      "kind": "group",
+      "x": 32,
+      "y": 84,
+      "width": 384,
+      "height": 430,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2
+      }
+    },
+    {
+      "id": "services",
+      "kind": "group",
+      "x": 536,
+      "y": 84,
+      "width": 712,
+      "height": 430,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "number-0",
+      "kind": "rect",
+      "x": 20,
+      "y": 32,
+      "width": 48,
+      "height": 56,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "1",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-row-0",
+      "kind": "rect",
+      "x": 88,
+      "y": 32,
+      "width": 272,
+      "height": 108,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "类公开指南",
+            "style": {
+              "fontSize": 24,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "用于整理查询口径\n保留原文与出处",
+            "style": {
+              "fontSize": 20,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "number-1",
+      "kind": "rect",
+      "x": 20,
+      "y": 160,
+      "width": 48,
+      "height": 56,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "2",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-row-1",
+      "kind": "rect",
+      "x": 88,
+      "y": 160,
+      "width": 272,
+      "height": 108,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "类咨询入口",
+            "style": {
+              "fontSize": 24,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "窗口与线上咨询\n用于归并问题场景",
+            "style": {
+              "fontSize": 20,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "number-2",
+      "kind": "rect",
+      "x": 20,
+      "y": 288,
+      "width": 48,
+      "height": 56,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "21",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-row-2",
+      "kind": "rect",
+      "x": 88,
+      "y": 288,
+      "width": 272,
+      "height": 108,
+      "parentId": "sources",
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "项候选问题",
+            "style": {
+              "fontSize": 24,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "等待核实服务范围\n数量不代表交付承诺",
+            "style": {
+              "fontSize": 20,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-0",
+      "kind": "roundedRect",
+      "x": 0,
+      "y": 0,
+      "width": 348,
+      "height": 207,
+      "parentId": "services",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "指南检索",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "按主题查找公开材料\n展示来源与适用范围",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-1",
+      "kind": "roundedRect",
+      "x": 364,
+      "y": 0,
+      "width": 348,
+      "height": 207,
+      "parentId": "services",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "咨询分流",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "区分问题所属领域\n提示对应咨询入口",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-2",
+      "kind": "roundedRect",
+      "x": 0,
+      "y": 223,
+      "width": 348,
+      "height": 207,
+      "parentId": "services",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "问题归集",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "归并重复诉求\n保留待确认事项",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service-3",
+      "kind": "roundedRect",
+      "x": 364,
+      "y": 223,
+      "width": 348,
+      "height": 207,
+      "parentId": "services",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "内容维护",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "整理更新建议\n由责任人员核实口径",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "mapping",
+      "from": "sources",
+      "to": "services",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "需求映射",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      }
+    }
+  ],
+  "scenes": []
+}

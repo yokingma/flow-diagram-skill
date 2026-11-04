@@ -23,12 +23,19 @@ Before arranging new or revised geometry, read the entries whose conditions matc
 - **Current checks:** valid style fields can be checked, but the tool cannot infer a borderless design intention from a white fill.
 - **Still view:** inspect the heading on the actual background, including transparent exports on their carrying surface. Check separation from surrounding content.
 
-## Narrow cards with CJK or mixed-language content
+## Narrow cards and text wrapping
 
-- **Condition and symptom:** Chinese text, mixed scripts, long titles or several tags occupy a narrow card. Wrapping exceeds an estimate based on Latin character count; punctuation or a term can become stranded.
+- **Condition and symptom:** Long terms, titles or several tags occupy a narrow card in any language. CJK and mixed scripts also vary in glyph width; character counts alone cannot establish fit. Punctuation or a term can become stranded.
 - **Start with:** measure the complete content using the final width and actual typography, then allocate height and nearby space. Adjust width or organization before reducing text size. Preserve meaning when changing wording. See [content measurement](static-layout.md#structure-and-layout) and the [long-content card recipe](visual-design.md#repeated-cards-and-longer-content).
 - **Current checks:** `measure` gives deterministic content-height and line-count estimates. It does not report browser glyph pixels or prove that every possible line break reads well.
 - **Still view:** read titles, sentences, list items and tags at the intended display width. Check punctuation, term boundaries and tag emphasis, not only clipping.
+
+## Short labels and optical alignment
+
+- **Condition and symptom:** identical text anchors or padding still appear misaligned across letters, CJK glyphs, digits, punctuation or mixed fonts; a rounded shape's content safe area can add a visible inset.
+- **Start with:** establish a shared reading edge and text roles, then inspect actual rendered labels. A separate border group and borderless text rect can decouple decoration from the text inset when needed; keep their local coordinates explicit. See [source mapping and service cards](visual-design.md#source-mapping-and-service-cards).
+- **Current checks:** content measurement estimates line count and height. Coordinate equality or a browser bounding box is not a guarantee of optical centering, and a font-ready signal does not prove identical glyphs across hosts.
+- **Still view:** compare title starts, number columns, label centers and border gaps at the target size. If browser measurement assists a correction, record the font, coordinate system and measured condition; recheck visually after the change instead of applying a fixed offset to every font.
 
 ## Content changes after geometry is arranged
 

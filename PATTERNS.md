@@ -10,7 +10,7 @@ Guide regression tests belong in `tests/` with the complete suite. When relocati
 
 ## Regression resource ownership
 
-All 27 Skill test files live in `tests/`. Copy installed resources from `skills/flow-svg-diagram`; direct geometry/plan imports use that same installation directory. Own historical label-risk JSON and artifact-pixel fixtures in `tests/fixtures/`, with source attribution and no dependency on an old `.scratch/` tree. GIF tests import the repository's direct `gifuct-js` development dependency rather than the SDK package's dependencies or types. The repository consumer harness belongs in `scripts/`; its fail-closed prerequisite test is part of the full regression entry.
+Skill test files live in `tests/`. Copy installed resources from `skills/flow-svg-diagram`; direct geometry/plan imports use that same installation directory. Own historical label-risk JSON and artifact-pixel fixtures in `tests/fixtures/`, with source attribution and no dependency on an old `.scratch/` tree. GIF tests import the repository's direct `gifuct-js` development dependency rather than the SDK package's dependencies or types. The repository consumer harness belongs in `scripts/`; its fail-closed prerequisite test is part of the full regression entry.
 
 Run regressions from an independent repository copy with only its own installed development dependencies. Preserve browser-dependent test discovery and preconditions. A no-browser run must report the skipped browser cases; it does not satisfy the complete consumer/browser gate.
 
@@ -25,6 +25,14 @@ The initial installation unit is copied without behavior changes. Move repositor
 ## Completion and evidence
 
 Report file delivery and inspection coverage separately. A no-browser run can complete JSON, offline HTML, and SVG delivery while quality coverage stays incomplete. Finalization removes only the selected task workspace. Browser capture and actual visual review require their own evidence.
+
+## Teaching recipes and visual guidance
+
+Keep reader-question selection, preference/context resolution and composition rules in installed references, with conditional entry points from `SKILL.md`. Teaching recipes record invented facts and checked display conditions; fixed geometry is a starting point for that content, not a general visual threshold. Exercise new recipes through the copied installed CLI. Record actual viewing independently from synthetic test assertions and programmatic browser checks. Static composition and requested export formats remain separate choices.
+
+## Project preference preflight
+
+`references/preferences.md` owns the installed Agent file contract and lifecycle. Resolve preferences before authoring, retain existing revision design, and keep task context separate. The CLI does not manage this configuration. Verify guidance with isolated Agent scenarios and actual file operations; wording assertions do not establish workflow behavior. Project preference files sit outside task cleanup scope and are written only for an explicit persistence request.
 
 ## Acceptance and CI
 

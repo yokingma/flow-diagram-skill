@@ -48,6 +48,26 @@ Before implementation, record the visual choices in the task's existing plan or 
 
 Select a recipe when its structure matches the explanation. Keep the semantic pattern's source-supported objects and relationships; the recipe chooses their visual organization. Record concrete choices in the existing plan or draft. Combine recipes or use direct coordinates when needed. Static and animated presentation remain separate choices.
 
+#### Capability inventory without runtime edges
+
+Use when the reader needs to compare capabilities or ownership rather than follow a process. Structure: `scope heading / comparable capability cards / explicit status or limits`.
+
+Choose a shared title position, body hierarchy and card rhythm. Name the basis of grouping. Use explicit text for proposed, available and unknown states, including access or authorization that remains undecided. Add an edge only when this page must explain a source-supported relationship; a row of cards supplies no execution order.
+
+Starting point: [recipe-capability-overview.json](../examples/recipe-capability-overview.json). Its parallel cards compare three responsibilities and intentionally contain no edges. See [checked conditions](../examples/README.md#presentation-recipe-checks).
+
+#### Source mapping and service cards
+
+Use when the page must connect a compact account of sources or transformed needs to comparable services. Structure: `source heading / aligned source rows → labelled mapping channel → service heading / repeated cards`.
+
+1. Allocate the actual target display area using [delivery context](delivery-contexts.md) before laying out the two regions. Reserve a channel for the mapping explanation and keep headings on their regions' outer left edges.
+2. Give repeated source rows a shared number column, text column and row rhythm. Keep `number + object + context` as distinct roles; use `source heading + corresponding result` when the explanation is a mapping. A number describes only the quantity established by the source, never maturity or delivery commitment.
+3. Give services a title, core explanation and optional supporting state. Use body text for long names and sentences. Repeating a card title as a pill adds density without a new meaning; retain tags only for a distinct category, attribute or status.
+
+For short labels whose shape safe area prevents the intended reading edge, consider a border group with a separate borderless text rect. Measure its actual typography, account for parent-local coordinates and inspect the result. Ordinary structured cards remain suitable when their safe area fits the design; this composition is an option, not a replacement for all rounded nodes.
+
+Starting point: [recipe-source-services.json](../examples/recipe-source-services.json). The mapping is explanatory, not a runtime call. Its numbers, spacing and content are teaching choices; preserve the user's facts when adapting it. See [checked conditions](../examples/README.md#presentation-recipe-checks).
+
 #### Layered architecture and sidebar
 
 Use for comparing layers with repeated columns and governance or explanatory notes beside them. Structure: `layer heading / aligned columns → relationship channel → next layer`, with the sidebar outside the main channels.
@@ -186,6 +206,7 @@ Define each element's explanatory role before coordinating its appearance.
 - Decide whether each tag expresses a category, attribute, or state before choosing its text and color.
 - Reuse shape, type size, weight, and palette roles across comparable tags.
 - Use short phrases for tags. Place explanatory sentences in body text or supporting information.
+- Use a tag for information beyond the card's own title or grouping. When tags compete with the title, wrap into awkward fragments or repeat the same category, reorganize them as body text or subcards while preserving source meaning. Assess density at the target display size; character counts alone are not a universal limit.
 - Arrange multiple tags in a stable order with consistent spacing. When space is insufficient, use supported content structures to wrap them or adjust the layout.
 - Match visual emphasis to importance. Give ordinary attribute tags less visual weight than the title.
 
@@ -241,6 +262,8 @@ Use AI inspection to identify visible defects and provide observations for human
 3. For animation, inspect key paused states for continuity and use playback to assess pacing. State when only sampled still images were viewed.
 
 Record each observed issue with its specific location, visible symptom, and effect on understanding or visual quality. For example: "At the article column width, the supporting text in the retrieval node is crowded, and its pill tags attract more attention than the title, weakening the content hierarchy."
+
+For repeated cards and text in any language, compare title starts, number/text columns, adjacent gaps and text-to-border clearance at the recorded display size. Check whether short labels appear vertically centered and whether punctuation or digits disrupt the reading edge. Geometric anchors and browser bounding boxes provide evidence about position; optical balance still requires actual viewing. Describe a visible defect rather than inferring quality from equal coordinates alone.
 
 Use the existing [review workflows](visual-checks.md) and observation fields; record specific design problems in `issues`. For final SVG/PNG files, follow [target-size artifact inspection](artifact-evidence.md). Apply authorized corrections and inspect the affected views again.
 

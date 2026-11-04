@@ -1,4 +1,4 @@
-# FlowSVG skill 使用指南
+# Flow SVG Diagram 用户指南
 
 [English](flowsvg-skill-guide.md) · [文档地图](../README.md)
 
@@ -9,7 +9,7 @@ Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播�
 这份指南说明如何在支持 skill 的编程助手中安装和使用 Flow SVG Diagram。你用自然语言描述图解，助手先根据阅读问题选择表达模型，再组织来源支持的内容、编写图解 JSON、调用工具和解释检查结果。默认交付一个最终选定图解，包含可编辑 JSON、带播放控件的离线 HTML 和创作报告；草稿与检查截图只在任务期间保留，成功收尾后清理；只有明确要求时才保留完整历史。
 
 
-独立 Skill 版本准备为 `v0.1.0`；本地迁移尚未发布独立远端仓库或 release。请按下文从本地快照安装。精确 SDK 基线仍为 `flowsvg@0.2.2`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收，用户运行时不跟随 npm `latest`。
+首个独立 Skill 版本为准备中的 `0.1.0`。从 [flow-svg-diagram-skills](https://github.com/yokingma/flow-svg-diagram-skills) 获取源码，再按下文安装完整目录。需要可复现安装时，选择已有的发布标签或记录源码提交；manifest 中的版本号本身不证明 release 已发布。精确 SDK 基线仍为 `flowsvg@0.2.2`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收，用户运行时不跟随 npm `latest`。
 
 SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
 
@@ -58,12 +58,48 @@ skill 包含浏览器控制库，不包含浏览器程序，也不会自动下�
 
 ## 2. 安装到宿主
 
-将本仓库的整个 `skills/flow-svg-diagram/` 文件夹复制到下列位置之一。保留 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-svg-diagram`。只复制 `SKILL.md` 无法运行工具。
+普通安装推荐从任意项目使用 Skills CLI：
+
+```sh
+npx skills add yokingma/flow-svg-diagram-skills
+```
+
+CLI 会发现随仓库提供的 `flow-svg-diagram` Skill，并在交互过程中询问要安装哪个 Skill 以及目标 Agent。若要无交互地安装到当前用户的 Codex 全局目录，执行：
+
+```sh
+npx skills add yokingma/flow-svg-diagram-skills --global --agent codex --yes
+```
+
+不加 `--global` 时安装到当前项目。`npx skills list`、`npx skills check` 和 `npx skills update flow-svg-diagram` 可管理 CLI 创建的安装。shorthand 默认跟随仓库分支；需要可复现安装时请使用 release tag 或固定提交。使用 Skill 只需 Node 与 npm，无需安装仓库的 pnpm 开发依赖。
+
+手动安装或本地开发时，再克隆独立仓库或下载源码 ZIP，并将完整的 `skills/flow-svg-diagram/` 文件夹复制到下列位置之一。保留 `LICENSE`，以及 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-svg-diagram`。只复制 `SKILL.md` 无法运行工具。
 
 | 宿主 | 仅当前项目可用 | 当前用户的多个项目可用 | 显式调用 |
 | --- | --- | --- | --- |
 | Codex CLI / IDE 扩展 | `<项目>/.agents/skills/flow-svg-diagram/` | `~/.agents/skills/flow-svg-diagram/` | `$flow-svg-diagram`；也可通过 `/skills` 查找 |
 | Claude Code | `<项目>/.claude/skills/flow-svg-diagram/` | `~/.claude/skills/flow-svg-diagram/` | `/flow-svg-diagram` |
+
+首次为当前用户安装时，在克隆目录执行。以下命令要求目标 `flow-svg-diagram` 目录尚不存在。
+
+macOS/Linux（Codex）：
+
+```sh
+mkdir -p "$HOME/.agents/skills"
+cp -R skills/flow-svg-diagram "$HOME/.agents/skills/flow-svg-diagram"
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
+```
+
+Windows PowerShell（Codex；仅为安装示例，不作为 Windows 验收证据）：
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$HOME/.agents/skills" | Out-Null
+Copy-Item -Recurse -Path "skills/flow-svg-diagram" -Destination "$HOME/.agents/skills/flow-svg-diagram"
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
+```
+
+Claude Code 将 `.agents/skills` 换为 `.claude/skills`。仅为某项目安装时，使用表格中的目标项目路径。更新时先备份安装目录，再用所选版本的完整目录替换；合并复制可能残留已删除的脚本或参考资料。
 
 `~` 表示用户主目录，Windows 上通常是 `C:\Users\<用户名>`。其他宿主使用其已有的 skill 安装方式，并确保助手能读取该目录和执行 Node 命令。上述路径来自宿主官方文档，不表示已在所有宿主实测。
 
@@ -106,6 +142,22 @@ API 服务和数据库属于“订单平台”，客户端位于平台外。
 先展示全图，再依次演示请求和响应，最后回到全图。
 图解命名为 request-response，默认交付 JSON 和离线 HTML。
 ```
+
+## 3.1. 设计偏好、用途与展示尺寸
+
+新建和修订草稿会在五步流程前执行[项目偏好初始化](../../skills/flow-svg-diagram/references/preferences.md)。助手从当前工作目录或你明确指定的项目根读取 `.diagrams/.preferences.json`，复用已有选择，仅询问相关缺口；纯导出、校验和诊断保持原流程。修订时保留原图设计，除非本次要求明确改变它。
+
+你可以选择“仅本次”或“保存以后复用”。只有明确要求保存，才持久化风格、配色、字体、密度或参考方向。可以用 `defaults: true` 保存跟随默认的选择，并同时保存明确覆盖项。用途、尺寸、事实、关系、导出格式和布局仍属于本次任务。这是助手管理的项目文件，不是 CLI 设置或用户级配置。新建时，本次要求优先于项目约定、已保存偏好和 Skill 默认值；具体文件契约与操作规则以链接参考为准。
+
+可以单独说“把这个配色保存为项目偏好”“把项目密度改为疏朗”或“重置项目偏好”。重置只删除偏好文件。配置无效时保留原文件、不采用其中的值，助手说明问题后允许使用本次临时选择继续；保存或重置失败会明确报告。
+
+用途未知且你明确选择默认值或要求直接制作时，起点为 Web 静态构图：960×600 画布、假定 720 CSS px 展示宽度，以及浅色背景；已有偏好可以覆盖外观。默认交付仍为 JSON、暂停离线 HTML 和报告，SVG/PNG 仍需提出请求。未回复不等于选择默认值。保存视觉默认不等于把所有后续任务的用途都选为 Web。
+
+PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景，以及标题和页脚由幻灯片还是素材承载。已知 PPT 用途继续使用该上下文，缺少精确尺寸时记录假设。目标尺寸查看只覆盖相应条件，真实 PowerPoint/WPS 集成单独记录。动画请明确浏览器 HTML 播放还是显式请求 GIF；MP4、PPTX 和原生 PowerPoint 动画不在本技能导出能力内。
+
+需要导入幻灯片的图片时，请指定 SVG 或 PNG；否则会将格式选择纳入首次上下文询问。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
+
+[读者问题选择表](../../skills/flow-svg-diagram/references/semantic-patterns.md#choose-by-the-readers-question)用于选择能力全景、来源映射或流程等结构。[教学配方](../../skills/flow-svg-diagram/examples/README.md#presentation-recipe-checks)包含无连线能力全景、中文来源与业务卡片、全图常显的并行流动动画。复用组织方式时，替换为自己的事实和展示尺寸。
 
 ## 4. 根据指定资料创作
 
@@ -238,9 +290,23 @@ node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/e
 node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture --from v001
 ```
 
-第二条命令使用随包示例，生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于先验证不依赖浏览器的交付。直接运行命令不会代替助手的语义分析或实际视觉判断。
+第二条命令使用随包示例，生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于先验证不依赖浏览器的交付。直接运行命令不会代替助手的语义分析或实际视觉判断。随包架构教学示例保留已知的关系标签与分组重叠告警；应阅读报告并按授权范围处理，不能把这次命令验证当成无告警的设计模板。
 
 完整参数、隔离缓存和报告字段见[工具合同](../../skills/flow-svg-diagram/references/tool-contract.md)。环境准备、取消或导出失败见[故障恢复](../../skills/flow-svg-diagram/references/troubleshooting.md)。
+
+## 9. 必需质量覆盖
+
+报告将 `completion.delivery` 与 `completion.quality` 分开记录。`qualityCoverage` 列出字段、编译和布局检查、实际 `diagram.html` 状态，以及每个请求的 SVG/PNG 展示条件。未指定尺寸时，图片使用原生尺寸和解析后的主题背景。文件齐备时可以交付，但缺少浏览器或实际查看时质量保持 `incomplete`；未解决或暂缓的问题为 `needs-user-decision`。仅记录审查的后续版本会继承父版本的请求格式和图片身份，不能让先前的静态文件从必需覆盖中消失。
+
+提交预览、HTML 或正式 SVG/PNG 证据复核前，使用 `review-template` 从指定证据生成含真实 ID 和哈希的未查看模板。实际查看后再填写观察。详见[三类复核完整入参契约](../../skills/flow-svg-diagram/references/review-inputs.md)；无效提交会在分配版本或渲染之前失败。
+
+HTML 与预览复核追加独立记录，不重制或复制图解文件。相同提交复用原记录；不同观察追加保存。最终交付重新核对证据，并保留部分覆盖和所有未解决问题；后续无问题观察不能抹除早先问题。详见[记录身份与完整入参](../../skills/flow-svg-diagram/references/review-inputs.md)。
+
+正式图片复核记录保留产物与证据的独立来源、SDK、时点、镜头、导出背景、展示尺寸和承载背景。查看一个条件不覆盖其他条件。finalize 保留所有请求的 SVG/PNG 与命名批量文件，并再次核实来源；完全相同的复核不新增文件，后续观察仍保留历史问题。
+
+## 按需采集正式图片证据
+
+已有 SVG/PNG 使用 `evidence --from <revision> --name <name> --output <task-workspace>/history [--artifact-preview-settings <json>] --browser <prepared-executable>`。默认覆盖全部选定文件，后续请求累积展示条件。有效截图保留原身份复用，不准备运行时、不启动浏览器、不写文件；新截图初始未查看。将返回的 `evidence-<uuid>` 通过 `--evidence-from` 传给 `review-template` 和 `review`。缺图或截图损坏可以补采，源文件、原产物或身份元数据损坏必须先处理。详见[证据契约](../../skills/flow-svg-diagram/references/artifact-evidence.md)。
 
 ## 宿主官方说明
 
@@ -248,17 +314,3 @@ node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.wo
 
 - [Codex：Agent Skills](https://developers.openai.com/codex/skills/)
 - [Claude Code：Extend Claude with skills](https://code.claude.com/docs/en/skills)
-
-#### 必需质量覆盖
-
-报告将 `completion.delivery` 与 `completion.quality` 分开记录。`qualityCoverage` 列出字段、编译和布局检查、实际 `diagram.html` 状态，以及每个请求的 SVG/PNG 展示条件。未指定尺寸时，图片使用原生尺寸和解析后的主题背景。文件齐备时可以交付，但缺少浏览器或实际查看时质量保持 `incomplete`；未解决或暂缓的问题为 `needs-user-decision`。仅记录审查的后续版本会继承父版本的请求格式和图片身份，不能让先前的静态文件从必需覆盖中消失。
-
-提交预览、HTML 或正式 SVG/PNG 证据复核前，使用 `review-template` 从指定证据生成含真实 ID 和哈希的未查看模板。实际查看后再填写观察。详见[三类复核完整入参契约](../../skills/flow-svg-diagram/references/review-inputs.md)；无效提交会在分配版本或渲染之前失败。
-
-HTML 与预览复核现在追加独立记录，不重制或复制图解文件。相同提交复用原记录；不同观察追加保存。最终交付重新核对证据，并保留部分覆盖和所有未解决问题；后续无问题观察不能抹除早先问题。详见[记录身份与完整入参](../../skills/flow-svg-diagram/references/review-inputs.md)。
-
-正式图片复核记录保留产物与证据的独立来源、SDK、时点、镜头、导出背景、展示尺寸和承载背景。查看一个条件不覆盖其他条件。finalize 保留所有请求的 SVG/PNG 与命名批量文件，并再次核实来源；完全相同的复核不新增文件，后续观察仍保留历史问题。
-
-## 按需采集正式图片证据
-
-已有 SVG/PNG 使用 `evidence --from <revision> --name <name> --output <task-workspace>/history [--artifact-preview-settings <json>] --browser <prepared-executable>`。默认覆盖全部选定文件，后续请求累积展示条件。有效截图保留原身份复用，不准备运行时、不启动浏览器、不写文件；新截图初始未查看。将返回的 `evidence-<uuid>` 通过 `--evidence-from` 传给 `review-template` 和 `review`。缺图或截图损坏可以补采，源文件、原产物或身份元数据损坏必须先处理。详见[证据契约](../../skills/flow-svg-diagram/references/artifact-evidence.md)。

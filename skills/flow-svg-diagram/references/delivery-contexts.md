@@ -2,6 +2,18 @@
 
 Before drafting, establish the audience, the message to retain, the intended display width or occupied slide area, and the requested outputs. Select the [semantic pattern](semantic-patterns.md) independently of the destination. A pattern describes meaning; a delivery context describes where that meaning must be readable.
 
+## Preferences and missing context
+
+For new or revised drafts, resolve appearance through [project preference preflight](preferences.md) before the five authoring steps. Here, establish purpose, display dimensions, carrying background, playback and requested files from the conversation and existing task decisions. A purpose preset supplies starting dimensions and typography for that context.
+
+Collect relevant missing context in one concise question, combined with any preference gaps where practical. Reuse answers already given. Clarify missing facts or relationships that would change meaning before drafting. Ordinary visual adjustments within the agreed scope can proceed without another approval.
+
+When purpose is unknown and the user explicitly chooses “use defaults” or “just make it,” author a static Web explanation with a `960 × 600` canvas, an assumed `720 CSS px` display width and a light background unless an applicable preference overrides the appearance. Choose grouping and layout from the reader's question. An unanswered question is not a choice of defaults. A known PPT purpose keeps its presentation context even when precise placement dimensions are missing.
+
+Record the adopted preferences, display conditions and their sources (request, project convention, user preference or assumption) in the existing task plan and final explanation. Default files remain JSON, paused offline HTML and reports; static composition does not implicitly request SVG or PNG. An unchanged export-only task preserves its input and requested formats.
+
+PPT placement determines layout, while requested file kinds determine exports. If the user needs a slide-import image but has not selected a format, include that choice in the initial context question. If they explicitly choose to proceed with default files, state that the delivery contains HTML/JSON/reports and that no slide-import image was requested; avoid implying it is already an integrated slide asset.
+
 ## Static assets for presentations
 
 Use the user's slide ratio and occupied area. A full-slide 16:9 canvas can start at `viewport: {"width": 1280, "height": 720}` when appropriate; local assets use their actual allocated aspect ratio. Neither choice creates PPTX or native PowerPoint shapes.
@@ -9,6 +21,16 @@ Use the user's slide ratio and occupied area. A full-slide 16:9 canvas can start
 Keep enough boundary and relationship context for the image to stand alone. Choose an SVG time that explains the intended state; the time-zero overview is an inspection projection, not a guarantee that every object is visible. Use the actual report's compiled timing. For a sequence that cannot be expressed faithfully in one frame, propose several images or an explicitly requested animation. Any aggregation or omission that changes meaning requires the user's decision.
 
 Inspect the exported image at its intended slide size. For full-slide material, 1280 CSS pixels is a useful reference width; a local asset needs its own allocated width. If no local width is supplied, state the assumed width and limit the readability claim to it. SVG import and GIF playback depend on the presentation software.
+
+Before choosing geometry, record full-slide versus local placement, available width and height, safe margins, and whether the slide or the asset carries the title, draft marker and footer. Use dimensions from the actual content area when supplied. When placement is unknown, state an authoring assumption and check that condition; verify again after the real placement is known.
+
+Use both dimensions for proportional fit: `s = min(availableWidth / canvasWidth, availableHeight / canvasHeight)`. Express available dimensions in the same reference units; displayed text size is authored size multiplied by `s`. For example, a `1280 × 560` asset in a `1200 × 525` reference area has `s = 0.9375`; 24-unit body text displays at 22.5 reference pixels. This is not a conversion to PowerPoint points. A smaller slide content height can reduce the scale further even when width is unchanged.
+
+Target-size image inspection covers the recorded dimensions and backdrop. Actual PowerPoint/WPS placement and playback are separate checks: record them as unverified until performed. Complete files may be delivered with disclosed inspection gaps; image or HTML checks alone do not establish slide integration.
+
+### Animated presentation material
+
+For “animation for PPT,” establish the playback carrier before choosing animation: offline HTML plays in a browser; SVG/PNG preserve one static frame; GIF requires an explicit request and software-specific playback checks. MP4, PPTX and native PowerPoint animation are outside this skill's export capability. State which carrier was produced and whether the target presentation software was actually tested. See [animation purpose](timeline.md#choose-the-animation-purpose) and [export limits](export.md).
 
 ## Static illustrations in web content
 

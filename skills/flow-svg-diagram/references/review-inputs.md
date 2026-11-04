@@ -25,10 +25,10 @@ All review roots are objects with exactly `reviewer`, `viewed`, and the kind-spe
 
 | Field | What to describe from the actual viewed image |
 | --- | --- |
-| `readingOrder` | Entry point, hierarchy and relationship directions. |
-| `density` | Text readability and information density at the recorded display size. |
-| `occlusion` | Visible clipping, overlap and connection clearance. |
-| `narrative` | Meaning of the viewed state and consistency with the intended explanation. |
+| `readingOrder` | Entry point, hierarchy and relationship directions; for repeated cards, compare title starts and number/text reading edges. |
+| `density` | Text readability and information density at the recorded display size; identify crowded tags, fragmented wording or repeated categories. |
+| `occlusion` | Visible clipping, overlap and connection clearance; compare card padding, adjacent gaps and short-label centering where relevant. |
+| `narrative` | Meaning of the viewed state and consistency with the intended explanation, including parallel versus sequential organization and unknown resource status. |
 
 `issues` is an explicit array. Use `[]` when no issue was observed in that viewed scope. Each issue is an object with exactly two nonempty strings: `reason` and `nextStep`. Unknown fields, missing required fields, incorrect types, duplicate IDs and blank strings fail with a field-level diagnostic. Comments and trailing commas are invalid JSON.
 

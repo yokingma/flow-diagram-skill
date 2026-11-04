@@ -4,7 +4,7 @@ Start with the message the reader should retain. List each source-supported obje
 
 ## Delivery context
 
-When the brief specifies presentation/web placement, target display size or interactive playback requirements, read [delivery contexts](delivery-contexts.md) before choosing canvas and density. For requests, retry/state transitions, fan-in/bottlenecks, staged processing or system boundaries, read [semantic patterns](semantic-patterns.md) for required evidence, common misrepresentations and static-frame choices.
+For a new or revised draft, read [delivery contexts](delivery-contexts.md) before choosing canvas and density. Reuse known preferences and purpose; follow its missing-context rule when information is absent. Read [semantic patterns](semantic-patterns.md#choose-by-the-readers-question) to select an organization by the reader's question, including inventories without runtime edges as well as relationship and process diagrams.
 
 ## Layout plan workflow
 

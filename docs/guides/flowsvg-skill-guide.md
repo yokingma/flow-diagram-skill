@@ -1,4 +1,4 @@
-# FlowSVG skill user guide
+# Flow SVG Diagram user guide
 
 [简体中文](flowsvg-skill-guide.zh-CN.md) · [Documentation map](../README.md)
 
@@ -9,7 +9,7 @@ The skill authors the diagram document and guides its inspection. The FlowSVG SD
 This guide explains how to install and use Flow SVG Diagram in a coding assistant that supports skills. Describe a diagram in natural language. The assistant chooses an expression model from the reader's question, organizes source-supported content, writes diagram JSON, runs the tools and explains the checks. Default delivery presents one selected final revision with editable JSON, offline HTML with playback controls, and an authoring report; drafts and inspection images are temporary and removed after successful finalization. Full history is retained only on explicit request.
 
 
-The independent Skill version is prepared as `v0.1.0`; no independent remote repository or release has been published by this local migration. Install from the local snapshot below. The exact SDK baseline remains `flowsvg@0.2.2`. SDK upgrades require an explicit manifest/lock update and independent acceptance; user runs never follow npm `latest`.
+The initial independent Skill version is `0.1.0`, under preparation. Get the source from [flow-svg-diagram-skills](https://github.com/yokingma/flow-svg-diagram-skills), then install the complete directory below. For reproducibility, select a published release tag when available or record the checkout commit; the version in the manifest alone does not establish a published release. The exact SDK baseline remains `flowsvg@0.2.2`. SDK upgrades require an explicit manifest/lock update and independent acceptance; user runs never follow npm `latest`.
 
 ## Documentation and task routing
 
@@ -60,12 +60,48 @@ The workflow requires an explicit static draft and plan. After `measure`, run `l
 
 ## 2. Install in a host
 
-Copy this repository's entire `skills/flow-svg-diagram/` directory to one of the locations below. Preserve the relative positions of `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` configures the Codex display name and short description; the invocation name is `$flow-svg-diagram`. Copying only `SKILL.md` cannot run the tools.
+For ordinary installation, use the Skills CLI from any project:
+
+```sh
+npx skills add yokingma/flow-svg-diagram-skills
+```
+
+The CLI discovers the bundled `flow-svg-diagram` Skill and interactively asks which Skill and Agent to install. For a non-interactive global Codex installation, use:
+
+```sh
+npx skills add yokingma/flow-svg-diagram-skills --global --agent codex --yes
+```
+
+Without `--global`, the installation is project-local. `npx skills list`, `npx skills check`, and `npx skills update flow-svg-diagram` manage installations created by the CLI. The shorthand follows the repository's default branch; use a release tag or commit for reproducible setup. End users need Node and npm, not the repository's pnpm development dependencies.
+
+For a manual or local-development installation, clone the independent repository or download its source ZIP, then copy the entire `skills/flow-svg-diagram/` directory to one of the locations below. Keep `LICENSE` and preserve the relative positions of `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` configures the Codex display name and short description; the invocation name is `$flow-svg-diagram`. Copying only `SKILL.md` cannot run the tools.
 
 | Host | Current project only | Multiple projects for the current user | Explicit invocation |
 | --- | --- | --- | --- |
 | Codex CLI / IDE extension | `<project>/.agents/skills/flow-svg-diagram/` | `~/.agents/skills/flow-svg-diagram/` | `$flow-svg-diagram`; also discoverable through `/skills` |
 | Claude Code | `<project>/.claude/skills/flow-svg-diagram/` | `~/.claude/skills/flow-svg-diagram/` | `/flow-svg-diagram` |
+
+For a first user-level installation, run from the cloned repository. These commands require that the destination `flow-svg-diagram` directory does not already exist.
+
+macOS/Linux (Codex):
+
+```sh
+mkdir -p "$HOME/.agents/skills"
+cp -R skills/flow-svg-diagram "$HOME/.agents/skills/flow-svg-diagram"
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
+```
+
+Windows PowerShell (Codex; installation example, not Windows acceptance evidence):
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$HOME/.agents/skills" | Out-Null
+Copy-Item -Recurse -Path "skills/flow-svg-diagram" -Destination "$HOME/.agents/skills/flow-svg-diagram"
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
+node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
+```
+
+For Claude Code, use `.claude/skills` in place of `.agents/skills`. For project-only installation, use the target project's directory in the table rather than your home directory. To update, back up the installed directory, then replace it with the complete selected version; merging copies can retain removed scripts or references.
 
 `~` means the user's home directory, usually `C:\Users\<username>` on Windows. For other hosts, use their existing skill installation mechanism and ensure that the assistant can read the directory and execute Node commands. These locations come from host documentation; they do not establish tested support for every host.
 
@@ -109,6 +145,22 @@ Use the flow-svg-diagram skill to show a client sending a request to an API serv
 Start with the full diagram, show the request and response in order, then return to the full diagram.
 Name the diagram request-response and deliver the default JSON and offline HTML.
 ```
+
+## 3.1. Preferences, purpose and display size
+
+Before the five authoring steps, new and revised drafts run [project preference preflight](../../skills/flow-svg-diagram/references/preferences.md). The assistant reads `.diagrams/.preferences.json` under the current working directory, or a project root you explicitly specify. It reuses known choices and asks only for relevant gaps; pure exports, validation and diagnosis keep their existing flow. For revisions, existing design remains in place unless your request changes it.
+
+You can choose “only this time” or “save for reuse.” Only an explicit save request persists visual style, palette, typography, density or reference direction. Defaults can be saved as `defaults: true`, alongside explicit overrides. Purpose, dimensions, facts, relationships, output formats and layout remain task decisions. This is a project file managed by the assistant, not a CLI setting or user-wide profile. For new drafts, current requirements take priority over project conventions, saved preferences and Skill defaults. Configuration location, schema and update rules are defined in the linked reference.
+
+Ask “save this palette for this project,” “change project density to airy,” or “reset project preferences” to manage the file. Reset removes only the preference file. Invalid configuration stays intact and supplies no values; the assistant explains the problem and lets you continue with task-only choices. Failed saves or resets are reported rather than treated as completed.
+
+If the purpose is unknown and you explicitly choose defaults or ask the assistant to proceed, the starting point is a static Web composition with a 960×600 canvas, assumed 720 CSS px display width and light background unless your preferences specify another appearance. Default delivery remains JSON, paused offline HTML and reports; SVG/PNG still require a request. An unanswered question does not select defaults. Saving visual defaults does not select Web as the purpose of every future task.
+
+For PPT assets, specify full-slide or local placement, available width **and height**, background, and whether the slide or the asset carries the title and footer. Known PPT use stays in that context; missing exact dimensions are recorded as assumptions. Target-size viewing covers those conditions; actual PowerPoint/WPS integration is reported separately. For animation, specify browser HTML playback or an explicitly requested GIF; MP4, PPTX and native PowerPoint animation are outside this skill's export capability.
+
+If you need an image to import into a slide, specify SVG or PNG; otherwise that choice is included in the initial context question. Choosing default files produces HTML/JSON/reports, with no implicit slide-import image.
+
+The [reader-question table](../../skills/flow-svg-diagram/references/semantic-patterns.md#choose-by-the-readers-question) helps choose capability inventories, source mappings or processes. The [teaching recipes](../../skills/flow-svg-diagram/examples/README.md#presentation-recipe-checks) include a no-edge capability overview, Chinese source/service cards and an all-visible parallel-flow animation. Reuse their organization with your own facts and dimensions.
 
 ## 4. Create from designated sources
 
@@ -241,9 +293,23 @@ node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/e
 node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture --from v001
 ```
 
-The second command generates temporary JSON, HTML and reports from the bundled example. The third publishes final files and removes this task workspace. `--browser none` explicitly skips screenshots so you can verify delivery without a browser. Direct CLI execution does not replace the assistant's semantic analysis or actual visual judgment.
+The second command generates temporary JSON, HTML and reports from the bundled example. The third publishes final files and removes this task workspace. `--browser none` explicitly skips screenshots so you can verify delivery without a browser. Direct CLI execution does not replace the assistant's semantic analysis or actual visual judgment. The bundled architecture teaching example retains known relationship-label/group-overlap warnings; read the report and resolve them within the requested scope rather than treating this smoke test as a clean design template.
 
 See [the tool contract](../../skills/flow-svg-diagram/references/tool-contract.md) for full arguments, isolated caches and report fields. See [troubleshooting](../../skills/flow-svg-diagram/references/troubleshooting.md) for preparation, cancellation or export failures.
+
+## 9. Required quality coverage
+
+The report separates `completion.delivery` from `completion.quality`. `qualityCoverage` names the structural checks, the actual `diagram.html` states and each requested SVG/PNG display surface. If no target size is specified, an image uses its intrinsic dimensions and the resolved theme backdrop. A complete file set can be delivered while quality is `incomplete` when a browser or actual viewing is unavailable; unresolved or deferred warnings are `needs-user-decision`. Review-only revisions carry the parent's requested formats and artifact identities so an earlier static file cannot disappear from the required coverage.
+
+Before submitting preview, HTML or SVG/PNG evidence reviews, use `review-template` to generate an unviewed form with registered IDs and hashes. Fill observations only after viewing. Read the [complete three-kind input contracts](../../skills/flow-svg-diagram/references/review-inputs.md); invalid submissions fail before allocating a revision or rendering.
+
+HTML and preview review append independent records without rendering or copying diagram files. Identical submissions reuse the same record. Finalization revalidates their source evidence and retains partial coverage and all unresolved observations; a later clean review does not erase an earlier issue. See [record identity and complete inputs](../../skills/flow-svg-diagram/references/review-inputs.md).
+
+Formal-image review records preserve exact artifact/evidence sources, SDK, time, camera, export background, display size and carrying backdrop. One reviewed surface does not cover another. Finalization retains all requested SVG/PNG and named batch files and revalidates the sources; repeated identical reviews write no new files, while later observations keep prior issues.
+
+## On-demand image evidence
+
+Use `evidence --from <revision> --name <name> --output <task-workspace>/history [--artifact-preview-settings <json>] --browser <prepared-executable>` for existing SVG/PNG. Defaults cover every selected file; later requests accumulate required conditions. Valid captures reuse their original identities without runtime, browser or writes. New captures remain unviewed. Pass the returned `evidence-<uuid>` to `review-template` and `review` with `--evidence-from`. See [the evidence contract](../../skills/flow-svg-diagram/references/artifact-evidence.md) for partial recovery and identity checks.
 
 ## Official host documentation
 
@@ -251,17 +317,3 @@ Installation paths and explicit invocation methods were checked on 2026-10-27. H
 
 - [Codex: Agent Skills](https://developers.openai.com/codex/skills/)
 - [Claude Code: Extend Claude with skills](https://code.claude.com/docs/en/skills)
-
-#### Required quality coverage
-
-The report separates `completion.delivery` from `completion.quality`. `qualityCoverage` names the structural checks, the actual `diagram.html` states and each requested SVG/PNG display surface. If no target size is specified, an image uses its intrinsic dimensions and the resolved theme backdrop. A complete file set can be delivered while quality is `incomplete` when a browser or actual viewing is unavailable; unresolved or deferred warnings are `needs-user-decision`. Review-only revisions carry the parent's requested formats and artifact identities so an earlier static file cannot disappear from the required coverage.
-
-Before submitting preview, HTML or SVG/PNG evidence reviews, use `review-template` to generate an unviewed form with registered IDs and hashes. Fill observations only after viewing. Read the [complete three-kind input contracts](../../skills/flow-svg-diagram/references/review-inputs.md); invalid submissions now fail before allocating a revision or rendering.
-
-HTML and preview review now append independent records without rendering or copying diagram files. Identical submissions reuse the same record. Finalization revalidates their source evidence and retains partial coverage and all unresolved observations; a later clean review does not erase an earlier issue. See [record identity and complete inputs](../../skills/flow-svg-diagram/references/review-inputs.md).
-
-Formal-image review records preserve exact artifact/evidence sources, SDK, time, camera, export background, display size and carrying backdrop. One reviewed surface does not cover another. Finalization retains all requested SVG/PNG and named batch files and revalidates the sources; repeated identical reviews write no new files, while later observations keep prior issues.
-
-## On-demand image evidence
-
-Use `evidence --from <revision> --name <name> --output <task-workspace>/history [--artifact-preview-settings <json>] --browser <prepared-executable>` for existing SVG/PNG. Defaults cover every selected file; later requests accumulate required conditions. Valid captures reuse their original identities without runtime, browser or writes. New captures remain unviewed. Pass the returned `evidence-<uuid>` to `review-template` and `review` with `--evidence-from`. See [the evidence contract](../../skills/flow-svg-diagram/references/artifact-evidence.md) for partial recovery and identity checks.

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "doctor": "node skills/flow-svg-diagram/scripts/flowsvg.mjs doctor",
-    "test:guides": "vitest run tests/authoring-skill-guidance.test.ts tests/authoring-skill-layered-example.test.ts",
+    "test:guides": "vitest run tests/authoring-skill-guidance.test.ts tests/authoring-skill-layered-example.test.ts tests/authoring-skill-presentation-recipes.test.ts",
     "test:skill": "vitest run tests/authoring-skill",
     "test": "pnpm test:skill",
     "verify:consumer": "node scripts/verify-authoring-skill.mjs"

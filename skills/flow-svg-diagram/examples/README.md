@@ -14,6 +14,22 @@ The following actual SVGs were rendered at time 0 with the locked SDK 0.2.2 and 
 
 No clipping or text overlap was observed in these viewed final surfaces. These are observations, not a zero-defect guarantee. The checks did not cover other fonts, operating systems, narrower placements, dark backgrounds or actual offline HTML. The original semantic examples keep their separately documented limitations; these starting points do not retroactively approve them.
 
+## Presentation recipe checks
+
+On 2026-11-03, the following neutral recipes were generated with the locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These checks are separate from the earlier recipe checks above.
+
+| Teaching recipe | Canvas; checked SVG/PNG display size | Actual observations |
+| --- | --- | --- |
+| [No-edge capability overview](recipe-capability-overview.json) | 960 × 600; 720 × 450 CSS px | Three parallel responsibility cards share title/body starts and padding. Existing responsibilities, the proposed capability and unknown authorization/launch conditions remain explicit. No edge implies an execution order. One static HTML state at 0ms was viewed. |
+| [Source mapping and service cards](recipe-source-services.json) | 1280 × 560; 1200 × 525 CSS px | The 1/2/21 number column is separate from source descriptions. Four service cards share reading edges and spacing. The inter-region arrow means a group-level needs mapping, not runtime calls or a promise to deliver 21 items. One static HTML state at 0ms was viewed. |
+| [All-visible parallel flow](recipe-parallel-flow.json) | 960 × 720; 720 × 540 CSS px | Both nodes, descriptions and relationship notes remain visible. Two independent paths transfer in the same direction; notes sit outside the marker paths. Twelve HTML states were viewed across opening, three repeated flows and the final hold. |
+
+No clipping, text overlap or marker/text collision was observed in these final viewed surfaces. Shared card heights leave deliberate open space; this is a composition choice rather than an automatic quality score. Invented facts and limits are recorded in [recipe-sources.json](recipe-sources.json).
+
+The animation compiles to 9000ms: an 800ms opening, three 2400ms parallel-flow beats and a 1000ms final hold. Viewed HTML sample times were `0, 0, 800, 925, 2000, 3200, 3325, 4400, 5600, 5725, 6800, 9000` ms. The bounded sample plan omitted the 8000ms beat boundary. Programmatic playback advanced and paused successfully; viewing these screenshots does not establish continuous visual playback inspection. The SVG/PNG checks cover only time 0.
+
+These observations cover the stated sizes and host. Actual PowerPoint/WPS placement and playback, other fonts/platforms/backgrounds, narrower placements and continuous visual playback were not checked. The original nine-page customer case was not independently revalidated. Neither these examples nor passing checks establish user aesthetic approval or a measured reduction in rework.
+
 ## Use a recipe
 
 Copy the selected JSON into the task workspace and adapt source-supported content. [recipe-sources.json](recipe-sources.json) records the invented facts and derivations used for these examples; replace that metadata with the user's real sources for a real task. Measure with the document's actual typography after changing widths or content, then use the existing validate, author, evidence and review workflow. Read [task workspace and retention rules](../references/tool-contract.md#task-workspace) before saving files.

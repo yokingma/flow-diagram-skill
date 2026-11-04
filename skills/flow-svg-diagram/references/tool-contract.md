@@ -25,6 +25,8 @@ A complete cache is usable offline. npm must still be available. A first uncache
 
 ## Task workspace
 
+Persistent project design preferences follow [their separate Agent contract](preferences.md). They are outside individual task workspaces; the following rules govern production drafts, helpers and evidence.
+
 Resolve the chosen working directory to its canonical real path before the first saved command, and derive workspace paths from that directory. Use that same real directory for later commands. Path aliases such as macOS `/tmp` versus `/private/tmp` can produce source paths that review-template or finalization rejects, even when both names reach the same files. Preserve an affected task; start a fresh canonical workspace rather than editing saved source reports.
 
 Before writing task files, create `.diagrams/.work/<diagram-name>/<task-id>/` under the user's chosen working directory. Choose a fresh task ID, such as a timestamp with a unique suffix, to keep concurrent tasks separate. Pass `--output <task-workspace>/history` to saved authoring, export, evidence and review calls. Read-only `validate --input` needs no history path; `validate --from` uses this history root to locate its explicit source. Keep commands running from the chosen working directory so relative CLI output paths stay correct. The finalization command accepts only real task directories under `.diagrams/.work/<name>/`; symlinked and broader directories are rejected.

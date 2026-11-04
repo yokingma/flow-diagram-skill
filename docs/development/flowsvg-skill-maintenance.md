@@ -1,4 +1,4 @@
-# FlowSVG skill maintenance
+# Flow SVG Diagram maintenance
 
 This is the repository entry for maintaining the FlowSVG authoring skill. For installation, prompts, outputs and revisions, use the [English user guide](../guides/flowsvg-skill-guide.md) or [中文用户指南](../guides/flowsvg-skill-guide.zh-CN.md).
 
@@ -9,6 +9,7 @@ This is the repository entry for maintaining the FlowSVG authoring skill. For in
 | Human user | [English guide](../guides/flowsvg-skill-guide.md) · [中文指南](../guides/flowsvg-skill-guide.zh-CN.md) | Installation, task selection, exports, revisions and limits |
 | Agent | [SKILL.md](../../skills/flow-svg-diagram/SKILL.md) | Execution order, decision gates and completion reporting |
 | Codex interface | [agents/openai.yaml](../../skills/flow-svg-diagram/agents/openai.yaml) | Display name and short UI description; the invocation name is `$flow-svg-diagram` |
+| Maintainer | This guide, [patterns](flowsvg-skill-patterns.md), [current changelog](../../CHANGELOG.md), [release procedure](../releasing.md) | Installation boundary, verification, implementation conventions and history |
 | Layout workflow | [Static layout and layout-plan workflow](../../skills/flow-svg-diagram/references/static-layout.md) · [layout-plan contract](../../skills/flow-svg-diagram/references/layout-plan.md) | Agent semantic choices, deterministic geometry and review hand-off |
 | Authoring | [Document model](../../skills/flow-svg-diagram/references/document-model.md), [static layout](../../skills/flow-svg-diagram/references/static-layout.md), [semantic patterns](../../skills/flow-svg-diagram/references/semantic-patterns.md), [delivery contexts](../../skills/flow-svg-diagram/references/delivery-contexts.md) | Diagram structure, relationships and display context |
 | Visual design | [Visual design](../../skills/flow-svg-diagram/references/visual-design.md) | Shared quality standards, context-specific direction, production recipes and observations for human review |
@@ -19,6 +20,8 @@ This is the repository entry for maintaining the FlowSVG authoring skill. For in
 
 The layout-plan workflow is the single command-order reference for draft, measurement, layout, validation, author/review and finalization. Keep its HTML-review and target-size evidence branches explicit; do not copy that sequence into the main skill or user guides. Keep visual production rules in the visual design reference and technical field and evidence contracts in their existing references. Reported quality states describe recorded checks and coverage; the user judges the final design.
 
+Project preference preflight and file management are Agent rules in [preferences.md](../../skills/flow-svg-diagram/references/preferences.md); purpose and display defaults remain in `delivery-contexts.md`. The CLI does not read or write preferences. Keep the preference contract in that single installed reference, including default markers, revisions, explicit persistence, invalid files and reset recovery. Keep bilingual guides aligned with those rules. Neutral presentation recipes in `examples/` carry their invented source metadata; copied-install tests verify content fit and exports, while the example index records independently viewed conditions and limits. Add visual questions within the existing four observation fields unless a separate contract change is explicitly designed.
+
 The complete human user guides and this maintenance guide belong in project `docs/`. Root READMEs and the [documentation map](../README.md#skill-users) provide discovery. Keep the English and Chinese user guides aligned by task, prerequisites, defaults, failure behavior and examples; `SKILL.md` is an Agent contract, not an English substitute for a user guide.
 
 ## Ownership and independent releases
@@ -28,7 +31,7 @@ The Skill repository owns authoring, layout plans, checks, review records, deliv
 
 ## Installation boundary
 
-The standalone installation unit is `skills/flow-svg-diagram/`. Preserve `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` supplies optional Codex UI metadata; it does not add runtime or tool dependencies. Automatic skill selection remains enabled by default. See [official skill metadata](https://developers.openai.com/codex/skills/#optional-metadata) for the host configuration. The tools run through Node 20+ and npm without source-workspace dependencies. See [ADR 0006](../adr/0006-authoring-skill-uses-public-sdk.md) for the integration decision.
+The standalone installation unit is `skills/flow-svg-diagram/`. Preserve `LICENSE`, `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` supplies optional Codex UI metadata; it does not add runtime or tool dependencies. Automatic skill selection remains enabled by default. See [official skill metadata](https://developers.openai.com/codex/skills/#optional-metadata) for the host configuration. The tools run through Node 20+ and npm without source-workspace dependencies. See [ADR 0006](../adr/0006-authoring-skill-uses-public-sdk.md) for the integration decision.
 
 An installed skill needs no README or full human user guide. All bundled document references, module imports, metadata assets, examples and runtime resources must resolve within the copied installation unit. Do not reference source-repository files or sibling skills. User-selected inputs, output directories, the isolated dependency cache and prepared browser executables are external runtime locations, not bundled resources. Keep runtime instructions and required examples inside the unit. The CLI's actual commands, cache behavior and report contract are defined in [the tool contract](../../skills/flow-svg-diagram/references/tool-contract.md).
 
@@ -57,7 +60,7 @@ node scripts/verify-authoring-skill.mjs --skill skills/flow-svg-diagram --browse
 
 This script is repository maintainer tooling, outside the installation unit. It records actual versions, hashes and contract outcomes. Missing prerequisites or unexecuted required contracts cause a nonzero exit status. The Node 18 executable tests rejection of an unsupported runtime; it is not the supported runtime for authoring.
 
-For documentation changes, check local paths and Markdown anchors from both root READMEs and the documentation map. Copy the entire skill outside the repository, then verify every bundled reference stays inside that copy and resolves. Check Markdown links, paths in prose and commands, metadata assets, script imports, runtime file dependencies and archive contents. See the [repeatable link and installation checks](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/.scratch/documentation-structure/acceptance.md#可重复的本地链接检查) for the Markdown portion. Run the user guide's `doctor`, browser-free `author` and `finalize` examples from a separate working directory with an isolated cache to verify that the copied skill needs no project documentation.
+For documentation changes, check local paths and Markdown anchors from both root READMEs and the documentation map. Copy the entire skill outside the repository, then verify every bundled reference stays inside that copy and resolves. Check Markdown links, paths in prose and commands, metadata assets, script imports, runtime file dependencies and archive contents. Check each relative Markdown destination from its containing file, each heading fragment against the target heading, and each bundled link against the copied installation root. The copied `LICENSE` must match the root license. Historical source links support provenance only; the current checks must work from this repository. Run the user guide's `doctor`, browser-free `author` and `finalize` examples from a separate working directory with an isolated cache to verify that the copied skill needs no project documentation.
 
 ## CI and platform evidence
 

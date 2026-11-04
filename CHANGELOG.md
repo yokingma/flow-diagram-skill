@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add Agent-managed project preference preflight before the five authoring steps, with explicit save/update/reset at `.diagrams/.preferences.json`, versioned descriptive fields and a follow-defaults marker. Preserve existing revision design and skip preference questions for pure exports, validation and diagnosis.
+- Repair semantic-pattern branch pointers, expose optical-alignment and wrapping guidance across languages, and make the source/service recipe independent of PPT placement. Sync bilingual guides and record preference-operation trials separately from visual acceptance.
+
+- Reuse available design preferences and delivery context before drafting; ask once for relevant gaps. After the user chooses defaults, use a Web static composition without changing default delivery formats.
+- Add capability-inventory and source/service composition guidance, presentation content-area sizing, mixed-script alignment observations and persistent relationship-flow animation guidance.
+- Add three neutral teaching recipes and copied-install regression coverage for content fit, finite layout checks and export completeness. Preserve the exact SDK baseline and keep automatic visual lint outside this change.
+
 ## 0.1.0 — independent repository preparation
 
 - Copy the complete Flow SVG Diagram installation unit into `skills/flow-svg-diagram` from the recorded FlowSVG source snapshot.

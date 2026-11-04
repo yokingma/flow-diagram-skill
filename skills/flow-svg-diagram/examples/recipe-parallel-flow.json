@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "title": "关系并行流动 · 教学设定",
+  "theme": "light",
+  "viewport": {
+    "width": 960,
+    "height": 720
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "heading",
+      "kind": "rect",
+      "x": 48,
+      "y": 32,
+      "width": 864,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "全图常显 · 关系并行流动",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source",
+      "kind": "roundedRect",
+      "x": 64,
+      "y": 288,
+      "width": 224,
+      "height": 168,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "资料站",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "提供公开资料",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "desk",
+      "kind": "roundedRect",
+      "x": 672,
+      "y": 288,
+      "width": 224,
+      "height": 168,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "服务台",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "参考资料与提示",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "limits",
+      "kind": "rect",
+      "x": 48,
+      "y": 676,
+      "width": 864,
+      "height": 32,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "教学设定：两条独立传递关系；重复三轮仅为演示节奏，不表示业务吞吐。",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "guides-label",
+      "kind": "rect",
+      "x": 400,
+      "y": 106,
+      "width": 160,
+      "height": 30,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "公开指南",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#246a86"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "notices-label",
+      "kind": "rect",
+      "x": 400,
+      "y": 620,
+      "width": 160,
+      "height": 30,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "服务提示",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#246a86"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "guides",
+      "from": "source",
+      "to": "desk",
+      "fromPort": "top",
+      "toPort": "top",
+      "route": "curved",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      }
+    },
+    {
+      "id": "notices",
+      "from": "source",
+      "to": "desk",
+      "fromPort": "bottom",
+      "toPort": "bottom",
+      "route": "curved",
+      "style": {
+        "stroke": "#658696",
+        "strokeWidth": 2
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "parallel",
+      "label": "常显关系与三轮并行流动",
+      "beats": [
+        {
+          "durationMs": 800,
+          "caption": "全图常显；两条箭头均表示从资料站到服务台的信息传递。",
+          "actions": []
+        },
+        {
+          "durationMs": 2400,
+          "caption": "两类资料并行流动；重复仅为演示，不表示请求或响应时序。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2400,
+          "caption": "两类资料并行流动；重复仅为演示，不表示请求或响应时序。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2400,
+          "caption": "两类资料并行流动；重复仅为演示，不表示请求或响应时序。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "演示结束，保留完整关系；可暂停或回看。",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

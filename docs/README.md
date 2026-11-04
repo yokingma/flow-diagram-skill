@@ -5,6 +5,7 @@
 ## Skill users
 
 - [English user guide](guides/flowsvg-skill-guide.md) and [中文用户指南](guides/flowsvg-skill-guide.zh-CN.md): install, select tasks, create, revise, export, and recover.
+- [Project preferences](../skills/flow-svg-diagram/references/preferences.md): preflight, explicit persistence and reset.
 - [Installed Agent contract](../skills/flow-svg-diagram/SKILL.md): execution order and completion gates.
 - [Layout workflow](../skills/flow-svg-diagram/references/static-layout.md#layout-plan-workflow), [visual design](../skills/flow-svg-diagram/references/visual-design.md), and [examples](../skills/flow-svg-diagram/examples/README.md): design and production resources.
 - [Runtime and result contract](../skills/flow-svg-diagram/references/tool-contract.md): task workspace, commands, SDK identity, reports, and finalization.
@@ -12,6 +13,7 @@
 
 ## Maintainers
 
+- [Contribution guide](../CONTRIBUTING.md) and [release procedure](releasing.md).
 - [Maintenance guide](development/flowsvg-skill-maintenance.md), [repository patterns](../PATTERNS.md), and [CLI patterns](development/flowsvg-skill-patterns.md).
 - [Glossary](../GLOSSARY.md), [architecture decisions](adr/README.md), and [Agent work rules](../AGENTS.md).
 - [Local tracker](agents/issue-tracker.md), [triage labels](agents/triage-labels.md), and [source-comment rules](agents/code-comments.md).

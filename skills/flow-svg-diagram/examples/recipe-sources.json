@@ -3,5 +3,23 @@
     "kind": "prompt",
     "reference": "FlowSVG recipe teaching setups, 2026-10-31",
     "description": "Invented teaching examples, not production system facts. Layered example preserves layered-architecture teaching membership and cross-layer relation directions; relationship-note nodes annotate the existing arrows and are not business entities. Process-return extends the basic collect/review/archive setup with explicitly invented review-pass, needs-changes and resubmission conditions. Content cards compare three authoring concerns; their horizontal arrangement does not add runtime dependencies. No retry limits, delays, capacity or deployment/trust facts are asserted."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Neutral visual-quality teaching setup, 2026-11-03",
+    "scope": "examples/recipe-capability-overview.json",
+    "description": "虚构公共资料工作室：资料整理、内容编辑是已有职责，发布支持是候选能力；三者并列且无执行依赖。仅使用公开资料；外部授权、模型接入和上线时间未确定。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Neutral visual-quality teaching setup, 2026-11-03",
+    "scope": "examples/recipe-source-services.json",
+    "description": "虚构教学设定：1类公开指南、2类咨询入口（窗口和线上）、21项候选问题，用于需求整理并映射到指南检索、咨询分流、问题归集、内容维护四类服务。整组箭头只表示需求映射，不表示运行时调用或逐项全连接；候选问题待核实，数字不构成承诺。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Neutral visual-quality teaching setup, 2026-11-03",
+    "scope": "examples/recipe-parallel-flow.json",
+    "description": "虚构教学设定：资料站分别向服务台传递公开指南和服务提示，两条方向相同的独立关系。全图常显；800ms开场，2400ms并行流动重复3轮，1000ms终态；节奏和重复次数仅为讲解选择，不表示业务时间、吞吐、请求或响应。 关系名采用连线旁的独立说明，避开传递标记经过文字的位置；说明节点不增加业务对象。"
   }
 ]
