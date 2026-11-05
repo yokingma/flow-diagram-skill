@@ -37,6 +37,16 @@ Treat the installed skill as read-only. Task helpers belong in the workspace rat
 
 During iteration, use browser-free validation and reuse one batch measurement input generated from the draft content and typography. Capture only after layout and content are ready. Keep drafts, helpers and inspection files in the workspace until finalization succeeds; failed or cancelled tasks remain available for recovery. Existing source files, other tasks and historical directories are outside cleanup scope.
 
+## Editable HTML pages
+
+For new or revised HTML explanations, copy [the page starter](../examples/html-page.html) into the task workspace, then author its headings, prose and CSS according to [content placement](delivery-contexts.md#content-placement). Supply that complete page to `author --input <diagram.json> --html <page.html> --name <name> --output <history-root>`, with the usual browser and export options. The resulting `diagram.html` is both the editable page and the single-file offline delivery; no separate page source is published. Low-level `author` without `--html` retains the SDK-only HTML output.
+
+A page contains exactly one ordered `<!-- flowsvg:player:start -->` / `<!-- flowsvg:player:end -->` region. An empty region is filled from the checked diagram. An existing filled region must match the exact diagram JSON bytes, theme, SDK identity and generated playback output. The region contains Skill-owned versioned data, `flowsvg-page-data`, the iframe `flowsvg-page-player`, and sizing code; preserve it when editing outer markup/CSS. These two IDs are reserved to that region. Malformed, duplicate, unsupported or mismatched regions fail explicitly rather than silently changing the diagram. The tool consumes the complete public SDK `renderHtml` result as opaque iframe content, without reading private assets or modifying SDK scripts.
+
+The input page is read once before allocating a version. `htmlPage` records portable source SHA-256/byte count, diagram SHA-256, SDK version/integrity, theme, playback HTML hash and final HTML hash. Finalization retains this provenance. Page composition finishes before final HTML identity and browser evidence are recorded. To edit a saved result, work on a copy and submit it as a new authoring input; direct edits to registered historical files invalidate their checks. The current strict page input requires matching diagram bytes; intentional diagram-data updates need the separate revision workflow rather than a silent mismatch.
+
+HTML inspection opens the final outer page, checks controls in its declared playback iframe and captures the whole page. File completion, browser facts and later actual-viewing observations remain separate. If a browser is unavailable, HTML may finish while inspection remains incomplete; keep that limitation explicit.
+
 ## Finalize the task
 
 After required exports and actual image reviews, run:

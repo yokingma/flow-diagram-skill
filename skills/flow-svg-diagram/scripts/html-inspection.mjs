@@ -53,29 +53,32 @@ export async function inspectDeliveredHtml(report, context) {
     const externalRequests = [];
     page.on("request", (request) => { if (/^https?:/u.test(request.url())) externalRequests.push(request.url()); });
     await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "load" });
-    await page.locator("#flowsvg-player svg").waitFor();
+    const player = await playerSurface(page, Boolean(report.htmlPage));
+    report.htmlInspection.playerSurface = report.htmlPage ? "managed-frame" : "document";
+    await player.locator("#flowsvg-player svg").waitFor();
+    await player.evaluate(() => document.fonts.ready);
     await page.evaluate(() => document.fonts.ready);
-    const initial = await readState(page, externalRequests);
+    const initial = await readState(player, externalRequests);
     if (initial.progress !== "0" || initial.playLabel !== "Play") {
       throw new Error("Delivered HTML did not open at time zero in a paused state.");
     }
     report.htmlInspection.initial = { ...initial, paused: true, offline: externalRequests.length === 0 };
     if (context.diagram.totalDuration > 0) {
-      const play = page.getByRole("button", { name: "Play", exact: true });
+      const play = player.getByRole("button", { name: "Play", exact: true });
       await play.click();
-      await page.waitForFunction(() => Number(document.querySelector('input[aria-label="Progress"]')?.value) > 0);
-      const advanced = await page.locator('input[aria-label="Progress"]').inputValue();
-      await page.getByRole("button", { name: "Pause", exact: true }).click();
+      await player.waitForFunction(() => Number(document.querySelector('input[aria-label="Progress"]')?.value) > 0);
+      const advanced = await player.locator('input[aria-label="Progress"]').inputValue();
+      await player.getByRole("button", { name: "Pause", exact: true }).click();
       report.htmlInspection.playback = { attempted: true, advanced: Number(advanced) > 0, paused: true, progress: advanced };
-      await seek(page, 0);
+      await seek(player, 0);
     } else {
       report.htmlInspection.playback = { attempted: false, reason: "Static diagram has no timeline to play." };
     }
     await mkdir(join(report.revision.directory, "html-inspection"));
     for (const point of report.htmlInspection.plan.points) {
       context.signal?.throwIfAborted();
-      await seek(page, point.timeMs);
-      const state = await readState(page, externalRequests);
+      await seek(player, point.timeMs);
+      const state = await readState(player, externalRequests);
       const bytes = await page.screenshot({ type: "png", fullPage: true, animations: "disabled" });
       const path = join(report.revision.directory, "html-inspection", `${point.id}.png`);
       await writeFile(path, bytes, { flag: "wx" });
@@ -135,22 +138,31 @@ export async function recordHtmlReview(report, options) {
   }
 }
 
-async function readState(page, externalRequests) {
-  return page.evaluate(() => ({
+/** Inspect controls only in the declared player surface; outer content cannot impersonate playback. */
+async function playerSurface(page, managed) {
+  if (!managed) return page;
+  const host = await page.locator("#flowsvg-page-player").elementHandle();
+  const frame = await host?.contentFrame();
+  if (!frame) throw new Error("Managed HTML page has no accessible playback frame.");
+  return frame;
+}
+
+async function readState(player, externalRequests) {
+  return player.evaluate(() => ({
     playLabel: document.querySelector('button[aria-label="Play"], button[aria-label="Pause"]')?.getAttribute("aria-label") ?? "missing",
     progress: document.querySelector('input[aria-label="Progress"]')?.value ?? "missing",
     svg: Boolean(document.querySelector("#flowsvg-player svg"))
   })).then((state) => ({ ...state, externalRequests: [...externalRequests] }));
 }
 
-async function seek(page, timeMs) {
-  await page.locator('input[aria-label="Progress"]').evaluate((element, value) => {
+async function seek(player, timeMs) {
+  await player.locator('input[aria-label="Progress"]').evaluate((element, value) => {
     const input = element;
     input.value = String(value);
     input.dispatchEvent(new Event("input", { bubbles: true }));
   }, timeMs);
   // The range control serializes finite timeline values, so fractional compiled times may be rounded.
-  await page.waitForFunction((value) => {
+  await player.waitForFunction((value) => {
     const actual = Number(document.querySelector('input[aria-label="Progress"]')?.value);
     return Number.isFinite(actual) && Math.abs(actual - Number(value)) <= 1;
   }, timeMs);

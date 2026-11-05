@@ -122,6 +122,7 @@ function deliverySummary(selected, records, files, requested, workspace) {
     reviewRecords: selected.reviewRecords,
     evidenceRecords: selected.evidenceRecords,
     checks: selected.checks, qualityCoverage: selected.qualityCoverage ?? null, sources,
+    ...(selected.htmlPage ? { htmlPage: selected.htmlPage } : {}),
     htmlInspection: selected.htmlInspection ? {
       status: selected.htmlInspection.status, sourceRevision: selected.htmlInspection.sourceRevision,
       fileSha256: selected.htmlInspection.file?.sha256, display: selected.htmlInspection.display,

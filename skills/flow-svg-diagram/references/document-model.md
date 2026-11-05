@@ -14,6 +14,8 @@ Every edge has a unique `id`, `from` and `to` pointing to nodes or groups. The a
 
 The viewport starts at document origin. Keep authored geometry within its width and height. Optional `viewport.fitHeight: {"padding": 24}` fits full-view height to current painted geometry while preserving width and origin. It does not move nodes or correct negative coordinates. Animated focus retains the authored viewport semantics; GIFs use fixed authored dimensions.
 
+The document `title` is metadata, distinct from an HTML page heading and a node title. Author global page introductions through [editable HTML pages](tool-contract.md#editable-html-pages); keep object-specific content in nodes.
+
 ## Node content and measurement
 
 Structured content is supported by `rect`, `roundedRect` and `cylinder`. It replaces a simple label and uses explicit fixed node dimensions. `content.blocks` contains ordered blocks:

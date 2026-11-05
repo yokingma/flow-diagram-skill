@@ -9,7 +9,7 @@ Create editable system and process diagrams with an AI coding assistant. Describ
 - Explain architectures, request/response flows, retries, state changes, and staged processing.
 - Create diagrams from designated files or repository sources, with recorded sources and decisions.
 - Revise editable JSON, validate existing diagrams, and inspect layout diagnostics.
-- Deliver offline HTML with playback controls; request SVG, PNG, or GIF for other uses.
+- Deliver offline HTML with page introductions outside the diagram and embedded playback controls; request SVG, PNG, or GIF for other uses.
 
 This repository maintains the **Skill**: authoring, layout plans, checks, review, and delivery. [FlowSVG SDK](https://github.com/yokingma/FlowSVG) maintains the document model, rendering, playback, export APIs, and application embedding. The Skill uses the published `flowsvg@0.2.2` package in an isolated cache. You do not need the SDK source repository or an SDK dependency in your application. “Executable” diagrams play authored visual states; they do not run the business process being explained.
 

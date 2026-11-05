@@ -14,6 +14,22 @@ Record the adopted preferences, display conditions and their sources (request, p
 
 PPT placement determines layout, while requested file kinds determine exports. If the user needs a slide-import image but has not selected a format, include that choice in the initial context question. If they explicitly choose to proceed with default files, state that the delivery contains HTML/JSON/reports and that no slide-import image was requested; avoid implying it is already an integrated slide asset.
 
+## Content placement
+
+Before choosing diagram geometry, assign the explanation's content to its carrying surface in the existing task plan. Complete this choice when every planned heading and explanation has a location and each requested format retains the context needed for its use.
+
+| Content | Default location |
+| --- | --- |
+| Overall title, subtitle and reading goal | HTML heading and introduction |
+| Background, sources, global assumptions, limits and detailed discussion | Supporting HTML prose |
+| Object names, group titles, relationship conditions and essential states | Diagram nodes, groups or nearby labels |
+| Explanation that changes with a scene or beat | Existing player captions |
+| Legend or annotation | Near the relationship it qualifies; global reading advice may sit in HTML |
+
+Use spatial and temporal meaning to decide placement, rather than the field name or text length. Keep necessary node descriptions in content cards. Moving text must preserve the source meaning; relationships or qualifications that would become ambiguous stay with their objects. Independent SVG/PNG and presentation assets need their own context allocation; page-only prose is not part of an exported image.
+
+For new or revised HTML explanations, author the page HTML/CSS around the player, beginning with [the editable page starter](../examples/html-page.html) when useful. The normal reading order is heading/introduction, player with captions and controls, then supporting prose; adapt it to the content. Page text uses HTML layout and remains readable independently of diagram scaling. Keep the managed playback region intact and follow [editable HTML pages](tool-contract.md#editable-html-pages) to submit the complete page. Inspect the actual page at its intended width, including a narrow width when relevant. An unchanged import, pure export or validation keeps its existing entry point and input design.
+
 ## Static assets for presentations
 
 Use the user's slide ratio and occupied area. A full-slide 16:9 canvas can start at `viewport: {"width": 1280, "height": 720}` when appropriate; local assets use their actual allocated aspect ratio. Neither choice creates PPTX or native PowerPoint shapes.

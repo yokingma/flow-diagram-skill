@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Accept Agent-composed HTML pages through `author --html`, preserving outer HTML/CSS around a managed iframe containing opaque public SDK output. Bind source/output identities and inspect the actual page and embedded player without changing the SDK baseline.
+
 - Add Agent-managed project preference preflight before the five authoring steps, with explicit save/update/reset at `.diagrams/.preferences.json`, versioned descriptive fields and a follow-defaults marker. Preserve existing revision design and skip preference questions for pure exports, validation and diagnosis.
 - Repair semantic-pattern branch pointers, expose optical-alignment and wrapping guidance across languages, and make the source/service recipe independent of PPT placement. Sync bilingual guides and record preference-operation trials separately from visual acceptance.
 

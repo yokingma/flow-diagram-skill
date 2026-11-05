@@ -1,4 +1,5 @@
 /** Coordinate saved author snapshots through SDK checks and exports; invalid reviews stop before allocation. */
+import { readHtmlPage } from "./html-page.mjs";
 import { preflightReviews } from "./review-preflight.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -24,6 +25,7 @@ export async function runRevision(options, signal, command = "author") {
   if (command === "author") report.completion = { delivery: "pending", quality: "incomplete",
     requested: ["json", "html", ...(options.svg ? ["svg"] : []), ...(options.png ? ["png"] : []), ...(options.gif ? ["gif"] : []), ...(options["export-manifest"] ? ["exports"] : [])], completed: [] };
   try {
+    const htmlPage = await readHtmlPage(options.html);
     await preflightReviews(options, { authoring: true });
     report.revision = await allocateRevision(options.output || resolve(".diagrams", ".history"), options.name || "diagram", options.from || options.parent || null);
     const input = await resolveRevisionInput(report, options);
@@ -44,7 +46,7 @@ export async function runRevision(options, signal, command = "author") {
     diagnoseLayout(report, { ...checked, sdk });
     report.status = "validated";
     if (command === "author") {
-      const context = { ...checked, runtime, options, signal };
+      const context = { ...checked, runtime, options, signal, htmlPage };
       await deliverStatic(report, context);
       if (options["export-manifest"]) await deliverManifest(report, context);
       await deliverOptionalStages(report, context);

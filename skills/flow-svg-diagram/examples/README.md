@@ -35,3 +35,7 @@ These observations cover the stated sizes and host. Actual PowerPoint/WPS placem
 Copy the selected JSON into the task workspace and adapt source-supported content. [recipe-sources.json](recipe-sources.json) records the invented facts and derivations used for these examples; replace that metadata with the user's real sources for a real task. Measure with the document's actual typography after changing widths or content, then use the existing validate, author, evidence and review workflow. Read [task workspace and retention rules](../references/tool-contract.md#task-workspace) before saving files.
 
 For the card example, measurement gives required heights below the shared authored height. Shared height is an authoring choice; the tool does not infer which objects should match. The layered example's annotation nodes are explanations of the existing group-to-group arrows, not new business entities. If changing annotation position makes ownership ambiguous, reserve a clearer channel rather than deleting the relationship.
+
+## Editable HTML page starter
+
+[html-page.html](html-page.html) is an editable page shell, not a second final delivery file. Copy it to the task workspace and adapt headings, prose and CSS. Preserve the single managed playback region, then submit the complete page with `author --html`; see [content placement](../references/delivery-contexts.md#content-placement) and [the page contract](../references/tool-contract.md#editable-html-pages).

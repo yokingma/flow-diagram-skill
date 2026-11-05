@@ -1,4 +1,5 @@
 /** Export one saved snapshot through public SDK entries; image failures preserve independent exports. */
+import { composeHtmlPage } from "./html-page.mjs";
 import { join } from "node:path";
 import { importSdk, ToolError } from "./runtime.mjs";
 import { findBrowser } from "./browser.mjs";
@@ -10,7 +11,8 @@ export async function deliverStatic(report, context) {
   report.stage = "export";
   context.signal?.throwIfAborted();
   const { renderHtml } = await importSdk(context.runtime, "/node");
-  const html = await renderHtml(context.document, { theme: report.theme, autoplay: false, controls: true });
+  const playerHtml = await renderHtml(context.document, { theme: report.theme, autoplay: false, controls: true });
+  const html = context.htmlPage ? composeHtmlPage(context.htmlPage, playerHtml, report) : playerHtml;
   const path = join(report.revision.directory, "diagram.html");
   await saveComplete(path, html, context.signal);
   report.artifacts.push({ kind: "html", path });

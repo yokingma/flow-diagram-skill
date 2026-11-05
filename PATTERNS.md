@@ -39,3 +39,7 @@ Keep reader-question selection, preference/context resolution and composition ru
 Run the complete regression suite against a prepared browser, then exercise the copied installed CLI through the independent consumer harness with a real unsupported Node 18 executable. A missing prerequisite, failed contract, or required `not-run` check must retain a nonzero/incomplete gate; no platform fallback converts it to success. Windows graceful console cancellation needs an actual Ctrl+C runner and remains unverified by the existing harness.
 
 CI triggers include installation resources, tests/fixtures, guides, tools, root configurations/locks, and workflows. Every configured OS/runtime job installs the frozen development lock and runs both gates; upload factual JSON evidence after failures. CI configuration, actual execution, programmatic browser checks, and viewed images are distinct evidence. Keep synthetic test attestations labeled; record actual viewing separately with exact saved-file/state identity.
+
+## Editable HTML pages
+
+`html-page.mjs` owns the Skill-managed playback region and page source/output identities. Preserve Agent-authored outer HTML/CSS, embed the complete public SDK HTML as opaque iframe content, and reject malformed or mismatched managed regions. Read page inputs once before revision allocation. Page delivery remains one HTML, diagram JSON and reports; no separate page source is required.

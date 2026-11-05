@@ -1,6 +1,6 @@
 # Skill architecture decisions
 
-These current decisions are copied with provenance from FlowSVG. SDK-only decisions remain in the source repository; this repository retains the public-SDK integration, shared diagnostics boundary, and Skill contracts.
+This index covers public-SDK integration, shared diagnostics, and Skill contracts. Decisions migrated from FlowSVG retain their provenance; later Skill decisions are maintained here. SDK-only decisions remain in the SDK repository.
 
 - [0006: 图解创作 skill 使用独立环境中的公开 SDK](0006-authoring-skill-uses-public-sdk.md)
 - [0007: 导出清单独立于图解文档](0007-export-manifest-outside-document.md)
@@ -13,3 +13,4 @@ These current decisions are copied with provenance from FlowSVG. SDK-only decisi
 - [0014: Append review observations independently from design revisions](0014-independent-review-records.md)
 - [0015: Collect missing evidence from existing artifacts](0015-on-demand-artifact-evidence.md)
 - [0016: SDK 与 Skill 使用独立仓库和发布周期](0016-independent-sdk-and-skill-repositories.md)
+- [0017: Skill owns HTML page composition](0017-skill-owned-html-composition.md)

@@ -58,6 +58,7 @@ const HELP = {
     "",
     "Options:",
     "  --input <json>       Diagram draft or imported revision JSON",
+    "  --html <html>        Agent-composed Skill page with a managed playback region",
     "  --name <diagram>     Required revision series name",
     "  --output <directory> Explicit history root",
     "  --parent <revision>  Explicit parent revision",
@@ -136,10 +137,11 @@ if (requestedHelp) {
   process.exitCode = 0;
 } else try {
   const { positionals, values } = parseArgs({ allowPositionals: true, strict: true, options: {
-    "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" }, decisions: { type: "string" },
+    "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, html: { type: "string" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" }, decisions: { type: "string" },
     gif: { type: "boolean" }, "gif-options": { type: "string" }, sources: { type: "string" }, theme: { type: "string" }, svg: { type: "boolean" }, png: { type: "boolean" }, "export-manifest": { type: "string" }, "png-width": { type: "string" }, background: { type: "string" }, "artifact-preview-settings": { type: "string" }, "artifact-review": { type: "string" }, time: { type: "string" }, browser: { type: "string" }, "visual-review": { type: "string" }, "html-review": { type: "string" }, samples: { type: "string" }, workspace: { type: "string" }, "keep-work": { type: "boolean" }
   } });
   const command = positionals[0];
+  if (values.html !== undefined && (command !== "author" || !values.html.trim())) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--html requires author and a nonempty HTML path.", "Run `flowsvg author --help`.", "html");
   checkLayoutOptions(command, values);
   checkValidationOptions(command, values);
   if (command !== "review-template" && ["kind", "template"].some((key) => values[key] !== undefined)) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--kind and --template require review-template.", "Run `flowsvg review-template --help`.");

@@ -162,6 +162,16 @@ If you need an image to import into a slide, specify SVG or PNG; otherwise that 
 
 The [reader-question table](../../skills/flow-svg-diagram/references/semantic-patterns.md#choose-by-the-readers-question) helps choose capability inventories, source mappings or processes. The [teaching recipes](../../skills/flow-svg-diagram/examples/README.md#presentation-recipe-checks) include a no-edge capability overview, Chinese source/service cards and an all-visible parallel-flow animation. Reuse their organization with your own facts and dimensions.
 
+## 3.2. Page introductions and diagram text
+
+For new or revised HTML explanations, the assistant plans page content before diagram geometry. Overall titles, introductions and global notes use normal HTML layout; object names, relationship conditions and essential states remain in the diagram. A comparison card may keep the description needed to explain that object. You can specify the page title, introduction, supporting notes and intended reading width in your request.
+
+The assistant writes the page HTML/CSS around an embedded player. The default reading order is introduction, player and supporting explanation, adapted to your material. The delivered HTML remains one self-contained offline file alongside editable diagram JSON and reports; no extra page source is required. Existing imports, pure exports and validation retain their original input and entry point.
+
+For direct tool use, copy the installed [HTML page starter](../../skills/flow-svg-diagram/examples/html-page.html) into the task workspace, edit its outer content and CSS, then pass it to `author --html <page.html>` with the usual diagram input and output options. Preserve its managed playback region. Existing filled regions must match the exact diagram JSON, theme and SDK; invalid or mismatched pages fail explicitly. Page source and final-file hashes are recorded, and checks cover the actual outer page plus the embedded controls. Browser capture does not establish actual visual approval. See the installed [page input contract](../../skills/flow-svg-diagram/references/tool-contract.md#editable-html-pages).
+
+Standalone SVG/PNG need their own context assessment: prose visible only in HTML is not included in the exported image. A missing browser can leave file delivery complete while page inspection remains unperformed.
+
 ## 4. Create from designated sources
 
 Give source paths and the authorized reading scope so the assistant can preserve evidence and avoid inventing business facts:

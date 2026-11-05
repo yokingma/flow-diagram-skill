@@ -94,7 +94,7 @@ Design starting point: [recipe-process-return.json](../examples/recipe-process-r
 
 #### Repeated cards and longer content
 
-Use for comparable objects that need titles, explanations, lists and short tags. Structure: `title / core explanation / consistent list-and-tag area`, repeated along a stable alignment grid.
+After [content placement](delivery-contexts.md#content-placement) assigns necessary text to diagram objects, use for comparable objects that need titles, explanations, lists and short tags. Structure: `title / core explanation / consistent list-and-tag area`, repeated along a stable alignment grid.
 
 1. Choose card width and text roles for the target display width. Use a stable left reading edge for longer content and the same content order for comparable cards.
 2. Measure every card at its final width and typography. For comparison cards, choose a shared height that contains the largest result plus intentional whitespace. Different roles or content may retain different heights.

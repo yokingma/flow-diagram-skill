@@ -120,3 +120,7 @@ Keep `v###` for real saved diagram production and `review-<sha256>` for append-o
 `artifact-review-source.mjs` resolves the explicit evidence source separately from the real diagram subject. `loadArtifactEvidenceSource` returns its hash-bound locator and actual source context; `verifyArtifactReviewEntries` verifies settings, original artifact identity and actual evidence bytes. Review preflight, templates and stored-record verification share this interface. Evidence source IDs never occupy `revision.id`.
 
 `review-projection.mjs` unions every requested evidence surface from same-context ancestry and applicable sources before evaluating viewing. Different observations for one evidence ID retain all attestations and issues. `finalize.mjs` preserves full portable surface identity rather than reducing it to dimensions and hashes. `loadReviewRecords` also revalidates saved authoring artifact observations before their status can enter a projection.
+
+## Agent-composed HTML
+
+`author --html` reads one Agent page before allocation, validates the single Skill-owned playback region and preserves surrounding bytes. `html-page.mjs` fills an empty starter region or verifies the exact existing region against the current input bytes, SDK identity and theme. Playback uses the opaque complete result of public `renderHtml` in an iframe. Page provenance keeps portable source/output hashes. Inspect the outer saved HTML while locating playback controls inside the managed frame; root SDK-only HTML remains the ordinary no-page path.

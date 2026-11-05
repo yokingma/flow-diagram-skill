@@ -97,6 +97,9 @@ export async function saveReport(report) {
   for (const frame of report.visual.capturedFrames || []) lines.push(`- captured ${frame.id}: ${frame.path} at ${frame.timeMs} ms; SHA-256 ${frame.sha256}; font ready: ${frame.fonts.ready}; glyph coverage: ${frame.fonts.glyphCoverage}; font issues: ${frame.fonts.issues.join(", ") || "none observed"}`);
   if (report.visual.review) lines.push(`Reviewer: ${report.visual.review.reviewer}`, `Source report: ${report.visual.review.sourceReport}`, report.visual.review.scope);
   for (const frame of report.visual.viewedFrames) lines.push(`- viewed ${frame.id}: ${frame.path} at ${frame.timeMs} ms; SHA-256 ${frame.sha256}; ${JSON.stringify(frame.observations)}`);
+  if (report.htmlPage) lines.push("", "## HTML page", "", `Source HTML SHA-256: ${report.htmlPage.source.sha256}`,
+    `Delivered HTML SHA-256: ${report.htmlPage.outputSha256}`, `Diagram SHA-256: ${report.htmlPage.inputSha256}`,
+    `Playback HTML SHA-256: ${report.htmlPage.playerSha256}`);
   if (report.htmlInspection) {
     lines.push("", "## HTML inspection", "", `Status: ${report.htmlInspection.status}`, `Source revision: ${report.htmlInspection.sourceRevision}`,
       `HTML SHA-256: ${report.htmlInspection.file?.sha256 ?? "not recorded"}`, `Display: ${JSON.stringify(report.htmlInspection.display ?? {})}`);
