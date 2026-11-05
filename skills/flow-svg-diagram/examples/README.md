@@ -39,3 +39,5 @@ For the card example, measurement gives required heights below the shared author
 ## Editable HTML page starter
 
 [html-page.html](html-page.html) is an editable page shell, not a second final delivery file. Copy it to the task workspace and adapt headings, prose and CSS. Preserve the single managed playback region, then submit the complete page with `author --html`; see [content placement](../references/delivery-contexts.md#content-placement) and [the page contract](../references/tool-contract.md#editable-html-pages).
+
+The starter retains a 720px minimum playback width in a focusable horizontal reading area; change `--diagram-reading-width` for the actual diagram typography. Page prose still wraps at narrow viewport widths. Check both horizontal ends and controls, and record playback width separately from viewport width. The value itself does not establish readable labels or actual viewing. Keep resources inline/data URLs for offline sharing.

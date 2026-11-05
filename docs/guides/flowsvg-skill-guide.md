@@ -331,3 +331,9 @@ Installation paths and explicit invocation methods were checked on 2026-10-27. H
 
 - [Codex: Agent Skills](https://developers.openai.com/codex/skills/)
 - [Claude Code: Extend Claude with skills](https://code.claude.com/docs/en/skills)
+
+## Animated explanatory pages on narrow screens
+
+For a new explanatory HTML page, the assistant keeps its heading and static introduction outside the player and uses existing timeline captions for changing narration. The editable starter uses a 720px minimum playback width within a focusable horizontal scrolling area; the assistant adjusts it to the diagram's labels and checks both ends, captions and controls. Page prose wraps independently. Report viewport and playback widths separately; horizontal scrolling does not show the entire graph at once.
+
+With a prepared browser, the saved-file check records actual captions and diagram text at compiled samples, exercises play/pause and backward seeking, and checks static page text stays stable. External network or local-file resources fail offline inspection while complete files remain available; use inline or data-URL assets. `--browser none` leaves these checks unperformed. Programmatic playback and sampled screenshots do not establish continuous visual viewing or sufficient caption reading time; the report states which were actually checked.

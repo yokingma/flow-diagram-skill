@@ -41,3 +41,9 @@ Use `highlight` to emphasize an object without claiming a transfer. Explicit hig
 One flow in a beat derives its duration from routed path length at the beat's target state: movement at 180 diagram units/second with a 400 ms minimum, followed by a 500 ms arrival hold. This effective duration replaces authored duration and shifts later beats. Multiple distinct edge flows use authored duration and synchronized progress. Use separate beats for sequential transfers and for longer reading time.
 
 Always read `compilation.totalDurationMs` and `compilation.beats` in the authoring report before choosing SVG times or discussing animation length. Summing authored durations gives the wrong timeline for single-flow beats. The preview plan uses those compiled intervals. See [visual inspection](visual-checks.md) for coverage and evidence.
+
+## Animation in an editable HTML page
+
+Keep the page heading, introduction and supporting prose outside the managed iframe. Use existing beat captions for changing explanation; do not add a second dynamic explanation protocol. Read actual compiled beat times before selecting page states, since one flow can replace the authored beat duration. A reading hold with `actions: []` retains the caption; add one when the effective flow interval is too short for its text.
+
+The saved-page browser check exercises play/pause and end-to-start backward seeking through visible controls, records actual captions and SVG text at finite samples, and verifies outer static text stays stable. It does not establish continuous visual playback or sufficient reading time. Actually play the page when judging rhythm; state separately which paused screenshots were viewed and whether continuous playback was watched.

@@ -42,6 +42,12 @@ CI triggers include installation resources, tests/fixtures, guides, tools, root 
 
 ## Editable HTML pages
 
+Offline HTML inspection observes resource requests from the complete page and embedded player. External network or local-file requests fail the inspection even when the offline browser blocks them; complete delivery files remain available and quality stays incomplete.
+
+Record visible captions and SVG text with each sampled page state. Exercise backward reconstruction through the visible progress control and verify the original diagram/caption and outer static text. Fractional compiled boundaries must not serialize just before a beat: round the requested range time upward by less than one microsecond and retain actual progress. Bound that rounding by the next compiled beat; an unrepresentable in-beat time fails instead of skipping a short beat. Final time remains clamped by the progress control maximum. Starter page CSS may retain a chosen diagram reading width inside a focusable horizontal scroller; it does not modify SDK layout or its opaque HTML.
+
+Backseek validation also compares a canonical public SVG signature: stable element tags/IDs, selected geometry/style attributes and computed visibility/display/opacity, sorted to ignore irrelevant DOM order. Keep text/caption checks alongside this signature; neither alone represents the full rendered state.
+
 `html-page.mjs` owns the Skill-managed playback region and page source/output identities. Preserve Agent-authored outer HTML/CSS, embed the complete public SDK HTML as opaque iframe content, and reject malformed or mismatched managed regions. Read page inputs once before revision allocation. Page delivery remains one HTML, diagram JSON and reports; no separate page source is required.
 
 ## Page-preserving revisions

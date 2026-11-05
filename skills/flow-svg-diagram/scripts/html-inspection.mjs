@@ -8,6 +8,7 @@ import { findBrowser, importPlaywright } from "./browser.mjs";
 import { createPreviewPlan } from "./preview-plan.mjs";
 
 const HTML_VIEWPORT = { width: 1440, height: 1000 };
+const SEEK_SUBMILLISECOND_PRECISION = 1000;
 import { validateReviewInput } from "./review-contract.mjs";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
@@ -51,13 +52,18 @@ export async function inspectDeliveredHtml(report, context) {
     report.htmlInspection.resources.page = "open";
     page.setDefaultTimeout(15_000);
     const externalRequests = [];
-    page.on("request", (request) => { if (/^https?:/u.test(request.url())) externalRequests.push(request.url()); });
-    await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "load" });
+    const htmlUrl = pathToFileURL(htmlPath).href;
+    page.on("request", (request) => {
+      const url = request.url();
+      if (url !== htmlUrl && !/^(?:about|blob|data):/u.test(url)) externalRequests.push(url);
+    });
+    await page.goto(htmlUrl, { waitUntil: "load" });
     const player = await playerSurface(page, Boolean(report.htmlPage));
     report.htmlInspection.playerSurface = report.htmlPage ? "managed-frame" : "document";
     await player.locator("#flowsvg-player svg").waitFor();
     await player.evaluate(() => document.fonts.ready);
     await page.evaluate(() => document.fonts.ready);
+    const outerText = await page.locator("body").innerText();
     const initial = await readState(player, externalRequests);
     if (initial.progress !== "0" || initial.playLabel !== "Play") {
       throw new Error("Delivered HTML did not open at time zero in a paused state.");
@@ -77,14 +83,23 @@ export async function inspectDeliveredHtml(report, context) {
     await mkdir(join(report.revision.directory, "html-inspection"));
     for (const point of report.htmlInspection.plan.points) {
       context.signal?.throwIfAborted();
-      await seek(player, point.timeMs);
+      const nextBoundary = context.diagram.beats.find((beat) => beat.startMs > point.timeMs)?.startMs;
+      await seek(player, point.timeMs, nextBoundary);
       const state = await readState(player, externalRequests);
       const bytes = await page.screenshot({ type: "png", fullPage: true, animations: "disabled" });
       const path = join(report.revision.directory, "html-inspection", `${point.id}.png`);
       await writeFile(path, bytes, { flag: "wx" });
       report.htmlInspection.states.push({ id: `html-${point.id}`, pointId: point.id, timeMs: point.timeMs,
         path, sha256: digest(bytes), paused: state.playLabel === "Play", offline: externalRequests.length === 0,
-        controls: { playLabel: state.playLabel, progress: state.progress }, externalRequests: [...externalRequests] });
+        controls: { playLabel: state.playLabel, progress: state.progress }, externalRequests: [...externalRequests],
+        caption: state.caption, diagramText: state.diagramText });
+    }
+    await recordBackseek(report.htmlInspection, player, initial, context.diagram.totalDuration, externalRequests);
+    report.htmlInspection.outerPage = { staticTextStable: outerText === await page.locator("body").innerText() };
+    if (!report.htmlInspection.outerPage.staticTextStable) throw new Error("Outer HTML text changed during playback or seeking.");
+    report.htmlInspection.offline = { passed: externalRequests.length === 0, externalRequests: [...externalRequests] };
+    if (externalRequests.length) {
+      throw new Error(`Offline HTML attempted external resource requests: ${[...new Set(externalRequests)].join(", ")}`);
     }
     report.htmlInspection.status = "awaiting-review";
     report.checks.html = "captured";
@@ -150,19 +165,60 @@ async function playerSurface(page, managed) {
 }
 
 async function readState(player, externalRequests) {
-  return player.evaluate(() => ({
-    playLabel: document.querySelector('button[aria-label="Play"], button[aria-label="Pause"]')?.getAttribute("aria-label") ?? "missing",
-    progress: document.querySelector('input[aria-label="Progress"]')?.value ?? "missing",
-    svg: Boolean(document.querySelector("#flowsvg-player svg"))
-  })).then((state) => ({ ...state, externalRequests: [...externalRequests] }));
+  return player.evaluate(() => {
+    /** Canonical public SVG state; excludes volatile DOM ordering and runtime-only attributes. */
+    const canonicalVisualSignature = () => {
+      const svg = document.querySelector("#flowsvg-player svg");
+      if (!svg) return "missing-svg";
+      const attributes = ["class", "fill", "stroke", "stroke-width", "d", "transform", "x", "y", "width", "height", "cx", "cy", "rx", "ry"];
+      const records = [svg, ...svg.querySelectorAll("*")].map((element) => {
+        const computed = getComputedStyle(element);
+        const attrs = Object.fromEntries(attributes.map((name) => [name, element.getAttribute(name) ?? ""]));
+        return { tag: element.tagName.toLowerCase(), id: element.id || "", attrs,
+          visibility: computed.visibility, display: computed.display, opacity: computed.opacity };
+      }).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+      return JSON.stringify(records);
+    };
+    return {
+      playLabel: document.querySelector('button[aria-label="Play"], button[aria-label="Pause"]')?.getAttribute("aria-label") ?? "missing",
+      progress: document.querySelector('input[aria-label="Progress"]')?.value ?? "missing",
+      svg: Boolean(document.querySelector("#flowsvg-player svg")),
+      caption: document.querySelector(".flowsvg-caption")?.textContent ?? "",
+      diagramText: [...document.querySelectorAll("#flowsvg-player svg text")].map((element) => element.textContent).join("\n"),
+      visualSignature: canonicalVisualSignature()
+    };
+  }).then((state) => ({ ...state, externalRequests: [...externalRequests] }));
 }
 
-async function seek(player, timeMs) {
+/** Exercise reconstruction through the visible range control, without inspecting player internals. */
+async function recordBackseek(inspection, player, initial, duration, externalRequests) {
+  if (duration <= 0) return;
+  await seek(player, duration);
+  await seek(player, 0);
+  const restored = await readState(player, externalRequests);
+  inspection.backseek = { attempted: true, fromTimeMs: duration, timeMs: 0,
+    restored: restored.progress === "0" && restored.playLabel === "Play"
+      && restored.caption === initial.caption && restored.diagramText === initial.diagramText
+      && restored.visualSignature === initial.visualSignature,
+    caption: restored.caption, diagramText: restored.diagramText,
+    visualSignature: restored.visualSignature, initialVisualSignature: initial.visualSignature };
+  if (!inspection.backseek.restored) throw new Error("Backward seeking did not restore the initial diagram and caption.");
+}
+
+async function seek(player, timeMs, nextBoundary) {
   await player.locator('input[aria-label="Progress"]').evaluate((element, value) => {
     const input = element;
-    input.value = String(value);
+    // Keep the request within its beat even when a deliberately tiny beat follows a fractional boundary.
+    const rounded = Math.ceil(value.timeMs * value.precision) / value.precision;
+    const target = value.nextBoundary === undefined ? rounded : Math.min(rounded, value.timeMs + (value.nextBoundary - value.timeMs) / 2);
+    input.value = String(target);
+    const actual = Number(input.value);
+    const clampedFinal = value.timeMs >= Number(input.max);
+    if ((!clampedFinal && actual < value.timeMs) || (value.nextBoundary !== undefined && actual >= value.nextBoundary)) {
+      throw new Error("The progress control cannot represent this compiled sample within its beat.");
+    }
     input.dispatchEvent(new Event("input", { bubbles: true }));
-  }, timeMs);
+  }, { timeMs, nextBoundary, precision: SEEK_SUBMILLISECOND_PRECISION });
   // The range control serializes finite timeline values, so fractional compiled times may be rounded.
   await player.waitForFunction((value) => {
     const actual = Number(document.querySelector('input[aria-label="Progress"]')?.value);

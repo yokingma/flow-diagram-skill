@@ -1,5 +1,12 @@
 # Changelog
 
+## Animated HTML inspection
+
+- Fail offline HTML inspection when the delivered page attempts external network or local-file resources; preserve complete files and captured failure evidence without claiming quality coverage.
+- Record actual captions and diagram text at compiled HTML samples, verify backward seeking restores the initial state and keep outer page text stable. Seek fractional boundaries upward by less than one microsecond to avoid selecting the preceding beat through range serialization.
+- Give the editable HTML starter an author-adjustable minimum playback width and a keyboard-focusable horizontal reading area for narrow viewports.
+- Compare a canonical public SVG visual-state signature during end-to-start backseek, including stable element attributes and computed visibility/style state.
+
 ## Unreleased
 
 - Verify mixed Agent-page HTML and explicit SVG/PNG through copied-install regressions, including source-preserving exports, independent image evidence and partial PNG failure. Clarify standalone-image context and separate page/image viewing in installed references and bilingual guides.
