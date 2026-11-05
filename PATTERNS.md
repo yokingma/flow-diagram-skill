@@ -43,3 +43,7 @@ CI triggers include installation resources, tests/fixtures, guides, tools, root 
 ## Editable HTML pages
 
 `html-page.mjs` owns the Skill-managed playback region and page source/output identities. Preserve Agent-authored outer HTML/CSS, embed the complete public SDK HTML as opaque iframe content, and reject malformed or mismatched managed regions. Read page inputs once before revision allocation. Page delivery remains one HTML, diagram JSON and reports; no separate page source is required.
+
+## Page-preserving revisions
+
+Authoring inherits a selected parent's Agent page when no explicit HTML is supplied. Verify the parent's registered full-file identity before reuse; edited pages enter through `--html`. `--sync-html` permits an intentional diagram/theme update only after canonical managed-region and embedded playback-hash validation; SDK identity remains exact. The new report records both previous input/playback hashes. A new revision recomposes and inspects its own saved HTML without inheriting prior actual-viewing coverage. Author-side HTML review preflight compares the selected page snapshot to the reviewed file; review recording also verifies the newly delivered bytes before adopting prior observations.

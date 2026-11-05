@@ -72,7 +72,7 @@ Successful finalization saves the selected result under your working directory:
   report.md
 ```
 
-Open `diagram.html` in a browser for offline viewing and playback. Keep `diagram.json` for later edits. The reports distinguish file delivery, completed checks, and unresolved issues. Successful finalization removes this task's drafts and screenshots unless you ask to retain history; failed tasks retain recovery files.
+Open `diagram.html` in a browser for offline viewing and playback. Keep `diagram.html`, `diagram.json` and the reports for later edits that preserve the page design. The reports distinguish file delivery, completed checks, and unresolved issues. Successful finalization removes this task's drafts and screenshots unless you ask to retain history; failed tasks retain recovery files.
 
 ## Status and limits
 

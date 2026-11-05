@@ -1,5 +1,5 @@
 /** Coordinate saved author snapshots through SDK checks and exports; invalid reviews stop before allocation. */
-import { readHtmlPage } from "./html-page.mjs";
+import { readHtmlPage, inheritHtmlPage } from "./html-page.mjs";
 import { preflightReviews } from "./review-preflight.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -25,14 +25,16 @@ export async function runRevision(options, signal, command = "author") {
   if (command === "author") report.completion = { delivery: "pending", quality: "incomplete",
     requested: ["json", "html", ...(options.svg ? ["svg"] : []), ...(options.png ? ["png"] : []), ...(options.gif ? ["gif"] : []), ...(options["export-manifest"] ? ["exports"] : [])], completed: [] };
   try {
-    const htmlPage = await readHtmlPage(options.html);
-    await preflightReviews(options, { authoring: true });
+    const selectedHtmlPage = await readHtmlPage(options.html);
+    await preflightReviews(options, { authoring: true, htmlPage: selectedHtmlPage });
     report.revision = await allocateRevision(options.output || resolve(".diagrams", ".history"), options.name || "diagram", options.from || options.parent || null);
     const input = await resolveRevisionInput(report, options);
     report.stage = "save";
     report.sources = [{ path: resolve(input), kind: "diagram-json" }];
     const text = await saveDraft(report, input);
     await inheritRevision(report, options);
+    const htmlPage = command === "author" ? await inheritHtmlPage(report, selectedHtmlPage) : null;
+    if (options["sync-html"] && !htmlPage) throw new ToolError("html-page", "HTML_PAGE_INVALID", "--sync-html requires an explicit or inherited Agent HTML page.", "Select --html or a parent with an Agent page.", "sync-html");
     await saveReport(report);
     await saveSources(report, options.sources);
     signal?.throwIfAborted();

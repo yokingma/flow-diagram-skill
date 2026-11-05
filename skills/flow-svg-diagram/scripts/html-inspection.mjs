@@ -115,6 +115,8 @@ export async function recordHtmlReview(report, options) {
     }
     const htmlBytes = await readFile(join(parent.directory, "diagram.html"));
     if (digest(htmlBytes) !== inspection.file.sha256) throw new Error("The reviewed diagram.html bytes changed after inspection.");
+    const deliveredBytes = await readFile(join(report.revision.directory, "diagram.html"));
+    if (digest(deliveredBytes) !== inspection.file.sha256) throw new Error("The new diagram.html differs from the reviewed source; inspect and review the new file.");
     const review = JSON.parse((await readFile(options["html-review"], "utf8")).toString("utf8"));
     validateReviewInput(review, "html");
     const viewedStates = [];

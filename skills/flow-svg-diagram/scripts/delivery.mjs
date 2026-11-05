@@ -12,7 +12,7 @@ export async function deliverStatic(report, context) {
   context.signal?.throwIfAborted();
   const { renderHtml } = await importSdk(context.runtime, "/node");
   const playerHtml = await renderHtml(context.document, { theme: report.theme, autoplay: false, controls: true });
-  const html = context.htmlPage ? composeHtmlPage(context.htmlPage, playerHtml, report) : playerHtml;
+  const html = context.htmlPage ? composeHtmlPage(context.htmlPage, playerHtml, report, context.options["sync-html"]) : playerHtml;
   const path = join(report.revision.directory, "diagram.html");
   await saveComplete(path, html, context.signal);
   report.artifacts.push({ kind: "html", path });

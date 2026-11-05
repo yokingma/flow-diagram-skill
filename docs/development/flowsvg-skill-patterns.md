@@ -124,3 +124,7 @@ Keep `v###` for real saved diagram production and `review-<sha256>` for append-o
 ## Agent-composed HTML
 
 `author --html` reads one Agent page before allocation, validates the single Skill-owned playback region and preserves surrounding bytes. `html-page.mjs` fills an empty starter region or verifies the exact existing region against the current input bytes, SDK identity and theme. Playback uses the opaque complete result of public `renderHtml` in an iframe. Page provenance keeps portable source/output hashes. Inspect the outer saved HTML while locating playback controls inside the managed frame; root SDK-only HTML remains the ordinary no-page path.
+
+## Continued Agent pages
+
+`inheritHtmlPage` selects only a registered Agent page from the explicit saved parent. Full-file hash verification precedes reuse; an explicit `--html` remains the input for edited pages and portable final-delivery imports. `--sync-html` updates only a canonical, hash-verified managed region and records previous input/playback identities. Author HTML review preflight compares the read-once page snapshot, and review recording compares actual newly delivered HTML bytes before adopting observations. New page bytes remain outside old viewing coverage.

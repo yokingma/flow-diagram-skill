@@ -40,7 +40,7 @@ export async function loadReviewSource(options) {
 /** Check every submitted review before authoring can reserve a version or run expensive stages.
  * Returns source context and verified materials keyed by visual/html/artifact; this function writes nothing.
  */
-export async function preflightReviews(options, { authoring = false } = {}) {
+export async function preflightReviews(options, { authoring = false, htmlPage = null } = {}) {
   const kinds = Object.keys(REVIEW_KINDS).filter((kind) => options[`${kind}-review`] !== undefined);
   if (!kinds.length) return null;
   const materials = {};
@@ -54,6 +54,9 @@ export async function preflightReviews(options, { authoring = false } = {}) {
       context ??= await loadReviewSource(options);
       if (kind === "artifact") context.artifactEvidenceSource = await loadArtifactEvidenceSource(context, options["evidence-from"] ?? context.parent.id);
       if (authoring) {
+        if (kind === "html" && htmlPage && htmlPage.source.sha256 !== context.source.htmlInspection?.file?.sha256) {
+          throw new Error("Selected HTML page differs from the reviewed source. Author and inspect the changed page before submitting a new review.");
+        }
         const input = options.input ? await readFile(options.input) : (await scopedFile(context.parent.directory, join(context.parent.directory, "diagram.json"))).bytes;
         const theme = options.theme ?? JSON.parse(input.toString("utf8")).theme ?? "light";
         if (theme !== context.source.theme) throw new Error("Author effective theme differs from the reviewed source; supply its original --theme explicitly.");

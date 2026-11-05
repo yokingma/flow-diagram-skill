@@ -165,7 +165,9 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 
 助手围绕内嵌播放器编写页面 HTML/CSS，默认按“介绍、播放器、补充说明”阅读，并根据资料调整。最终仍交付一个可离线打开的自包含 HTML，以及可编辑图解 JSON 和报告，无需额外页面源文件。已有图解导入、纯导出和校验保留原有输入及入口。
 
-直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-svg-diagram/examples/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-svg-diagram/references/tool-contract.md#editable-html-pages)。
+直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-svg-diagram/examples/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域默认必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-svg-diagram/references/tool-contract.md#editable-html-pages)。
+
+继续任务内已保存的版本时，`--from <版本>` 或 `--input <修改后.json> --parent <版本>` 会保留该版本登记的 Agent 页面，除非用 `--html` 另选页面。只修改页面时保留原 JSON。有意更改图解或主题时使用 `--sync-html`；工具校验旧播放区后只替换该区域，保留外围设计。任务清理后，在新工作区使用已交付的 `diagram.html` 和 `diagram.json`，无需历史父版本。先读取最终报告，保留已请求的格式。页面字节变化后需要重新检查并实际查看；旧 HTML 复核不能用于修改后的页面。命令与失败处理见[页面续编](../../skills/flow-svg-diagram/references/tool-contract.md#continue-an-existing-page)。
 
 独立 SVG/PNG 需要单独判断上下文：仅出现在 HTML 中的正文不会包含在导出图片里。缺少浏览器时，文件可以已交付，但页面检查仍未执行。
 
