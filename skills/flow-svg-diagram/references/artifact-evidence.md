@@ -5,6 +5,8 @@ Use this workflow when SVG or PNG is part of the requested final delivery. Timel
 
 `qualityCoverage` lists each missing static surface with its artifact ID, expected display dimensions and carrying backdrop. Without registered evidence, these dimensions are the file's native size and the backdrop follows the resolved theme. The reason includes explicit settings and the next capture step. Ordinary preview screenshots retain their own viewport; they do not cover the actual static file, even after HTML or preview review. Capture at a user-selected width requires explicit `--artifact-preview-settings`; later revisions retain existing evidence with its original display scope but do not automatically capture new evidence.
 
+For mixed HTML and image delivery, apply the [standalone-image content allocation](delivery-contexts.md#html-with-standalone-images) to each actual image. Record whether its title, legend and limits are visible in the image or supplied by the declared host. HTML viewing covers the page; each SVG/PNG still requires its registered target-size evidence and separate observation.
+
 ## Collect evidence from existing artifacts
 
 1. Select the explicit diagram subject with `--from <revision>`, its name and task history root. Use `evidence`; existing SVG/PNG files remain the capture source.

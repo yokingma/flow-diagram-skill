@@ -128,3 +128,7 @@ Keep `v###` for real saved diagram production and `review-<sha256>` for append-o
 ## Continued Agent pages
 
 `inheritHtmlPage` selects only a registered Agent page from the explicit saved parent. Full-file hash verification precedes reuse; an explicit `--html` remains the input for edited pages and portable final-delivery imports. `--sync-html` updates only a canonical, hash-verified managed region and records previous input/playback identities. Author HTML review preflight compares the read-once page snapshot, and review recording compares actual newly delivered HTML bytes before adopting observations. New page bytes remain outside old viewing coverage.
+
+## Mixed HTML and static-image regressions
+
+Use copied-install tests for combined `--html --svg --png`, byte-preserving unchanged export, defaults without images and independent PNG failure. SVG/PNG are source-bound diagram exports; the outer page is not part of their bytes. Capture actual image artifacts through `evidence` at explicit display conditions and preserve separate HTML and artifact identities. Existing exporter behavior needs no duplicate composition path merely to support a page shell.

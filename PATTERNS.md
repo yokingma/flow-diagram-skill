@@ -47,3 +47,7 @@ CI triggers include installation resources, tests/fixtures, guides, tools, root 
 ## Page-preserving revisions
 
 Authoring inherits a selected parent's Agent page when no explicit HTML is supplied. Verify the parent's registered full-file identity before reuse; edited pages enter through `--html`. `--sync-html` permits an intentional diagram/theme update only after canonical managed-region and embedded playback-hash validation; SDK identity remains exact. The new report records both previous input/playback hashes. A new revision recomposes and inspects its own saved HTML without inheriting prior actual-viewing coverage. Author-side HTML review preflight compares the selected page snapshot to the reviewed file; review recording also verifies the newly delivered bytes before adopting prior observations.
+
+## Mixed HTML and image acceptance
+
+Exercise combined `--html` and explicit image requests through the copied installed CLI and actual saved outputs. Page prose stays outside static exports; test source bytes, image identities and independent evidence rather than treating HTML screenshots as image coverage. Preserve successful formats on partial failure and leave default delivery image-free. Context allocation belongs in `references/delivery-contexts.md`; export mechanics and evidence each link there.

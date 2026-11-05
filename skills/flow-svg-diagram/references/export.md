@@ -18,6 +18,18 @@ node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --name "a
 
 Single files are `diagram.svg` and `diagram.png`. Their report records include artifact ID, actual byte hash, original revision, source hash, SDK version/integrity, selected time/theme/background/camera and intrinsic dimensions. `exports` records each requested format's success or failure. Missing browsers and PNG errors preserve successful JSON/HTML/SVG; PNG remains incomplete. Generated files remain visually unreviewed until [actual artifact evidence](artifact-evidence.md) is viewed and recorded.
 
+### Include an Agent-authored page
+
+For a combined page and image request, pass the complete page with the normal explicit image flags:
+
+```text
+node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --html "page.html" --name "article" --svg --png --time 0 --png-width 1440 --browser "/path/to/chromium"
+```
+
+The page supplies outer HTML prose and styles; static exports use the saved diagram JSON. Allocate standalone-image context using [delivery contexts](delivery-contexts.md#html-with-standalone-images) before running this command. Inspect the actual HTML and each requested image separately. A successful HTML and SVG remain available if PNG fails; the combined request remains incomplete.
+
+For an unchanged finalized page, import its exact `diagram.json` and select its `diagram.html` with `--html` in the fresh workspace. This preserves the selected page design while adding only requested formats. Keep its managed region intact and matching the original source bytes, theme and SDK. Default `author --html` without image flags still delivers only JSON, HTML and reports.
+
 ## Named batch exports
 
 Use `--export-manifest <json>` instead of single-frame `--svg`, `--png` or `--time`. First run `validate` or `author` on the exact source bytes. Read `input.sha256`, `sdk.version`, `sdk.integrity`, `compilation.totalDurationMs` and `compilation.beats` from that report, then confirm the selected times with the user. Build this independent manifest with those actual values:

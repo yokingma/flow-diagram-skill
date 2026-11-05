@@ -30,6 +30,14 @@ Use spatial and temporal meaning to decide placement, rather than the field name
 
 For new or revised HTML explanations, author the page HTML/CSS around the player, beginning with [the editable page starter](../examples/html-page.html) when useful. The normal reading order is heading/introduction, player with captions and controls, then supporting prose; adapt it to the content. Page text uses HTML layout and remains readable independently of diagram scaling. Keep the managed playback region intact and follow [editable HTML pages](tool-contract.md#editable-html-pages) to submit the complete page. Inspect the actual page at its intended width, including a narrow width when relevant. An unchanged import, pure export or validation keeps its existing entry point and input design.
 
+## HTML with standalone images
+
+When HTML and SVG/PNG are requested together, record whether each image will be read on its own or inside a known article or slide. Before authoring, assign its necessary title, legend and qualifications to either the image or the named host. Keep object identities, relationship directions and essential conditions understandable in that recorded use. An HTML introduction covers only the page.
+
+Use the same diagram when its content serves both destinations. If an image needs additional context, explicitly author it in the diagram or confirm the target host supplies it. If the destinations need different diagrams, save separate, clearly named drafts and sources; an export time or camera selection changes the selected view, not its underlying explanation. Follow the existing source-fidelity decision process before omissions, aggregation or scope changes.
+
+Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for explicit requests and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page prose edits alone do not request images.
+
 ## Static assets for presentations
 
 Use the user's slide ratio and occupied area. A full-slide 16:9 canvas can start at `viewport: {"width": 1280, "height": 720}` when appropriate; local assets use their actual allocated aspect ratio. Neither choice creates PPTX or native PowerPoint shapes.
