@@ -16,7 +16,7 @@ const base = { version: 1, viewport: { width: 500, height: 400 }, nodes: [
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG 诊断 revisions ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], unit = skill) {

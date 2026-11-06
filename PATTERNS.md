@@ -2,25 +2,23 @@
 
 ## Installation unit and repository tools
 
-`skills/flow-svg-diagram/` is the complete distributable Skill. Installed instructions, references, examples, metadata, scripts, and runtime resources resolve within that directory. Repository-level development tests, acceptance tools, and human guides belong outside the installation unit.
+`skills/flow-diagram/` is the complete distributable Skill. Installed instructions, references, examples, metadata, scripts, and runtime resources resolve within that directory. Repository-level development tests, acceptance tools, and human guides belong outside the installation unit.
 
-The detailed [CLI patterns](docs/development/flowsvg-skill-patterns.md) remain the implementation reference for runtime preparation, deterministic layout, diagnostics, review identity, and quality projection. The [maintenance guide](docs/development/flowsvg-skill-maintenance.md) defines verification and documentation ownership. New release entries belong in root `CHANGELOG.md`; the migrated pre-split changelog is historical.
+The public repository is `yokingma/flow-diagram-skill`; the installed Skill name and directory are `flow-diagram`, displayed as Flow Diagram. FlowSVG remains the SDK dependency. The `scripts/flowsvg.mjs` helper and existing runtime/cache identities retain their names independently of the Skill's public identity.
+
+The detailed [CLI patterns](docs/development/flow-diagram-patterns.md) remain the implementation reference for runtime preparation, deterministic layout, diagnostics, review identity, and quality projection. The [maintenance guide](docs/development/flow-diagram-maintenance.md) defines verification and documentation ownership. New release entries belong in root `CHANGELOG.md`.
 
 Guide regression tests belong in `tests/` with the complete suite. When relocating existing tests, change only resource locations and imports required by the final structure, retain every behavioral assertion, and keep the source snapshot traceable. Cross-repository documentation cites an explicit source commit; execution never depends on those online references.
 
 ## Regression resource ownership
 
-Skill test files live in `tests/`. Copy installed resources from `skills/flow-svg-diagram`; direct geometry/plan imports use that same installation directory. Own historical label-risk JSON and artifact-pixel fixtures in `tests/fixtures/`, with source attribution and no dependency on an old `.scratch/` tree. GIF tests import the repository's direct `gifuct-js` development dependency rather than the SDK package's dependencies or types. The repository consumer harness belongs in `scripts/`; its fail-closed prerequisite test is part of the full regression entry.
+Skill test files live in `tests/`. Copy installed resources from `skills/flow-diagram`; direct geometry/plan imports use that same installation directory. Own historical label-risk JSON and artifact-pixel fixtures in `tests/fixtures/`, with source attribution and no dependency on an old `.scratch/` tree. GIF tests import the repository's direct `gifuct-js` development dependency rather than the SDK package's dependencies or types. The repository consumer harness belongs in `scripts/`; its fail-closed prerequisite test is part of the full regression entry.
 
 Run regressions from an independent repository copy with only its own installed development dependencies. Preserve browser-dependent test discovery and preconditions. A no-browser run must report the skipped browser cases; it does not satisfy the complete consumer/browser gate.
 
 ## Runtime isolation
 
 The installed CLI prepares the exact public SDK baseline in an isolated cache. `runtime/package-lock.json` and `runtime/manifest.json` record the runtime dependency identity. The repository's `pnpm-lock.yaml` only controls development tools. Neither workflow may resolve the SDK from a workspace or a sibling checkout.
-
-## Migration scope
-
-The initial installation unit is copied without behavior changes. Move repository resources to their agreed final paths; do not introduce old-path fallback logic. Preserve the source repository until the independent browser acceptance gate passes.
 
 ## Completion and evidence
 

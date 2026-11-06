@@ -17,7 +17,7 @@ const document = { version: 1, title: "订单请求", viewport: { width: 640, he
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG 静态 delivery ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {

@@ -1,102 +1,130 @@
-# Flow SVG Diagram
+# Flow Diagram
 
-通过 AI 编程助手创作可编辑的系统与流程图解。描述关系或提供来源资料，即可生成静态或动画图解，并获得离线播放文件和检查报告。
+基于 [FlowSVG（流形）](https://github.com/yokingma/FlowSVG)，从自然语言、文档或代码创作可编辑系统与流程图解的 Agent Skill。将静态说明或动画演示交付为自包含离线 HTML，同时保留可编辑 JSON 与检查报告；按需导出 SVG、PNG 或 GIF。
 
-[English](README.md) · [用户指南](docs/guides/flowsvg-skill-guide.zh-CN.md) · [示例](skills/flow-svg-diagram/examples/README.md) · [文档导航](docs/README.md)
+[English](README.md) · [安装](#安装) · [用户指南](docs/guides/flow-diagram-guide.zh-CN.md) · [示例](skills/flow-diagram/examples/README.md) · [贡献说明](CONTRIBUTING.md)
 
-## 可以做什么
+## 典型示例
 
-- 解释系统架构、请求响应、重试、状态变化和分阶段处理。
-- 从指定文件或代码仓库资料创作图解，记录来源与用户决定。
-- 修订可编辑 JSON，校验已有图解，检查布局诊断。
-- 交付在图外排版介绍、内嵌播放控件的离线 HTML，按需导出 SVG、PNG 或 GIF。
+以下为 FlowSVG SDK 上游 showcase 的演示动图，分别展示请求流程、部署架构和模型推理。可访问[在线演示](https://yokingma.github.io/FlowSVG/)交互播放；[图片来源与版本](docs/images/flowsvg/README.md)记录素材出处。
 
-本仓维护 **Skill** 的创作、布局计划、检查、复核与交付流程。[FlowSVG SDK](https://github.com/yokingma/FlowSVG) 维护图解模型、渲染、播放、导出 API 与应用嵌入。Skill 在隔离缓存中使用公开 npm 包 `flowsvg@0.2.2`，无需 SDK 源码仓库，也无需给用户应用添加 SDK 依赖。“可执行”指播放图解定义的视觉状态，不代表执行所解释的业务。
+### 请求与响应
 
-## 环境要求
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="客户端与服务之间的请求和响应动画" width="700"></p>
 
-- 支持 Skill、可执行本地 Node 命令的助手，例如 Codex 或 Claude Code。
-- Node.js 20+ 与 npm。首次准备运行时需要访问 npm registry；缓存完整后可离线复用。
-- PNG、GIF 与浏览器检查需要单独准备 Chrome/Chromium 可执行文件。生成 JSON、HTML 与 SVG 无需浏览器，Skill 不自动下载浏览器。
+### Web 服务部署
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/web-service-deployment.gif" alt="包含两个应用副本的 Web 服务部署" width="700"></p>
+
+### LLM 推理
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="包含 Transformer 层与 KV Cache 复用的 LLM 推理过程" width="700"></p>
 
 ## 安装
 
-推荐使用 Skills CLI 安装。在任意项目中执行：
+在需要使用 Skill 的项目中执行：
 
 ```sh
-npx skills add yokingma/flow-svg-diagram-skills
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
 ```
 
-CLI 会发现 `skills/flow-svg-diagram/SKILL.md`，并在交互过程中让你选择 Skill 和目标 Agent。若要无交互地安装到当前用户的 Codex 全局目录，执行：
+[Skills CLI](https://github.com/vercel-labs/skills) 根据环境识别或询问目标助手，默认安装到当前项目。如果希望当前用户在多个项目中使用，选择以下一条命令：
 
 ```sh
-npx skills add yokingma/flow-svg-diagram-skills --global --agent codex --yes
+# Codex
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent codex --global
+
+# Claude Code
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent claude-code --global
 ```
 
-不加 `--global` 时，Skill 安装到当前项目。可用 `npx skills list`、`npx skills check` 和 `npx skills update flow-svg-diagram` 查看与更新受 CLI 管理的安装。shorthand 默认使用仓库分支；需要可复现时请使用 release tag 或固定提交。
+需要 **Node.js 20+ 与 npm**，通过 GitHub 安装还需要 Git。助手须支持 Skill 和本地 Node 命令。首次制作图解会将锁定的运行时包安装到隔离缓存，需要访问 npm registry；缓存完整后可离线复用，不改变用户应用的依赖。
 
-本地开发或需要手动固定源码时，再克隆仓库并复制完整的 [`skills/flow-svg-diagram/`](skills/flow-svg-diagram/) 目录。保留包括 `LICENSE`、脚本、参考资料、示例与运行时锁文件在内的所有文件。在克隆目录中，首次为当前用户安装 Codex Skill 的 macOS/Linux 命令如下：
+**PNG、GIF 与浏览器检查还需要单独安装的 Chrome/Chromium 可执行文件。** 生成 JSON、HTML 与 SVG 无需浏览器，Skill 不自动下载浏览器。
 
-```sh
-mkdir -p "$HOME/.agents/skills"
-cp -R skills/flow-svg-diagram "$HOME/.agents/skills/flow-svg-diagram"
-node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
-node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
-```
+Codex 未发现新 Skill 时，重启后检查。手动安装、Windows、更新与固定版本源码的步骤见[安装指南](docs/guides/flow-diagram-guide.zh-CN.md#2-安装到宿主)。使用 Skill 无需执行 `pnpm install`，也无需 SDK 源码仓库。
 
-仅在目标目录尚不存在时使用上述复制命令。更新时先备份，再替换整个安装目录，避免已删除文件残留。[安装指南](docs/guides/flowsvg-skill-guide.zh-CN.md#2-安装到宿主)包含项目级路径、Claude Code 与 PowerShell 步骤。Codex 未发现新 Skill 时重启后检查。使用 Skill 无需执行 `pnpm install`。
-
-## 创建第一张图解
+## 开始使用
 
 在 Codex 中发送：
 
 ```text
-$flow-svg-diagram
+$flow-diagram
 创建静态架构图：客户端调用 API 服务，API 服务查询数据库。
 API 与数据库属于“订单平台”，客户端位于该边界之外。
 使用中文标签和浅色主题，命名为 order-platform。
 交付默认 JSON、离线 HTML，另外导出 SVG。
 ```
 
-Claude Code 将第一行换为 `/flow-svg-diagram`。需要动画时，明确说明先后顺序与状态变化。指定资料创作、修订、导出与直接调用 CLI 的方法见[用户指南](docs/guides/flowsvg-skill-guide.zh-CN.md)。
+Claude Code 将第一行换为 `/flow-diagram`。
 
-成功收尾后，选定结果保存在工作目录下：
+需要动画时，说明先后顺序与状态变化，例如：
 
 ```text
-.diagrams/order-platform/
-  diagram.json
-  diagram.html
-  diagram.svg       # 本例明确请求
-  report.json
-  report.md
+使用 flow-diagram skill 解释一次请求与响应。
+客户端、API 与数据库全程可见。先展示全图，再依次演示请求到达 API、
+查询数据库、向客户端返回响应，最后回到全图。
 ```
 
-用浏览器打开 `diagram.html` 离线查看与播放，保留 `diagram.html`、`diagram.json` 与报告，以便后续编辑时保留页面设计。报告分别说明文件交付、已完成检查与未解决问题。成功收尾默认清理本次任务的草稿和截图；需要完整历史时提前提出。失败任务保留恢复文件。
+根据资料创作时，指定允许读取的文件或目录。已知受众、实际展示尺寸和导出格式时，一并说明。助手会询问影响含义或展示的缺口；明确要求后，可保存项目设计偏好。
 
-## 当前状态与限制
+## 交付内容
 
-项目仍处于实验阶段，`0.1.0` 为准备中的首个独立版本。Skill 版本、工具报告版本与 SDK 版本分别管理。需要可复现安装时，选择发布标签或记录源码提交；本页不表示发布标签已经存在。
+成功收尾后，用浏览器打开 `.diagrams/order-platform/diagram.html`。页面可离线使用，包含播放控件，初始状态为暂停。
 
+| 文件 | 用途 |
+| --- | --- |
+| `diagram.html` | 离线讲解页面与播放器 |
+| `diagram.json` | 可编辑图解，用于修订与导出 |
+| `report.json`、`report.md` | 来源、已完成检查、警告与未完成事项 |
+| `diagram.svg` | 本例明确请求的静态导出 |
 
-生成文件与程序检查不代表实际视觉复核。缺少浏览器或图片查看能力时，检查覆盖保持未完成。Skill 交付图解资产，不生成 PPTX 或 PowerPoint 原生形状。
+SVG、PNG 与 GIF 均为可选导出。HTML 页面的正文位于图外，不包含在图片导出中。保留 HTML、JSON 与报告，以便后续编辑时保留页面设计。成功收尾默认清理本次任务的草稿和截图；需要保留历史时提前提出。失败任务保留恢复文件。
 
-## 开发与贡献
+## 适用范围
 
-使用 Node 20+ 与 `packageManager` 指定的 pnpm `10.12.1`：
+- 系统架构与边界、请求响应、重试、状态变化和分阶段处理。
+- 根据指定资料制作图解，记录来源与内容取舍。
+- 修订、只读校验、布局诊断与交付文件检查。
+- 离线讲解、网页插图和演示文稿图片素材；不生成 PPTX 或 PowerPoint 原生形状。
+
+## 基于 FlowSVG
+
+[FlowSVG（流形）](https://github.com/yokingma/FlowSVG) 是面向系统和流程解释的开源 TypeScript 图解 SDK。用同一份可编辑 JSON 或 TypeScript 文档描述节点、连线、分组、场景和节拍，由 SDK 校验、渲染、播放状态变化，并导出离线 HTML、SVG、PNG 或 GIF。“可执行”指作者定义的视觉状态与过渡，不执行所解释的业务流程。
+
+本 **Skill** 指导助手读取资料、设计讲解方式、创作与修订图解、规划布局、检查结果，最后交付文件与报告；**FlowSVG SDK** 提供底层渲染与播放能力。需要将图解嵌入应用时，可直接使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成，见 [SDK 仓库](https://github.com/yokingma/FlowSVG)与 [npm 包](https://www.npmjs.com/package/flowsvg)。
+
+### 运行时依赖
+
+Skill 在隔离缓存中准备以下锁定的软件包：
+
+| 软件包 | 版本 | 用途 |
+| --- | --- | --- |
+| `flowsvg` | `0.2.2` | 图解校验、内容测量、几何诊断、渲染、播放与导出 |
+| `playwright-core` | `1.58.2` | 控制已准备的浏览器，执行检查及 PNG、GIF 生成；不包含浏览器程序 |
+| `gifenc` | `1.0.3` | GIF 编码，通过 `flowsvg` 间接安装 |
+
+[运行时 manifest](skills/flow-diagram/runtime/manifest.json)记录精确 SDK 基线；[运行时依赖清单](skills/flow-diagram/runtime/package.json)与[锁文件](skills/flow-diagram/runtime/package-lock.json)定义依赖版本和完整性。上游 SDK 发布新版本不会自动升级 Skill。React、Vue 属于 SDK 的可选集成，使用本 Skill 无需安装它们。用户需要的 Node/npm 与浏览器环境见[安装](#安装)。
+
+## 当前状态
+
+项目处于实验阶段，`0.1.0` 为首个独立发布候选版本；发布与验证要求见[发布流程](docs/releasing.md)。安装命令跟随仓库默认分支。
+
+平台与助手宿主的验证范围仍有限，Windows 控制台 Ctrl+C 验收及 Claude Code 图解任务验证尚未完成。详见[已知平台限制与验证要求](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence)；各候选版本的已验证环境应在发布说明中列明。
+
+文件生成、程序检查与实际视觉复核分别记录。缺少浏览器或图片查看能力时，依赖这些能力的检查保持未完成。
+
+## 开发
+
+使用 Node 20+ 与 pnpm `10.12.1`：
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm test
 ```
 
-浏览器用例仅在 `FLOWSVG_TEST_BROWSER` 指向已准备好的 Chrome/Chromium 时运行，否则明确跳过。独立的完整消费者验收还需要真实 Node 18 可执行文件，以验证不受支持运行时的拒绝行为：
+未设置 `FLOWSVG_TEST_BROWSER` 时会跳过依赖浏览器的测试。浏览器与消费者验收步骤见[贡献说明](CONTRIBUTING.md)；维护、架构决策与发布记录从[文档导航](docs/README.md)进入。
 
-```sh
-pnpm verify:consumer --browser "/path/to/chrome" --node18 "/path/to/node18" --output acceptance/evidence.json
-```
+## 许可
 
-参阅[贡献说明](CONTRIBUTING.md)、[维护指南](docs/development/flowsvg-skill-maintenance.md)、[实现约定](PATTERNS.md)、[变更记录](CHANGELOG.md)与[发布流程](docs/releasing.md)。仓库开发依赖使用根目录 pnpm 锁；安装后的 Skill 使用独立 npm 运行时锁。
-
-## 许可与来源
-
-采用 [MIT 许可证](LICENSE)，保留 copyright © 2026 zac_ma。可单独分发的 Skill 内含同一份[许可证](skills/flow-svg-diagram/LICENSE)。本项目从 FlowSVG 提取；[快照来源](docs/snapshot-provenance.md)记录来源提交、归属与运行时身份。第三方运行时包保留各自许可证。
+采用 [MIT 许可证](LICENSE)，保留 copyright © 2026 zac_ma。可单独分发的 Skill 内含同一份[许可证](skills/flow-diagram/LICENSE)。从 FlowSVG 提取的来源见[来源与许可说明](CONTRIBUTING.md#source-and-license-attribution)。第三方运行时包保留各自许可证。

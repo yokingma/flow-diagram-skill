@@ -4,10 +4,10 @@ Before changing a domain contract or terminology, read [GLOSSARY.md](../../GLOSS
 
 ## Repository boundaries
 
-- `skills/flow-svg-diagram/` is the complete installation unit: Agent guidance, host metadata, scripts, references, examples, runtime resources, and license.
+- `skills/flow-diagram/` is the complete installation unit: Agent guidance, host metadata, scripts, references, examples, runtime resources, and license.
 - `tests/` and `tests/fixtures/` own independent regression coverage and its inputs.
 - `scripts/` contains repository acceptance tooling.
-- `docs/` contains human guides, maintenance guidance, architecture decisions, and recorded acceptance.
+- `docs/` and local work records follow the [documentation scope](../README.md#documentation-scope).
 - Root `PATTERNS.md` and `CHANGELOG.md` describe independent repository conventions and releases.
 
 The SDK is a separately versioned public dependency. Its document model, rendering, playback, and export APIs remain SDK responsibilities. Use the versioned SDK manuals linked from the glossary when assessing that boundary; installed execution uses the bundled references and pinned runtime rather than a sibling source checkout.

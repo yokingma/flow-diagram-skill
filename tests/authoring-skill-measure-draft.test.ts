@@ -10,7 +10,7 @@ let skill: string;
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG draft measurement ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {

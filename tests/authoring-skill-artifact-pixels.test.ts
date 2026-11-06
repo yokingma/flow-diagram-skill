@@ -12,7 +12,7 @@ const executablePath = process.env.FLOWSVG_TEST_BROWSER;
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG pixels 独立 ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
   await cp(resolve("tests/fixtures/artifact-evidence"), join(root, "fixtures"), { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });

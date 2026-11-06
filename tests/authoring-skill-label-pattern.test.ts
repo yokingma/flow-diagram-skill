@@ -11,7 +11,7 @@ const fixtureDirectory = resolve("tests/fixtures/label-pattern");
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG label patterns ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {

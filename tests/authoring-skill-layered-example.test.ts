@@ -10,12 +10,12 @@ const readJson = async (path: string): Promise<Record<string, unknown>> =>
 
 test("bundled layered architecture example declares the teaching semantics at the public files", async () => {
   const [example, sources, patterns, english, chinese, maintenance] = await Promise.all([
-    readJson("skills/flow-svg-diagram/examples/layered-architecture.json"),
-    readJson("skills/flow-svg-diagram/examples/semantic-pattern-sources.json"),
-    readFile(resolve("skills/flow-svg-diagram/references/semantic-patterns.md"), "utf8"),
-    readFile(resolve("docs/guides/flowsvg-skill-guide.md"), "utf8"),
-    readFile(resolve("docs/guides/flowsvg-skill-guide.zh-CN.md"), "utf8"),
-    readFile(resolve("docs/development/flowsvg-skill-maintenance.md"), "utf8")
+    readJson("skills/flow-diagram/examples/layered-architecture.json"),
+    readJson("skills/flow-diagram/examples/semantic-pattern-sources.json"),
+    readFile(resolve("skills/flow-diagram/references/semantic-patterns.md"), "utf8"),
+    readFile(resolve("docs/guides/flow-diagram-guide.md"), "utf8"),
+    readFile(resolve("docs/guides/flow-diagram-guide.zh-CN.md"), "utf8"),
+    readFile(resolve("docs/development/flow-diagram-maintenance.md"), "utf8")
   ]);
   const nodes = example.nodes as Array<Record<string, unknown>>;
   const edges = example.edges as Array<Record<string, unknown>>;
@@ -46,11 +46,11 @@ test("copied skill measures the layered draft, preserves IDs and finalizes the b
   const root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG layered acceptance ")));
   try {
     const skill = join(root, "installed skill");
-    await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+    await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
     const workspace = join(root, ".diagrams", ".work", "layered-architecture", "task-01");
     await mkdir(workspace, { recursive: true });
     const source = join(root, "layered-source.json");
-    const sourceBytes = await readFile(resolve("skills/flow-svg-diagram/examples/layered-architecture.json"));
+    const sourceBytes = await readFile(resolve("skills/flow-diagram/examples/layered-architecture.json"));
     await writeFile(source, sourceBytes);
     const run = (args: string[]) => new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
       const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
@@ -111,9 +111,9 @@ test.skipIf(!browser)("copied layered example can complete PNG delivery when a p
   const root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG layered PNG ")));
   try {
     const skill = join(root, "installed skill");
-    await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+    await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
     const source = join(root, "layered.json");
-    await cp(resolve("skills/flow-svg-diagram/examples/layered-architecture.json"), source);
+    await cp(resolve("skills/flow-diagram/examples/layered-architecture.json"), source);
     const run = (args: string[]) => new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
       const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
         cwd: root,

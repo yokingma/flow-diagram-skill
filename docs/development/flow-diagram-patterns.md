@@ -1,4 +1,4 @@
-# FlowSVG skill implementation patterns
+# Flow Diagram implementation patterns
 
 ## Edge-label pattern diagnosis
 
@@ -18,7 +18,7 @@ Validate review-only CLI options at the command boundary. Unsupported commands m
 
 Keep file delivery eligibility separate from quality coverage. Once validation, compilation and every requested file succeed, optional browser or visual failures remain in the report while finalization can publish the complete files.
 
-This project maintenance document covers the CLI in `skills/flow-svg-diagram/scripts/`. It is outside the skill installation unit; see the [maintenance guide](flowsvg-skill-maintenance.md) for verification and installation boundaries.
+This project maintenance document covers the CLI in `skills/flow-diagram/scripts/`. It is outside the skill installation unit; see the [maintenance guide](flow-diagram-maintenance.md) for verification and installation boundaries.
 
 ## Read-only validation
 
@@ -26,7 +26,7 @@ This project maintenance document covers the CLI in `skills/flow-svg-diagram/scr
 
 ## Layout diagnostics and measurement estimates
 
-Keep diagnostic `nextStep` text aligned with [the authorization and decision rules](../../skills/flow-svg-diagram/references/diagnostics-and-revisions.md). Already authorized mechanical corrections can proceed; changes to meaning or outside the current authorization require a user decision. Preserve warning identities, severity and formal decision verification when updating action text.
+Keep diagnostic `nextStep` text aligned with [the authorization and decision rules](../../skills/flow-diagram/references/diagnostics-and-revisions.md). Already authorized mechanical corrections can proceed; changes to meaning or outside the current authorization require a user decision. Preserve warning identities, severity and formal decision verification when updating action text.
 
 Use public SDK frame `contentLayout.lines` to count distinct baseline `y` positions for deterministic structural estimates. Share ordinary-label measurement in `label-measurement.mjs`: read public `labelLines` and calibrate line spacing with a two-line public frame at the same width and typography. SDK frames retain overflowing lines, so a minimal probe height is sufficient. The pinned baseline reserves 24 vertical units for ordinary labels. Keep this baseline constant next to the calibration and update both with a verified SDK upgrade. Label overflow reasons reuse this estimator at the sampled node width and label; diagnostic code never reads private compiled-diagram state. Do not infer rows from height/font or count marker/tag fragments separately. Keep the method label explicit and exclude graph-internal labels and browser glyph pixels. Warning groups summarize related records only; exact issue IDs and times in `diagnostics` remain the decision seam.
 
@@ -36,11 +36,11 @@ Use public SDK frame `contentLayout.lines` to count distinct baseline `y` positi
 
 ## Layout-plan validation
 
-Keep `layout-plan.mjs` pure and independent of SDK installation. Its validation interface returns field-level diagnostics and does not mutate the plan or draft. Run public SDK draft validation separately before layout. A group primitive changes the local coordinate scope only when its ID names an existing group; anonymous rows and columns preserve the enclosing semantic parent. Overrides accept geometry only. Reject group spacing overrides unless their target is expanded as a group container in the plan. Unassigned nodes keep their existing geometry. See the [versioned contract](../../skills/flow-svg-diagram/references/layout-plan.md).
+Keep `layout-plan.mjs` pure and independent of SDK installation. Its validation interface returns field-level diagnostics and does not mutate the plan or draft. Run public SDK draft validation separately before layout. A group primitive changes the local coordinate scope only when its ID names an existing group; anonymous rows and columns preserve the enclosing semantic parent. Overrides accept geometry only. Reject group spacing overrides unless their target is expanded as a group container in the plan. Unassigned nodes keep their existing geometry. See the [versioned contract](../../skills/flow-diagram/references/layout-plan.md).
 
 ## Layout plan workflow
 
-Use the single workflow in [static-layout](../../skills/flow-svg-diagram/references/static-layout.md#layout-plan-workflow) for draft, measurement, layout, validation, author/review and finalization. Keep Agent semantic choices separate from deterministic geometry. The layout-assistance examples are teaching data: five layers establish reading order only, and four edges are teaching relations; they do not imply production facts or call timing.
+Use the single workflow in [static-layout](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow) for draft, measurement, layout, validation, author/review and finalization. Keep Agent semantic choices separate from deterministic geometry. The layout-assistance examples are teaching data: five layers establish reading order only, and four edges are teaching relations; they do not imply production facts or call timing.
 
 ## Layered teaching examples
 

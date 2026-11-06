@@ -1,4 +1,4 @@
-# Flow SVG Diagram Skill 术语
+# Flow Diagram Skill 术语
 
 本仓维护创作、布局、检查、复核和交付术语。下方 SDK 术语用于理解公开 SDK 基线；SDK 模型与 API 的权威来源为[版本化 SDK 手册](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md)。术语初始来源为 [FlowSVG `86bb7ad`](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/GLOSSARY.md)，两项产品职责定义沿用已确认的拆分决定。
 
@@ -9,9 +9,9 @@
 ## 语言
 
 **FlowSVG SDK**：用于校验、渲染、播放和导出图解文档的软件开发工具包，也是应用集成的基础。
-_避免_：Flow SVG Diagram Skill、图解创作助手
+_避免_：Flow Diagram Skill、图解创作助手
 
-**Flow SVG Diagram Skill**：面向系统和流程解释的图解创作能力，供助手组织来源资料、创作与修订图解、检查交付结果。
+**Flow Diagram Skill**：面向系统和流程解释的图解创作能力，供助手组织来源资料、创作与修订图解、检查交付结果。
 _避免_：FlowSVG SDK、播放器
 
 **图解文档（Diagram Document）**：描述一张图的节点、连线、场景和节拍的可序列化数据。

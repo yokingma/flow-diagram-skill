@@ -25,4 +25,4 @@ The portable report retains hashes, source metadata, scoped review observations 
 
 Successful ordinary tasks retain only user-facing deliverables. Full screenshot evidence and helper scripts are unavailable after default cleanup, so full history must be requested before finalization. Failed or cancelled tasks remain available for recovery. Cleanup does not change quality status or establish visual approval.
 
-See the [tool contract](../../skills/flow-svg-diagram/references/tool-contract.md#finalize-the-task) and [maintenance patterns](../development/flowsvg-skill-patterns.md).
+See the [tool contract](../../skills/flow-diagram/references/tool-contract.md#finalize-the-task) and [maintenance patterns](../development/flow-diagram-patterns.md).

@@ -28,7 +28,7 @@ let installedSkill: string;
 beforeAll(async () => {
   acceptanceRoot = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG presentation recipes ")));
   installedSkill = join(acceptanceRoot, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), installedSkill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), installedSkill, { recursive: true });
 });
 
 afterAll(async () => {

@@ -10,9 +10,9 @@ let skill: string;
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG layout acceptance ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
-  await cp(resolve("skills/flow-svg-diagram/examples/layout-assistance.json"), join(root, "layout-assistance.json"));
-  await cp(resolve("skills/flow-svg-diagram/examples/layout-assistance-plan.json"), join(root, "layout-assistance-plan.json"));
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram/examples/layout-assistance.json"), join(root, "layout-assistance.json"));
+  await cp(resolve("skills/flow-diagram/examples/layout-assistance-plan.json"), join(root, "layout-assistance-plan.json"));
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {

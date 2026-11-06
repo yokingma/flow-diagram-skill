@@ -583,7 +583,7 @@ async function main() {
   skill = join(root, 'installed skill');
   cache = join(root, '缓存 cache');
   evidence.consumerDirectory = root;
-  await cp(resolve(values.skill ?? 'skills/flow-svg-diagram'), skill, { recursive: true });
+  await cp(resolve(values.skill ?? 'skills/flow-diagram'), skill, { recursive: true });
   await mkdir(join(root, 'browser temp'));
   await writeFile(join(root, 'package.json'), '{"dependencies":{"flowsvg":"0.0.0"}}');
   await writeFile(join(root, 'package-lock.json'), 'application lock unchanged');

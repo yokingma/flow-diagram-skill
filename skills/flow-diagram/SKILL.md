@@ -1,11 +1,11 @@
 ---
-name: flow-svg-diagram
+name: flow-diagram
 description: Create and revise executable FlowSVG diagrams to explain systems, processes, and state changes with static views or animation. Validate or diagnose diagrams, manage project design preferences, and export JSON, offline HTML, SVG, PNG, or GIF. Reuse the document for playback and SDK embedding.
 ---
 
-# Flow SVG Diagram
+# Flow Diagram
 
-Flow SVG Diagram is the authoring skill for executable system and process diagrams: author once, then play, embed, inspect, and export the result.
+Flow Diagram is the authoring skill for executable system and process diagrams: author once, then play, embed, inspect, and export the result.
 
 Turn descriptions and source material into **visual explanations**: static or animated diagrams that make structures, relationships, and processes clear. The aim is to preserve the source meaning and help readers understand how things are organized, connected, and change over time.
 

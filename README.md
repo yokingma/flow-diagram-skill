@@ -1,57 +1,55 @@
-# Flow SVG Diagram
+# Flow Diagram
 
-Create editable system and process diagrams with an AI coding assistant. Describe the relationships, provide source material, and receive a static or animated diagram with offline playback and inspection reports.
+An Agent Skill built on [FlowSVG](https://github.com/yokingma/FlowSVG) for creating editable system and process diagrams from descriptions, documents, or code. Deliver a static explanation or an animated walkthrough as a self-contained offline HTML page, with editable JSON and check reports. Export SVG, PNG, or GIF when requested.
 
-[简体中文](README.zh-CN.md) · [User guide](docs/guides/flowsvg-skill-guide.md) · [Examples](skills/flow-svg-diagram/examples/README.md) · [Documentation](docs/README.md)
+[简体中文](README.zh-CN.md) · [Install](#install) · [User guide](docs/guides/flow-diagram-guide.md) · [Examples](skills/flow-diagram/examples/README.md) · [Contributing](CONTRIBUTING.md)
 
-## What you can do
+## Examples
 
-- Explain architectures, request/response flows, retries, state changes, and staged processing.
-- Create diagrams from designated files or repository sources, with recorded sources and decisions.
-- Revise editable JSON, validate existing diagrams, and inspect layout diagnostics.
-- Deliver offline HTML with page introductions outside the diagram and embedded playback controls; request SVG, PNG, or GIF for other uses.
+Upstream FlowSVG SDK showcase animations illustrate request flows, deployment architecture, and model inference. Browse the [interactive demo](https://yokingma.github.io/FlowSVG/) or see the [asset sources and versions](docs/images/flowsvg/README.md).
 
-This repository maintains the **Skill**: authoring, layout plans, checks, review, and delivery. [FlowSVG SDK](https://github.com/yokingma/FlowSVG) maintains the document model, rendering, playback, export APIs, and application embedding. The Skill uses the published `flowsvg@0.2.2` package in an isolated cache. You do not need the SDK source repository or an SDK dependency in your application. “Executable” diagrams play authored visual states; they do not run the business process being explained.
+### Request and response
 
-## Requirements
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="Animated request and response between a client and service" width="700"></p>
 
-- An assistant that supports skills and can execute local Node commands, such as Codex or Claude Code.
-- Node.js 20+ and npm. Initial runtime preparation needs access to the npm registry; a complete cache can then be reused offline.
-- A separately prepared Chrome/Chromium executable for PNG, GIF, and browser inspection. JSON, HTML, and SVG generation work without it. The Skill never downloads a browser.
+### Web service deployment
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/web-service-deployment.gif" alt="Web service deployment with two application replicas" width="700"></p>
+
+### LLM inference
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="LLM inference with Transformer layers and KV Cache reuse" width="700"></p>
 
 ## Install
 
-The recommended installation uses the Skills CLI. From any project, run:
+Run in the project where you want to use the Skill:
 
 ```sh
-npx skills add yokingma/flow-svg-diagram-skills
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
 ```
 
-The CLI discovers `skills/flow-svg-diagram/SKILL.md` and lets you select the Skill and target Agent interactively. To install directly to the global Codex directory without prompts, use:
+The [Skills CLI](https://github.com/vercel-labs/skills) selects a detected assistant or asks you to choose one. Installation is project-local by default. To install for the current user across projects, choose one of these commands:
 
 ```sh
-npx skills add yokingma/flow-svg-diagram-skills --global --agent codex --yes
+# Codex
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent codex --global
+
+# Claude Code
+npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent claude-code --global
 ```
 
-Without `--global`, the Skill is installed for the current project. Use `npx skills list`, `npx skills check`, and `npx skills update flow-svg-diagram` to inspect and update a managed installation. The shorthand resolves the repository's default branch; use a release tag or commit when reproducibility matters.
+You need **Node.js 20+ and npm**, and Git for the GitHub installation. Your assistant must support skills and local Node commands. The first diagram task installs locked runtime packages into an isolated cache and needs access to the npm registry; a complete cache can be reused offline. Your application's dependencies are not changed.
 
-For local development or a manually pinned checkout, clone the repository and copy the complete [`skills/flow-svg-diagram/`](skills/flow-svg-diagram/) directory. Preserve all files, including `LICENSE`, scripts, references, examples, and runtime locks. From the cloned repository, a first user-level Codex installation on macOS/Linux is:
+**PNG, GIF, and browser inspection also need a separately installed Chrome/Chromium executable.** JSON, HTML, and SVG generation work without it. The Skill never downloads a browser.
 
-```sh
-mkdir -p "$HOME/.agents/skills"
-cp -R skills/flow-svg-diagram "$HOME/.agents/skills/flow-svg-diagram"
-node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" doctor
-node "$HOME/.agents/skills/flow-svg-diagram/scripts/flowsvg.mjs" prepare
-```
+Restart Codex if the new Skill is not discovered. See the [installation guide](docs/guides/flow-diagram-guide.md#2-install-in-a-host) for manual installation, Windows, updates, and fixed-version checkouts. Using the Skill does not require `pnpm install` or an SDK source checkout.
 
-Use this copy command only when the destination does not already exist. For updates, back up and replace the whole installed directory so removed files do not survive an update. The [installation guide](docs/guides/flowsvg-skill-guide.md#2-install-in-a-host) covers project-level paths, Claude Code, and PowerShell. Restart Codex if the new Skill is not discovered. You do not need `pnpm install` to use the Skill.
-
-## Create your first diagram
+## Use it
 
 In Codex, send:
 
 ```text
-$flow-svg-diagram
+$flow-diagram
 Create a static architecture diagram: a client calls an API service,
 and the API service queries a database. The API and database belong to
 the Order platform; the client is outside that boundary.
@@ -59,45 +57,76 @@ Use English labels and a light theme. Name it order-platform.
 Deliver the default JSON and offline HTML, and also export SVG.
 ```
 
-In Claude Code, use `/flow-svg-diagram` on the first line. For animation, request the sequence and state changes explicitly. See the [user guide](docs/guides/flowsvg-skill-guide.md) for source-based tasks, revisions, exports, and direct CLI use.
+In Claude Code, replace the first line with `/flow-diagram`.
 
-Successful finalization saves the selected result under your working directory:
+For animation, describe the sequence and state changes, for example:
 
 ```text
-.diagrams/order-platform/
-  diagram.json
-  diagram.html
-  diagram.svg       # requested in this example
-  report.json
-  report.md
+Use the flow-diagram skill to explain a request and response.
+Keep the client, API, and database visible throughout. First show the
+overview, then animate the request to the API, the database query,
+and the response to the client. Finish with the overview.
 ```
 
-Open `diagram.html` in a browser for offline viewing and playback. Keep `diagram.html`, `diagram.json` and the reports for later edits that preserve the page design. The reports distinguish file delivery, completed checks, and unresolved issues. Successful finalization removes this task's drafts and screenshots unless you ask to retain history; failed tasks retain recovery files.
+When working from sources, name the files or directories the assistant may read. Include the audience, intended display size, and export formats when known. The assistant asks about gaps that affect meaning or presentation; project design preferences can be saved on explicit request.
 
-## Status and limits
+## What you get
 
-The project is experimental; `0.1.0` is the initial independent version under preparation. Skill, tool-report, and SDK versions are separate identities. Use a release tag or record your checkout commit when you need a reproducible installation; this README does not assert that a release tag has been published.
+After successful finalization, open `.diagrams/order-platform/diagram.html` in a browser. It works offline and includes playback controls; the initial state is paused.
 
+| File | Purpose |
+| --- | --- |
+| `diagram.html` | Offline explanation page and player |
+| `diagram.json` | Editable diagram for revisions and exports |
+| `report.json`, `report.md` | Sources, completed checks, warnings, and unfinished work |
+| `diagram.svg` | Static export explicitly requested in the example |
 
-File generation and automated checks do not establish actual visual review. Missing browsers or image-viewing capability leave inspection coverage incomplete. The Skill produces diagram assets; PPTX files and native PowerPoint shapes are outside its scope.
+SVG, PNG, and GIF are optional exports. HTML page prose is outside the diagram and is not included in image exports. Keep the HTML, JSON, and reports together for later edits that preserve the page design. Successful finalization removes the task's drafts and screenshots unless you request history retention; failed tasks retain recovery files.
 
-## Development and contribution
+## What it covers
 
-Use Node 20+ and pnpm `10.12.1` (the `packageManager` version):
+- System architecture and boundaries, request/response flows, retries, state changes, and staged processing.
+- Source-based diagrams with recorded references and content decisions.
+- Revisions, read-only validation, layout diagnostics, and checks of delivered files.
+- Offline explanations, web illustrations, and image assets for presentations. PPTX files and native PowerPoint shapes are outside the Skill's scope.
+
+## Powered by FlowSVG
+
+[FlowSVG](https://github.com/yokingma/FlowSVG) is an open-source TypeScript SDK for executable diagrams that explain systems and processes. A single editable JSON or TypeScript document describes nodes, connections, groups, scenes, and beats. The SDK validates and renders that document, plays its state changes, and exports offline HTML, SVG, PNG, or GIF. “Executable” refers to authored visual states and transitions; it does not run the business process being explained.
+
+This **Skill** guides the assistant through reading sources, designing the explanation, authoring and revising the diagram, planning layout, inspecting results, and delivering files and reports. **FlowSVG SDK** supplies its rendering and playback foundation. To embed diagrams in an application, the SDK offers native browser, React, Vue, and Web Component integrations; see the [SDK repository](https://github.com/yokingma/FlowSVG) and [npm package](https://www.npmjs.com/package/flowsvg).
+
+### Runtime dependencies
+
+The Skill prepares these locked packages in its isolated cache:
+
+| Package | Version | Role |
+| --- | --- | --- |
+| `flowsvg` | `0.2.2` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
+| `playwright-core` | `1.58.2` | Controls the prepared browser for inspection, PNG, and GIF generation; includes no browser executable |
+| `gifenc` | `1.0.3` | GIF encoding, installed transitively through `flowsvg` |
+
+The [runtime manifest](skills/flow-diagram/runtime/manifest.json) records the exact SDK baseline; the [runtime package](skills/flow-diagram/runtime/package.json) and [lockfile](skills/flow-diagram/runtime/package-lock.json) define dependency versions and integrity. A newer upstream SDK release does not automatically upgrade the Skill. React and Vue are optional SDK integrations and are not needed to use this Skill. End-user Node/npm and browser requirements are described under [Install](#install).
+
+## Status
+
+Experimental. `0.1.0` is the initial independent release candidate; see the [release procedure](docs/releasing.md) for publication and verification requirements. The installation command follows the repository's default branch.
+
+Platform and assistant-host verification is still limited. Windows console Ctrl+C acceptance and Claude Code diagram-task verification remain incomplete. See [known platform limits and verification requirements](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence); release notes should identify the environments verified for each candidate.
+
+File generation, automated checks, and actual visual review are reported separately. A missing browser or image viewer leaves dependent inspection incomplete.
+
+## Development
+
+Use Node 20+ and pnpm `10.12.1`:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm test
 ```
 
-Browser-dependent tests are skipped unless `FLOWSVG_TEST_BROWSER` points to a prepared Chrome/Chromium executable. The separate full consumer gate also requires a real Node 18 executable to test unsupported-runtime rejection:
+Browser-dependent tests skip when `FLOWSVG_TEST_BROWSER` is absent. See [CONTRIBUTING](CONTRIBUTING.md) for browser and consumer acceptance, and the [documentation map](docs/README.md) for maintenance, architecture decisions, and release records.
 
-```sh
-pnpm verify:consumer --browser "/path/to/chrome" --node18 "/path/to/node18" --output acceptance/evidence.json
-```
+## License
 
-Read [CONTRIBUTING](CONTRIBUTING.md), the [maintenance guide](docs/development/flowsvg-skill-maintenance.md), [patterns](PATTERNS.md), [changelog](CHANGELOG.md), and [release procedure](docs/releasing.md). Development dependencies use the root pnpm lock; the installed Skill has its own npm runtime lock.
-
-## License and provenance
-
-[MIT](LICENSE), copyright © 2026 zac_ma. The distributable Skill includes the same [license](skills/flow-svg-diagram/LICENSE). This repository was extracted from FlowSVG; [snapshot provenance](docs/snapshot-provenance.md) records the source commit, retained attribution, and runtime identity. Third-party runtime packages retain their own licenses.
+[MIT](LICENSE), copyright © 2026 zac_ma. The standalone Skill includes the same [license](skills/flow-diagram/LICENSE). See [source and license attribution](CONTRIBUTING.md#source-and-license-attribution) for its FlowSVG origin. Third-party runtime packages retain their own licenses.

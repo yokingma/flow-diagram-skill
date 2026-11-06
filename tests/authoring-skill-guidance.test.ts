@@ -6,9 +6,9 @@ const read = (path: string) => readFile(resolve(path), "utf8");
 
 test("authoring guidance keeps the source-scoped, decision-gated final delivery flow", async () => {
   const [skill, english, chinese] = await Promise.all([
-    read("skills/flow-svg-diagram/SKILL.md"),
-    read("docs/guides/flowsvg-skill-guide.md"),
-    read("docs/guides/flowsvg-skill-guide.zh-CN.md")
+    read("skills/flow-diagram/SKILL.md"),
+    read("docs/guides/flow-diagram-guide.md"),
+    read("docs/guides/flow-diagram-guide.zh-CN.md")
   ]);
 
   expect(skill).toContain("Start with the reader's question:");

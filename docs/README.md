@@ -1,33 +1,41 @@
-# Flow SVG Diagram documentation
+# Flow Diagram documentation
 
 [Project](../README.md) · [中文介绍](../README.zh-CN.md)
 
 ## Skill users
 
-- [English user guide](guides/flowsvg-skill-guide.md) and [中文用户指南](guides/flowsvg-skill-guide.zh-CN.md): install, select tasks, create, revise, export, and recover.
-- [Project preferences](../skills/flow-svg-diagram/references/preferences.md): preflight, explicit persistence and reset.
-- [Installed Agent contract](../skills/flow-svg-diagram/SKILL.md): execution order and completion gates.
-- [Layout workflow](../skills/flow-svg-diagram/references/static-layout.md#layout-plan-workflow), [visual design](../skills/flow-svg-diagram/references/visual-design.md), and [examples](../skills/flow-svg-diagram/examples/README.md): design and production resources.
-- [Runtime and result contract](../skills/flow-svg-diagram/references/tool-contract.md): task workspace, commands, SDK identity, reports, and finalization.
-- [Review contracts](../skills/flow-svg-diagram/references/review-inputs.md) and [artifact evidence](../skills/flow-svg-diagram/references/artifact-evidence.md): registered evidence and actual viewing.
+- [English user guide](guides/flow-diagram-guide.md) and [中文用户指南](guides/flow-diagram-guide.zh-CN.md): installation, creation, revisions, exports, and recovery.
+- [Teaching examples](../skills/flow-diagram/examples/README.md): starting diagrams and their intended display conditions.
+- [FlowSVG showcase previews](images/flowsvg/README.md): source and license of the animations displayed in the root READMEs.
 
-## Maintainers
+## Skill developers
 
-- [Contribution guide](../CONTRIBUTING.md) and [release procedure](releasing.md).
-- [Maintenance guide](development/flowsvg-skill-maintenance.md), [repository patterns](../PATTERNS.md), and [CLI patterns](development/flowsvg-skill-patterns.md).
-- [Glossary](../GLOSSARY.md), [architecture decisions](adr/README.md), and [Agent work rules](../AGENTS.md).
-- [Local tracker](agents/issue-tracker.md), [triage labels](agents/triage-labels.md), and [source-comment rules](agents/code-comments.md).
+- [Contribution guide](../CONTRIBUTING.md): setup, bug reports, validation, pull requests, and source attribution.
+- [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, verification methods, and platform limits.
+- [Repository patterns](../PATTERNS.md) and [CLI patterns](development/flow-diagram-patterns.md): implementation conventions and module responsibilities.
+- [Glossary](../GLOSSARY.md) and [architecture decisions](adr/README.md): domain terms, accepted trade-offs, and contracts.
+- [Agent work rules](../AGENTS.md), [source-comment rules](agents/code-comments.md), and [domain documentation](agents/domain.md): repository development guidance.
+- [Local tracker](agents/issue-tracker.md) and [triage labels](agents/triage-labels.md): conventions for ignored local work records.
+- [Release procedure](releasing.md) and [changelog](../CHANGELOG.md): distribution and release changes.
 
-## Acceptance
+## Installed Agent references
 
+The complete installation unit is `skills/flow-diagram/`. Its [SKILL.md](../skills/flow-diagram/SKILL.md) routes the assistant by task; required execution guidance stays inside that directory.
 
-The complete regression suite and installed-CLI consumer gate are available locally. The three-platform Node 20/22 [CI workflow](../.github/workflows/authoring-skill.yml) is configured; local results and platform limits are recorded in ticket 04. No remote CI has been run by these local checks. File generation and programmatic browser checks do not attest actual viewing.
+- [Project preferences](../skills/flow-diagram/references/preferences.md): preflight and explicit persistence.
+- [Layout workflow](../skills/flow-diagram/references/static-layout.md#layout-plan-workflow) and [visual design](../skills/flow-diagram/references/visual-design.md): diagram production.
+- [Runtime and result contract](../skills/flow-diagram/references/tool-contract.md): commands, workspaces, reports, and finalization.
+- [Review contracts](../skills/flow-diagram/references/review-inputs.md) and [artifact evidence](../skills/flow-diagram/references/artifact-evidence.md): inspections and actual-viewing records.
+
+## Documentation scope
+
+Keep reusable usage instructions, current development rules, architecture decisions, release procedures, and attribution in `docs/`. Keep task plans, run logs, acceptance snapshots, publication audits, and case retrospectives in ignored `.scratch/` work records. Summarize relevant verification results in pull requests, CI artifacts, or release notes for the exact candidate. Preserve reusable methods and known limitations in the maintenance guide.
 
 ## SDK authority
 
-FlowSVG SDK owns document model, nodes, edges, timeline, rendering, playback, and export APIs. The Skill's bundled references apply to its precise `flowsvg@0.2.2` runtime baseline and support offline execution; the SDK manuals are the API authority:
+FlowSVG SDK owns the document model, rendering, playback, export APIs, and application embedding. The Skill's bundled references apply to its locked `flowsvg@0.2.2` runtime and support offline execution. For SDK APIs, consult the versioned manuals:
 
 - [English SDK manual at source commit 86bb7ad](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.md).
 - [中文 SDK 手册，来源提交 86bb7ad](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md).
 
-These explicit-version references are optional reading. Installed execution does not require network documentation or a local SDK checkout.
+Installed execution uses bundled references and the public npm SDK; it does not require online manuals or a sibling SDK checkout.

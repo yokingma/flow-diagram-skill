@@ -6,7 +6,7 @@ Status: accepted
 
 本 ADR 是当前 skill 集成决策记录；实际支持版本和安装行为以 skill 验收、SDK 公开产物和测试为准。
 
-原决策的“同仓库维护”前提在本仓由 [ADR 0016](0016-independent-sdk-and-skill-repositories.md) 取代；SDK 原仓清理仍以完整独立验收为门槛。Skill 在独立仓库维护，安装后必须脱离源码仓库运行。skill 只通过公开 SDK 校验、测量和导出图解，不依赖源码内部模块、private showcase package 或应用构建。工具环境隔离于用户应用，使用锁定并通过验收的 SDK 版本，不跟随 npm latest 自动升级。这样可以复用公开 SDK 并独立维护文档和验收，同时避免用户必须克隆、构建整个项目，以及工具安装改变应用依赖。
+原决策的“同仓库维护”前提在本仓由 [ADR 0016](0016-independent-sdk-and-skill-repositories.md) 取代。Skill 在独立仓库维护，安装后必须脱离源码仓库运行。skill 只通过公开 SDK 校验、测量和导出图解，不依赖源码内部模块、private showcase package 或应用构建。工具环境隔离于用户应用，使用锁定并通过验收的 SDK 版本，不跟随 npm latest 自动升级。这样可以复用公开 SDK 并独立维护文档和验收，同时避免用户必须克隆、构建整个项目，以及工具安装改变应用依赖。
 
 ## Consequences
 

@@ -25,7 +25,7 @@ const hash = (bytes: string | Buffer) => createHash("sha256").update(bytes).dige
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG page images ")));
   skill = join(root, "installed");
-  await cp(resolve(process.env.FLOWSVG_TEST_SKILL ?? "skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve(process.env.FLOWSVG_TEST_SKILL ?? "skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {

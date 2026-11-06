@@ -15,7 +15,7 @@ const plan = { schemaVersion: 1, strategy: "layered", layers: [
 ] };
 
 async function validate(input: unknown = plan, document: unknown = draft) {
-  const { validateLayoutPlan } = await import("../skills/flow-svg-diagram/scripts/layout-plan.mjs");
+  const { validateLayoutPlan } = await import("../skills/flow-diagram/scripts/layout-plan.mjs");
   return validateLayoutPlan(document, input);
 }
 

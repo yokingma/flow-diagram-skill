@@ -18,7 +18,7 @@ const document = { version: 1, viewport: { width: 960, height: 600 }, nodes: [{ 
 beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG manifest 独立 ")));
   skill = join(root, "installed skill");
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
   input = join(root, "source.json");
   const bytes = JSON.stringify(document, null, 4) + "\n";
   await writeFile(input, bytes);

@@ -1,6 +1,6 @@
 /** Public pure geometry contract: layout follows a plan without editing diagram semantics. */
 import { expect, test } from "vitest";
-import { getLayoutMeasurementInputs, layoutDraft } from "../skills/flow-svg-diagram/scripts/layout-geometry.mjs";
+import { getLayoutMeasurementInputs, layoutDraft } from "../skills/flow-diagram/scripts/layout-geometry.mjs";
 
 const draft = {
   version: 1, title: "教学布局", viewport: { width: 200, height: 100 },

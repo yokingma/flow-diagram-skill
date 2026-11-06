@@ -1,5 +1,5 @@
 {
-  "name": "flow-svg-diagram-skills",
+  "name": "flow-diagram-skill",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "doctor": "node skills/flow-svg-diagram/scripts/flowsvg.mjs doctor",
+    "doctor": "node skills/flow-diagram/scripts/flowsvg.mjs doctor",
     "test:guides": "vitest run tests/authoring-skill-guidance.test.ts tests/authoring-skill-layered-example.test.ts tests/authoring-skill-presentation-recipes.test.ts",
     "test:skill": "vitest run tests/authoring-skill",
     "test": "pnpm test:skill",

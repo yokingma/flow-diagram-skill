@@ -22,7 +22,7 @@ beforeAll(async () => {
   skill = join(root, "installed skill");
   taskTemp = join(root, "owned task temp");
   await mkdir(taskTemp);
-  await cp(resolve("skills/flow-svg-diagram"), skill, { recursive: true });
+  await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], cancelOnSampling = false, onSampling?: () => void, crashPreview = false) {

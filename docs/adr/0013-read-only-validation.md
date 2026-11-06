@@ -8,7 +8,7 @@
 
 ## Context
 
-Repeated draft checks copied identical JSON and wrote two reports per invocation. These files represent a check, rather than a design change. The user approved reducing this work while retaining all required diagnostics and quality coverage. The approved tickets and CLI/test boundaries are recorded in [原仓历史工作记录](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/.scratch/flowsvg-authoring-lightweight/README.md).
+Repeated draft checks copied identical JSON and wrote two reports per invocation. These files represent a check, rather than a design change. Read-only validation retains all required diagnostics while avoiding design-history writes for repeated draft checks. Current verification starts at the [maintenance guide](../development/flow-diagram-maintenance.md#maintainer-verification).
 
 ## Decision
 

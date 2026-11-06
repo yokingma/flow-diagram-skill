@@ -10,7 +10,7 @@ test("acceptance records missing browser and Node18 as incomplete rather than a 
   try {
     const output = join(directory, "result.json");
     const environment = Object.fromEntries(Object.entries(process.env).filter(([key]) => !["FLOWSVG_TEST_BROWSER", "FLOWSVG_TEST_NODE18"].includes(key)));
-    const result = spawnSync(process.execPath, [resolve("scripts/verify-authoring-skill.mjs"), "--skill", resolve("skills/flow-svg-diagram"), "--output", output], { env: environment, encoding: "utf8" });
+    const result = spawnSync(process.execPath, [resolve("scripts/verify-authoring-skill.mjs"), "--skill", resolve("skills/flow-diagram"), "--output", output], { env: environment, encoding: "utf8" });
     expect(result.status).toBe(1);
     const evidence = JSON.parse(await readFile(output, "utf8"));
     expect(evidence.status).toBe("incomplete");
