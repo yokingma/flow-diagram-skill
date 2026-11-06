@@ -10,7 +10,7 @@ This guide explains how to install and use Flow Diagram in a coding assistant th
 
 The skill is experimental and uses an exact registry SDK baseline. The current supported SDK range is `>=0.2.2 <0.3.0`; installations still use the exact version and integrity recorded by the runtime manifest and lockfile. Platform and assistant-host verification is limited. See [known platform limits](../development/flow-diagram-maintenance.md#ci-and-platform-evidence) and the [host verification procedure](../development/flow-diagram-maintenance.md#host-verification). Installation instructions do not establish that every host and platform has passed acceptance.
 
-The initial independent Skill version is the `0.1.0` release candidate. Install through the Skills CLI or a complete manual copy as described in [Install in a host](#2-install-in-a-host). The exact SDK baseline is `flowsvg@0.2.2`; SDK upgrades require an explicit manifest/lock update and independent acceptance.
+The initial independent Skill version is the `0.1.0` release candidate. Install through the Skills CLI or a complete manual copy as described in [Install in a host](#2-install-in-a-host). The exact SDK baseline is `flowsvg@0.2.3`; SDK upgrades require an explicit manifest/lock update and independent acceptance.
 
 ## Documentation and task routing
 

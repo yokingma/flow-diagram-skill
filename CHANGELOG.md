@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+- Upgrade the exact runtime baseline to `flowsvg@0.2.3`, refresh its npm integrity lock and manifest, retain the tested compatibility range `>=0.2.2 <0.3.0`, and synchronize SDK identity checks and guidance. Recalibrate vertical-label fixtures for endpoint-column wrapping while preserving risk thresholds and update the dense-layout diagnostic expectation.
+
 - Rename the public project to Flow Diagram (`yokingma/flow-diagram-skill`) and the installable Skill to `flow-diagram`. Move the installation unit to `skills/flow-diagram/`; synchronize host metadata, bilingual guides, repository tooling and regression paths. Preserve the CLI entry, runtime contracts and exact SDK baseline.
 
 - Verify mixed Agent-page HTML and explicit SVG/PNG through copied-install regressions, including source-preserving exports, independent image evidence and partial PNG failure. Clarify standalone-image context and separate page/image viewing in installed references and bilingual guides.
@@ -27,7 +29,7 @@
 ## 0.1.0 — independent repository preparation
 
 - Copy the complete Flow Diagram installation unit into `skills/flow-diagram` from the recorded FlowSVG source snapshot.
-- Add independent development dependencies and a pnpm lockfile. Keep the installed runtime's npm lockfile and `flowsvg@0.2.2` baseline unchanged.
+- At the 0.1.0 preparation snapshot, add independent development dependencies and a pnpm lockfile while keeping that snapshot's installed runtime npm lockfile and `flowsvg@0.2.2` baseline unchanged.
 - Verify external installation, read-only validation, JSON/HTML/SVG generation, finalization, and application dependency isolation without a browser.
 - Migrate bilingual user guides, current CLI maintenance patterns, attributed pre-split history, glossary, and relevant architecture decisions. Add independent Agent/tracker documentation and retain the two guide/example regression suites at their new repository paths.
 - Migrate all 27 Skill regression files and their maintained fixtures into `tests/`; declare `gifuct-js@2.1.2` directly for GIF decoding. Preserve existing behavior assertions and browser preconditions. Move the consumer harness as a required regression-test resource, with its default installation path updated.

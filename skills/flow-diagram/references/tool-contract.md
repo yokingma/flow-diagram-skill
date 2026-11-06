@@ -154,7 +154,7 @@ The tool reads and validates this metadata once, saves it as `sources.json` in t
 
 ## Registry baseline and compatibility
 
-The runtime uses the exact published `flowsvg@0.2.2` registry package. Its version and integrity are recorded in `runtime/manifest.json` and `runtime/package-lock.json`; other dependencies are exact registry versions. The supported compatibility range is `>=0.2.2 <0.3.0`, but the runtime never resolves that range dynamically. A future SDK upgrade requires a new exact baseline, regenerated lockfile and manifest, and the full independent skill acceptance before it becomes current. The tool does not perform npm publication.
+The runtime uses the exact published `flowsvg@0.2.3` registry package. Its version and integrity are recorded in `runtime/manifest.json` and `runtime/package-lock.json`; other dependencies are exact registry versions. The supported compatibility range is `>=0.2.2 <0.3.0`, but the runtime never resolves that range dynamically. A future SDK upgrade requires a new exact baseline, regenerated lockfile and manifest, and the full independent skill acceptance before it becomes current. The tool does not perform npm publication.
 
 ## Previews and visual review
 

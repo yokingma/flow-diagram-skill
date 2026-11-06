@@ -4,7 +4,7 @@ All bundled examples are teaching setups, not production facts. Semantic example
 
 ## Recipe display checks
 
-The following actual SVGs were rendered at time 0 with the locked SDK 0.2.2 and viewed as target-size artifact-evidence PNGs on macOS with prepared Chrome 156.0.8078.74, device scale factor 1 and a white backdrop on 2026-10-31. They have empty scenes and no animation. These observations support these exact static conditions, not smaller widths, HTML playback or user aesthetic acceptance.
+The following historical checks rendered SVGs at time 0 with the then-locked SDK 0.2.2 and viewed target-size artifact-evidence PNGs on macOS with prepared Chrome 156.0.8078.74, device scale factor 1 and a white backdrop on 2026-10-31. They have empty scenes and no animation. These observations remain bound to SDK 0.2.2 and the stated static conditions; they do not establish current SDK 0.2.3 acceptance, smaller widths, HTML playback or user aesthetic acceptance.
 
 | Design starting point | Canvas and checked CSS width | Viewed result and limits |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ No clipping or text overlap was observed in these viewed final surfaces. These a
 
 ## Presentation recipe checks
 
-On 2026-11-03, the following neutral recipes were generated with the locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These checks are separate from the earlier recipe checks above.
+On 2026-11-03, the following historical neutral-recipe checks were generated with the then-locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These observations remain bound to SDK 0.2.2 and are separate from the current 0.2.3 runtime acceptance and the earlier recipe checks above.
 
 | Teaching recipe | Canvas; checked SVG/PNG display size | Actual observations |
 | --- | --- | --- |

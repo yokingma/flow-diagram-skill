@@ -16,7 +16,7 @@
       "kind": "group",
       "x": 100,
       "y": 60,
-      "width": 220,
+      "width": 50,
       "height": 100,
       "label": "上游模块"
     },
@@ -25,7 +25,7 @@
       "kind": "group",
       "x": 100,
       "y": 210,
-      "width": 220,
+      "width": 50,
       "height": 100,
       "label": "下游模块"
     }

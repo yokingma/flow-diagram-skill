@@ -2,7 +2,7 @@
 
 ## Edge-label pattern diagnosis
 
-Use already wrapped public label lines and their baseline coordinates for conservative short-line risks, without a second text-width estimator or private path parser. Keep inspection finite and identity bound to the label field.
+The `flowsvg@0.2.3` baseline wraps purely vertical edge labels using endpoint column widths; calibrate short-line fixtures through those widths rather than path length. Use already wrapped public label lines and their baseline coordinates for conservative short-line risks, without a second text-width estimator or private path parser. Keep inspection finite and identity bound to the label field.
 
 ## Partial review validity
 

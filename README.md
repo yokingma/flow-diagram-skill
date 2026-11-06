@@ -102,7 +102,7 @@ The Skill prepares these locked packages in its isolated cache:
 
 | Package | Version | Role |
 | --- | --- | --- |
-| `flowsvg` | `0.2.2` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
+| `flowsvg` | `0.2.3` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
 | `playwright-core` | `1.58.2` | Controls the prepared browser for inspection, PNG, and GIF generation; includes no browser executable |
 | `gifenc` | `1.0.3` | GIF encoding, installed transitively through `flowsvg` |
 

@@ -26,7 +26,7 @@ The complete human user guides and this maintenance guide belong in project `doc
 
 ## Ownership and independent releases
 
-The Skill repository owns authoring, layout plans, checks, review records, delivery reports, its runtime baseline, and acceptance. The [SDK manual at the source snapshot](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.md) owns the document model, nodes, edges, timeline, playback, and export APIs. Installation references remain self-contained and apply to the exact `flowsvg@0.2.2` baseline; they are operational guidance rather than a separate SDK API authority. No local sibling checkout is required.
+The Skill repository owns authoring, layout plans, checks, review records, delivery reports, its runtime baseline, and acceptance. The [SDK manual at the source snapshot](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.md) owns the document model, nodes, edges, timeline, playback, and export APIs. Installation references remain self-contained and apply to the exact `flowsvg@0.2.3` baseline; they are operational guidance rather than a separate SDK API authority. No local sibling checkout is required.
 
 The first independent distribution version is prepared as `v0.1.0` and is not yet published. Runtime report tool versions and diagram document versions are separate identities. Keep the installed runtime npm lock separate from repository development pnpm dependencies. Explicit SDK baseline updates require synchronized manifest/lock integrity and repeated isolated acceptance before release; the compatibility range never selects a runtime version. Repository release records live in the root [CHANGELOG](../../CHANGELOG.md).
 

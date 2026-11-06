@@ -57,7 +57,7 @@ test("installed tool saves a draft, pins its isolated SDK and leaves the applica
   expect(report.status).toBe("delivered");
   expect(report.checks.validation).toBe("passed");
   expect(report.checks.compilation).toBe("passed");
-  expect(report.sdk.version).toBe("0.2.2");
+  expect(report.sdk.version).toBe("0.2.3");
   expect(report.sdk.path.startsWith(join(root, "缓存 cache"))).toBe(true);
   expect(JSON.parse(await readFile(join(report.revision.directory, "diagram.json"), "utf8"))).toEqual(document);
   expect(JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"))).toEqual(report);
@@ -138,7 +138,7 @@ test("complete cache works offline, corruption rebuilds, and no-cache offline fa
   const metadata = JSON.parse(await readFile(metadataPath, "utf8"));
   await writeFile(metadataPath, JSON.stringify({ ...metadata, version: "999.0.0" }));
   const repaired = JSON.parse((await command(["prepare"])).stdout);
-  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.2.2" } });
+  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.2.3" } });
   const input = join(root, "offline.json");
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "offline"], { ...offline, FLOWSVG_CACHE_DIR: join(root, "never prepared") });

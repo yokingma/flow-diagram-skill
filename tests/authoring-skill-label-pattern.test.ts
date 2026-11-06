@@ -46,7 +46,7 @@ test("read-only validation explains a reconstructed Chinese vertical run without
   expect(warning.softWrappedRun.baselineSpan).toBeGreaterThan(200);
   expect(warning.candidates).toContain("Increase the label space or adjust the path and ports");
   expect(report).toMatchObject({ revision: null, validation: { snapshotCreated: false } });
-  expect(report.sdk.version).toBe("0.2.2");
+  expect(report.sdk.version).toBe("0.2.3");
   expect((await readdir(root)).sort()).toEqual(before);
   expect(await readFile(input, "utf8")).toBe(bytes);
   expect(result.stderr).not.toContain("<launching>");
@@ -96,12 +96,15 @@ test.each([
   ["four-two-character-lines", "跨层调用关系说明", 50, true],
   ["four-longer-lines", "跨层调用关系说明文字资料", 70, false],
   ["short-label", "标签", 30, false],
+  ["wide-endpoints", "跨层调用关系说明文字", 220, false],
   ["explicit-prefix-with-soft-run", "说明\n跨层调用关系说明文字", 30, true],
   ["several-short-explicit-paragraphs", "跨层\n调用\n关系\n说明", 30, false],
   ["empty-explicit-paragraphs", "\n\n跨层调用关系说明文字\n", 30, true]
 ])("short-line boundary %s respects calibrated scope", async (name, label, gap, expected) => {
   const report = await validateChanged(name, (draft) => {
     draft.edges[0].label = label;
+    // Purely vertical edges use endpoint column widths in SDK 0.2.3.
+    draft.nodes = draft.nodes.map((node) => ({ ...node, width: gap }));
     draft.nodes[1].y = draft.nodes[0].y + draft.nodes[0].height + gap;
   });
   expect(report.diagnostics.some((issue: { code: string }) => issue.code === "LABEL_VERTICAL_RUN")).toBe(expected);

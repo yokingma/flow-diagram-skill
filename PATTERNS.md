@@ -18,7 +18,7 @@ Run regressions from an independent repository copy with only its own installed 
 
 ## Runtime isolation
 
-The installed CLI prepares the exact public SDK baseline in an isolated cache. `runtime/package-lock.json` and `runtime/manifest.json` record the runtime dependency identity. The repository's `pnpm-lock.yaml` only controls development tools. Neither workflow may resolve the SDK from a workspace or a sibling checkout.
+The installed CLI prepares the exact public SDK baseline in an isolated cache. `runtime/package-lock.json` and `runtime/manifest.json` record the runtime dependency identity. The repository's `pnpm-lock.yaml` only controls development tools. Neither workflow may resolve the SDK from a workspace or a sibling checkout. SDK baseline upgrades synchronize the runtime package, npm lock, manifest version/integrity, current guidance and report identity assertions. Recalibrate wrapping fixtures against public SDK frames while retaining positive, negative and threshold cases; historical viewing records keep their original SDK identity.
 
 ## Completion and evidence
 

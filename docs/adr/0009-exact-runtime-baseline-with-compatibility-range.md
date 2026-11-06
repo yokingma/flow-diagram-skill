@@ -4,7 +4,7 @@ Status: accepted
 
 来源：FlowSVG [`86bb7ad`](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/adr/0009-exact-runtime-baseline-with-compatibility-range.md)。本仓保留与 Skill 有关的决策和职责边界。
 
-图解创作 skill 使用一个精确锁定且经过验收的 registry SDK 作为运行时基线，同时维护一个独立的兼容范围。当前基线为 `flowsvg@0.2.2` 及其完整性标识，当前兼容范围为 `>=0.2.2 <0.3.0`。
+图解创作 skill 使用一个精确锁定且经过验收的 registry SDK 作为运行时基线，同时维护一个独立的兼容范围。当前基线为 `flowsvg@0.2.3` 及其完整性标识，当前兼容范围为 `>=0.2.2 <0.3.0`。
 
 skill 安装和用户运行不动态解析兼容范围，也不跟随 npm `latest`。维护者在新的 patch 版本出现或明确提出升级时，先以候选版本执行独立安装、报告与诊断、静态导出以及可用浏览器检查；通过后才更新精确基线。若旧的最低版本仍通过兼容验收，支持范围下限保持不变。
 

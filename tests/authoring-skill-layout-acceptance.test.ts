@@ -59,7 +59,7 @@ test("31-node fixture measures and lays out deterministically while preserving s
   const report = JSON.parse(result.stdout);
   expect(report).toMatchObject({ command: "layout", status: "laid-out", checks: { validation: "passed", plan: "passed", compilation: "passed" }, strategy: "layered" });
   expect(report.overrides).toContainEqual(expect.objectContaining({ nodeId: "control-plane" }));
-  expect(report.diagnostics.some((item: { code?: string }) => item.code === "label-node-overlap")).toBe(true);
+  expect(report.diagnostics.some((item: { code?: string }) => item.code === "node-overlap")).toBe(true);
   const original = await json(source);
   const laidOut = await json(first);
   expect(semantic(laidOut)).toEqual(semantic(original));

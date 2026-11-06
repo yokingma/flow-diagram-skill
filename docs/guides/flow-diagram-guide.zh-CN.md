@@ -10,7 +10,7 @@ Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播�
 
 当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前支持范围为 `>=0.2.2 <0.3.0`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
 
-首个独立 Skill 版本为 `0.1.0` 发布候选版本。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。精确 SDK 基线为 `flowsvg@0.2.2`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
+首个独立 Skill 版本为 `0.1.0` 发布候选版本。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。精确 SDK 基线为 `flowsvg@0.2.3`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
 
 SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
 
