@@ -9,6 +9,7 @@
 
 ## Unreleased
 
+- Consolidate Chinese publishing guidance for GitHub distribution and WorkBuddy Skill assets in `docs/releasing.md`; keep platform registration outside this guide. No installed Skill files changed.
 - Upgrade the exact SDK runtime to `flowsvg@0.3.1` with synchronized registry integrity and npm lock. Support this exact SDK version; retain historical report and review identities.
 - Defer historical export completion/evidence adoption until validation establishes matching source, theme and SDK identities. A new SDK cannot claim old static files as completed exports; retain their requests for explicit re-export.
 - Add a fictional mixed approval flow, preset-label authoring guidance and aligned bilingual instructions. Keep static layout separate from animated draft measurement.
