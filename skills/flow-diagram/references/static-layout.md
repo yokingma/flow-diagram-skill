@@ -13,13 +13,15 @@ Use a layout plan when repeated geometry should be recalculated after content ch
 Follow this sequence once for every layout-plan task:
 
 1. **Draft** the semantic structure and save the static `diagram.json`. Confirm IDs, relationships, parent scopes and reading order.
-2. **Measure** complete node content with the installed `measure` command. Apply a height-filled copy only when requested; keep coordinates and groups under author control.
+2. **Measure** complete node content and [preset labels](document-model.md#preset-labels) with the installed `measure` command. Apply a height-filled copy only when requested; resolve width diagnostics before layout and keep coordinates and groups under author control.
 3. **Layout** with the same validated `layout-plan.json`. The command writes a new draft and reports changed geometry, overrides and retained warnings.
 4. **Validate** the layout draft, then read field, compile and finite geometry diagnostics. Resolve meaning-changing choices with the user.
 5. **Author/review** the requested HTML/SVG/PNG/GIF. HTML review covers the delivered HTML states; ordinary preview review covers sampled SDK frames. For existing SVG/PNG, use `evidence --from <diagram-revision>` to collect missing target conditions, then actually view the images and use independent `review --artifact-review --evidence-from <source>`. Read [artifact evidence](artifact-evidence.md) for defaults and accumulated conditions.
 6. **Finalize** only the selected revision after requested files and required review scope are complete. Delivery completion and quality coverage remain separate.
 
 The example gaps are teaching settings for its content and viewport. They do not promise clearance for arbitrary labels or CJK text.
+
+`layout` requires `scenes: []`. Establish static geometry before adding animation; then use complete-draft `measure` to include every preset label replacement. Recheck spacing after any height increase. Animated width/height changes require separate state measurements and explicit authoring geometry.
 
 ## Structure and layout
 
@@ -37,10 +39,10 @@ Draft measurement covers node content and node labels. It does not measure edge-
 
 Before invoking the tool, compare every object, edge direction and parent relationship against the evidence. After the tool runs, read [diagnostics and revisions](diagnostics-and-revisions.md) for warning coverage and user decisions. For browser screenshots, read [visual inspection](visual-checks.md). Structural validation and finite layout checks are separate from actual visual inspection.
 
-To try a complete static example after installing the skill, run:
+To try a complete static example after installing the skill, first create a canonical [task workspace](tool-contract.md#task-workspace). Replace `<task-workspace>` with that path and run:
 
 ```text
-node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/architecture.json --name architecture --svg --time 0
+node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/architecture.json --name architecture --svg --time 0 --output "<task-workspace>/history"
 node <skill-directory>/scripts/flowsvg.mjs measure --input <skill-directory>/examples/content-measurement.json
 ```
 

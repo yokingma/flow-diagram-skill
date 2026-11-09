@@ -1,4 +1,5 @@
 /** Deterministic skill-only geometry. Inputs are SDK-valid static drafts and validated layout plans; no I/O occurs here. */
+import { isPresetLabelKind } from "./label-measurement.mjs";
 const NODE_FIELDS = ["x", "y", "width", "height"];
 const EDGE_FIELDS = ["route", "fromPort", "toPort"];
 const DEFAULT_GAP = 0;
@@ -16,7 +17,8 @@ export function getLayoutMeasurementInputs(draft, plan) {
   const placements = plannedPlacements(draft, plan);
   return draft.nodes.filter((node) => ids.has(node.id) && hasMeasuredText(node)).map((node) => ({ nodeId: node.id,
     kind: node.kind, width: ownValue(placements, node.id)?.width ?? nodeWidth(node, plan), ...(node.content !== undefined ? { content: node.content } : {}),
-    ...(isNonEmptyLabel(node.label) ? { label: node.label } : {}), ...(draft.typography ? { typography: draft.typography } : {}) }));
+    ...(isPresetLabelKind(node.kind) ? { label: node.label ?? "" } : isNonEmptyLabel(node.label) ? { label: node.label } : {}),
+    ...(draft.typography ? { typography: draft.typography } : {}) }));
 }
 
 /**
@@ -130,7 +132,7 @@ function primitiveIds(primitive) {
 function ownValue(object, key) { return object && Object.hasOwn(object, key) ? object[key] : undefined; }
 
 function isNonEmptyLabel(label) { return typeof label === "string" && label.length > 0; }
-function hasMeasuredText(node) { return node.content !== undefined || isNonEmptyLabel(node.label); }
+function hasMeasuredText(node) { return node.content !== undefined || isNonEmptyLabel(node.label) || isPresetLabelKind(node.kind); }
 
 /** Resolve width-dependent geometry without measurements; height growth never changes widths or horizontal positions. */
 function plannedPlacements(draft, plan) {

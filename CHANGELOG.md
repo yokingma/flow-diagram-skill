@@ -9,6 +9,11 @@
 
 ## Unreleased
 
+- Upgrade the exact SDK runtime to `flowsvg@0.3.1` with synchronized registry integrity and npm lock. Support this exact SDK version; retain historical report and review identities.
+- Defer historical export completion/evidence adoption until validation establishes matching source, theme and SDK identities. A new SDK cannot claim old static files as completed exports; retain their requests for explicit re-export.
+- Add a fictional mixed approval flow, preset-label authoring guidance and aligned bilingual instructions. Keep static layout separate from animated draft measurement.
+- Measure `diamond`, `parallelogram`, `document` and `predefinedProcess` labels through public `measureNodeLabel`, retaining unresolved width diagnostics. Draft measurement includes preset label replacements and empty labels; static layout uses final planned widths and shape-safe height floors. Width overflow no longer reports a height-only remedy.
+
 - Upgrade the exact runtime baseline to `flowsvg@0.2.3`, refresh its npm integrity lock and manifest, retain the tested compatibility range `>=0.2.2 <0.3.0`, and synchronize SDK identity checks and guidance. Recalibrate vertical-label fixtures for endpoint-column wrapping while preserving risk thresholds and update the dense-layout diagnostic expectation.
 
 - Rename the public project to Flow Diagram (`yokingma/flow-diagram-skill`) and the installable Skill to `flow-diagram`. Move the installation unit to `skills/flow-diagram/`; synchronize host metadata, bilingual guides, repository tooling and regression paths. Preserve the CLI entry, runtime contracts and exact SDK baseline.

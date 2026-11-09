@@ -1,6 +1,6 @@
 # Flow Diagram Skill 术语
 
-本仓维护创作、布局、检查、复核和交付术语。下方 SDK 术语用于理解公开 SDK 基线；SDK 模型与 API 的权威来源为[版本化 SDK 手册](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md)。术语初始来源为 [FlowSVG `86bb7ad`](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/GLOSSARY.md)，两项产品职责定义沿用已确认的拆分决定。
+本仓维护创作、布局、检查、复核和交付术语。下方 SDK 术语用于理解公开 SDK 基线；SDK 模型与 API 的权威来源为[版本化 SDK 手册](https://github.com/yokingma/FlowSVG/blob/726a31bb52c0af50439d6bdf1d087814af48f70c/docs/guides/sdk-guide.zh-CN.md)。术语初始来源为 [FlowSVG `86bb7ad`](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/GLOSSARY.md)，两项产品职责定义沿用已确认的拆分决定。
 
 **FlowSVG（流形）**：项目品牌名，中文名为“流形”；英文文档仅使用 FlowSVG；中文文档可写作 FlowSVG（流形）。npm 包名与导入路径使用小写 `flowsvg`。公开播放器类、组件及相关类型使用 `Flow` 前缀，例如 `FlowPlayer`、`FlowPlayerProps` 和 `FlowPlayerElement`。默认自定义元素名为 `<flowsvg-player>`；CSS 类与控制栏变量使用 `flowsvg-` 和 `--flowsvg-` 前缀。
 

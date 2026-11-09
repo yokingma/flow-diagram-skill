@@ -10,6 +10,12 @@ For GIF or screenshot startup failures, read [prepared browser selection](visual
 
 `GIF_BROWSER_UNAVAILABLE` means browser use was disabled or no prepared browser was selected or detected. `GIF_ENVIRONMENT` means the SDK could not start or run the selected executable. Check the reported path and operating-system dependencies. Successful JSON/HTML/SVG remain available, and the explicitly requested GIF is still unfinished. Supply a usable browser and retry in a new revision.
 
+## Continuing after an SDK upgrade
+
+Historical reports, exports and viewing evidence retain their original SDK version and integrity. When continuing saved JSON under a new baseline, re-export every requested image; old completion and evidence cannot satisfy the new context. Ordinary `review` can still address a verified historical source, but its observations remain bound to that source.
+
+An Agent-composed HTML page with a filled managed region from another SDK fails with `HTML_PAGE_INVALID`, including with `--sync-html`. Preserve the historical page. In a new task page, copy its authorized outer HTML/CSS and leave only the empty `<!-- flowsvg:player:start -->` / `<!-- flowsvg:player:end -->` region. Submit that fresh page through `author --html` with the selected JSON, regenerate the requested outputs and inspect the actual new files. Keep old review records under their original identity.
+
 ## GIF settings and export errors
 
 - `GIF_OPTIONS`: inspect the reported field/reason and [supported settings](export.md). Correct malformed JSON, unsupported fields, invalid values or a range outside the compiled timeline.

@@ -20,6 +20,10 @@ Choose a pattern by the relationship the reader must understand. Patterns can be
 
 Treat the table as a selection aid, not a requirement to use these exact compositions. For a capability inventory, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges) and use [recipe-capability-overview.json](../examples/recipe-capability-overview.json). For source mapping and business cards, use [the source/service recipe](visual-design.md#source-mapping-and-service-cards). Their [teaching sources](../examples/recipe-sources.json) state invented facts and unknowns separately from these relation-focused examples.
 
+## Decisions and conditional process paths
+
+For source-supported conditions, use a decision node and name each outgoing condition; a shape alone does not define the rule. [mixed-approval-flow.json](../examples/mixed-approval-flow.json) demonstrates input/output, decision, defined subprocess and report presets. Its fictional sources define complete materials leading to review and archival, while missing materials return for revision. The static overview retains both branches; only the complete-materials path is animated. No retry, review criterion or real execution duration is supplied. Follow [preset labels](document-model.md#preset-labels) for safe measurement before authoring.
+
 ## Request and response
 
 Use this pattern when the reader must distinguish an initiating request from its returned result.
@@ -76,10 +80,10 @@ Use this teaching pattern when a reader needs to compare layers, several columns
 
 ## Run the installed examples
 
-Replace `<skill-directory>` with the absolute installed path. Run from a separate working directory. Repeat the first command with each sample name above. The sources file preserves the bundled teaching setups; it does not assert real-world facts or fetch sources. For the layered sample, run `measure --input` on the draft, write a new output draft, then validate and author from that new file; keep the original draft bytes unchanged. A complete authoring result still needs actual HTML/image inspection, and program checks do not stand in for visual review.
+Replace `<skill-directory>` with the absolute installed path. Run from a separate working directory and create a canonical [task workspace](tool-contract.md#task-workspace); replace `<task-workspace>` with that path. Repeat the first command with each sample name above, using its own matching diagram name and workspace. The sources file preserves the bundled teaching setups; it does not assert real-world facts or fetch sources. For the layered sample, run `measure --input` on the draft, write a new output draft, then validate and author from that new file; keep the original draft bytes unchanged. A complete authoring result still needs actual HTML/image inspection, and program checks do not stand in for visual review.
 
 ```text
-node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/request-response.json" --sources "<skill-directory>/examples/semantic-pattern-sources.json" --name request-response --svg --time 0
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/request-response.json" --sources "<skill-directory>/examples/semantic-pattern-sources.json" --name request-response --svg --time 0 --output "<task-workspace>/history"
 node "<skill-directory>/scripts/flowsvg.mjs" measure --input "<skill-directory>/examples/content-measurement.json"
 ```
 

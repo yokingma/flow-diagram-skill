@@ -96,13 +96,15 @@ SVG, PNG, and GIF are optional exports. HTML page prose is outside the diagram a
 
 This **Skill** guides the assistant through reading sources, designing the explanation, authoring and revising the diagram, planning layout, inspecting results, and delivering files and reports. **FlowSVG SDK** supplies its rendering and playback foundation. To embed diagrams in an application, the SDK offers native browser, React, Vue, and Web Component integrations; see the [SDK repository](https://github.com/yokingma/FlowSVG) and [npm package](https://www.npmjs.com/package/flowsvg).
 
+Diagrams support plain-label decision, input/output, report and predefined-process shapes. Start with the [mixed approval flow](skills/flow-diagram/examples/mixed-approval-flow.json) and its [measurement guidance](skills/flow-diagram/references/document-model.md#preset-labels).
+
 ### Runtime dependencies
 
 The Skill prepares these locked packages in its isolated cache:
 
 | Package | Version | Role |
 | --- | --- | --- |
-| `flowsvg` | `0.2.3` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
+| `flowsvg` | `0.3.1` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
 | `playwright-core` | `1.58.2` | Controls the prepared browser for inspection, PNG, and GIF generation; includes no browser executable |
 | `gifenc` | `1.0.3` | GIF encoding, installed transitively through `flowsvg` |
 

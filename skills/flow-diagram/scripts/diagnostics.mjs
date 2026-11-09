@@ -31,7 +31,7 @@ export function diagnoseLayout(report, { document, diagram, sdk }) {
         ? labelOverflowDetails(node, document, sdk)
         : null;
       const reason = labelDetails
-        ? `Label for node "${node.id}" exceeds its height: current height ${labelDetails.currentHeight}, required height ${labelDetails.requiredHeight}, estimated line count ${labelDetails.estimatedLineCount}. This line count is a deterministic estimate from the public SDK baseline, not browser pixel measurement or formal SVG/PNG artifact evidence.`
+        ? labelOverflowReason(node, labelDetails)
         : warning.message;
       addWarning(report, warning.code, warning.objectId, warning.path, timeMs, reason,
         "Text may extend past its readable content area.", ["Increase the affected node dimensions", "Shorten or reorganize the content"],
@@ -78,6 +78,13 @@ function diagnoseLabelRuns(report, document, frame, timeMs) {
 function labelOverflowDetails(node, document, sdk) {
   return { currentHeight: node.height, ...measureLabel(sdk, { kind: node.kind, width: node.width,
     label: node.label, typography: document.typography }) };
+}
+
+function labelOverflowReason(node, details) {
+  const problem = details.diagnostics?.some((item) => item.dimension === "width")
+    ? "exceeds its available width; increasing height alone cannot resolve it"
+    : "exceeds its height";
+  return `Label for node "${node.id}" ${problem}: current height ${details.currentHeight}, required height ${details.requiredHeight}, estimated line count ${details.estimatedLineCount}. This line count is a deterministic estimate from the public SDK baseline, not browser pixel measurement or formal SVG/PNG artifact evidence.`;
 }
 
 /** Summarize related warnings for navigation while retaining every source diagnostic as a decision target. */

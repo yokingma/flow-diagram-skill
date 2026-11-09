@@ -57,7 +57,7 @@ test("installed tool saves a draft, pins its isolated SDK and leaves the applica
   expect(report.status).toBe("delivered");
   expect(report.checks.validation).toBe("passed");
   expect(report.checks.compilation).toBe("passed");
-  expect(report.sdk.version).toBe("0.2.3");
+  expect(report.sdk.version).toBe("0.3.1");
   expect(report.sdk.path.startsWith(join(root, "缓存 cache"))).toBe(true);
   expect(JSON.parse(await readFile(join(report.revision.directory, "diagram.json"), "utf8"))).toEqual(document);
   expect(JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"))).toEqual(report);
@@ -69,6 +69,32 @@ test("doctor reports missing SDK state without preparing dependencies", async ()
   expect(result.code).toBe(0);
   expect(JSON.parse(result.stdout).runtime.state).toBe("missing");
 });
+
+test("a changed SDK cannot mark historical exports complete without rendering new files", async () => {
+  const input = join(root, "sdk-boundary.json");
+  await writeFile(input, JSON.stringify(document));
+  const first = await command(["author", "--browser", "none", "--input", input, "--name", "sdk-boundary", "--svg"]);
+  expect(first.code, first.stdout).toBe(0);
+  const source = JSON.parse(first.stdout);
+  // Synthetic archived metadata isolates the inheritance contract; it is not old-SDK acceptance evidence.
+  const oldSdk = { ...source.sdk, version: "0.2.3", integrity: "archived-sdk-integrity" };
+  const archived = { ...source, sdk: oldSdk, artifacts: source.artifacts.map((item: { kind: string }) =>
+    item.kind === "svg" ? { ...item, sdk: oldSdk } : item) };
+  const record = join(source.revision.directory, "report.json");
+  const bytes = JSON.stringify(archived);
+  await writeFile(record, bytes);
+  const continued = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary"]);
+  const report = JSON.parse(continued.stdout);
+  expect(report.sdk.version).toBe("0.3.1");
+  expect(report.completion.requested).toContain("svg");
+  expect(report.completion.completed).not.toContain("svg");
+  expect(report.completion.delivery).toBe("incomplete");
+  expect(report.inheritedArtifacts ?? []).toEqual([]);
+  const rendered = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary", "--svg"]);
+  expect(rendered.code, rendered.stdout).toBe(0);
+  expect(JSON.parse(rendered.stdout).completion.delivery).toBe("complete");
+  expect(await readFile(record, "utf8")).toBe(bytes);
+}, 60_000);
 
 test("interrupted installation recovery removes abandoned temporary environments", async () => {
   const cache = join(root, "interrupted cache");
@@ -138,7 +164,7 @@ test("complete cache works offline, corruption rebuilds, and no-cache offline fa
   const metadata = JSON.parse(await readFile(metadataPath, "utf8"));
   await writeFile(metadataPath, JSON.stringify({ ...metadata, version: "999.0.0" }));
   const repaired = JSON.parse((await command(["prepare"])).stdout);
-  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.2.3" } });
+  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.3.1" } });
   const input = join(root, "offline.json");
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "offline"], { ...offline, FLOWSVG_CACHE_DIR: join(root, "never prepared") });

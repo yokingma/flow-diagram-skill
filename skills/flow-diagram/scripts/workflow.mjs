@@ -5,7 +5,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { prepareRuntime, importSdk, ToolError } from "./runtime.mjs";
 import { allocateRevision, createReport, saveDraft, recordFailure, saveReport } from "./reports.mjs";
-import { resolveRevisionInput, inheritRevision } from "./revisions.mjs";
+import { resolveRevisionInput, inheritRevision, inheritDeliveryContext } from "./revisions.mjs";
 import { checkDocument } from "./document-checks.mjs";
 import { diagnoseLayout } from "./diagnostics.mjs";
 import { deliverManifest } from "./export-manifest.mjs";
@@ -32,7 +32,7 @@ export async function runRevision(options, signal, command = "author") {
     report.stage = "save";
     report.sources = [{ path: resolve(input), kind: "diagram-json" }];
     const text = await saveDraft(report, input);
-    await inheritRevision(report, options);
+    const parent = await inheritRevision(report, options);
     const htmlPage = command === "author" ? await inheritHtmlPage(report, selectedHtmlPage) : null;
     if (options["sync-html"] && !htmlPage) throw new ToolError("html-page", "HTML_PAGE_INVALID", "--sync-html requires an explicit or inherited Agent HTML page.", "Select --html or a parent with an Agent page.", "sync-html");
     await saveReport(report);
@@ -45,6 +45,7 @@ export async function runRevision(options, signal, command = "author") {
     const sdk = await importSdk(runtime);
     const checked = checkDocument(report, sdk, text, options);
     if (!checked) return report;
+    inheritDeliveryContext(report, parent, options);
     diagnoseLayout(report, { ...checked, sdk });
     report.status = "validated";
     if (command === "author") {

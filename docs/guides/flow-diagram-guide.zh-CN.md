@@ -8,11 +8,13 @@ Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播�
 
 这份指南说明如何在支持 skill 的编程助手中安装和使用 Flow Diagram。你用自然语言描述图解，助手先根据阅读问题选择表达模型，再组织来源支持的内容、编写图解 JSON、调用工具和解释检查结果。默认交付一个最终选定图解，包含可编辑 JSON、带播放控件的离线 HTML 和创作报告；草稿与检查截图只在任务期间保留，成功收尾后清理；只有明确要求时才保留完整历史。
 
-当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前支持范围为 `>=0.2.2 <0.3.0`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
+当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.3.1`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
 
-首个独立 Skill 版本为 `0.1.0` 发布候选版本。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。精确 SDK 基线为 `flowsvg@0.2.3`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
+首个独立 Skill 版本为 `0.1.0` 发布候选版本。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。精确 SDK 基线为 `flowsvg@0.3.1`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
 
-SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/86bb7ad29484d7deb63142c1df84c6944a7c0eb4/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
+SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/726a31bb52c0af50439d6bdf1d087814af48f70c/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
+
+SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新基线下重新导出请求的图片并重新查看。其他 SDK 生成的已填充 Agent HTML 页面即使使用 `--sync-html` 也会被拒绝；保留原文件，按[SDK 升级恢复步骤](../../skills/flow-diagram/references/troubleshooting.md#continuing-after-an-sdk-upgrade)准备新的 managed region。
 
 ## 文档入口和任务分流
 
@@ -38,6 +40,8 @@ SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yok
 助手根据使用场景，采用[视觉设计方法](../../skills/flow-diagram/references/visual-design.md)协调文字、间距、色彩、容器、标签、连线和动画。工具检查与 AI 检查提供证据和观察，最终设计效果由你判断。报告中的质量通过状态描述已记录的检查与覆盖范围。
 
 随包的[语义模式指南](../../skills/flow-diagram/references/semantic-patterns.md)覆盖请求响应、重试与状态迁移、汇聚与瓶颈、分阶段数据处理、带边界的系统架构和分层架构教学设定。示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
+
+流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[混合审批流程](../../skills/flow-diagram/examples/mixed-approval-flow.json)使用虚构教学设定：缺失材料分支保持可见，动画只演示材料完整的路径。对完整草稿运行 `measure`，会测量这些形状的全部标签替换版本；若仍有宽度诊断，需要加宽节点。`layout` 仍只接受静态草稿：先排布几何，再加入 scenes，然后重新测量并检查间距。独立测量对象的 `label` 可为字符串（含空串）或非空版本数组；顶层批量数组中的 label 仍是描述性元数据。
 
 需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留多列、组内标题留白、层间带标签连线和治理侧栏。层序不等于调用时间顺序，分组不自动代表部署或信任边界，虚线治理说明也不增加未声明的运行时依赖。先对 draft 运行 `measure --input` 并写出独立的新草稿，再用新草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
 
@@ -321,6 +325,8 @@ GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请�
 ```
 
 `validate --input <draft.json>` 返回结构化诊断、输入字节身份和实际 SDK 基线，不创建历史目录、快照或交付文件。`revision` 为 null，`validation.snapshotCreated` 为 false。保留工作草稿；需要留存诊断时，将 stdout 重定向到任务目录。只有检查明确已保存版本时，才使用 `validate --from <revision> --name <name> --output <task-workspace>/history`。正式告警决定必须引用已保存的 `author` 报告；草稿诊断不能提供持久化的 `sourceRevision`。
+
+仅做视觉诊断时，助手优先复用已登记且有效的截图。只有 JSON 或最终交付文件时，保持输入字节不变，在隔离任务目录中生成临时检查材料；提供了匹配页面时保留该页面。有可用浏览器才能截图，实际查看图片仍是独立检查。助手报告发现、证据位置和未执行检查后，保留工作目录，不发布替换结果；修正图解需要相应授权。详见[仅检查任务的准备流程](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation)。
 
 也可在终端调用安装单元的唯一命令入口。下面的 `<skill-directory>` 必须替换为安装目录的绝对路径；先切换到希望保存输出的工作目录，并将 `<task-id>` 替换为本次运行的新任务 ID。
 

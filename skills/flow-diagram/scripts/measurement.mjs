@@ -4,7 +4,7 @@ import { publishDraftCopy } from "./atomic-draft.mjs";
 import { resolve } from "node:path";
 import { importSdk, prepareRuntime, ToolError } from "./runtime.mjs";
 import { recordFailure } from "./reports.mjs";
-import { LABEL_ESTIMATE_METHOD, measureLabel } from "./label-measurement.mjs";
+import { LABEL_ESTIMATE_METHOD, isPresetLabelKind, measureLabel, measurementLabelForNode } from "./label-measurement.mjs";
 
 const MEASUREMENT_FIELDS = ["kind", "width", "content", "label", "typography"];
 
@@ -42,7 +42,7 @@ export async function measureContent(options, signal) {
   return result;
 }
 
-/** Measure initial labels and structured content versions in a complete diagram while preserving the source draft. */
+/** Measure initial ordinary labels and all preset/content versions without changing the source draft. */
 async function measureDraft(sdk, draft, options, signal) {
   const issues = sdk.validateDocument(draft);
   if (issues.length) throw new DraftMeasurementError(issues.map((issue) => ({ path: issue.path, message: issue.message })));
@@ -53,12 +53,12 @@ async function measureDraft(sdk, draft, options, signal) {
     nextStep: "Measure the affected states separately and adjust this node with the existing authoring workflow." })));
   const measurements = nodes.flatMap((node) => {
     const versions = contentVersionsForNode(draft, node.id, node.content);
-    const label = typeof node.label === "string" && node.label.length > 0 ? node.label : undefined;
+    const label = measurementLabelForNode(draft, node);
     if (!versions.length && label === undefined) return [];
     const contentMeasurement = versions.length ? measureStructuredNode(sdk, node, versions, draft.typography) : null;
-    const labelMeasurement = label === undefined ? null : measureLabel(sdk, { ...node, typography: draft.typography });
+    const labelMeasurement = label === undefined ? null : measureLabel(sdk, { ...node, label, typography: draft.typography });
     const requiredHeight = Math.max(contentMeasurement?.requiredHeight ?? 0, labelMeasurement?.requiredHeight ?? 0);
-    const diagnostics = contentMeasurement?.diagnostics ?? [];
+    const diagnostics = [...(contentMeasurement?.diagnostics ?? []), ...(labelMeasurement?.diagnostics ?? [])];
     return [{ nodeId: node.id, kind: node.kind, width: node.width, currentHeight: node.height, requiredHeight,
       recommendedHeight: requiredHeight, heightChange: Math.max(0, requiredHeight - node.height),
       ...(contentMeasurement ? { contentVersions: versions.length, perContent: contentMeasurement.perContent } : {}), diagnostics,
@@ -67,7 +67,7 @@ async function measureDraft(sdk, draft, options, signal) {
   });
   const diagnostics = measurements.flatMap((item) => item.diagnostics.map((diagnostic) => ({ ...diagnostic, objectId: item.nodeId })));
   if (diagnostics.length) throw new DraftMeasurementError(diagnostics.map((diagnostic) => ({ code: "MEASUREMENT_DIAGNOSTIC", objectId: diagnostic.objectId,
-    location: `nodes.${diagnostic.objectId}.content`, reason: diagnostic.message,
+    location: `nodes.${diagnostic.objectId}.${diagnostic.path?.startsWith("label") ? "label" : "content"}`, reason: diagnostic.message,
     nextStep: "Resolve width or fixed graph overflow before applying automatic height backfill." })));
   const measurement = { kind: "draft", method: "sdk-content-estimate", units: "diagram", nodes: measurements, output: options.output ? resolve(options.output) : null };
   if (!options.output) return measurement;
@@ -168,11 +168,11 @@ function measureOne(sdk, input) {
     "Use kind, width, label, content and typography fields only.", unknownField);
   const content = contentInput.content === undefined && label !== undefined ? null : measureStructuredInput(sdk, contentInput);
   if (label === undefined) return content;
-  if (typeof label !== "string" || label.length === 0) throw new ToolError("measurement", "MEASUREMENT_INVALID",
+  if (!isPresetLabelKind(input.kind) && (typeof label !== "string" || label.length === 0)) throw new ToolError("measurement", "MEASUREMENT_INVALID",
     "A measurement label must be a nonempty string.", "Supply label text or omit the label field.", "label");
   const measuredLabel = measureLabel(sdk, { kind: input.kind, width: input.width, label, typography: input.typography });
   const requiredHeight = Math.max(content?.height ?? 0, measuredLabel.requiredHeight);
-  return { ...content, height: requiredHeight, requiredHeight, diagnostics: content?.diagnostics ?? [],
+  return { ...content, height: requiredHeight, requiredHeight, diagnostics: [...(content?.diagnostics ?? []), ...(measuredLabel.diagnostics ?? [])],
     estimatedLineCount: Math.max(content?.estimatedLineCount ?? 0, measuredLabel.estimatedLineCount),
     estimatedLineCountMethod: LABEL_ESTIMATE_METHOD, method: "sdk-content-estimate", units: "diagram" };
 }

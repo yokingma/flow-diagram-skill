@@ -22,7 +22,7 @@ Identify the task type, the input to use, and where to enter or resume the proce
 | Revise a finalized diagram | Read the existing diagram and final report. Establish the requested changes and scope, complete preference preflight, then follow the five-step process, reusing design decisions that remain valid. Carry forward requested formats unless the user changes them. |
 | Add export formats only | Enter at step 3 with the existing diagram unchanged. Skip drafting, styling, measurement, and layout changes, then inspect and finalize the requested files. |
 | Continue an unfinished task | Read the task records and select the saved revision to continue. Resume at the unfinished steps or those affected by changes. |
-| Validation or diagnosis only | Use `validate` for structural checks. If visual diagnosis is requested, follow the applicable inspection workflows in step 4. Report the checks performed, their limits, and discovered issues, then stop. |
+| Validation or diagnosis only | Use `validate` for structural checks. For visual diagnosis, follow [inspection-only preparation](references/visual-checks.md#inspection-only-preparation), then the applicable checks in step 4. Report the checks performed, their limits, and discovered issues, then stop. |
 
 For standalone save, change or reset requests, follow [project preferences](references/preferences.md) and report the operation without creating a diagram.
 
@@ -43,7 +43,7 @@ Start with the reader's question: what should the reader understand after viewin
 - **Define the question.** Identify the subject and what the reader should understand from the user's request.
 - **Establish the facts.** Read the user's designated sources or existing diagram within the authorized scope. Identify relevant objects, relationships, processes, and state changes. Distinguish known facts from information that needs clarification, and record sources through [source metadata](references/tool-contract.md#source-metadata).
 
-  For broad investigations, such as exploring a code repository, spawn a sub-agent to investigate the parts relevant to the reader's question. Give the sub-agent the question and authorized source scope. Ask for relevant objects, relationships, processes, and state changes, with source locations and unresolved questions. Use those findings to establish the facts needed for the explanation.
+  For broad investigations, such as exploring a code repository, investigate the parts relevant to the reader's question. When the host supports sub-agents and delegation is permitted, delegate bounded parts with that question and authorized source scope; otherwise investigate them in the current session. In either case, collect relevant objects, relationships, processes, and state changes, with source locations and unresolved questions. Use those findings to establish the facts needed for the explanation.
 
   For a few articles, a small set of reference materials, or a short request such as "Explain the RAG workflow with a flowchart," establish the facts in the current session.
 
@@ -94,7 +94,7 @@ View the generated diagram and confirm that it explains the subject accurately a
 
 Before submitting reviews, read [the complete review input contracts and template workflow](references/review-inputs.md). Generate an unviewed form with `review-template` from the explicit diagram subject and, for separate formal evidence, `--evidence-from`, then use independent `review` for HTML, preview and formal SVG/PNG observations and record the IDs, hashes, observations, and issues only for images actually viewed. Repeated review submission does not require another diagram version. When a browser or image viewer is unavailable, record the unperformed checks and their impact explicitly.
 
-For discovered problems, return to step 3 to apply authorized corrections, regenerate the artifacts, and inspect the affected files and states again. Follow [diagnosis and revision decisions](references/diagnostics-and-revisions.md) when recording issues or clarifying meaning-changing corrections with the user.
+For diagnosis-only tasks, report discovered problems and stop. For authoring or revision tasks, return to step 3 to apply authorized corrections, regenerate the artifacts, and inspect the affected files and states again. Follow [diagnosis and revision decisions](references/diagnostics-and-revisions.md) when recording issues or clarifying meaning-changing corrections with the user.
 
 Finish when each required file, state, and display condition has been inspected or its unperformed checks are explicit, and every observed issue has a recorded handling decision.
 

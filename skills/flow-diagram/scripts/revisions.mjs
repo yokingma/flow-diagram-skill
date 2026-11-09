@@ -54,13 +54,20 @@ export async function inheritRevision(report, options) {
   report.userDecisions = [...record.userDecisions];
   if (report.command === "author" && options.from && report.input.sha256 === record.input?.sha256) {
     report.completion.requested = [...new Set([...(report.completion.requested ?? []), ...(record.completion?.requested ?? [])])];
-    report.completion.completed = [...new Set([...(report.completion.completed ?? []), ...(record.completion?.completed ?? [])])];
-    // Review-only parents can already carry original files from an earlier source revision.
-    report.inheritedArtifacts = [...(record.artifacts ?? []), ...(record.inheritedArtifacts ?? [])].filter((artifact) => ["svg", "png"].includes(artifact.kind));
-    report.inheritedExports = [...(record.exports ?? []), ...(record.inheritedExports ?? [])];
-    report.artifactEvidence = record.artifactEvidence ?? report.artifactEvidence;
   }
   if (options.decisions) await saveDecisions(report, options.decisions);
+  return record;
+}
+
+/** Adopt completed files only after validation establishes the actual source, theme and runtime SDK identity. */
+export function inheritDeliveryContext(report, record, options) {
+  if (!record || report.command !== "author" || !options.from || report.input.sha256 !== record.input?.sha256
+    || report.theme !== record.theme || report.sdk.version !== record.sdk?.version || report.sdk.integrity !== record.sdk?.integrity) return;
+  report.completion.completed = [...new Set([...(report.completion.completed ?? []), ...(record.completion?.completed ?? [])])];
+  // Review-only parents can already carry original files from an earlier source revision.
+  report.inheritedArtifacts = [...(record.artifacts ?? []), ...(record.inheritedArtifacts ?? [])].filter((artifact) => ["svg", "png"].includes(artifact.kind));
+  report.inheritedExports = [...(record.exports ?? []), ...(record.inheritedExports ?? [])];
+  report.artifactEvidence = record.artifactEvidence ?? report.artifactEvidence;
 }
 
 function revisionError(message) { return new ToolError("revision", "PARENT_SELECTION", message, "Confirm the intended parent with the user, then start a new revision with an explicit selection.", "parent"); }

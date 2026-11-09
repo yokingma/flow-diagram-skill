@@ -94,13 +94,15 @@ SVG、PNG 与 GIF 均为可选导出。HTML 页面的正文位于图外，不包
 
 本 **Skill** 指导助手读取资料、设计讲解方式、创作与修订图解、规划布局、检查结果，最后交付文件与报告；**FlowSVG SDK** 提供底层渲染与播放能力。需要将图解嵌入应用时，可直接使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成，见 [SDK 仓库](https://github.com/yokingma/FlowSVG)与 [npm 包](https://www.npmjs.com/package/flowsvg)。
 
+图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[混合审批流程](skills/flow-diagram/examples/mixed-approval-flow.json)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
+
 ### 运行时依赖
 
 Skill 在隔离缓存中准备以下锁定的软件包：
 
 | 软件包 | 版本 | 用途 |
 | --- | --- | --- |
-| `flowsvg` | `0.2.3` | 图解校验、内容测量、几何诊断、渲染、播放与导出 |
+| `flowsvg` | `0.3.1` | 图解校验、内容测量、几何诊断、渲染、播放与导出 |
 | `playwright-core` | `1.58.2` | 控制已准备的浏览器，执行检查及 PNG、GIF 生成；不包含浏览器程序 |
 | `gifenc` | `1.0.3` | GIF 编码，通过 `flowsvg` 间接安装 |
 

@@ -2,7 +2,7 @@
 
 ## Edge-label pattern diagnosis
 
-The `flowsvg@0.2.3` baseline wraps purely vertical edge labels using endpoint column widths; calibrate short-line fixtures through those widths rather than path length. Use already wrapped public label lines and their baseline coordinates for conservative short-line risks, without a second text-width estimator or private path parser. Keep inspection finite and identity bound to the label field.
+Purely vertical edge labels wrap using endpoint column widths; calibrate short-line fixtures through those widths rather than path length. Use already wrapped public label lines and their baseline coordinates for conservative short-line risks, without a second text-width estimator or private path parser. Keep inspection finite and identity bound to the label field.
 
 ## Partial review validity
 
@@ -25,6 +25,8 @@ This project maintenance document covers the CLI in `skills/flow-diagram/scripts
 `validation.mjs` reads a draft once or verifies an explicitly selected saved source. It returns the shared `document-checks.mjs` validation/compilation results and the same finite layout diagnosis without allocating history or calling `saveReport`. Keep `revision: null`, an exact input hash and `validation.snapshotCreated: false`. `validation.sourceRevision` identifies only an explicitly verified saved input; newly computed diagnostics still use `sourceRevision: null`. Formal decisions require a saved authoring report. Runtime cache preparation remains independent of diagram persistence.
 
 ## Layout diagnostics and measurement estimates
+
+The preset kinds (`diamond`, `parallelogram`, `document`, `predefinedProcess`) use public `measureNodeLabel` for height and unresolved width diagnostics. `label-measurement.mjs` selects the API by node kind, counts lines from public frames at the measured height, and collects initial/animated preset labels for draft measurement. Empty preset labels retain contour clearance. Standalone preset inputs accept a string or nonempty label-version array; top-level batch labels retain their metadata meaning. Width diagnostics stop draft backfill and static layout and retain a label field location. Ordinary nodes keep their existing initial-label estimator. Layout remains static-only; use draft measurement after adding animation.
 
 Keep diagnostic `nextStep` text aligned with [the authorization and decision rules](../../skills/flow-diagram/references/diagnostics-and-revisions.md). Already authorized mechanical corrections can proceed; changes to meaning or outside the current authorization require a user decision. Preserve warning identities, severity and formal decision verification when updating action text.
 
@@ -110,6 +112,8 @@ Use fictional fixture content with explicit layer groups, rows, sidebars and con
 `review-contract.mjs` owns the complete strict shape for preview, HTML and formal-image review inputs. Source-specific readers retain identity checks. `review-preflight.mjs` validates all supplied inputs and source bytes before any author revision allocation or expensive execution; it exposes verified materials for independent review recording. Author preflight also checks the effective theme before runtime preparation. Template generation uses the same identity readers, writes only a new file in the same canonical task workspace, and keeps actual viewing false with observations blank. Never treat template identity verification as a viewing attestation.
 
 ## Independent observations and report projection
+
+`inheritRevision` preserves parent provenance and same-source delivery requests before runtime preparation, returning the parent report to the workflow. After public document validation establishes theme and actual SDK identity, `inheritDeliveryContext` adopts completed files, inherited exports and artifact evidence only when source/theme/SDK all match. A baseline change retains export requirements without treating old bytes as new completion. Historical managed HTML still rejects an SDK mismatch; reconstruct a fresh empty managed region while preserving authorized outer content.
 
 Keep `v###` for real saved diagram production and `review-<sha256>` for append-only observations. Independent review consumes source preflight and complete actual-file/screenshot identity without author, compiler, renderer or browser calls. Normalize accepted semantic inputs before computing the ID; publish a complete record exclusively, and revalidate the existing record/source on duplicate reuse.
 

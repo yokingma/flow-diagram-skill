@@ -26,38 +26,10 @@ After a valid request is planned, browser lookup or launch failures (including a
 
 ## Record actual viewing independently
 
-After viewing each listed screenshot, save an attestation:
-
-```json
-{
-  "reviewer":"the model and host that actually viewed these images",
-  "viewed":true,
-  "items":[{
-    "evidenceId":"copy from artifactEvidence.items",
-    "sha256":"copy the screenshot's exact SHA-256",
-    "observations":{
-      "readingOrder":"Describe actual entry point and relationship directions.",
-      "density":"Describe readability at the recorded CSS width.",
-      "occlusion":"Describe visible clipping or overlap within this surface.",
-      "narrative":"Describe the selected state and its source-supported meaning."
-    },
-    "issues":[]
-  }]
-}
-```
-
-Use `issues: []` only when that viewed surface has no observed issue. Otherwise use objects with `reason` and `nextStep` strings. Offer candidate corrections, ask when a choice changes meaning, and apply already authorized mechanical corrections in a new revision.
-
-Run `review --from <diagram-subject-revision> --evidence-from <evidence-source> --name <same-name> --output <same-root> --artifact-review <review.json>`. The diagram subject, original artifact version and evidence source are explicit and can differ. Omit `--evidence-from` only when the subject itself registered the evidence. Maintain the same source JSON bytes, theme and locked SDK identity. This appends one review record without allocating a diagram version, preparing the SDK, compiling, generating HTML, exporting, starting a browser or capturing an image. A repeated identical submission revalidates and reuses the record without writes. The tool verifies original artifacts, saved settings, screenshot bytes and both revision path scopes. Changed files, context, rendering parameters, missing registration and escaped paths are rejected.
+Follow [formal SVG/PNG review inputs](review-inputs.md#formal-svgpng-evidence) for the complete JSON contract and [formal-image submission](review-inputs.md#formal-image-submission-and-author-preflight) for independent `review`. Keep `--from` as the diagram subject and use `--evidence-from` for the selected evidence source. Generate an unviewed `--kind artifact` template from that source, then fill it after viewing the listed screenshots. Offer candidate corrections for observed issues; ask when a choice changes meaning, and apply already authorized mechanical corrections in a new revision.
 
 `visual.artifactReviews` contains only the identified viewed evidence. `artifactEvidenceCoverage` lists requested surfaces and counts viewed/unviewed surfaces. `checks.artifactVisual: reviewed` describes that scope; it does not change sampled `viewedFrames`, imply other sizes were seen, or complete the diagram's quality. Original files and reports remain unchanged during the task. [Finalization](tool-contract.md#finalize-the-task) retains final files and review facts, then removes temporary evidence unless the user requested history.
 
-Generate the unviewed form with `review-template --from <diagram-subject-revision> --evidence-from <evidence-source> --name <same-name> --output <same-root> --kind artifact --template <new-task-file.json>`. Actual viewing and observations stay caller-supplied. Multiple registered surfaces from that selected source can share one form; it can be submitted with HTML and preview forms in one `review` call.
-
-Each independent artifact material stores `source: {kind: "revision" | "evidence-record", id, sourceRevision, reportSha256}` separately from the subject. Every accepted entry retains its original artifact revision, evidence source, source/SDK/theme, export time/camera/background, intrinsic and target dimensions, carrying backdrop and both hashes. Finalization verifies those files again and retains all identities, attestations and issues in the portable report. All requested surfaces remain required, including unviewed ones. A later clean observation does not erase an earlier issue. Original evidence remains unchanged until successful scoped task cleanup.
-
 Independent evidence record IDs can be passed directly to `--evidence-from`. Finalization loads all applicable requests even when no review exists. It retains complete conditions, operation outcomes, identities and review issues in the portable report. Damaged screenshots invalidate only their affected observation entries for coverage. Other valid surfaces, HTML states and preview frames in the same combined review remain effective; the invalid observations and issues remain visible as history. A fresh verified capture and actual review can restore coverage.
-
-When an invalid saved observation or independent entry still has issues, `qualityCoverage` includes a `review-issues` requirement with `needs-user-decision` and the original issue facts. Missing images cannot resolve those issues. Invalid entries without issues contribute only their missing viewing coverage.
 
 Required surfaces report `evidenceStatus` separately from quality. Byte-verified images keep active `evidenceId` values. A damaged image reports `evidenceStatus: "invalid"`, `evidenceId: null`, its validation reason and an exact-condition recapture command. A source registration alone retains the required surface and its original registration ID, without claiming a usable capture. Valid reviewed legacy images continue to count.

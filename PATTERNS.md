@@ -55,3 +55,7 @@ Authoring inherits a selected parent's Agent page when no explicit HTML is suppl
 ## Mixed HTML and image acceptance
 
 Exercise combined `--html` and explicit image requests through the copied installed CLI and actual saved outputs. Page prose stays outside static exports; test source bytes, image identities and independent evidence rather than treating HTML screenshots as image coverage. Preserve successful formats on partial failure and leave default delivery image-free. Context allocation belongs in `references/delivery-contexts.md`; export mechanics and evidence each link there.
+
+## FlowSVG 0.3.1 baseline
+
+The exact registry runtime is `flowsvg@0.3.1`. Keep package, manifest and npm lock identity synchronized; support declarations do not select installations. Historical reports, managed HTML and viewing evidence keep their original SDK identity. Adopt historical export completion only after validation confirms matching source, theme and actual SDK identity; a changed baseline requires fresh exports. Verify upgrades through a copied installation and the public package.

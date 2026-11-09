@@ -38,8 +38,8 @@ Keep saved authoring invocations in the same temporary history root: `--output <
 Each `author` invocation creates a new revision. Failed authoring numbers remain reserved. Ordinary `validate --input <draft>` requires no name and writes no history. To check an existing saved version, use `validate --from v001 --name <name> --output <task-workspace>/history`; the tool verifies its canonical location and input hash. The selected source is recorded in `validation.sourceRevision`, while `revision` remains null. Validation does not infer a latest source or accept `--parent`, `--decisions` or `--sources`. Import an independent JSON with `--input` and no parent. To continue a saved task revision, name its parent in that task history; when the intended parent is unclear, ask before running a revision task. The tool cannot infer the semantic origin of an arbitrary copied draft.
 
 ```text
-node <skill-directory>/scripts/flowsvg.mjs author --input <new-draft.json> --name orders --parent v001
-node <skill-directory>/scripts/flowsvg.mjs author --from v001 --name orders
+node <skill-directory>/scripts/flowsvg.mjs author --input <new-draft.json> --name orders --parent v001 --output "<task-workspace>/history"
+node <skill-directory>/scripts/flowsvg.mjs author --from v001 --name orders --output "<task-workspace>/history"
 ```
 
 `--from` reads the explicit parent under the selected `--output` root and `--name`, without `--input`. Both modes require the parent’s `diagram.json` and `report.json`. An Agent page is inherited from that parent after verifying its saved HTML hash, unless an explicit `--html` selects another page; intentional diagram/theme changes require `--sync-html`. A parent cannot be the newly allocated revision or a path outside that diagram. Historical JSON used as `--input` requires the matching parent. Save a changed draft separately and change only what the user authorized. Failed retries and extra exports also create new revisions.
@@ -63,8 +63,8 @@ Each newly generated layout warning, including the four older checks, carries `w
 An A–B exception does not decide A–C, another text line or another time. Inherited decisions retain their original source revision, identity and full context. A changed draft may record a `revise` decision for its original warning, but the decision does not authorize a new warning in the changed context. Original records without IDs remain unchanged; create a fresh authoring revision before making a new precise decision about them. The tool never fills in guessed historical IDs or accepts the old code/object form as a new submission.
 
 ```text
-node <skill-directory>/scripts/flowsvg.mjs author --from v001 --name orders --decisions <decisions.json>
-node <skill-directory>/scripts/flowsvg.mjs author --input <authorized-fix.json> --parent v001 --name orders --decisions <decisions.json>
+node <skill-directory>/scripts/flowsvg.mjs author --from v001 --name orders --decisions <decisions.json> --output "<task-workspace>/history"
+node <skill-directory>/scripts/flowsvg.mjs author --input <authorized-fix.json> --parent v001 --name orders --decisions <decisions.json> --output "<task-workspace>/history"
 ```
 
 Decisions require an explicit parent and are saved in the new revision. A decision alone never removes original warnings or marks quality approved. New decision files select identified layout warnings; other authorizations remain part of the source and task record. Report what changed, what was retained and which checks actually ran.

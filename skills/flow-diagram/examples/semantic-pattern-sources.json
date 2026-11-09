@@ -46,5 +46,11 @@
     "reference": "Bundled teaching scenario: layout assistance",
     "scope": "examples/layout-assistance.json",
     "description": "教学设定：五层仅用于阅读顺序；四条连线表示教学关联。两行内容卡片、横向控制面和中文密集文本用于演示重复几何计算，不表示生产系统、调用时间顺序或真实运行依赖。"
+  },
+  {
+    "kind": "prompt",
+    "reference": "Bundled teaching scenario: mixed approval flow",
+    "scope": "examples/mixed-approval-flow.json",
+    "description": "Fictional teaching rules: a received application is checked for complete materials. Complete materials enter a defined review and then report archival; missing materials return for revision. Only the complete-materials branch is animated. No retries, review criteria, real organization, execution duration or outcome guarantee is specified. Four presets carry plain labels; review and report labels have explicit replacement versions."
   }
 ]

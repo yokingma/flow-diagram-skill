@@ -115,10 +115,10 @@ function measurePlannedNodes(sdk, draft, plan) {
     const contentMeasurement = input.content === undefined ? null : sdk.measureNodeContent(contentInput);
     const labelMeasurement = input.label === undefined ? null : measureLabel(sdk, input);
     const requiredHeight = Math.max(contentMeasurement?.height ?? 0, labelMeasurement?.requiredHeight ?? 0);
-    const diagnostics = contentMeasurement?.diagnostics ?? [];
+    const diagnostics = [...(contentMeasurement?.diagnostics ?? []), ...(labelMeasurement?.diagnostics ?? [])];
     if (diagnostics.length) throw new LayoutDiagnosticsError(diagnostics.map((issue) => ({ severity: "error", stage: "measurement",
-      code: "LAYOUT_MEASUREMENT_DIAGNOSTIC", location: `nodes[${draft.nodes.findIndex((node) => node.id === nodeId)}].content`, objectId: nodeId,
-      reason: issue.message, nextStep: "Resolve the reported content measurement issue at its final planned width before rerunning layout." })));
+      code: "LAYOUT_MEASUREMENT_DIAGNOSTIC", location: `nodes[${draft.nodes.findIndex((node) => node.id === nodeId)}].${issue.path?.startsWith("label") ? "label" : "content"}`, objectId: nodeId,
+      reason: issue.message, nextStep: "Resolve the reported measurement issue at its final planned width before rerunning layout." })));
     return { nodeId, width: input.width, currentHeight: node.height, requiredHeight, recommendedHeight: requiredHeight,
       heightChange: Math.max(0, requiredHeight - node.height),
       ...(labelMeasurement ? { estimatedLineCount: labelMeasurement.estimatedLineCount, estimatedLineCountMethod: LABEL_ESTIMATE_METHOD, labelOnly: input.content === undefined } : {}), diagnostics };

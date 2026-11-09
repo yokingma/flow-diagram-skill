@@ -1,14 +1,16 @@
 # Runtime and result contracts
 
-Install the entire `flowsvg/` directory using the host's existing skill installation mechanism. Keep `scripts/`, `references/`, and `runtime/` together. The installed tool uses Node directly; Bash, pnpm, a TypeScript compiler, and the source repository are not runtime requirements.
+Install the entire `skills/flow-diagram/` directory as `flow-diagram/` using the host's existing skill installation mechanism. Preserve its contents and relative paths. The installed tool uses Node directly; Bash, pnpm, a TypeScript compiler, and the source repository are not runtime requirements.
+
+For Skill tasks, use the explicit task workspace in saved commands below; CLI `--help` lists all low-level options.
 
 ```text
 node <skill-directory>/scripts/flowsvg.mjs doctor
 node <skill-directory>/scripts/flowsvg.mjs prepare
 node <skill-directory>/scripts/flowsvg.mjs validate --input <json> [--theme light|dark]
 node <skill-directory>/scripts/flowsvg.mjs validate --from <revision> --name <diagram-name> [--output <history-root>] [--theme light|dark]
-node <skill-directory>/scripts/flowsvg.mjs author --input <json> --name <diagram-name> [--html <page.html>] [--sync-html] [--sources <metadata.json>] [--theme light|dark] [--svg] [--png --png-width <pixels>] [--time <ms>] [--background theme|transparent] [--samples <count>] [--artifact-preview-settings <json>] [--artifact-review <json>] [--gif --gif-options <json>] [--browser <executable|none>] [--visual-review <json>] [--html-review <json>] [--output <directory>] [--parent <revision>] [--decisions <json>]
-node <skill-directory>/scripts/flowsvg.mjs author --from <revision> --name <diagram-name> [--output <directory>] [--decisions <json>]
+node <skill-directory>/scripts/flowsvg.mjs author --input <json> --name <diagram-name> [--html <page.html>] [--sync-html] [--sources <metadata.json>] [--theme light|dark] [--svg] [--png --png-width <pixels>] [--time <ms>] [--background theme|transparent] [--samples <count>] [--artifact-preview-settings <json>] [--artifact-review <json>] [--gif --gif-options <json>] [--browser <executable|none>] [--visual-review <json>] [--html-review <json>] --output <task-workspace>/history [--parent <revision>] [--decisions <json>]
+node <skill-directory>/scripts/flowsvg.mjs author --from <revision> --name <diagram-name> --output <task-workspace>/history [--decisions <json>]
 node <skill-directory>/scripts/flowsvg.mjs evidence --from <revision> --name <name> --output <history-root> [--artifact-preview-settings <json>] [--browser <executable|none>]
 node <skill-directory>/scripts/flowsvg.mjs review --from <subject-revision> --name <name> [--output <history-root>] [--html-review <json>] [--visual-review <json>] [--artifact-review <json> --evidence-from <evidence-source>]
 node <skill-directory>/scripts/flowsvg.mjs review-template --from <subject-revision> --name <name> --output <history-root> --kind <visual|html|artifact> --template <new-task-file> [--evidence-from <evidence-source>]
@@ -115,11 +117,13 @@ Use `measure --input <json>` to estimate text height at a fixed width through th
 
 | Input form | Use and fields |
 | --- | --- |
-| One measurement object | Use `{kind, width, label?, content?, typography?}` for one fixed-width experiment. A standalone `label` must be nonempty. When both label and content are supplied, the result uses the larger required height. |
+| One measurement object | Use `{kind, width, label?, content?, typography?}` for one fixed-width experiment. Ordinary `label` must be a nonempty string; preset labels accept a string (including empty) or nonempty string-version array. When both ordinary label and content are supplied, the result uses the larger required height. Presets reject structured content. |
 | Top-level array | Measure unrelated structured-content objects in one process. Each item's optional `label` is descriptive metadata, not measured text. |
-| Complete diagram draft | Measure each structured-content or nonempty label-only node by ID, using its authored width and the document typography. Complete document nodes retain the label/content mutual-exclusion rule. |
+| Complete diagram draft | Measure structured-content and label-only nodes by ID, using authored width and document typography. Preset nodes include empty/omitted initial labels and every label replacement. Ordinary labels remain initial-only. Complete document nodes retain the label/content mutual-exclusion rule. |
 
 For an independent object, `content` accepts one content object or a nonempty array of versions. Use [the multiple-version example](../examples/content-measurement.json) for a runnable input. Draft measurement includes initial content and every `updateNode.value.content` replacement.
+
+For `diamond`, `parallelogram`, `document` and `predefinedProcess`, height and width diagnostics come from public `measureNodeLabel`; see [preset labels](document-model.md#preset-labels). `layout` measures these kinds at final planned widths in a static draft. Add animation afterward and use `measure` for a common height across preset label versions. Width issues stop draft backfill and layout and point to the node's `label`; standalone measurement returns the unresolved diagnostics for inspection. Height recommendations alone do not prove width fit.
 
 ### Read measurement results
 
@@ -154,7 +158,7 @@ The tool reads and validates this metadata once, saves it as `sources.json` in t
 
 ## Registry baseline and compatibility
 
-The runtime uses the exact published `flowsvg@0.2.3` registry package. Its version and integrity are recorded in `runtime/manifest.json` and `runtime/package-lock.json`; other dependencies are exact registry versions. The supported compatibility range is `>=0.2.2 <0.3.0`, but the runtime never resolves that range dynamically. A future SDK upgrade requires a new exact baseline, regenerated lockfile and manifest, and the full independent skill acceptance before it becomes current. The tool does not perform npm publication.
+The runtime uses the exact published `flowsvg@0.3.1` registry package. Its version and integrity are recorded in `runtime/manifest.json` and `runtime/package-lock.json`; other dependencies are exact registry versions. The supported SDK version is exactly `0.3.1`, and runtime installation never dynamically selects another SDK version. A future SDK upgrade requires a new exact baseline, regenerated lockfile and manifest, and the full independent skill acceptance before it becomes current. The tool does not perform npm publication.
 
 ## Previews and visual review
 

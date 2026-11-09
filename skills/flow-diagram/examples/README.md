@@ -4,7 +4,7 @@ All bundled examples are teaching setups, not production facts. Semantic example
 
 ## Recipe display checks
 
-The following historical checks rendered SVGs at time 0 with the then-locked SDK 0.2.2 and viewed target-size artifact-evidence PNGs on macOS with prepared Chrome 156.0.8078.74, device scale factor 1 and a white backdrop on 2026-10-31. They have empty scenes and no animation. These observations remain bound to SDK 0.2.2 and the stated static conditions; they do not establish current SDK 0.2.3 acceptance, smaller widths, HTML playback or user aesthetic acceptance.
+The following historical checks rendered SVGs at time 0 with the then-locked SDK 0.2.2 and viewed target-size artifact-evidence PNGs on macOS with prepared Chrome 156.0.8078.74, device scale factor 1 and a white backdrop on 2026-10-31. They have empty scenes and no animation. These observations remain bound to SDK 0.2.2 and the stated static conditions; they do not establish current SDK 0.3.1 acceptance, smaller widths, HTML playback or user aesthetic acceptance.
 
 | Design starting point | Canvas and checked CSS width | Viewed result and limits |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ No clipping or text overlap was observed in these viewed final surfaces. These a
 
 ## Presentation recipe checks
 
-On 2026-11-03, the following historical neutral-recipe checks were generated with the then-locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These observations remain bound to SDK 0.2.2 and are separate from the current 0.2.3 runtime acceptance and the earlier recipe checks above.
+On 2026-11-03, the following historical neutral-recipe checks were generated with the then-locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These observations remain bound to SDK 0.2.2 and are separate from the current 0.3.1 runtime acceptance and the earlier recipe checks above.
 
 | Teaching recipe | Canvas; checked SVG/PNG display size | Actual observations |
 | --- | --- | --- |
@@ -41,3 +41,10 @@ For the card example, measurement gives required heights below the shared author
 [html-page.html](html-page.html) is an editable page shell, not a second final delivery file. Copy it to the task workspace and adapt headings, prose and CSS. Preserve the single managed playback region, then submit the complete page with `author --html`; see [content placement](../references/delivery-contexts.md#content-placement) and [the page contract](../references/tool-contract.md#editable-html-pages).
 
 The starter retains a 720px minimum playback width in a focusable horizontal reading area; change `--diagram-reading-width` for the actual diagram typography. Page prose still wraps at narrow viewport widths. Check both horizontal ends and controls, and record playback width separately from viewport width. The value itself does not establish readable labels or actual viewing. Keep resources inline/data URLs for offline sharing.
+
+
+## Mixed approval flow
+
+[mixed-approval-flow.json](mixed-approval-flow.json) demonstrates plain-label `parallelogram`, `diamond`, `predefinedProcess` and `document` nodes alongside an ordinary return node. [Source metadata](semantic-pattern-sources.json) records the fictional complete/missing-materials rules. The missing branch is visible but only the complete-materials branch plays; the example makes no claim about real approval criteria, retries or processing time.
+
+Run `measure --input` on the complete draft before authoring. It includes the review/report label replacements and preserves the authored height when it already accommodates every version. `layout` accepts a static draft only: arrange a `scenes: []` copy before adding animation, then measure all label versions and recheck positions. The four presets reject structured `content`; width diagnostics require a wider node or an authorized text change. Generated files and screenshots remain separate from actual viewing at the intended display size.

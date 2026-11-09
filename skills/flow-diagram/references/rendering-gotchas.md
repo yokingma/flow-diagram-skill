@@ -6,7 +6,7 @@ Before arranging new or revised geometry, read the entries whose conditions matc
 
 - **Condition and symptom:** a long label occupies a short edge path, especially between closely spaced groups. Automatic wrapping can leave one or two characters per line, even though the document validates.
 - **Start with:** reserve enough path and label space before placing the connected objects. If the relation needs a sentence, use an unlabelled arrow with a nearby, clearly associated explanation. The [layered recipe](visual-design.md#layered-architecture-and-sidebar) demonstrates this choice. Annotation nodes describe the existing relationship; they are not new business entities. Preserve its direction and endpoints.
-- **Current checks:** in SDK 0.2.3, purely vertical edge labels use endpoint column widths; other edge labels use available path space. Widening a vertical gap alone may leave wrapping unchanged. `measure` reports node content and node labels, not edge-label fit. Existing overlap warnings do not guarantee detection of awkward wrapping; [`LABEL_VERTICAL_RUN`](diagnostics-and-revisions.md#short-edge-label-runs) flags conservative runs of very short soft-wrapped lines from public SDK estimates; it does not catch every awkward line break.
+- **Current checks:** purely vertical edge labels use endpoint column widths; other edge labels use available path space. Widening a vertical gap alone may leave wrapping unchanged. `measure` reports node content and node labels, not edge-label fit. Existing overlap warnings do not guarantee detection of awkward wrapping; [`LABEL_VERTICAL_RUN`](diagnostics-and-revisions.md#short-edge-label-runs) flags conservative runs of very short soft-wrapped lines from public SDK estimates; it does not catch every awkward line break.
 - **Still view:** trace the actual path and read the entire label at the target size. Check that a separate explanation has unambiguous ownership and does not hide an arrowhead.
 
 ## Sidebars beside cross-region relationships
@@ -27,7 +27,7 @@ Before arranging new or revised geometry, read the entries whose conditions matc
 
 - **Condition and symptom:** Long terms, titles or several tags occupy a narrow card in any language. CJK and mixed scripts also vary in glyph width; character counts alone cannot establish fit. Punctuation or a term can become stranded.
 - **Start with:** measure the complete content using the final width and actual typography, then allocate height and nearby space. Adjust width or organization before reducing text size. Preserve meaning when changing wording. See [content measurement](static-layout.md#structure-and-layout) and the [long-content card recipe](visual-design.md#repeated-cards-and-longer-content).
-- **Current checks:** SDK 0.2.3 preserves complete Latin words in ordinary labels; an intact word can exceed the estimated width. `measure` gives deterministic content-height and line-count estimates, so a height recommendation alone does not establish horizontal fit. It does not report browser glyph pixels or prove that every possible line break reads well.
+- **Current checks:** ordinary labels preserve complete Latin words; an intact word can exceed the estimated width. `measure` gives deterministic content-height and line-count estimates, so a height recommendation alone does not establish horizontal fit. It does not report browser glyph pixels or prove that every possible line break reads well.
 - **Still view:** read titles, sentences, list items and tags at the intended display width. Check punctuation, term boundaries and tag emphasis, not only clipping.
 
 ## Short labels and optical alignment
@@ -45,3 +45,8 @@ Before arranging new or revised geometry, read the entries whose conditions matc
 - **Still view:** inspect the changed region and affected relationships. Keep intended height differences when content or comparison purpose requires them; there is no global equal-height threshold.
 
 For logs or intermediates that must survive cleanup, decide retention when [creating task files](tool-contract.md#task-workspace), rather than after finalization.
+
+
+## Preset labels and shape clearance
+
+For decision, input/output, report or predefined-process nodes, read [preset labels](document-model.md#preset-labels) before setting dimensions. Run `measure` at the intended width and typography, including every label replacement. These presets can split overwide words at grapheme boundaries and clip text to a shape-specific safe area. Resolve width diagnostics before backfill or layout; a larger height alone cannot make a grapheme fit. Public geometry diagnostics use visible clipped paint, so a lack of overlap warnings does not establish that all authored text is visible. Inspect the actual label and contour at the target size.

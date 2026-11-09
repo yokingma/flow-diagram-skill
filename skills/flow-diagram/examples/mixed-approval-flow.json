@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "title": "Mixed approval flow — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 1360,
+    "height": 580
+  },
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 16,
+    "flowLabel": 14
+  },
+  "nodes": [
+    {
+      "id": "application",
+      "kind": "parallelogram",
+      "x": 40,
+      "y": 160,
+      "width": 240,
+      "height": 120,
+      "label": "Application\nreceived"
+    },
+    {
+      "id": "complete",
+      "kind": "diamond",
+      "x": 380,
+      "y": 136,
+      "width": 260,
+      "height": 168,
+      "label": "Materials\ncomplete?"
+    },
+    {
+      "id": "review",
+      "kind": "predefinedProcess",
+      "x": 740,
+      "y": 160,
+      "width": 240,
+      "height": 120,
+      "label": "Review\napplication"
+    },
+    {
+      "id": "report",
+      "kind": "document",
+      "x": 1080,
+      "y": 160,
+      "width": 240,
+      "height": 120,
+      "label": "Draft report"
+    },
+    {
+      "id": "revision",
+      "kind": "roundedRect",
+      "x": 390,
+      "y": 420,
+      "width": 240,
+      "height": 80,
+      "label": "Return for revision"
+    }
+  ],
+  "edges": [
+    {
+      "id": "submit",
+      "from": "application",
+      "to": "complete",
+      "label": "submit",
+      "route": "straight"
+    },
+    {
+      "id": "accepted",
+      "from": "complete",
+      "to": "review",
+      "label": "complete",
+      "route": "straight"
+    },
+    {
+      "id": "missing",
+      "from": "complete",
+      "to": "revision",
+      "label": "missing",
+      "route": "straight",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "archive",
+      "from": "review",
+      "to": "report",
+      "label": "archive",
+      "route": "straight"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "approval",
+      "label": "Complete-materials path",
+      "beats": [
+        {
+          "durationMs": 800,
+          "caption": "Fictional rule: complete materials enter review; missing materials return for revision.",
+          "actions": []
+        },
+        {
+          "durationMs": 1000,
+          "caption": "Submit the received application.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "submit",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "This playback follows the complete-materials branch.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "accepted",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 800,
+          "transitionMs": 0,
+          "caption": "The defined review finishes.",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "review",
+              "value": {
+                "label": "Review\ncompleted"
+              }
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "Archive the report after review.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "archive",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1200,
+          "transitionMs": 0,
+          "caption": "Report archived. The missing-materials branch remains visible but is not animated.",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "report",
+              "value": {
+                "label": "Report ready\nArchived"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@ Optional `typography` contains positive finite `nodeLabel`, `edgeLabel` and `flo
 
 ## Geometry and relationships
 
-Every node has a globally unique `id`, `kind`, finite `x`/`y` and positive finite `width`/`height`. Kinds are `rect`, `roundedRect`, `ellipse`, `cylinder`, `group`. A group supplies a local origin for children and rounded borders by default. Use `parentId` only for an existing group, without cycles. Child x/y are offsets from the parent's current origin, including nested groups. Groups do not clip children: explicitly allow room for child bounds and a heading. `visible` defaults true; hidden ancestors also hide descendants.
+Every node has a globally unique `id`, `kind`, finite `x`/`y` and positive finite `width`/`height`. Kinds are `rect`, `roundedRect`, `ellipse`, `cylinder`, `group`, `diamond`, `parallelogram`, `document` and `predefinedProcess`. A group supplies a local origin for children and rounded borders by default. Use `parentId` only for an existing group, without cycles. Child x/y are offsets from the parent's current origin, including nested groups. Groups do not clip children: explicitly allow room for child bounds and a heading. `visible` defaults true; hidden ancestors also hide descendants.
 
 A node can have a simple `label` string or structured `content`, never both. Node `style` allows hexadecimal `fill`, `stroke`, `textColor`, nonnegative `strokeWidth`, and boolean `dashed` (for group borders). Use [color roles and palette](visual-design.md#color-roles-and-palette) for visual choices and source-supported state colors.
 
@@ -15,6 +15,17 @@ Every edge has a unique `id`, `from` and `to` pointing to nodes or groups. The a
 The viewport starts at document origin. Keep authored geometry within its width and height. Optional `viewport.fitHeight: {"padding": 24}` fits full-view height to current painted geometry while preserving width and origin. It does not move nodes or correct negative coordinates. Animated focus retains the authored viewport semantics; GIFs use fixed authored dimensions.
 
 The document `title` is metadata, distinct from an HTML page heading and a node title. Author global page introductions through [editable HTML pages](tool-contract.md#editable-html-pages); keep object-specific content in nodes.
+
+## Preset labels
+
+Use `diamond` for a decision, `parallelogram` for input/output, `document` for a report/file, and `predefinedProcess` for a defined subprocess. The subprocess shape is one node, not a group or executable operation. Select these meanings only when supported by the sources.
+
+These four kinds accept plain `label` only and reject structured `content`, including empty blocks. Their label safe areas, clipping and shape contours are owned by the SDK. After choosing width and typography, run `measure` before applying heights; a generic rectangular height is unsafe for a diamond or report wave. For a standalone input, use `{ "kind": "diamond", "width": 240, "label": ["Ready?", "Materials\ncomplete?"] }`. Empty strings are valid versions; the versions array must be nonempty. Top-level batch `label` remains metadata, so use a standalone object or complete draft for preset labels.
+
+Complete-draft measurement includes the initial label and every `updateNode.value.label` replacement for these kinds. Empty or omitted initial text still reserves contour clearance. Width diagnostics remain actionable after increasing height: widen the node or obtain authorization for a text change. Visible overflowing text is clipped rather than shrunk. Existing ordinary-label whole-word wrapping does not describe these presets, which may split overwide words between complete graphemes.
+
+For a complete workflow, use [mixed-approval-flow.json](../examples/mixed-approval-flow.json) with its [teaching source metadata](../examples/semantic-pattern-sources.json). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all preset label versions and recheck spacing. Inspect actual playback and requested images separately from numeric measurement.
+
 
 ## Node content and measurement
 

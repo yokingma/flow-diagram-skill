@@ -46,7 +46,7 @@ test("read-only validation explains a reconstructed Chinese vertical run without
   expect(warning.softWrappedRun.baselineSpan).toBeGreaterThan(200);
   expect(warning.candidates).toContain("Increase the label space or adjust the path and ports");
   expect(report).toMatchObject({ revision: null, validation: { snapshotCreated: false } });
-  expect(report.sdk.version).toBe("0.2.3");
+  expect(report.sdk.version).toBe("0.3.1");
   expect((await readdir(root)).sort()).toEqual(before);
   expect(await readFile(input, "utf8")).toBe(bytes);
   expect(result.stderr).not.toContain("<launching>");
