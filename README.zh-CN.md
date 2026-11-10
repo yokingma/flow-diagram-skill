@@ -110,9 +110,9 @@ Skill 在隔离缓存中准备以下锁定的软件包：
 
 ## 当前状态
 
-项目处于实验阶段，`0.1.0` 为首个独立正式版本；固定安装请使用 `v0.1.0` 标签，验证要求见[发布流程](docs/releasing.md)。安装命令跟随仓库默认分支。
+`0.1.0` 是首个独立正式版本。需要固定安装时请使用 `v0.1.0` 标签。本 Skill 使用精确锁定的 `flowsvg@0.3.1` 运行时基线。
 
-平台与助手宿主的验证范围仍有限，Windows 控制台 Ctrl+C 验收及 Claude Code 图解任务验证尚未完成。详见[已知平台限制与验证要求](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence)；各正式版本的已验证环境应在发布说明中列明。
+平台与助手宿主的验证范围仍有限，当前范围见[已知平台限制与验证要求](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence)。
 
 文件生成、程序检查与实际视觉复核分别记录。缺少浏览器或图片查看能力时，依赖这些能力的检查保持未完成。
 
