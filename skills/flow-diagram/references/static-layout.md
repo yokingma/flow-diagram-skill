@@ -17,7 +17,7 @@ Follow this sequence once for every layout-plan task:
 3. **Layout** with the same validated `layout-plan.json`. The command writes a new draft and reports changed geometry, overrides and retained warnings.
 4. **Validate** the layout draft, then read field, compile and finite geometry diagnostics. Resolve meaning-changing choices with the user.
 5. **Author/review** the requested HTML/SVG/PNG/GIF. HTML review covers the delivered HTML states; ordinary preview review covers sampled SDK frames. For existing SVG/PNG, use `evidence --from <diagram-revision>` to collect missing target conditions, then actually view the images and use independent `review --artifact-review --evidence-from <source>`. Read [artifact evidence](artifact-evidence.md) for defaults and accumulated conditions.
-6. **Finalize** only the selected revision after requested files and required review scope are complete. Delivery completion and quality coverage remain separate.
+6. **Finalize** the selected revision when all requested files are complete, each required check has been performed or its gap and impact are explicit, and every observed issue has a recorded handling decision. Follow [finalization](tool-contract.md#finalize-the-task); delivery completion and quality coverage remain separate.
 
 The example gaps are teaching settings for its content and viewport. They do not promise clearance for arbitrary labels or CJK text.
 

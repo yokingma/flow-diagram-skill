@@ -20,6 +20,33 @@ Choose a pattern by the relationship the reader must understand. Patterns can be
 
 Treat the table as a selection aid, not a requirement to use these exact compositions. For a capability inventory, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges) and use [recipe-capability-overview.json](../examples/recipe-capability-overview.json). For source mapping and business cards, use [the source/service recipe](visual-design.md#source-mapping-and-service-cards). Their [teaching sources](../examples/recipe-sources.json) state invented facts and unknowns separately from these relation-focused examples.
 
+## Relationship scope and endpoints
+
+Before placing edges in a grouped or layered diagram, state the view's level of detail: layer responsibilities, component dependencies, or a layer overview with named component exceptions. Select endpoints at the level of the source-supported relationship:
+
+| Relationship meaning | Endpoints | Interpretation |
+| --- | --- | --- |
+| One layer or subsystem supports another | Group → group | Connect their boundaries; the relation describes the named groups collectively and does not assert every possible child-to-child dependency. |
+| A specific component serves a subsystem, or a subsystem serves a specific component | Node → group, or group → node | Keep the specific endpoint and name the collective responsibility at the other boundary. |
+| A specific component calls, supplies or depends on another | Node → node | Preserve both component IDs, direction and any conditions. |
+| A component belongs to a layer | Parent membership | Express containment with `parentId`; add an edge only for a separately supported relationship. |
+
+For a capability or layered architecture overview, use group endpoints for collective relationships and keep only the component exceptions needed to answer the reader's question. In a component dependency view, retain the specific endpoints. An architecture title or the presence of groups alone does not establish either meaning.
+
+Record the view's relationship level and any ambiguous or meaning-changing endpoint choices in the task plan. Repeated edges between children of the same groups are a prompt to check the relationship's scope, not an instruction to merge them. When revising, obtain a scoped [information-choice decision](source-fidelity.md#before-and-after-a-meaning-change) before replacing component relationships with a collective relation. Preserve meaningful exceptions, such as a named external integration, a cross-layer dependency or a planned capability with distinct status. User approval of that specific abstraction can be applied without asking again for each edge.
+
+Endpoint selection is ready for geometry when it expresses the intended relationship level and any uncertainty that would change meaning is resolved. Judge individual endpoints against the sources and reader's question; route styling cannot correct a relationship expressed at the wrong level.
+
+### Endpoint decision examples
+
+These invented cases illustrate the decision; they supply no facts about a user's system.
+
+| Source and reader's question | Endpoint decision |
+| --- | --- |
+| “The data platform supports the application platform”; explain how the platforms relate. Each platform contains several capability cards. | Connect the two platform groups. Keep cards as members; the collective statement supplies no individual card-to-card calls to draw. |
+| “The order API writes to the order database”; show that dependency. The API and database belong to different groups. | Connect the API and database shapes. Membership supplies context but does not establish a collective dependency between their groups. |
+| “The data platform supports the application platform; a planned audit service will also serve the named external client”; explain the overview and its exception. | Draw the group relationship and the specific audit-service → client exception with its planned status. Keep the exception's scope distinct from the collective relationship. |
+
 ## Decisions and conditional process paths
 
 For source-supported conditions, use a decision node and name each outgoing condition; a shape alone does not define the rule. [mixed-approval-flow.json](../examples/mixed-approval-flow.json) demonstrates input/output, decision, defined subprocess and report presets. Its fictional sources define complete materials leading to review and archival, while missing materials return for revision. The static overview retains both branches; only the complete-materials path is animated. No retry, review criterion or real execution duration is supplied. Follow [preset labels](document-model.md#preset-labels) for safe measurement before authoring.
@@ -73,7 +100,7 @@ Use this pattern when ownership or another explicitly named boundary determines 
 
 Use this teaching pattern when a reader needs to compare layers, several columns inside a layer, and governance notes beside the main structure. The bundled sample is an invented teaching setup; it does not describe a production system.
 
-- **Required input:** layer names and their intended reading relationship, the objects in each column, explicit cross-layer relation directions, heading space, and the meaning of any governance annotation. Keep the layer order separate from execution order.
+- **Required input:** layer names and their intended reading relationship, the objects in each column, explicit cross-layer relation directions, heading space, and the meaning of any governance annotation. Choose [relationship scope and endpoints](#relationship-scope-and-endpoints) before placing cross-layer edges. Keep the layer order separate from execution order.
 - **Common misrepresentation:** a top-to-bottom layer order is read as call timing; a group is read as a deployment, network or trust boundary; a governance edge is read as an undeclared runtime dependency. Use labels such as “非调用依赖” when the relation is explanatory only.
 - **Static frame:** leave heading space inside each group, keep columns on a shared row, and route labelled edges through the gaps between groups. Measure structured content at the document's actual typography before increasing heights. The sample's row heights, column gaps and label clearance are verified starting values for this document and display width, not general SDK layout parameters.
 - **Runnable JSON:** [layered-architecture.json](../examples/layered-architecture.json). It contains two columns in each of the ingress, domain and data layers, a dashed governance sidebar, labelled cross-layer edges, and auxiliary text that records unknown information. The title and auxiliary blocks are measured from the draft and the published draft keeps only supported height increases. Layer order does not establish call order, grouping does not automatically establish deployment or trust boundaries, and governance relations do not add dependencies absent from the teaching setup. A group does not imply a deployment or trust boundary unless the source says so.

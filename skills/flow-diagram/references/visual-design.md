@@ -72,7 +72,7 @@ Starting point: [recipe-source-services.json](../examples/recipe-source-services
 
 Use for comparing layers with repeated columns and governance or explanatory notes beside them. Structure: `layer heading / aligned columns → relationship channel → next layer`, with the sidebar outside the main channels.
 
-1. Fix the main columns and reserve group-heading space. Align comparable card edges and title starts across layers.
+1. Select [relationship scope and endpoints](semantic-patterns.md#relationship-scope-and-endpoints), then fix the main columns and reserve group-heading space. Align comparable card edges and title starts across layers.
 2. Place cross-layer endpoints and allocate label or explanation space before placing the sidebar. Use an unlabelled arrow plus a nearby explanation when a short vertical path cannot carry the label legibly.
 3. Place the sidebar beyond those channels. Its heading and content must state whether it expresses membership, governance or commentary; position alone does not establish a runtime dependency.
 
@@ -154,7 +154,7 @@ For example, a body-text size of 20 diagram units gives `u = 5`; card padding ca
 - **Reserve connection channels.** Allow space for arrowheads, relationship labels, and return paths. Widen the relevant channel when a label needs more room.
 - **Adjust density coherently.** When the composition is crowded, first adjust layout, grouping, or canvas dimensions. Keep spacing consistent within each hierarchy level.
 
-Use the selected values as a reusable spacing system. Preserve a spatial hierarchy in which gaps within content are smaller than gaps between objects, and gaps between objects are smaller than gaps between groups.
+Use the selected values as a reusable spacing system. Smaller gaps within content and larger gaps between objects and groups are a starting point for expressing hierarchy. Adapt them when connection channels, compact layers or the intended composition need different proportions. Judge the result by clear membership, traceable relationships and readability at the target display size.
 
 ### Color roles and palette
 
@@ -222,15 +222,22 @@ Make relationships easy to trace and coordinate their appearance with the overal
 | Cross-group relationship | Reserve a channel across boundaries and keep endpoints and direction clear. |
 | Parallel relationships | Separate paths and their labels. Use distinct directed connections for requests and responses. |
 
-- **Classify the relationship first.** Decide whether the edge is node-to-node, group-to-group, membership, return or annotation. Use a group endpoint only when the relationship is actually about that group; never use a parent group as a shortcut for a child node.
-- **Choose ports before routes.** Coordinate entry and exit ports with the reading direction and the intended channel. Prefer facing ports for direct links. Reuse port choices for comparable relationships and keep parallel directions on separate ports or channels.
-- **Choose routes by structure.** Use `straight` only when the direct segment has clear space and the ports are aligned. Use `orthogonal` for layered or grouped layouts, off-axis ports, and paths that must pass through reserved bends. Use `curved` for returns or paths that need visual separation. Do not leave an off-axis relationship on the default straight route merely because structural validation passes.
-- **Reserve channels before labels and sidebars.** Treat each bend corridor as layout space. Keep unrelated cards, group borders and explanatory sidebars outside the corridor; move or resize them before accepting a route that crosses or overlaps them.
+- **Select endpoint scope first.** Follow [relationship scope and endpoints](semantic-patterns.md#relationship-scope-and-endpoints) before choosing ports or routes. Apply that scope to forward, return and explanatory relationships alike.
+- **Choose ports and routes together.** Start with ports that face the intended direction. Choose the simplest traceable path with clear arrowheads and label space, using the table below. Grouping, layering and off-axis ports alone do not require bends. Reconsider ports or node positions when the rendered path is crowded.
+- **Reserve channels before labels and sidebars.** Treat path clearance as layout space. Keep unrelated cards and explanatory sidebars outside the channel; where a component edge crosses a group boundary, keep that crossing distinct from a group endpoint.
 - **Establish line hierarchy.** Keep default line width and color consistent. Emphasize key paths when needed and give secondary relationships less visual weight.
 - **Give line styles explicit meanings.** Map solid lines, dashed lines, and color differences to defined relationship categories. Explain those categories through labels or a legend.
 - **Place labels near their paths.** Choose an identifiable segment with clearance from arrowheads, bends, and other text. Reserve layout space for longer labels.
 - **Resolve ambiguity first.** Keep directions traceable through crossings and relationship ownership clear along shared segments. Depict a junction as a meaningful merge only when the sources support that meaning.
-- **Coordinate routes across the composition.** Reuse routing rules for comparable relationships. Consider affected connections together when adjusting nodes or channels so local detours preserve the overall order.
+- **Coordinate routes across the composition.** Consider affected connections together when adjusting nodes or channels so local detours preserve the overall order. When routes share a busy gap, apply [shared-channel guidance](rendering-gotchas.md#independent-edges-share-a-routing-channel).
+
+| Route candidate | When to use it | What to verify |
+| --- | --- | --- |
+| `straight` | A direct segment is clear and easy to follow, including a diagonal between off-axis ports. | The segment avoids unrelated content and leaves independently traceable endpoints, arrowheads and labels. |
+| `orthogonal` | Bends make a relationship clearer or help it follow a planned gap. | Inspect the actual bends and shared segments; this mode does not assign exclusive lanes or guarantee obstacle avoidance. |
+| `curved` | A curve separates a return or another relationship from nearby paths. | Check the whole curve, its crossings and its arrowhead; changing route style alone does not establish separation. |
+
+For example, keep a clear diagonal between two offset components; compare a bent path when that diagonal crosses a card; reconsider the ports or layout when several bent paths collapse into one track. Keep the same source-supported relationship during these geometry changes. Connection inspection is complete when each edge can be traced independently to its intended boundary at the target display size, or its remaining ambiguity is recorded in review `issues`.
 
 ### Animation rhythm and visual continuity
 

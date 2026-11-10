@@ -49,9 +49,9 @@ The whitelist governs visible content blocks, not the HTML implementation struct
 
 **Apply this deletion test before authoring:** remove any block that repeats visible diagram content, describes how the diagram was made, or can disappear without reducing the reader's ability to use the page. Delete the starter's explanatory comment instead of filling it. If the page needs section headings, a table of contents or scrolling prose, stop and move that material to the delivery explanation or a separate file.
 
-### Human completion checklist
+### Page completion checklist
 
-Before delivery, a human author or reviewer confirms all of the following:
+Before delivery, the Agent checks the authored page and available browser and image evidence against all of the following:
 
 - exactly one `h1` names the explanation;
 - exactly one introductory sentence states the reader's question or the answer the diagram provides;
@@ -60,7 +60,7 @@ Before delivery, a human author or reviewer confirms all of the following:
 - no visible source, decision, inspection, production or duplicate diagram-content block remains outside the whitelist;
 - the page has no external resource request and remains usable at the intended width, including the narrow condition when relevant.
 
-This is a human authoring and review criterion. A violation is an authoring issue to move or remove before delivery.
+The Agent corrects observed violations before delivery. When browser or image viewing is unavailable, record the unperformed checks and their impact explicitly. The user's final design judgment is separate from this self-check.
 
 This is an Agent authoring contract. Do not implement it as page-text length, heading-count or section-count validation in `html-page.mjs`, `validate`, inspection or reports.
 

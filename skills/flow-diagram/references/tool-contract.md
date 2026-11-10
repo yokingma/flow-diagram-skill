@@ -61,7 +61,7 @@ HTML inspection opens the final outer page, checks controls in its declared play
 
 ## Finalize the task
 
-After required exports and actual image reviews, run:
+When all requested files are complete, each required check has been performed or its gap and impact are explicit, and every observed issue has a recorded handling decision, run:
 
 ```text
 node <skill-directory>/scripts/flowsvg.mjs finalize --workspace <task-workspace> --name <diagram-name> --from <selected-revision>
@@ -70,6 +70,8 @@ node <skill-directory>/scripts/flowsvg.mjs finalize --workspace <task-workspace>
 The command reads the selected successful `author` revision under `<task-workspace>/history/<name>/`. It collects requested output files through the explicit parent chain while source JSON bytes, SDK version/integrity and theme match. This preserves PNG/SVG/GIF after review-only calls. Changed content ends that search: re-export requested images for the changed draft. Missing, failed or modified static exports block finalization and preserve the previous final delivery and workspace.
 
 Finalization publishes JSON, HTML, requested images, `report.json` and `report.md` under `.diagrams/<name>/`. The portable report records relative final-file paths, hashes, the selected revision, SDK identity, checks, original source metadata, user decisions and recorded review observations. It contains no required links to temporary screenshots or revision directories. A report's `quality` remains its scoped check result; cleanup grants no visual approval.
+
+Complete files may be finalized with disclosed inspection gaps. Missing checks keep quality incomplete; unresolved issues retain their reported status under [the report contract](#revisions-and-reports). File publication does not complete those checks or establish user acceptance.
 
 Only after publication succeeds does the command remove the exact task workspace, including helper scripts, temporary revisions and screenshots. Check the returned `cleanup.status`; a cleanup error leaves the final delivery intact and must be reported. `--keep-work` preserves the full workspace only when the user explicitly requests history or debug evidence. Finalization never prunes earlier `.history` directories or other tasks. A subsequent edit imports the final `diagram.json` and, for an Agent page, its final `diagram.html` into a fresh workspace using [page continuation](#continue-an-existing-page). Read the existing final report and re-export its requested formats unless the user changes the delivery set; files from changed content cannot be reused as new exports.
 

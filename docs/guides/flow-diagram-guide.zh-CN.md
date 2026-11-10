@@ -49,7 +49,7 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 工作流要求静态草稿和显式计划。`measure` 会返回当前高度、所需高度、变化量和确定性估算行数；行数来自公开 SDK 基线，不是浏览器像素或正式 SVG/PNG 证据。之后运行 `layout --input <draft> --plan <layout-plan.json> --output <new-draft.json>`，再对新草稿运行 `validate`，然后进入 author。布局结果是草稿，不是版本或质量批准。正式 SVG/PNG 审查使用 `evidence` 读取已有文件，按需通过 `--artifact-preview-settings` 指定展示条件，查看每张 evidence 图片，再通过 `review --artifact-review` 显式指定主体和 evidence 来源。普通 preview 和 HTML review 只覆盖各自的采样 surface，不能覆盖正式图片。
 
-分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可在排布前选择[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)。[渲染陷阱提示](../../skills/flow-diagram/references/rendering-gotchas.md)按条件给出预防方法；[配方示例检查](../../skills/flow-diagram/examples/README.md)区分设计起点与能力演示。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
+设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[配方示例检查](../../skills/flow-diagram/examples/README.md)区分这些设计起点与能力演示。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
 
 ## 1. 准备环境
 
@@ -193,7 +193,7 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 
 新建或修订 HTML 讲解时，助手先分配页面内容，再确定图形几何。页面包含一个标题、一句回答读者问题的简介、仅在需要操作说明时加入的功能阅读提示，以及受管播放器。对象名称、关系条件、关键状态和比较卡片中必要的对象说明保留在图内。来源、决策、检查和制作记录放进交付说明或报告，不把来源提纲或任务计划改写成页面章节。完整规则见安装包内的[页面内容契约](../../skills/flow-diagram/references/delivery-contexts.md#keep-the-html-page-minimal)。
 
-助手围绕内嵌播放器编写页面 HTML/CSS，固定阅读顺序为标题、一句简介、可选的功能阅读提示、带字幕和控件的播放器，不设补充说明章节。交付前执行删除测试：凡是重复图中内容、描述制作过程，或删掉后不影响读者使用页面的区块，都移出或删除。最终仍交付一个可离线打开的自包含 HTML，以及可编辑图解 JSON 和报告，无需额外页面源文件。已有图解导入、纯导出和校验保留原有输入及入口。
+助手围绕内嵌播放器编写页面 HTML/CSS，固定阅读顺序为标题、一句简介、可选的功能阅读提示、带字幕和控件的播放器，不设补充说明章节。交付前由助手执行[页面完成清单](../../skills/flow-diagram/references/delivery-contexts.md#page-completion-checklist)和删除测试：凡是重复图中内容、描述制作过程，或删掉后不影响读者使用页面的区块，都移出或删除。未执行的检查及其影响会明确说明，最终设计判断由你作出。最终仍交付一个可离线打开的自包含 HTML，以及可编辑图解 JSON 和报告，无需额外页面源文件。已有图解导入、纯导出和校验保留原有输入及入口。
 
 直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-diagram/examples/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域默认必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-diagram/references/tool-contract.md#editable-html-pages)。
 
