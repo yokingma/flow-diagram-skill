@@ -10,7 +10,7 @@ This guide explains how to install and use Flow Diagram in a coding assistant th
 
 The skill is experimental and uses an exact registry SDK baseline. The supported SDK version is exactly `0.3.1`; installations still use the exact version and integrity recorded by the runtime manifest and lockfile. Platform and assistant-host verification is limited. See [known platform limits](../development/flow-diagram-maintenance.md#ci-and-platform-evidence) and the [host verification procedure](../development/flow-diagram-maintenance.md#host-verification). Installation instructions do not establish that every host and platform has passed acceptance.
 
-The initial independent Skill version is the `0.1.0` release candidate. Install through the Skills CLI or a complete manual copy as described in [Install in a host](#2-install-in-a-host). The exact SDK baseline is `flowsvg@0.3.1`; SDK upgrades require an explicit manifest/lock update and independent acceptance.
+The initial independent Skill release is `0.1.0`. Install through the Skills CLI or a complete manual copy as described in [Install in a host](#2-install-in-a-host). Use the `v0.1.0` tag for a fixed checkout. The exact SDK baseline is `flowsvg@0.3.1`; SDK upgrades require an explicit manifest/lock update and independent acceptance.
 
 After an SDK upgrade, historical reports and viewing evidence retain their original SDK identity. Re-export requested images under the new baseline and inspect them again. A filled Agent HTML page from another SDK is rejected even with `--sync-html`; preserve the original and follow [SDK upgrade recovery](../../skills/flow-diagram/references/troubleshooting.md#continuing-after-an-sdk-upgrade) to prepare a fresh managed region.
 
@@ -102,7 +102,7 @@ cd flow-diagram-skill
 git rev-parse HEAD
 ```
 
-For a fixed installation, check out the reviewed commit or an existing release tag before copying; record the commit printed by `git rev-parse HEAD`. `0.1.0` is a candidate version, so verify tag availability before selecting one.
+For a fixed installation, check out the `v0.1.0` release tag before copying and record the commit printed by `git rev-parse HEAD`.
 
 Copy the entire `skills/flow-diagram/` directory to one of the locations below. Keep `LICENSE` and preserve the relative positions of `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` configures the Codex display name and short description; the invocation name is `$flow-diagram`. Copying only `SKILL.md` cannot run the tools.
 

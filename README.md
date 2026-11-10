@@ -112,9 +112,9 @@ The [runtime manifest](skills/flow-diagram/runtime/manifest.json) records the ex
 
 ## Status
 
-Experimental. `0.1.0` is the initial independent release candidate; see the [release procedure](docs/releasing.md) for publication and verification requirements. The installation command follows the repository's default branch.
+Experimental. `0.1.0` is the initial independent release; use the `v0.1.0` tag for a fixed installation and see the [release procedure](docs/releasing.md) for verification requirements. The installation command follows the repository's default branch.
 
-Platform and assistant-host verification is still limited. Windows console Ctrl+C acceptance and Claude Code diagram-task verification remain incomplete. See [known platform limits and verification requirements](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence); release notes should identify the environments verified for each candidate.
+Platform and assistant-host verification is still limited. Windows console Ctrl+C acceptance and Claude Code diagram-task verification remain incomplete. See [known platform limits and verification requirements](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence); release notes identify the environments verified for each release.
 
 File generation, automated checks, and actual visual review are reported separately. A missing browser or image viewer leaves dependent inspection incomplete.
 

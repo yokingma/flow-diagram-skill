@@ -7,7 +7,7 @@
 - Give the editable HTML starter an author-adjustable minimum playback width and a keyboard-focusable horizontal reading area for narrow viewports.
 - Compare a canonical public SVG visual-state signature during end-to-start backseek, including stable element attributes and computed visibility/style state.
 
-## Unreleased
+## 0.1.0 — initial independent release
 
 - Align the complete rendering-gotcha checklist across the Skill, installed references and `PATTERNS.md`; structure preset-label risks as a matchable entry and remove the remaining broad HTML-prose wording from export guidance. Complete the bilingual guide summaries so they name the managed player. Documentation guidance only; no CLI, check or report behavior changed.
 - Add a human page completion checklist, align outer-page and narrow-screen inspection with it, and define semantic wrappers, accessibility attributes and inline/data-URL assets as allowed implementation structure while keeping external resources out. Record the page content contract in the glossary. Guidance and terminology only; no CLI or report behavior changed.
@@ -36,7 +36,7 @@
 - Add capability-inventory and source/service composition guidance, presentation content-area sizing, mixed-script alignment observations and persistent relationship-flow animation guidance.
 - Add three neutral teaching recipes and copied-install regression coverage for content fit, finite layout checks and export completeness. Preserve the exact SDK baseline and keep automatic visual lint outside this change.
 
-## 0.1.0 — independent repository preparation
+## Preparation before 0.1.0
 
 - Copy the complete Flow Diagram installation unit into `skills/flow-diagram` from the recorded FlowSVG source snapshot.
 - At the 0.1.0 preparation snapshot, add independent development dependencies and a pnpm lockfile while keeping that snapshot's installed runtime npm lockfile and `flowsvg@0.2.2` baseline unchanged.
@@ -45,4 +45,4 @@
 - Migrate all 27 Skill regression files and their maintained fixtures into `tests/`; declare `gifuct-js@2.1.2` directly for GIF decoding. Preserve existing behavior assertions and browser preconditions. Move the consumer harness as a required regression-test resource, with its default installation path updated.
 - Configure independent CI for Ubuntu/macOS/Windows and Node 20/22, including complete browser regressions and the fail-closed external consumer gate with real Node 18 rejection. Expand triggers to tests, fixtures, guides, tools, configurations, locks, and workflows. Record local browser/consumer execution and limited actual visual inspection separately from unexecuted remote CI and the Windows graceful-cancellation limitation.
 
-This version is prepared locally and has not been released. Local browser and consumer acceptance are recorded separately from configured CI and unexecuted platforms.
+This preparation snapshot records the independent repository setup that preceded the 0.1.0 release. Local browser and consumer acceptance remain separate from configured CI and unexecuted platforms.

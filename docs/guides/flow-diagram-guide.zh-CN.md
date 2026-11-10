@@ -10,7 +10,7 @@ Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播�
 
 当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.3.1`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
 
-首个独立 Skill 版本为 `0.1.0` 发布候选版本。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。精确 SDK 基线为 `flowsvg@0.3.1`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
+首个独立 Skill 正式版本为 `0.1.0`。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。需要固定源码时使用 `v0.1.0` 标签。精确 SDK 基线为 `flowsvg@0.3.1`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
 
 SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/726a31bb52c0af50439d6bdf1d087814af48f70c/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
 
@@ -100,7 +100,7 @@ cd flow-diagram-skill
 git rev-parse HEAD
 ```
 
-需要固定版本时，复制前先检出经过审查的提交或已存在的发布标签，并记录 `git rev-parse HEAD` 输出的提交。`0.1.0` 是候选版本，选择标签前请核对它是否存在。
+需要固定版本时，复制前先检出 `v0.1.0` 发布标签，并记录 `git rev-parse HEAD` 输出的提交。
 
 将完整的 `skills/flow-diagram/` 文件夹复制到下列位置之一。保留 `LICENSE`，以及 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-diagram`。只复制 `SKILL.md` 无法运行工具。
 
