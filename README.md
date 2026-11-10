@@ -81,7 +81,7 @@ After successful finalization, open `.diagrams/order-platform/diagram.html` in a
 | `report.json`, `report.md` | Sources, completed checks, warnings, and unfinished work |
 | `diagram.svg` | Static export explicitly requested in the example |
 
-SVG, PNG, and GIF are optional exports. HTML page prose is outside the diagram and is not included in image exports. Keep the HTML, JSON, and reports together for later edits that preserve the page design. Successful finalization removes the task's drafts and screenshots unless you request history retention; failed tasks retain recovery files.
+SVG, PNG, and GIF are optional exports. The HTML page carries only a heading, a one-sentence answer to the reader's question, functional reading hints when needed and the player; source, decision and check records stay in the delivery explanation and reports. Page text is not included in image exports. Keep the HTML, JSON and reports together for later edits that preserve the page design. Successful finalization removes the task's drafts and screenshots unless you request history retention; failed tasks retain recovery files.
 
 ## What it covers
 

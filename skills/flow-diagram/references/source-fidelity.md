@@ -8,7 +8,7 @@ Read this reference when a source has unknowns, a readability proposal aggregate
 2. When readability needs improvement, offer concrete candidates: separate images, additional states or an aggregation with its lost distinctions stated. Node count is a readability signal, not an automatic deletion threshold.
 3. Obtain the user's decision before merging objects, omitting source-supported relationships or changing meaning. Apply an already explicit decision within its stated scope; a general “make it simpler” request leaves the affected facts unresolved.
 4. In `sources[].description`, connect the source facts, unknowns, actual decision and permitted scope. For an existing diagram, select an explicit parent and save the authorized draft in a new revision. Keep the parent and its original issues. If a parent diagnostic exists, record the actual choice with `--decisions` as well. That option requires a known diagnostic; a semantic choice alone does not justify inventing a diagnostic code.
-5. Deliver the saved files and an explanation of **retained**, **merged**, **omitted** and **unknown** information. Identify the source and decision for each change, and the effects on interpretation. State “none” where a category is empty. Keep unapproved proposals unresolved.
+5. Deliver the saved files and an explanation of **retained**, **merged**, **omitted** and **unknown** information. Identify the source and decision for each change, and the effects on interpretation. State “none” where a category is empty. Keep unapproved proposals unresolved. This is delivery prose, not an HTML page section: do not copy the account, its table or the source inventory into the page. See [keep the HTML page minimal](delivery-contexts.md#keep-the-html-page-minimal).
 
 These are authoring actions and prose in existing metadata and delivery explanations, not a new report schema. A decision to merge three sources does not authorize a new queue policy, another omitted relationship or changes in a later source version.
 
@@ -41,7 +41,7 @@ Only after U2 does the author write a separate aggregated draft. The author reta
 ]
 ```
 
-A delivery explanation for that teaching revision would say:
+A delivery explanation for that teaching revision would say (in the delivery message, not on the HTML page):
 
 | Category | Account tied to S1 and U2 |
 | --- | --- |

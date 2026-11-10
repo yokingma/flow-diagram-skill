@@ -20,15 +20,49 @@ Before choosing diagram geometry, assign the explanation's content to its carryi
 
 | Content | Default location |
 | --- | --- |
-| Overall title, subtitle and reading goal | HTML heading and introduction |
-| Background, sources, global assumptions, limits and detailed discussion | Supporting HTML prose |
+| Overall title and one-sentence reading goal | HTML heading and introduction |
+| Background, sources, global assumptions, limits and detailed discussion | Outside the page: delivery explanation, `report.json` / `report.md`, `sources[].description` or a separate file |
 | Object names, group titles, relationship conditions and essential states | Diagram nodes, groups or nearby labels |
 | Explanation that changes with a scene or beat | Existing player captions |
-| Legend or annotation | Near the relationship it qualifies; global reading advice may sit in HTML |
+| Legend or annotation | Near the relationship it qualifies; only a functional reading hint may sit in HTML |
 
-Use spatial and temporal meaning to decide placement, rather than the field name or text length. Keep necessary node descriptions in content cards. Moving text must preserve the source meaning; relationships or qualifications that would become ambiguous stay with their objects. Independent SVG/PNG and presentation assets need their own context allocation; page-only prose is not part of an exported image.
+Use spatial and temporal meaning to decide placement, rather than the field name or text length. Keep necessary node descriptions in content cards. Moving text must preserve the source meaning; relationships or qualifications that would become ambiguous stay with their objects. Independent SVG/PNG and presentation assets need their own context allocation; page text is not part of an exported image. All placement stays within the [page content contract](#keep-the-html-page-minimal); a content type has no page destination unless that contract allows it.
 
-For new or revised HTML explanations, author the page HTML/CSS around the player, beginning with [the editable page starter](../examples/html-page.html) when useful. The normal reading order is heading/introduction, player with captions and controls, then supporting prose; adapt it to the content. Page text uses HTML layout and remains readable independently of diagram scaling. Keep the managed playback region intact and follow [editable HTML pages](tool-contract.md#editable-html-pages) to submit the complete page. Inspect the actual page at its intended width, including a narrow width when relevant. An unchanged import, pure export or validation keeps its existing entry point and input design.
+For new or revised HTML explanations, author the page HTML/CSS around the player, beginning with [the editable page starter](../examples/html-page.html) when useful. The reading order is the blocks allowed by [keep the HTML page minimal](#keep-the-html-page-minimal): heading, one-sentence introduction, functional reading hints, then the player with its captions and controls. There is no supporting-prose section. Page text uses HTML layout and remains readable independently of diagram scaling. Keep the managed playback region intact and follow [editable HTML pages](tool-contract.md#editable-html-pages) to submit the complete page. Inspect the actual page at its intended width, including a narrow width when relevant. An unchanged import, pure export or validation keeps its existing entry point and input design.
+
+### Keep the HTML page minimal
+
+**Use this section as the single source of truth for Agent-authored page content.** The starter, installed references and bilingual guides point here; they do not add blocks or create exceptions. Let diagram nodes, relationships and player captions carry the explanation; the page is a viewing shell for orientation and operation, not a report. Treat user material as source evidence for the diagram. Do not turn the source outline, task plan or delivery report into an HTML outline.
+
+**Before writing page HTML, allocate content in this order:**
+
+1. Write one `h1` that names the explanation.
+2. Write one introduction sentence that states the reader's question or the answer the diagram provides.
+3. Add a functional reading hint only when the reader needs an operation instruction, such as horizontal scrolling, display width or player controls.
+4. Put the managed player region after those blocks. Its captions and controls carry scene-specific explanation.
+
+**The page whitelist is closed:** one `h1`, one introductory sentence, optional functional reading hints and the managed player region. Do not add a second-level heading, supporting-prose section, source list, data table, appendix, decision log, inspection record or production footer.
+
+The whitelist governs visible content blocks, not the HTML implementation structure. Semantic wrappers such as `main`, `header` and `section`, ARIA attributes, keyboard focus handling and CSS are allowed when they support the listed blocks. Keep CSS, scripts, fonts and images inline or in data URLs so the delivered file remains self-contained; do not add CDN or other external resources.
+
+**Keep these materials outside the page:** source transcriptions and paraphrases; complete relationship or object inventories; `retained` / `merged` / `omitted` / `unknown` accounts; assumptions, limits, QA scope and production notes; repeated node text; and any second explanation of the diagram. Put object detail in nodes, groups and nearby labels; put source facts and decisions in `sources[].description`, `report.json`, `report.md` or the delivery explanation; put changing explanation in existing player captions. [Source fidelity](source-fidelity.md#before-and-after-a-meaning-change) step 5 is a delivery requirement, not permission to add a page chapter. If a full inventory is needed for reference, create a separate file outside the page and mention it in the delivery explanation.
+
+**Apply this deletion test before authoring:** remove any block that repeats visible diagram content, describes how the diagram was made, or can disappear without reducing the reader's ability to use the page. Delete the starter's explanatory comment instead of filling it. If the page needs section headings, a table of contents or scrolling prose, stop and move that material to the delivery explanation or a separate file.
+
+### Human completion checklist
+
+Before delivery, a human author or reviewer confirms all of the following:
+
+- exactly one `h1` names the explanation;
+- exactly one introductory sentence states the reader's question or the answer the diagram provides;
+- a functional reading hint appears only when the reader needs an operation instruction and contains only that instruction;
+- the managed player region appears exactly once, after the outer text, with its captions and controls intact;
+- no visible source, decision, inspection, production or duplicate diagram-content block remains outside the whitelist;
+- the page has no external resource request and remains usable at the intended width, including the narrow condition when relevant.
+
+This is a human authoring and review criterion. A violation is an authoring issue to move or remove before delivery.
+
+This is an Agent authoring contract. Do not implement it as page-text length, heading-count or section-count validation in `html-page.mjs`, `validate`, inspection or reports.
 
 ## HTML with standalone images
 
@@ -36,7 +70,7 @@ When HTML and SVG/PNG are requested together, record whether each image will be 
 
 Use the same diagram when its content serves both destinations. If an image needs additional context, explicitly author it in the diagram or confirm the target host supplies it. If the destinations need different diagrams, save separate, clearly named drafts and sources; an export time or camera selection changes the selected view, not its underlying explanation. Follow the existing source-fidelity decision process before omissions, aggregation or scope changes.
 
-Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for explicit requests and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page prose edits alone do not request images.
+Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for explicit requests and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page text edits alone do not request images.
 
 ## Static assets for presentations
 

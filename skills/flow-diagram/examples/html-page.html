@@ -11,7 +11,6 @@ main { max-width: 1120px; margin: auto; padding: 32px 24px; }
 h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 40px); line-height: 1.2; overflow-wrap: anywhere; }
 p { line-height: 1.65; }
 header { margin-bottom: 24px; }
-.explanation { margin-top: 24px; max-width: 72ch; }
 .diagram-scroll { max-width: 100%; overflow-x: auto; }
 .diagram-scroll:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 #flowsvg-page-player { min-width: var(--diagram-reading-width); }
@@ -24,16 +23,19 @@ header { margin-bottom: 24px; }
 <main>
 <header>
 <h1>Diagram explanation</h1>
-<p>Replace with a short introduction, or remove this paragraph.</p>
+<p>One sentence stating what this diagram answers.</p>
 </header>
 <p class="reading-hint" id="diagram-reading-hint">On a narrow screen, scroll the diagram area horizontally to read the whole diagram and reach its controls.</p>
 <section class="diagram-scroll" aria-label="Interactive diagram" aria-describedby="diagram-reading-hint" tabindex="0">
 <!-- flowsvg:player:start -->
 <!-- flowsvg:player:end -->
 </section>
-<section class="explanation" aria-label="Supporting explanation">
-<p>Replace with source-supported context, assumptions or limits, or remove this section.</p>
-</section>
+<!-- Remove this starter comment before delivery. Keep only the page whitelist:
+     one h1, one introductory sentence, optional functional reading hints
+     and the managed player region. Keep the hint only when narrow-screen
+     scrolling or player controls need instruction; otherwise delete it.
+     Move sources, decisions and check records outside the page; see
+     ../references/delivery-contexts.md#keep-the-html-page-minimal. -->
 </main>
 </body>
 </html>

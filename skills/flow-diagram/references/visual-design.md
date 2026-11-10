@@ -4,14 +4,14 @@ Use explicit design methods to guide production. Automated checks and AI image i
 
 ## Shared quality standards
 
-Apply these standards across usage contexts. Choose concrete type sizes, colors, spacing, and shapes for the intended context and display size.
+Apply these standards to the diagram and its node, group and label text across usage contexts. Choose concrete type sizes, colors, spacing, and shapes for the intended context and display size. Supporting information in these standards means diagram-bound text, not outer HTML prose; the page's allowed blocks are fixed by [keep the HTML page minimal](delivery-contexts.md#keep-the-html-page-minimal).
 
 | Standard | Observable result |
 | --- | --- |
-| Clear hierarchy | The reader can identify the subject and entry point, then distinguish main content, supporting explanations, and status tags. Position, type size, weight, and color work together to express emphasis. |
-| Balanced composition | Grouping, alignment, and whitespace have a clear organizing logic. Containers fit their content, and local density supports the overall visual balance. |
-| Consistent visual language | Objects with the same role, text roles, tags, and connections follow consistent styling rules. Emphasis and state changes have explicit meanings. |
-| Readable, structured text | Text and tags are readable at the intended display size. Titles, paragraphs, lists, and supporting explanations have distinct roles. Line breaks preserve meaningful units. |
+| Clear hierarchy | The reader can identify the subject and entry point, then distinguish main content, secondary explanations and status tags. Position, type size, weight and color work together to express emphasis. |
+| Balanced composition | Grouping, alignment and whitespace have a clear organizing logic. Containers fit their content, and local density supports the overall visual balance. |
+| Consistent visual language | Objects with the same role, text roles, tags and connections follow consistent styling rules. Emphasis and state changes have explicit meanings. |
+| Readable, structured text | Text and tags are readable at the intended display size. Titles, paragraphs, lists and supporting information have distinct roles. Line breaks preserve meaningful units. |
 | Purposeful color | Background, content, emphasis, and status colors have defined roles. Text has sufficient contrast with its carrying background. Important meanings are also expressed through text, shapes, or line styles. |
 | Traceable relationships | The reader can follow each connection to its source, destination, and arrowhead, and identify which relationship a label describes. Routes, arrowheads, and label placement work together. |
 | Continuous, readable animation | Each stage retains the context needed for understanding. Object identity and the reasons for changes remain clear. Text stays visible long enough to read, and focus changes follow the explanation's sequence. |
@@ -222,8 +222,10 @@ Make relationships easy to trace and coordinate their appearance with the overal
 | Cross-group relationship | Reserve a channel across boundaries and keep endpoints and direction clear. |
 | Parallel relationships | Separate paths and their labels. Use distinct directed connections for requests and responses. |
 
-- **Choose ports first.** Coordinate entry and exit ports with the reading direction to reduce unnecessary reversals. Reuse port choices for comparable relationships.
-- **Choose routes by structure.** Use straight routes for direct connections, orthogonal routes for layered or grouped layouts, and curved routes for returns or paths that need visual separation.
+- **Classify the relationship first.** Decide whether the edge is node-to-node, group-to-group, membership, return or annotation. Use a group endpoint only when the relationship is actually about that group; never use a parent group as a shortcut for a child node.
+- **Choose ports before routes.** Coordinate entry and exit ports with the reading direction and the intended channel. Prefer facing ports for direct links. Reuse port choices for comparable relationships and keep parallel directions on separate ports or channels.
+- **Choose routes by structure.** Use `straight` only when the direct segment has clear space and the ports are aligned. Use `orthogonal` for layered or grouped layouts, off-axis ports, and paths that must pass through reserved bends. Use `curved` for returns or paths that need visual separation. Do not leave an off-axis relationship on the default straight route merely because structural validation passes.
+- **Reserve channels before labels and sidebars.** Treat each bend corridor as layout space. Keep unrelated cards, group borders and explanatory sidebars outside the corridor; move or resize them before accepting a route that crosses or overlaps them.
 - **Establish line hierarchy.** Keep default line width and color consistent. Emphasize key paths when needed and give secondary relationships less visual weight.
 - **Give line styles explicit meanings.** Map solid lines, dashed lines, and color differences to defined relationship categories. Explain those categories through labels or a legend.
 - **Place labels near their paths.** Choose an identifiable segment with clearance from arrowheads, bends, and other text. Reserve layout space for longer labels.

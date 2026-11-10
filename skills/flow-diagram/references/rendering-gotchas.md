@@ -1,6 +1,6 @@
 # Rendering gotchas
 
-Before arranging new or revised geometry, read the entries whose conditions match the draft. Use the linked methods for the complete operation. These are risk-prevention choices, not automatic repairs or additional approval steps.
+Before arranging new or revised geometry, read the complete list. For each entry, compare its condition and symptom with the draft and record the matched entries and chosen **Start with** actions in the task plan before writing geometry. Use the linked methods for the complete operation. These are risk-prevention choices, not automatic repairs or additional approval steps.
 
 ## Long relationship labels on short paths
 
@@ -15,6 +15,13 @@ Before arranging new or revised geometry, read the entries whose conditions matc
 - **Start with:** reserve the main relationship channels before positioning the sidebar. Coordinate ports and sidebar placement using the [connection recipe](visual-design.md#connections-and-relationship-labels). Use an in-card explanation only when it preserves the required relationship and its ownership.
 - **Current checks:** the SDK routes edges and detects some node-related risks, but does not guarantee container avoidance. Container-crossing diagnosis is under evaluation, not a default check.
 - **Still view:** follow each cross-region path through bends and crossings to the destination arrowhead. Distinguish membership boundaries from paths and explanatory side notes.
+
+## Group endpoints and off-axis ports on cross-layer edges
+
+- **Condition and symptom:** the source meaning is card-to-card but an edge points to a parent **group**, or the chosen ports share neither an x nor a y coordinate while `route` is omitted or left as `straight`. The result is commonly a diagonal segment through other groups, an arrowhead on a container outline or a connection that visually overlaps an unrelated card. A group endpoint is valid only when the relationship itself is between groups or layers; it is not a shortcut for a card. A channel that is too narrow for a label can create the same crowding as [short-path labels](#long-relationship-labels-on-short-paths).
+- **Start with:** classify the relationship before writing geometry: card-to-card, group-to-group or membership. For card-to-card, name the concrete card IDs in both `from` and `to`; for group-to-group, use group IDs intentionally and state the layer-level meaning. Then choose ports that face the relationship and reserve a clear channel before placing sidebars or labels. When the chosen ports are off-axis, set `route: orthogonal` explicitly; use separate channels and distinct ports for parallel or return relationships. If no channel can carry a label without crossing content, remove the line-side label and place a nearby explanation that clearly belongs to that relationship.
+- **Current checks:** `validate` may report some edge-node or label overlap, but it does not infer relationship meaning, reject an unintended group endpoint or treat a diagonal route as a failure. `measure` does not prove channel width or edge-label fit. Passing structural checks is not evidence that the arrow reaches the intended card or avoids visual collision.
+- **Still view:** inspect the rendered path at the target size, preferably with a crop of the busy channel. Trace from the source card or group through every bend to the arrowhead. Confirm that the arrowhead lands on the intended boundary, every segment stays in its reserved channel, no unrelated node is crossed or covered, and parallel directions remain distinguishable.
 
 ## Borderless headings and supporting text
 
@@ -49,4 +56,7 @@ For logs or intermediates that must survive cleanup, decide retention when [crea
 
 ## Preset labels and shape clearance
 
-For decision, input/output, report or predefined-process nodes, read [preset labels](document-model.md#preset-labels) before setting dimensions. Run `measure` at the intended width and typography, including every label replacement. These presets can split overwide words at grapheme boundaries and clip text to a shape-specific safe area. Resolve width diagnostics before backfill or layout; a larger height alone cannot make a grapheme fit. Public geometry diagnostics use visible clipped paint, so a lack of overlap warnings does not establish that all authored text is visible. Inspect the actual label and contour at the target size.
+- **Condition and symptom:** a decision, input/output, report or predefined-process node uses a preset label whose versions may exceed the shape's safe area. Overwide words can split at grapheme boundaries, and the contour can clip text even when the document validates.
+- **Start with:** read [preset labels](document-model.md#preset-labels) before setting dimensions. Run `measure` at the intended width and typography, including every label replacement. Resolve width diagnostics before backfill or layout; increasing height alone cannot make a grapheme fit.
+- **Current checks:** public geometry diagnostics use visible clipped paint, so a lack of overlap warnings does not establish that all authored text is visible.
+- **Still view:** inspect the actual label and contour at the target size after measurement and layout.

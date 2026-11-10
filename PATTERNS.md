@@ -26,7 +26,7 @@ Report file delivery and inspection coverage separately. A no-browser run can co
 
 ## Teaching recipes and visual guidance
 
-Keep reader-question selection, preference/context resolution and composition rules in installed references, with conditional entry points from `SKILL.md`. Teaching recipes record invented facts and checked display conditions; fixed geometry is a starting point for that content, not a general visual threshold. Exercise new recipes through the copied installed CLI. Record actual viewing independently from synthetic test assertions and programmatic browser checks. Static composition and requested export formats remain separate choices.
+Keep reader-question selection, preference/context resolution, composition rules and the complete rendering-gotcha list in installed references, with explicit entry points from `SKILL.md`. Before geometry, read the complete gotcha list, match each condition against the draft and record the selected prevention actions in the task plan. Teaching recipes record invented facts and checked display conditions; fixed geometry is a starting point for that content, not a general visual threshold. Exercise new recipes through the copied installed CLI. Record actual viewing independently from synthetic test assertions and programmatic browser checks. Static composition and requested export formats remain separate choices.
 
 ## Project preference preflight
 
@@ -47,6 +47,12 @@ Record visible captions and SVG text with each sampled page state. Exercise back
 Backseek validation also compares a canonical public SVG signature: stable element tags/IDs, selected geometry/style attributes and computed visibility/display/opacity, sorted to ignore irrelevant DOM order. Keep text/caption checks alongside this signature; neither alone represents the full rendered state.
 
 `html-page.mjs` owns the Skill-managed playback region and page source/output identities. Preserve Agent-authored outer HTML/CSS, embed the complete public SDK HTML as opaque iframe content, and reject malformed or mismatched managed regions. Read page inputs once before revision allocation. Page delivery remains one HTML, diagram JSON and reports; no separate page source is required.
+
+## Page content wording contract
+
+Page content scope is an Agent authoring decision, not a CLI check. `references/delivery-contexts.md#keep-the-html-page-minimal` is its single source of truth: it owns the closed whitelist of allowed blocks, the excluded-content destinations, the deletion test and the human completion checklist. Before authoring, the Agent must convert the reader's question into one title and one sentence, add only operation instructions the reader needs, then place the managed player. Installed references, the starter and the bilingual guides link there; they do not extend the allowed blocks or grant exceptions, and short summaries at entry points must match that contract.
+
+When editing this guidance, sweep the whole repository for wording that silently re-authorizes page chapters (`supporting prose`, `supporting explanation`, `global notes`, `补充说明`, `正文`), including bilingual guides, both root READMEs and the starter comment. Keep the English and Chinese guides aligned on the allowed blocks and reading order. This contract governs wording only: do not add page-text length, heading-count or section-count validation to `html-page.mjs`, `validate`, inspection or reports.
 
 ## Page-preserving revisions
 

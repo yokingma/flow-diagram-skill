@@ -26,7 +26,7 @@ For a combined page and image request, pass the complete page with the normal ex
 node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --html "page.html" --name "article" --svg --png --time 0 --png-width 1440 --browser "/path/to/chromium" --output "<task-workspace>/history"
 ```
 
-The page supplies outer HTML prose and styles; static exports use the saved diagram JSON. Allocate standalone-image context using [delivery contexts](delivery-contexts.md#html-with-standalone-images) before running this command. Inspect the actual HTML and each requested image separately. A successful HTML and SVG remain available if PNG fails; the combined request remains incomplete.
+The page supplies only the allowed heading, one-sentence introduction, functional reading hints and managed player region, plus their outer HTML/CSS; static exports use the saved diagram JSON. Follow the [page content contract](delivery-contexts.md#keep-the-html-page-minimal) and allocate standalone-image context using [delivery contexts](delivery-contexts.md#html-with-standalone-images) before running this command. Inspect the actual HTML and each requested image separately. A successful HTML and SVG remain available if PNG fails; the combined request remains incomplete.
 
 For an unchanged finalized page, import its exact `diagram.json` and select its `diagram.html` with `--html` in the fresh workspace. This preserves the selected page design while adding only requested formats. Keep its managed region intact and matching the original source bytes, theme and SDK. Default `author --html` without image flags still delivers only JSON, HTML and reports.
 
