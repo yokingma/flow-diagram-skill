@@ -14,7 +14,7 @@
 - [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, verification methods, and platform limits.
 - [Repository patterns](../PATTERNS.md) and [CLI patterns](development/flow-diagram-patterns.md): implementation conventions and module responsibilities.
 - [Glossary](../GLOSSARY.md) and [architecture decisions](adr/README.md): domain terms, accepted trade-offs, and contracts.
-- [Agent work rules](../AGENTS.md), [source-comment rules](agents/code-comments.md), and [domain documentation](agents/domain.md): repository development guidance.
+- [Agent work rules](../AGENTS.md), [technical writing](agents/technical-writing.md), [source-comment rules](agents/code-comments.md), and [domain documentation](agents/domain.md): repository development guidance.
 - [Local tracker](agents/issue-tracker.md) and [triage labels](agents/triage-labels.md): conventions for ignored local work records.
 - [Release procedure](releasing.md) and [changelog](../CHANGELOG.md): distribution and release changes.
 
