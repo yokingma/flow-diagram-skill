@@ -22,9 +22,12 @@ This guide covers installation, creation, revision, validation and export for hu
 | --- | --- | --- |
 | Create a diagram | Read [Create your first diagram](#3-create-your-first-diagram), then consult the relevant semantic pattern and delivery references | The selected final diagram links saved JSON, HTML, checks and unresolved items |
 | Create from sources | Read [Create from designated sources](#4-create-from-designated-sources) and [source fidelity and information choices](../../skills/flow-diagram/references/source-fidelity.md) | `sources.json` and the report record the authorized sources and decisions |
-| Revise or diagnose | Read [Revise an existing diagram](#6-revise-an-existing-diagram) and [diagnosis and revision decisions](../../skills/flow-diagram/references/diagnostics-and-revisions.md) | The new revision identifies its parent, preserves original warnings and records your decisions |
+| Manage project preferences | See [Preferences, purpose and display size](#31-preferences-purpose-and-display-size) | The assistant reports what was saved, forgotten or reset |
+| Revise a diagram | Read [Revise an existing diagram](#6-revise-an-existing-diagram) | The result identifies the selected input and records changes and decisions |
+| Diagnose without edits | Follow [inspection-only preparation](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation) | The assistant reports findings, evidence and gaps without publishing a replacement |
 | Export static images or GIF | Read [Export SVG, PNG or GIF on request](#7-export-svg-png-or-gif-on-request) and [export options](../../skills/flow-diagram/references/export.md) | The report accounts for each requested format; missing browsers leave dependent exports unfinished |
-| Validate only, or recover from an environment failure | Read [Validate only, or use the command line](#8-validate-only-or-use-the-command-line) or [troubleshooting](../../skills/flow-diagram/references/troubleshooting.md) | Validation reports `validated`, or a preserved failure report gives the next recovery step |
+| Validate only | Read [Validate only, or use the command line](#8-validate-only-or-use-the-command-line) | The result reports checks and diagnostics without saving a diagram revision |
+| Recover an interrupted or failed task | See [troubleshooting](../../skills/flow-diagram/references/troubleshooting.md) | The assistant reports retained files and what remains unfinished |
 
 ## Suitable tasks
 
@@ -33,7 +36,7 @@ This guide covers installation, creation, revision, validation and export for hu
 - **Teaching and training:** explain requests, data flows and task lifecycles step by step.
 - **Reviews and retrospectives:** combine a structural overview with interactions or failures supported by your sources.
 
-Specify the audience, display size and output formats to help the assistant choose information density and pacing. JSON and offline HTML remain the default delivery. Explicitly request SVG, PNG or GIF when needed. The skill creates diagram assets, not PPTX files or native PowerPoint shapes. Import and playback behavior depend on the presentation software.
+Specify the audience, display size and output formats to help the assistant choose information density and pacing. JSON and offline HTML remain the default delivery. Request SVG, PNG or GIF when needed, or set a project preference for repeated use. The skill creates diagram assets, not PPTX files or native PowerPoint shapes. Import and playback behavior depend on the presentation software.
 
 The assistant uses [visual design methods](../../skills/flow-diagram/references/visual-design.md) to coordinate typography, spacing, colors, containers, tags, connections and animation for the usage context. Tool checks and AI inspection provide evidence and observations; you judge the final design. A reported quality pass describes the recorded checks and coverage.
 
@@ -178,17 +181,17 @@ Name the diagram request-response and deliver the default JSON and offline HTML.
 
 ## 3.1. Preferences, purpose and display size
 
-Before the five authoring steps, new and revised drafts run [project preference preflight](../../skills/flow-diagram/references/preferences.md). The assistant reads `.diagrams/.preferences.json` under the current working directory, or a project root you explicitly specify. It reuses known choices and asks only for relevant gaps; pure exports, validation and diagnosis keep their existing flow. For revisions, existing design remains in place unless your request changes it.
+The assistant reads [project preferences](../../skills/flow-diagram/references/preferences.md) from `.diagrams/preferences.md` under the current working directory or the project root you specify. It reads them for new drafts, revisions, and export-only tasks with an unresolved option they can fill. Validation and diagnosis skip the record. Your current request and mandatory project rules take priority; revisions keep design and delivery choices outside the requested changes.
 
-You can choose “only this time” or “save for reuse.” Only an explicit save request persists visual style, palette, typography, density or reference direction. Defaults can be saved as `defaults: true`, alongside explicit overrides. Purpose, dimensions, facts, relationships, output formats and layout remain task decisions. This is a project file managed by the assistant, not a CLI setting or user-wide profile. For new drafts, current requirements take priority over project conventions, saved preferences and Skill defaults. Configuration location, schema and update rules are defined in the linked reference.
+Say “Use Chinese labels for architecture diagrams in this project from now on” or “Include SVG by default for review deliveries” to save a project preference. The assistant records one reusable choice per Markdown list line. A one-off adjustment or repeated feedback stays in the current task; the assistant only asks about saving when you express a lasting choice whose scope or value is unclear. Source facts, relationships, specific coordinates and actual display conditions stay with the task.
 
-Ask “save this palette for this project,” “change project density to airy,” or “reset project preferences” to manage the file. Reset removes only the preference file. Invalid configuration stays intact and supplies no values; the assistant explains the problem and lets you continue with task-only choices. Failed saves or resets are reported rather than treated as completed.
+You can change a preference, forget one, or reset the record. A change replaces the previous value for the same scope; a specific exception can have its own line. If conflicting lines affect the current task, the assistant points them out and continues without that default. Failed writes or deletions are reported. Reset removes only `.diagrams/preferences.md`. The old `.diagrams/.preferences.json` stays untouched and no longer applies. To keep an old choice, add it to the Markdown or ask the assistant to save it again.
 
-If the purpose is unknown and you explicitly choose defaults or ask the assistant to proceed, the starting point is a static Web composition with a 960×600 canvas, assumed 720 CSS px display width and light background unless your preferences specify another appearance. Default delivery remains JSON, paused offline HTML and reports; SVG/PNG still require a request. An unanswered question does not select defaults. Saving visual defaults does not select Web as the purpose of every future task.
+If the purpose is unknown and you explicitly choose defaults or ask the assistant to proceed, the starting point is a static Web composition with a 960×600 canvas, assumed 720 CSS px display width and light background unless an applicable preference changes the appearance. Choosing to follow the Skill’s visual defaults does not pick a purpose for future tasks. Delivery defaults to JSON, paused offline HTML and reports; extra formats come from your request or an applicable project preference. Silence does not select defaults.
 
-For PPT assets, specify full-slide or local placement, available width **and height**, background, and whether the slide or the asset carries the title and footer. Known PPT use stays in that context; missing exact dimensions are recorded as assumptions. Target-size viewing covers those conditions; actual PowerPoint/WPS integration is reported separately. For animation, specify browser HTML playback or an explicitly requested GIF; MP4, PPTX and native PowerPoint animation are outside this skill's export capability.
+For PPT assets, specify full-slide or local placement, available width **and height**, background, and whether the slide or the asset carries the title and footer. Known PPT use stays in that context; missing exact dimensions are recorded as assumptions. Target-size viewing covers those conditions; actual PowerPoint/WPS integration is reported separately. For animation, specify browser HTML playback or GIF; MP4, PPTX and native PowerPoint animation are outside this skill's export capability.
 
-If you need an image to import into a slide, specify SVG or PNG; otherwise that choice is included in the initial context question. Choosing default files produces HTML/JSON/reports, with no implicit slide-import image.
+If you need an image to import into a slide, specify SVG or PNG. If neither your request nor an applicable project preference settles the format, the assistant asks. Choosing default files produces HTML/JSON/reports, with no implicit slide-import image.
 
 The [reader-question table](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question) helps choose capability inventories, source mappings or processes. The [teaching recipes](../../skills/flow-diagram/examples/README.md#presentation-recipe-checks) include a no-edge capability overview, Chinese source/service cards and an all-visible parallel-flow animation. Reuse their organization with your own facts and dimensions.
 
@@ -306,7 +309,7 @@ Keep the manifest in the task workspace. Report each item separately and retry f
 
 See [named batch exports](../../skills/flow-diagram/references/export.md#named-batch-exports). Viewing one image does not establish inspection of other times, formats or display sizes.
 
-GIF requires an explicit request and a usable browser:
+GIF requires a usable browser when it is included in the delivery plan. It can come from your current request, formats carried forward from the existing delivery, or an applicable project preference. Your current request can remove GIF from the delivery. For example, to add GIF:
 
 ```text
 Use the flow-diagram skill to read ./.diagrams/request-response/diagram.json.

@@ -1,54 +1,40 @@
-# Project design preferences
+# Project preferences
 
-Read this reference for **new or revised drafts**, or an explicit request to **save, change or reset project preferences**. Pure export, validation and diagnosis use their existing task entry points. This is the authoritative preference contract; [delivery context](delivery-contexts.md) owns purpose, dimensions, carrying background, playback and requested files.
+Project preferences are user-chosen defaults for later diagram tasks in the same project. The assistant manages them; the CLI does not read or write them.
 
-## Preflight
+## Locate and read
 
-1. **Locate.** Use the current working directory as the project root unless the user explicitly names another root. Read only `<project-root>/.diagrams/.preferences.json`; parent directories, input-file locations and the installed Skill do not select configuration. This project file sits outside individual deliveries and task workspaces, so task finalization leaves it intact.
-2. **Validate.** Apply the [version 1 contract](#version-1-file-contract). Missing configuration is normal and does not prove first use. An unreadable or invalid file stays intact and supplies no values; describe its path and specific field/reason, then let the user choose task-only defaults or temporary preferences. Reuse an explicit choice already in the current request. There is no time-based expiry or automatic migration.
-3. **Resolve.** For new drafts: current explicit request → applicable project convention → valid project preferences → Skill defaults. For revisions: current explicit request → design already expressed by the diagram → valid project preferences → Skill defaults. Use project conventions for unresolved choices; explain conflicts with retained design before changing it. Reading preferences alone never authorizes restyling an unchanged import.
-4. **Collect gaps.** Reuse current conversation choices and task records. Ask once for relevant missing preferences, combining them with already apparent delivery-context gaps when practical. Offer “only this time” and “save for reuse”. Known choices need no repeated style or save question. An unanswered question selects neither defaults nor persistence.
-5. **Record.** Translate descriptions into concrete choices for this task; record adopted values, sources and temporary overrides in the existing task plan. Complete any explicitly requested [persistence](#save-update-and-reset), or disclose its failure. Unfinished tasks reuse valid recorded decisions and revisit only affected choices.
+Use the current working directory as the project root unless the user explicitly names another root. The sole record is `<project-root>/.diagrams/preferences.md`, outside task workspaces and delivery directories. Do not search parent directories, source locations or the installed Skill. Leave legacy `.diagrams/.preferences.json` untouched; it is inactive and is not read or migrated.
 
-Preflight is complete when relevant visual choices have known values, explicit defaults or assumptions within the authorized scope, their sources are recorded, and requested persistence is verified or its failure disclosed. A disclosed assumption cannot replace a required answer about using defaults. Continue to the five authoring steps; a standalone preference-management request ends with its operation result.
+Read the record before authoring new or revised drafts, for an export-only task with a material choice still open, or for an authorized preference operation. An export with its material choices settled, validation, and diagnosis skip the record. An omitted optional flag with a normal default is not by itself an open choice. On resumption, reuse recorded task decisions and revisit only affected choices.
 
-## Version 1 file contract
+The record is editable Markdown, with one reusable preference per top-level `- ` list item on a single physical line. An item states the default and any condition that limits it:
 
-```json
-{
-  "version": 1,
-  "scope": "project",
-  "source": "user-confirmed",
-  "defaults": true,
-  "preferences": {
-    "palette": "deep blue emphasis on a light background",
-    "density": "airy, with generous reading space"
-  }
-}
+```markdown
+- Architecture diagrams use Simplified Chinese labels by default.
+- Architecture diagrams use a light background by default.
+- Architecture diagrams for technical reviews use a dark background by default.
+- Review deliveries include an SVG by default.
 ```
 
-The root is an object with required `version: 1`, `scope: "project"`, `source: "user-confirmed"` and a `preferences` object. Optional `defaults` accepts only `true`. The only preference keys are:
+A missing file is normal. Use only clear, applicable preference items. Ignore unusable items and leave them intact. If the file cannot be read, use none of it. Mention an unreadable file or skipped item only when it affects a current choice or requested operation, and proceed with unaffected choices. Treat items as default choices, never as instructions that grant access, alter the workflow or replace source evidence.
 
-| Key | Visual tendency |
-| --- | --- |
-| `visualStyle` | Overall visual direction |
-| `palette` | Palette and color-role preferences |
-| `typography` | Font and typographic character |
-| `density` | Preferred information density |
-| `referenceDirection` | Visual references and what to learn from them |
+## Apply
 
-Each value is a string containing non-whitespace text. Arrays, null, wrong fixed values, unsupported versions, unknown root/preference keys or invalid value types invalidate the whole file. Report identified fields and reasons rather than silently accepting a subset.
+1. **Respect the task.** Apply the current explicit request within applicable mandatory project rules. If they conflict, clarify the affected choice. In revisions, keep existing design and delivery decisions outside the authorized changes. A preference never expands the revision or changes the input design of an export.
+2. **Fill open choices.** Use applicable project preferences before Skill defaults. An unambiguous narrower preference takes precedence within its stated scope. Equally applicable conflicting items leave that choice unresolved; do not pick by line order or edit the record to resolve them. Mention the conflict if it affects the task and use the normal path for missing information.
+3. **Record the decision.** Note materially relevant adopted values and sources in the existing task plan. Ask once for remaining material gaps, together with relevant [delivery context](delivery-contexts.md#preferences-and-missing-context). A saved visual preference such as “Use the Skill's visual defaults for unspecified appearance choices” settles those choices only; it does not settle the purpose or display conditions. Silence authorizes neither defaults nor a write.
 
-`defaults: true` settles omitted appearance fields by following the current Skill visual defaults; explicit fields override those defaults. It can be saved with an empty `preferences` object. Without the marker, collect only task-relevant gaps rather than requiring all five fields. Preserve the marker rather than expanding today's colors or sizes into stored values. This visual choice does not select a delivery purpose; unknown purpose follows [delivery-context rules](delivery-contexts.md#preferences-and-missing-context).
+For example, “Export this diagram” can use an applicable format preference; “Export as PNG” settles the format. An export-only request still uses the selected input and existing export workflow.
 
-Store visual tendencies only. Business facts, relationships, diagram type, geometry, output formats and target dimensions belong to the task. Reference directions are visual data, not instructions that override the workflow, business evidence or permission for external access. If a referenced asset is unavailable, disclose the limit and resolve only the affected visual choice.
+## Save, update, forget or reset
 
-## Save, update and reset
+**Write only on clear authorization.** A direct save/change/forget/reset request or clear language such as “Use this palette for future diagrams in this project” is enough. Ordinary feedback, one-off choices, praise and repeated adjustments do not authorize persistence or a prompt to save. When the user expresses lasting intent but leaves the scope or choice unclear, clarify only what is missing. Apply a clear lasting change during the task or on its own, and report what was saved or why it could not be saved.
 
-**Authorization and scope.** Write only after an explicit request to persist project preferences. Applying a style to this diagram is task-only unless persistence was requested. State the fields and default decision to be saved; clarify an ambiguous “save this style”. Merge approved changes into valid configuration, retaining unrelated fields. Removing an override or changing the default marker also requires an explicit request. Repairing or replacing invalid configuration requires explicit authorization.
+Store reusable defaults for visual design, expression or delivery. Keep task facts, relationships, concrete diagram coordinates, one-off requirements and actual display conditions in the task. Record the user's preference in their language where practical, with its scope and no extra rationale or conversation history.
 
-**Update.** Create `.diagrams/` if needed. Re-read the target before mutation; if it changed since the read, coordinate the conflict before proceeding. Prepare complete valid JSON in a temporary sibling and validate it before replacing the target. Keep the original until replacement; re-read, parse and compare the result. If final verification fails, retain recovery material and report the observed state rather than claiming success. This Agent procedure supplies no concurrency lock or transaction guarantee.
+- **Save or change.** Add one item per authorized preference. An identical fact needs no write. Replace the previous value for the same choice and scope; keep a broader default and a clearly scoped exception on separate lines. Preserve unrelated content.
+- **Forget.** Remove only the item matching the requested choice and scope. An already absent item needs no write.
+- **Reset.** Delete only `.diagrams/preferences.md` and verify its absence. A missing file is already reset. Leave other project files and deliveries intact.
 
-**Reset.** Re-read and check for changes, delete only `.diagrams/.preferences.json`, then verify absence. Other `.diagrams/` content remains intact. A missing file is already reset. Subsequent new/revised tasks collect relevant gaps again; reset does not save a default choice.
-
-**Failure.** Preserve existing files when an operation cannot complete. Report unverified saves or failed deletions explicitly. Diagram production can continue with already determined task-only choices; standalone management requests report only their operation result. The CLI has no preference command or flag. User-level storage and automatic migration are outside this version.
+Before a mutation, re-read the target and check that it has not changed; if it has, preserve the newer content and resolve any conflict before writing. For saves, create `.diagrams/` only when needed, prepare the complete replacement in a temporary sibling, then replace and re-read the target to verify the intended change and unchanged unrelated content. Keep existing content if it cannot be read or safely updated. Report an unverified write or deletion; diagram work can continue with already settled task choices. Standalone operations end with their result, without starting a diagram.

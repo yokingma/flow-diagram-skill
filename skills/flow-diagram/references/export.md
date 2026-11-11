@@ -28,7 +28,7 @@ node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --html "p
 
 The page supplies only the allowed heading, one-sentence introduction, functional reading hints and managed player region, plus their outer HTML/CSS; static exports use the saved diagram JSON. Follow the [page content contract](delivery-contexts.md#keep-the-html-page-minimal) and allocate standalone-image context using [delivery contexts](delivery-contexts.md#html-with-standalone-images) before running this command. Inspect the actual HTML and each requested image separately. A successful HTML and SVG remain available if PNG fails; the combined request remains incomplete.
 
-For an unchanged finalized page, import its exact `diagram.json` and select its `diagram.html` with `--html` in the fresh workspace. This preserves the selected page design while adding only requested formats. Keep its managed region intact and matching the original source bytes, theme and SDK. Default `author --html` without image flags still delivers only JSON, HTML and reports.
+For an unchanged finalized page, import its exact `diagram.json` and select its `diagram.html` with `--html` in the fresh workspace. This preserves the selected page design. When adding a format to the same delivery, carry forward the formats in the final report unless the user changes the delivery set. A project preference can fill an open choice for the new export; it does not change existing formats. Keep the managed region intact and matching the original source bytes, theme and SDK. Default `author --html` without image flags still delivers only JSON, HTML and reports.
 
 ## Named batch exports
 
@@ -59,9 +59,9 @@ Frames and their formats run in manifest order. Each `exports` item records time
 
 Select batch artifact IDs through the same [actual-file evidence workflow](artifact-evidence.md). One viewed format, time or display width does not cover the other items or sizes.
 
-## Explicit GIF requests
+## GIF exports
 
-Generate GIF only when the user explicitly requests GIF. Add `--gif` to the normal `author` command. Use a prepared Chrome/Chromium executable; read [browser selection](visual-checks.md#prepared-browser) for `--browser`, environment settings and local detection. For example:
+Generate GIF when it is included in the resolved delivery plan, whether explicitly requested for this task, carried forward from the existing delivery, or selected by an applicable project preference. Follow the task precedence rules in [project preferences](preferences.md#apply). Add `--gif` to the normal `author` command. Use a prepared Chrome/Chromium executable; read [browser selection](visual-checks.md#prepared-browser) for `--browser`, environment settings and local detection. For example:
 
 ```text
 node <skill-directory>/scripts/flowsvg.mjs author --input "animated draft.json" --name "request-flow" --gif --browser "/path/to/chromium" --gif-options "gif settings.json" --output "<task-workspace>/history"

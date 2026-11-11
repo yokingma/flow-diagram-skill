@@ -1,6 +1,6 @@
 ---
 name: flow-diagram
-description: Create and revise executable FlowSVG diagrams to explain systems, processes, and state changes with static views or animation. Validate or diagnose diagrams, manage project design preferences, and export JSON, offline HTML, SVG, PNG, or GIF. Reuse the document for playback and SDK embedding.
+description: Create and revise executable FlowSVG diagrams to explain systems, processes, and state changes with static views or animation. Validate or diagnose diagrams and export JSON, offline HTML, SVG, PNG, or GIF. Manage project preferences for FlowSVG diagrams. Reuse the document for playback and SDK embedding.
 ---
 
 # Flow Diagram
@@ -17,14 +17,14 @@ Identify the task type, the input to use, and where to enter or resume the proce
 
 | Request | Starting point |
 | --- | --- |
-| New diagram or JSON import that will be authored or revised | Complete preference preflight, then follow all five steps. Preserve unchanged imported bytes where required. |
-| Unchanged JSON import for export or inspection | Use the export or diagnosis entry point; skip preference preflight and keep the input design. |
-| Revise a finalized diagram | Read the existing diagram and final report. Establish the requested changes and scope, complete preference preflight, then follow the five-step process, reusing design decisions that remain valid. Carry forward requested formats unless the user changes them. |
-| Add export formats only | Enter at step 3 with the existing diagram unchanged. Skip drafting, styling, measurement, and layout changes, then inspect and finalize the requested files. |
+| New diagram or JSON import that will be authored or revised | Start at step 0 and follow all five authoring steps. Preserve unchanged imported bytes where required. |
+| Revise a finalized diagram | Read the existing diagram and final report. Establish the requested changes and scope, then start at step 0. Reuse valid design decisions and carry forward requested formats unless the user changes them. |
+| Export an existing diagram without edits | Consult [project preferences](references/preferences.md#locate-and-read) only for a material export choice still open. Run `author` using the [export options](references/export.md). Preserve the selected JSON bytes and page design; skip drafting, styling, measurement, and layout changes. Inspect and finalize in steps 4 and 5. |
 | Continue an unfinished task | Read the task records and select the saved revision to continue. Resume at the unfinished steps or those affected by changes. |
-| Validation or diagnosis only | Use `validate` for structural checks. For visual diagnosis, follow [inspection-only preparation](references/visual-checks.md#inspection-only-preparation), then the applicable checks in step 4. Report the checks performed, their limits, and discovered issues, then stop. |
+| Validation only | Use read-only [validation](references/tool-contract.md#revisions-and-reports). Report the checks performed, their limits, and discovered issues, then stop. |
+| Visual diagnosis without edits | Follow [inspection-only preparation](references/visual-checks.md#inspection-only-preparation), then the applicable checks in step 4. Report findings, evidence, and coverage gaps, then stop. |
 
-For standalone save, change or reset requests, follow [project preferences](references/preferences.md) and report the operation without creating a diagram.
+When the user clearly sets a default for future diagrams in this project or asks to save, change, forget or reset a preference, follow [preference management](references/preferences.md#save-update-forget-or-reset). Report standalone operations without creating a diagram.
 
 For imports, revisions, or exports from existing diagrams, read [input and parent selection](references/diagnostics-and-revisions.md#selecting-a-parent). Before creating task files, read [task workspace requirements](references/tool-contract.md#task-workspace); for validation commands and report states, read [runtime and result contracts](references/tool-contract.md).
 
@@ -32,9 +32,9 @@ Proceed when the input, authorized changes, and process entry point are clear.
 
 ## Process
 
-### 0. Initialize design preferences
+### 0. Resolve project preferences
 
-For new and revised drafts, follow [project preferences](references/preferences.md) before step 1. Complete its preflight by resolving relevant visual choices and recording their sources; finish any requested save or disclose its failure. Standalone preference-management requests use that reference and stop after reporting the operation. Pure export, validation and diagnosis tasks keep their existing entry points. Resume unfinished tasks with their recorded decisions, revisiting preflight only when a relevant choice changes.
+For new and revised drafts, follow [project preferences](references/preferences.md) before step 1. Apply relevant defaults only to open choices and record their sources. Resolve remaining material gaps with the delivery context. Verify any authorized save or report its failure. Resume unfinished tasks with their recorded decisions, revisiting preferences only when a relevant choice changes.
 
 ### 1. Define the explanation goal
 
@@ -74,7 +74,7 @@ Implement the design from step 2 and generate the artifacts needed for inspectio
 Use Node 20+ and npm. Run `node <skill-directory>/scripts/flowsvg.mjs` from the user's chosen working directory, with quoted paths when needed. Resolve tools and task resources within this installed skill. The CLI prepares its own pinned SDK runtime without changing application dependencies.
 
 - **Read the relevant authoring guidance.** For new or revised drafts, read [the document model](references/document-model.md) and [layout guidance](references/static-layout.md), and adapt the selected [design recipes](references/visual-design.md#design-methods-and-recipes). Revisit [rendering gotchas](references/rendering-gotchas.md) when the chosen shapes, labels, routes or changed dimensions expose a relevant technical risk. For animation, also read [scenes, inherited state, and timing](references/timeline.md). For requested SVG, PNG, or GIF files, read [export options and limits](references/export.md).
-- **Build the diagram document.** For new or revised drafts, implement the planned objects, groups, connections, text, and animation stages. Preserve the source language and selected visual direction. Use the endpoints selected by [relationship scope](references/semantic-patterns.md#relationship-scope-and-endpoints), then apply [connection design](references/visual-design.md#connections-and-relationship-labels) to choose ports, routes and label space. For a new diagram without a specified direction, start with a light theme and rounded groups. Measure text on the complete draft and follow the [layout plan workflow](references/static-layout.md#layout-plan-workflow) when repeated geometry needs a plan. Compare every object, relationship direction, parent boundary, and state change against the sources. Save authorized changes in a new workspace draft; for an unchanged import or export, use the selected input bytes directly.
+- **Build the diagram document.** For new or revised drafts, implement the planned objects, groups, connections, text, and animation stages. Use the selected label language and visual direction while preserving source meaning. Use the endpoints selected by [relationship scope](references/semantic-patterns.md#relationship-scope-and-endpoints), then apply [connection design](references/visual-design.md#connections-and-relationship-labels) to choose ports, routes and label space. For a new diagram without a specified direction, start with a light theme and rounded groups. Measure text on the complete draft and follow the [layout plan workflow](references/static-layout.md#layout-plan-workflow) when repeated geometry needs a plan. Compare every object, relationship direction, parent boundary, and state change against the sources. Save authorized changes in a new workspace draft; for an unchanged import or export, use the selected input bytes directly.
 - **Validate and correct.** Use read-only `validate` during iteration and read every diagnostic. It returns exact input identity and finite checks without creating a diagram revision; keep the working draft. Apply corrections within the current authorization, following [diagnosis and revision decisions](references/diagnostics-and-revisions.md). Clarify corrections that would change the explanation's meaning with the user.
 - **Compose the HTML page.** For new or revised HTML explanations, implement step 2's page allocation under the [page content contract](references/delivery-contexts.md#keep-the-html-page-minimal) and submit the HTML/CSS through [editable HTML pages](references/tool-contract.md#editable-html-pages). For an existing result, follow [page continuation](references/tool-contract.md#continue-an-existing-page) to preserve its design and explicitly synchronize intended diagram changes. Reuse the installed starter for new pages when useful; preserve the managed player region and keep the complete page in the task workspace.
 - **Generate inspection artifacts.** Before browser capture or choosing a preview sample count, read [browser preparation and sampling](references/visual-checks.md). Use `author` to produce the required offline HTML, needed previews, and requested export files. Use `author --browser none` when only intermediate HTML is needed. For several named static states, follow [named batch exports](references/export.md#named-batch-exports); confirm selected times from actual compiled beats with the user before binding the manifest. Follow the [runtime and result contracts](references/tool-contract.md) for setup, SDK compatibility, and report fields; use CLI `--help` for command options.
@@ -103,7 +103,7 @@ Finish when each required file, state, and display condition has been inspected 
 
 Turn the selected diagram into a delivery the user can view, use, and continue editing, and describe its completion status accurately.
 
-Deliver one selected diagram with editable JSON, paused offline HTML with controls, `report.json`, and `report.md`, plus any requested SVG, PNG, or GIF files.
+Deliver one selected diagram with editable JSON, paused offline HTML with controls, `report.json`, and `report.md`, plus any SVG, PNG, or GIF files in the delivery plan.
 
 - **Confirm the final version.** Select the revision for delivery and verify that the requested files are complete and match the source and outputs covered by step 4's inspection records or explicit inspection gaps.
 - **Publish and organize the delivery.** Follow [finalization](references/tool-contract.md#finalize-the-task) to publish `.diagrams/<diagram-name>/`. Verify the returned final-file paths and task-workspace cleanup status. Preserve history or debug evidence when the user explicitly requests it; keep cleanup scoped to this task workspace.

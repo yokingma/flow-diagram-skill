@@ -30,9 +30,9 @@ Keep reader-question selection, preference/context resolution, design methods an
 
 Design guidance supplies goals, judgment criteria and candidate methods. When a failure is observed, document its conditions, concrete behavior and visible consequences in the installed gotchas; distinguish observed facts from suspected causes. Retain treatments as candidates until evidence across relevant scenarios supports a general rule. A successful correction or rerun alone does not establish a universal route, endpoint or layout preference. Keep case evidence and investigation history in ignored task records under the [documentation scope](docs/README.md#documentation-scope).
 
-## Project preference preflight
+## Project preferences
 
-`references/preferences.md` owns the installed Agent file contract and lifecycle. Resolve preferences before authoring, retain existing revision design, and keep task context separate. The CLI does not manage this configuration. Verify guidance with isolated Agent scenarios and actual file operations; wording assertions do not establish workflow behavior. Project preference files sit outside task cleanup scope and are written only for an explicit persistence request.
+`references/preferences.md` owns the installed Agent file contract and lifecycle. Use saved defaults for open choices before authoring or for an export with an unresolved option. Retain design and delivery decisions outside the revision scope. The Agent manages one Markdown record outside task cleanup; writes require a clear request or an explicit choice for future tasks in the project. The CLI does not manage the record. Verify guidance with isolated Agent scenarios and actual file operations; wording assertions do not establish workflow behavior.
 
 ## Acceptance and CI
 

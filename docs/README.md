@@ -22,7 +22,7 @@
 
 The complete installation unit is `skills/flow-diagram/`. Its [SKILL.md](../skills/flow-diagram/SKILL.md) routes the assistant by task; required execution guidance stays inside that directory.
 
-- [Project preferences](../skills/flow-diagram/references/preferences.md): preflight and explicit persistence.
+- [Project preferences](../skills/flow-diagram/references/preferences.md): applying and saving user-stated project defaults.
 - [Layout workflow](../skills/flow-diagram/references/static-layout.md#layout-plan-workflow) and [visual design](../skills/flow-diagram/references/visual-design.md): diagram production.
 - [Runtime and result contract](../skills/flow-diagram/references/tool-contract.md): commands, workspaces, reports, and finalization.
 - [Review contracts](../skills/flow-diagram/references/review-inputs.md) and [artifact evidence](../skills/flow-diagram/references/artifact-evidence.md): inspections and actual-viewing records.

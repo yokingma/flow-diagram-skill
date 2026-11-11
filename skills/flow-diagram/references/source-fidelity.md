@@ -4,7 +4,7 @@ Read this reference when a source has unknowns, a readability proposal aggregate
 
 ## Before and after a meaning change
 
-1. Map each source-supported object, relationship, direction, boundary and state to the draft. Keep the source language. Mark missing values as unknown, or explain the narrower scope if that value is outside the requested diagram.
+1. Map each source-supported object, relationship, direction, boundary and state to the draft. Use the source language by default; if the request or an applicable project preference selects another label language, translate without changing the meaning. Mark missing values as unknown, or explain the narrower scope if that value is outside the requested diagram.
 2. When readability needs improvement, offer concrete candidates: separate images, additional states or an aggregation with its lost distinctions stated. Node count is a readability signal, not an automatic deletion threshold.
 3. Obtain the user's decision before merging objects, omitting source-supported relationships or changing meaning. Apply an already explicit decision within its stated scope; a general “make it simpler” request leaves the affected facts unresolved.
 4. In `sources[].description`, connect the source facts, unknowns, actual decision and permitted scope. For an existing diagram, select an explicit parent and save the authorized draft in a new revision. Keep the parent and its original issues. If a parent diagnostic exists, record the actual choice with `--decisions` as well. That option requires a known diagnostic; a semantic choice alone does not justify inventing a diagnostic code.

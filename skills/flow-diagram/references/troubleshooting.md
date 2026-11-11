@@ -1,6 +1,8 @@
 # Recover an incomplete authoring task
 
-Read stdout JSON or the saved `report.json` first. Use `stage`, diagnostic `code`, `location`, `reason`, `nextStep`, and actual `artifacts` to explain the failure. Keep the draft and successful outputs. Follow [diagnosis and revision decisions](diagnostics-and-revisions.md): apply already authorized mechanical corrections, and ask the user when a correction changes meaning. For an environment failure or unexpected interruption, address the reported cause before retrying within the current authorization. `validate` returns diagnostics without saving a revision; `author` saves a fresh revision. If the same failure recurs without new evidence, stop and report the next recovery action. User cancellation follows the stopping rule below.
+For user cancellation, follow the [stopping rule](#cancellation-and-completion) first. Otherwise, keep the draft and successful outputs. Read stdout JSON or the saved `report.json`. Use `stage`, diagnostic `code`, `location`, `reason`, `nextStep`, and actual `artifacts` to explain the failure.
+
+After an unexpected interruption, check the retained task files and [select the explicit saved revision](diagnostics-and-revisions.md#selecting-a-parent) when one exists. Identify the unfinished steps. Follow [diagnosis and revision decisions](diagnostics-and-revisions.md) to address the cause within the current authorization. Ask the user when a correction changes meaning. Retry only the affected operations: `validate` saves no revision, `author` saves a new revision, and `review` and `evidence` use independent records. If the same failure recurs without new evidence, stop and report the next recovery action.
 
 ## Environment and browser preparation
 
@@ -8,7 +10,7 @@ Run `node <skill-directory>/scripts/flowsvg.mjs doctor` for Node 20+, npm and is
 
 For GIF or screenshot startup failures, read [prepared browser selection](visual-checks.md#prepared-browser). Verify that the chosen executable exists, has execution permission and runs on this operating system. Prepare Chrome/Chromium separately when needed.
 
-`GIF_BROWSER_UNAVAILABLE` means browser use was disabled or no prepared browser was selected or detected. `GIF_ENVIRONMENT` means the SDK could not start or run the selected executable. Check the reported path and operating-system dependencies. Successful JSON/HTML/SVG remain available, and the explicitly requested GIF is still unfinished. Supply a usable browser and retry in a new revision.
+`GIF_BROWSER_UNAVAILABLE` means browser use was disabled or no prepared browser was selected or detected. `GIF_ENVIRONMENT` means the SDK could not start or run the selected executable. Check the reported path and operating-system dependencies. Successful JSON/HTML/SVG remain available; the GIF is unfinished. Supply a usable browser and retry in a new revision.
 
 ## Continuing after an SDK upgrade
 
@@ -28,7 +30,7 @@ An Agent-composed HTML page with a filled managed region from another SDK fails 
 
 Ctrl+C and termination signals cancel the current task. Authoring saves a cancellation report when writable; read-only validation returns cancellation on stdout and preserves its input without a saved report. The SDK releases its owned browser resources. Successful earlier files remain listed; an unfinished GIF stays absent from `completion.completed`. A force-killed process cannot write a final report. Preserve that revision as interruption evidence.
 
-When the user asks to stop or cancels the task, stop further commands and retries. Report retained files and unfinished work. Resume only after the user asks; a resumed authoring attempt creates a new revision, while validation remains read-only. For an unexpected interruption, apply the recovery conditions above.
+When the user asks to stop or cancels the task, stop any running task commands and do not start further commands or retries. Report retained files and unfinished work. Resume only after the user asks; a resumed authoring attempt creates a new revision, while validation remains read-only. For an unexpected interruption, apply the recovery conditions above.
 
 State delivery and quality separately. `completion.delivery: complete` requires every requested export to finish. Layout warnings, unviewed screenshots and skipped visual inspection still need an explicit explanation even when all files exist. Follow the report's actual checks; an HTML file or GIF progress message is not evidence that the full task passed visual review.
 

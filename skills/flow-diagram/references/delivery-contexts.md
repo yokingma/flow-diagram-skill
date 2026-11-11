@@ -4,15 +4,15 @@ Before drafting, establish the audience, the message to retain, the intended dis
 
 ## Preferences and missing context
 
-For new or revised drafts, resolve appearance through [project preference preflight](preferences.md) before the five authoring steps. Here, establish purpose, display dimensions, carrying background, playback and requested files from the conversation and existing task decisions. A purpose preset supplies starting dimensions and typography for that context.
+For new or revised drafts, read [project preferences](preferences.md) before the five authoring steps. Here, establish purpose, display dimensions, carrying background, playback and files from the conversation and existing task decisions. Apply relevant saved defaults to open choices. A purpose preset supplies starting dimensions and typography for the actual context.
 
 Collect relevant missing context in one concise question, combined with any preference gaps where practical. Reuse answers already given. Clarify missing facts or relationships that would change meaning before drafting. Ordinary visual adjustments within the agreed scope can proceed without another approval.
 
 When purpose is unknown and the user explicitly chooses “use defaults” or “just make it,” author a static Web explanation with a `960 × 600` canvas, an assumed `720 CSS px` display width and a light background unless an applicable preference overrides the appearance. Choose grouping and layout from the reader's question. An unanswered question is not a choice of defaults. A known PPT purpose keeps its presentation context even when precise placement dimensions are missing.
 
-Record the adopted preferences, display conditions and their sources (request, project convention, user preference or assumption) in the existing task plan and final explanation. Default files remain JSON, paused offline HTML and reports; static composition does not implicitly request SVG or PNG. An unchanged export-only task preserves its input and requested formats.
+Record the adopted preferences, display conditions and their sources (request, project convention, user preference or assumption) in the existing task plan and final explanation. In the absence of a request or applicable preference for other files, deliver JSON, paused offline HTML and reports. Static composition alone does not call for SVG or PNG. An export-only task preserves its input and uses preferences only for relevant open choices.
 
-PPT placement determines layout, while requested file kinds determine exports. If the user needs a slide-import image but has not selected a format, include that choice in the initial context question. If they explicitly choose to proceed with default files, state that the delivery contains HTML/JSON/reports and that no slide-import image was requested; avoid implying it is already an integrated slide asset.
+PPT placement determines layout, while the resolved file kinds determine exports. If the user needs a slide-import image and the format remains unresolved, include that choice in the initial context question. If they explicitly choose to proceed with default files, state that the delivery contains HTML/JSON/reports and that no slide-import image was requested; avoid implying it is already an integrated slide asset.
 
 ## Content placement
 
@@ -70,7 +70,7 @@ When HTML and SVG/PNG are requested together, record whether each image will be 
 
 Use the same diagram when its content serves both destinations. If an image needs additional context, explicitly author it in the diagram or confirm the target host supplies it. If the destinations need different diagrams, save separate, clearly named drafts and sources; an export time or camera selection changes the selected view, not its underlying explanation. Follow the existing source-fidelity decision process before omissions, aggregation or scope changes.
 
-Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for explicit requests and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page text edits alone do not request images.
+Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for planned images and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page text edits alone do not request images.
 
 ## Static assets for presentations
 
@@ -88,7 +88,7 @@ Target-size image inspection covers the recorded dimensions and backdrop. Actual
 
 ### Animated presentation material
 
-For “animation for PPT,” establish the playback carrier before choosing animation: offline HTML plays in a browser; SVG/PNG preserve one static frame; GIF requires an explicit request and software-specific playback checks. MP4, PPTX and native PowerPoint animation are outside this skill's export capability. State which carrier was produced and whether the target presentation software was actually tested. See [animation purpose](timeline.md#choose-the-animation-purpose) and [export limits](export.md).
+For “animation for PPT,” establish the playback carrier before choosing animation: offline HTML plays in a browser; SVG/PNG preserve one static frame. Include GIF when the resolved delivery plan calls for it under [GIF export rules](export.md#gif-exports), and check playback in the target presentation software. MP4, PPTX and native PowerPoint animation are outside this skill's export capability. State which carrier was produced and whether the target presentation software was actually tested. See [animation purpose](timeline.md#choose-the-animation-purpose) and [export limits](export.md).
 
 ## Static illustrations in web content
 
@@ -121,4 +121,4 @@ For example, a new web draft can include:
 
 This fragment is not a complete document. Add the required version, nodes, edges and scenes. Structured content's omitted font sizes scale with `nodeLabel`; explicit font sizes remain unchanged. Measure content with the same typography context before choosing node heights. Larger typography does not automatically enlarge nodes or rearrange geometry.
 
-Default outputs remain editable JSON, paused offline HTML and reports. Request SVG, PNG or GIF explicitly using [export options](export.md). Formal SVG/PNG files have independent [target-size artifact evidence](artifact-evidence.md); fixed 1440 × 1000 sampling images do not establish readability at 720px or 1280px.
+Default outputs remain editable JSON, paused offline HTML and reports. Use [export options](export.md) for any additional formats in the delivery plan. Formal SVG/PNG files have independent [target-size artifact evidence](artifact-evidence.md); fixed 1440 × 1000 sampling images do not establish readability at 720px or 1280px.

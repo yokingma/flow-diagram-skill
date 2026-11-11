@@ -1,6 +1,6 @@
 # Static authoring and layout
 
-Start with the message the reader should retain. List each source-supported object, directed relationship and boundary. Keep labels in the source language. Put source evidence and any explicitly user-approved assumptions in metadata; the tool records metadata but cannot establish its truth. A clear brief needs no separate layout approval.
+Start with the message the reader should retain. List each source-supported object, directed relationship and boundary. Use the label language selected for the task, defaulting to the source language. Put source evidence and any explicitly user-approved assumptions in metadata; the tool records metadata but cannot establish its truth. A clear brief needs no separate layout approval.
 
 ## Delivery context
 

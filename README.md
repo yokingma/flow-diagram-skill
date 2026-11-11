@@ -68,7 +68,7 @@ overview, then animate the request to the API, the database query,
 and the response to the client. Finish with the overview.
 ```
 
-When working from sources, name the files or directories the assistant may read. Include the audience, intended display size, and export formats when known. The assistant asks about gaps that affect meaning or presentation; project design preferences can be saved on explicit request.
+When working from sources, name the files or directories the assistant may read. Include the audience, intended display size, and export formats when known. The assistant asks about gaps that affect meaning or presentation; the assistant remembers preferences you clearly set for future diagrams in this project.
 
 ## What you get
 

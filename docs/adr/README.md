@@ -14,3 +14,4 @@ This index covers public-SDK integration, shared diagnostics, and Skill contract
 - [0015: Collect missing evidence from existing artifacts](0015-on-demand-artifact-evidence.md)
 - [0016: SDK 与 Skill 使用独立仓库和发布周期](0016-independent-sdk-and-skill-repositories.md)
 - [0017: Skill owns HTML page composition](0017-skill-owned-html-composition.md)
+- [0018: Keep project preferences in one Markdown record](0018-project-preferences-in-markdown.md)

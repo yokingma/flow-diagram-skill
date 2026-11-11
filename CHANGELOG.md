@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Store reusable project preferences for design, expression and delivery in `.diagrams/preferences.md`, one Markdown item per line. Save only on clear authorization, including an explicit choice for future project tasks. Apply preferences to open choices without expanding a revision. The legacy JSON stays untouched and is no longer read. Agent guidance only; the CLI and SDK runtime are unchanged.
+
 - Clarify Agent page self-check versus user design judgment, allow finalization of complete files with disclosed inspection gaps, make spatial hierarchy an adaptable design starting point, and remove repeated page rules from the main workflow. Guidance only; no CLI, report or runtime behavior changed.
 - Consult relevant rendering failures during design in step 2, then revisit technical details during authoring. Treat remedies as candidates and record material judgments instead of per-entry or per-edge logs. Document the observed shared-path failure and align maintenance guidance and bilingual guides. Guidance only; no CLI, report or runtime behavior changed.
 - Choose connection endpoints by relationship meaning and routes by rendered clarity. Allow clear diagonal paths, describe group/component/mixed endpoints, and inspect ambiguous shared paths without prescribing a universal line style.
