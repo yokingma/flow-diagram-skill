@@ -41,3 +41,15 @@ export function createPreviewPlan(document, diagram, maxPoints = DEFAULT_PREVIEW
     overviewProjection: "At time zero with camera focus actions removed; all non-camera actions and content are preserved.",
     points: [{ timeMs: 0, view: "overview", reasons: ["full-view"] }, ...selected].map((point, index) => ({ id: `frame-${String(index + 1).padStart(2, "0")}`, ...point })), omitted };
 }
+
+/** Actual HTML has one authored camera at each time; reserve its budget for unique timeline states. */
+export function createHtmlPlan(document, diagram, maxPoints = DEFAULT_PREVIEW_POINTS) {
+  // The SDK plan reserves one slot for its focus-free projection. HTML cannot reproduce that
+  // projection by seeking, so select one extra slot and discard only that synthetic overview.
+  const plan = createPreviewPlan(document, diagram, maxPoints + 1);
+  const points = plan.mode === "static" ? plan.points : plan.points.filter((point) => point.view === "timeline");
+  return { ...plan, strategy: "actual-html-beats-v1", maxPoints: plan.mode === "static" ? 1 : maxPoints,
+    overviewProjection: "Actual delivered HTML at each selected time; authored focus and camera actions are preserved.",
+    points: points.map((point, index) => ({ ...point, id: `frame-${String(index + 1).padStart(2, "0")}`, view: "html" })),
+    omitted: plan.omitted.map((point) => ({ ...point, view: "html" })) };
+}

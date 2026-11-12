@@ -40,13 +40,13 @@ Translate the direction into coordinated choices:
 
 Use [delivery contexts](delivery-contexts.md) for concrete canvas and typography starting points and display-size requirements. Map the choices to supported fields in the [document model](document-model.md); for animation, also read [timeline](timeline.md).
 
-Before implementation, record the visual choices in the task's existing plan or draft: text roles and sizes, palette values by role, spacing values, card and tag structures, and connection styles. For animation, include the stage plan. These choices must fit the usage context and the shared quality standards.
+Express visual choices directly in the draft: text roles and sizes, palette, spacing, containers and connection styles. Use the standards to improve the result at the intended display size; they are guidance rather than an acceptance checklist. For animation, choose stages that support the explanation.
 
 ## Design methods and recipes
 
 ### Composition recipes
 
-Select a recipe when its structure matches the explanation. Keep the semantic pattern's source-supported objects and relationships; the recipe chooses their visual organization. Record concrete choices in the existing plan or draft. Combine recipes or use direct coordinates when needed. Static and animated presentation remain separate choices.
+Select a recipe when its structure matches the explanation. Keep the semantic pattern's source-supported objects and relationships; the recipe chooses their visual organization. Apply concrete choices in the draft. Combine recipes or use direct coordinates when needed. Static and animated presentation remain separate choices.
 
 #### Capability inventory without runtime edges
 
@@ -224,7 +224,7 @@ Make relationships easy to trace and coordinate their appearance with the overal
 
 - **Select endpoint scope first.** Follow [relationship scope and endpoints](semantic-patterns.md#relationship-scope-and-endpoints) before choosing ports or routes. Apply that scope to forward, return and explanatory relationships alike.
 - **Reserve channels before labels and sidebars.** Treat path clearance as layout space. Keep unrelated cards and explanatory sidebars outside the channel; where a component edge crosses a group boundary, keep that crossing distinct from a group endpoint.
-- **Choose ports and routes together.** For regular process and grouped layouts, favor horizontal and vertical segments. First align nodes and facing ports for a direct `straight` path; where endpoints remain offset, start with an `orthogonal` path through the reserved channel. Use a diagonal or `curved` path when it makes the relationship clearer or better fits the composition. Compare the rendered candidates using the table below.
+- **Default to horizontal and vertical segments.** Use this routing style for process, layered architecture and grouped diagrams. Align facing ports for a horizontal or vertical `straight` path; connect offset ports with an `orthogonal` path through a reserved channel. Align the actual ports rather than only node tops: different heights can tilt a side-to-side connection. After measurement or resizing, adjust positions and channels to restore the intended alignment. Reserve diagonals for compositions whose spatial relationships need them, such as radial or free-form networks; use curves to distinguish returns or loops when they improve tracing. Judge these choices in the rendered result.
 - **Establish line hierarchy.** Keep default line width and color consistent. Emphasize key paths when needed and give secondary relationships less visual weight.
 - **Give line styles explicit meanings.** Map solid lines, dashed lines, and color differences to defined relationship categories. Explain those categories through labels or a legend.
 - **Place labels near their paths.** Choose an identifiable segment with clearance from arrowheads, bends, and other text. Reserve layout space for longer labels.
@@ -233,11 +233,11 @@ Make relationships easy to trace and coordinate their appearance with the overal
 
 | Route candidate | When to use it | What to verify |
 | --- | --- | --- |
-| `straight` | A direct segment is clear and easy to follow, including a diagonal between off-axis ports. | The segment avoids unrelated content and leaves independently traceable endpoints, arrowheads and labels. |
-| `orthogonal` | Bends make a relationship clearer or help it follow a planned gap. | Inspect the actual bends and shared segments; this mode does not assign exclusive lanes or guarantee obstacle avoidance. |
+| `straight` | Facing ports align horizontally or vertically. A deliberate diagonal serves a spatial composition as described above. | Check actual port alignment and clearance for endpoints, arrowheads and labels. `straight` joins the ports directly; it does not align them. |
+| `orthogonal` | Ports remain offset in a process, layered architecture or grouped diagram. | Reserve a channel and inspect the actual bends and shared segments; this mode does not assign exclusive lanes or guarantee obstacle avoidance. |
 | `curved` | A curve separates a return or another relationship from nearby paths. | Check the whole curve, its crossings and its arrowhead; changing route style alone does not establish separation. |
 
-For example, keep a clear diagonal between two offset components; compare a bent path when that diagonal crosses a card; reconsider the ports or layout when several bent paths collapse into one track. Keep the same source-supported relationship during these geometry changes. Connection inspection is complete when each edge can be traced independently to its intended boundary at the target display size, or its remaining ambiguity is recorded in review `issues`.
+For example, align the side ports of different-height cards to keep a row horizontal, and route a cross-row relationship through the gap between rows. When several bent paths collapse into one track, adjust ports, spacing and channels together. Keep the same source-supported relationship during these geometry changes. Connection inspection is complete when each edge can be traced independently to its intended boundary at the target display size, or its remaining ambiguity is recorded in the task's `issues.md`.
 
 ### Animation rhythm and visual continuity
 
@@ -260,11 +260,11 @@ Give each change an explanatory purpose and allow time to recognize, read, and u
 - **Make paused states understandable.** At key stages, retain text, relationship direction, and current-state information needed to explain the paused view.
 - **Ground motion meaning in the sources.** Let speed, repetition count, and waiting time represent actual quantities or durations only when supported by the material. Use explanatory pacing for ordinary teaching animation.
 
-Record each stage's explanatory purpose, changes, transition, and reading pause in the plan. Follow [animation authoring](timeline.md) for supported actions and inherited state. Verify actual compiled timing before selecting export times or reporting duration.
+Give each stage an explanatory purpose, changes, transition and reading pause in the draft. Follow [animation authoring](timeline.md) for supported actions and inherited state. Verify actual compiled timing before selecting export times or reporting duration.
 
 ## Inspect the visual design
 
-Use AI inspection to identify visible defects and provide observations for human review. Compare the actual rendered result with the recorded visual choices and shared quality standards at the intended display size.
+Use AI inspection to identify visible defects and provide observations for human review. Compare the actual rendered result with the chosen visual direction and shared quality standards at the intended display size.
 
 1. Inspect the whole composition for entry point, emphasis, balance, and fit to the usage context.
 2. Inspect text, containers, tags, and connections for readability, consistent styling, clearance, and unambiguous ownership. Use the relevant recipes above to locate deviations.
@@ -274,6 +274,6 @@ Record each observed issue with its specific location, visible symptom, and effe
 
 For repeated cards and text in any language, compare title starts, number/text columns, adjacent gaps and text-to-border clearance at the recorded display size. Check whether short labels appear vertically centered and whether punctuation or digits disrupt the reading edge. Geometric anchors and browser bounding boxes provide evidence about position; optical balance still requires actual viewing. Describe a visible defect rather than inferring quality from equal coordinates alone.
 
-Use the existing [review workflows](visual-checks.md) and observation fields; record specific design problems in `issues`. For final SVG/PNG files, follow [target-size artifact inspection](artifact-evidence.md). Apply authorized corrections and inspect the affected views again.
+Use [actual viewing](visual-checks.md) and record substantive problems in the single task `issues.md`. View final SVG/PNG files at their intended size and background; register formal evidence only when requested. Apply authorized corrections and inspect the affected views again.
 
 Inspection is complete when each required view has been inspected or its missing inspection is explicit, observed issues have recorded handling decisions, and affected views have been checked again after corrections. Present the result and observations for the user's design judgment; report uninspected sizes and animation stages as coverage gaps.

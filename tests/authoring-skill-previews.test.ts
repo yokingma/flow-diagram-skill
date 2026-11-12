@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Preview contracts use the copied installation, structured CLI results and real Chromium artifacts. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
@@ -28,6 +29,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], interrupt: "cancel" | "crash" | null = null) {
+  if (args[0] === "author") args = [...args, "--preview"];
   return new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache"), DEBUG: "pw:browser", TMPDIR: join(root, "browser temp"), TMP: join(root, "browser temp"), TEMP: join(root, "browser temp") }
@@ -55,9 +57,9 @@ test.skipIf(!browserPath)("real compiled beats drive full-view and timeline scre
   await writeFile(input, JSON.stringify(diagram));
   const result = await command(["author", "--input", input, "--name", "animated", "--browser", browserPath!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.compilation.totalDurationMs).toBeGreaterThan(1040);
-  expect(report).toMatchObject({ checks: { visual: "not-run" }, visual: { status: "awaiting-review", viewedFrames: [] }, completion: { delivery: "complete", quality: "needs-user-decision" } });
+  expect(report).toMatchObject({ checks: { visual: "not-run" }, visual: { status: "captured", viewedFrames: [] }, completion: { delivery: "complete" } });
   expect(report.visual.plan.points[0]).toMatchObject({ view: "overview", timeMs: 0 });
   const secondStart = report.compilation.beats[1].startMs;
   expect(report.visual.plan.points).toContainEqual(expect.objectContaining({ timeMs: secondStart, reasons: expect.arrayContaining(["content-change"]) }));
@@ -76,7 +78,7 @@ test.skipIf(!browserPath)("real compiled beats drive full-view and timeline scre
   expect(changedFrame.sha256).not.toBe(initialFrame.sha256);
   expect(report.visual.resources).toMatchObject({ page: "closed", context: "closed", browser: "closed" });
   expect(JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"))).toEqual(report);
-  const again = JSON.parse((await command(["author", "--input", input, "--name", "animated", "--browser", browserPath!])).stdout);
+  const again = (await readCommandReport((await command(["author", "--input", input, "--name", "animated", "--browser", browserPath!])).stdout));
   expect(again.visual.plan).toEqual(report.visual.plan);
 }, 90_000);
 
@@ -85,7 +87,7 @@ test("static diagrams plan one overview frame and disclose the static review sco
   await writeFile(input, JSON.stringify({ ...diagram, scenes: [] }));
   const result = await command(["author", "--input", input, "--name", "static-preview", "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.visual.plan).toMatchObject({
     mode: "static",
     totalDurationMs: 0,
@@ -106,7 +108,7 @@ test.skipIf(!browserPath)("static diagrams capture the single planned frame", as
   await writeFile(input, JSON.stringify({ ...diagram, scenes: [] }));
   const result = await command(["author", "--input", input, "--name", "static-capture", "--browser", browserPath!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.visual.plan.points).toHaveLength(1);
   expect(report.visual.capturedFrames).toHaveLength(1);
   expect(report.visual.capturedFrames[0]).toMatchObject({ id: "frame-01", timeMs: 0, view: "overview" });
@@ -118,14 +120,14 @@ test("no browser retains JSON/HTML/SVG and reports planned, captured and unviewe
   await writeFile(input, JSON.stringify(diagram));
   const result = await command(["author", "--input", input, "--name", "no-browser", "--browser", "none", "--svg"]);
   expect(result.code, result.stdout).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report).toMatchObject({ completion: { delivery: "complete" }, checks: { visual: "not-run" }, visual: { status: "not-run", capturedFrames: [], viewedFrames: [] } });
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "BROWSER_UNAVAILABLE" }));
   expect(report.artifacts.map((artifact: { kind: string }) => artifact.kind)).toEqual(expect.arrayContaining(["json", "html", "svg", "report-json", "report-markdown"]));
   const markdown = await readFile(join(report.revision.directory, "report.md"), "utf8");
   expect(markdown).toContain("## Visual coverage");
   expect(markdown).toContain("Captured frames: 0");
-  expect(markdown).toContain("Viewed frames: 0");
+  expect(markdown).not.toContain("Viewed frames: 0");
 }, 90_000);
 
 test("long diagrams bound samples, preserve change priorities and disclose omitted points reproducibly", async () => {
@@ -133,8 +135,8 @@ test("long diagrams bound samples, preserve change priorities and disclose omitt
   await writeFile(input, JSON.stringify({ ...diagram, scenes: [{ id: "long", label: "长流程", beats: Array.from({ length: 25 }, (_, index) => ({
     durationMs: 1000, actions: [{ type: "updateNode", target: "server", value: { label: `状态 ${index}` } }]
   })) }] }));
-  const first = JSON.parse((await command(["author", "--input", input, "--name", "long", "--browser", "none"])).stdout);
-  const second = JSON.parse((await command(["author", "--input", input, "--name", "long", "--browser", "none"])).stdout);
+  const first = (await readCommandReport((await command(["author", "--input", input, "--name", "long", "--browser", "none"])).stdout));
+  const second = (await readCommandReport((await command(["author", "--input", input, "--name", "long", "--browser", "none"])).stdout));
   expect(first.visual.plan).toEqual(second.visual.plan);
   expect(first.visual.plan.points).toHaveLength(12);
   expect(first.visual.plan.points).toContainEqual(expect.objectContaining({ timeMs: 25000, reasons: ["final"] }));
@@ -148,7 +150,7 @@ test("preview sample count can be selected for a focused visual review", async (
   await writeFile(input, JSON.stringify(diagram));
   const result = await command(["author", "--input", input, "--name", "focused-samples", "--browser", "none", "--samples", "5"]);
   expect(result.code).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.visual.plan.maxPoints).toBe(5);
   expect(report.visual.plan.points).toHaveLength(5);
 }, 90_000);
@@ -162,7 +164,7 @@ test.skipIf(!browserPath)("screenshot crash and cancellation clean owned Chrome 
     const browserPid = browserPids.at(-1);
   expect(browserPid).toBeGreaterThan(0);
   expect(() => process.kill(browserPid, 0)).toThrow();
-  const failed = JSON.parse(failedResult.stdout);
+  const failed = (await readCommandReport(failedResult.stdout));
   expect(failed).toMatchObject({ status: "failed", stage: "preview", visual: { status: "failed", capturedFrames: [], resources: { page: "closed", context: "closed", browser: "closed" } },
     completion: { delivery: "complete", completed: ["json", "html"] } });
   expect(failed.diagnostics).toContainEqual(expect.objectContaining({ code: "PREVIEW_FAILED" }));
@@ -170,7 +172,7 @@ test.skipIf(!browserPath)("screenshot crash and cancellation clean owned Chrome 
   await writeFile(input, JSON.stringify(diagram));
   const cancelledResult = await command(["author", "--input", input, "--name", "cancelled", "--browser", browserPath!], "cancel");
   expect(cancelledResult.code).toBe(1);
-  const cancelled = JSON.parse(cancelledResult.stdout);
+  const cancelled = (await readCommandReport(cancelledResult.stdout));
   expect(cancelled).toMatchObject({ status: "cancelled", checks: { visual: "not-run" }, visual: { status: "cancelled", resources: { page: "closed", context: "closed", browser: "closed" } } });
   expect(cancelled.artifacts.filter((artifact: { kind: string }) => artifact.kind === "preview")).toHaveLength(cancelled.visual.capturedFrames.length);
   expect(JSON.parse(await readFile(join(cancelled.revision.directory, "report.json"), "utf8"))).toEqual(cancelled);
@@ -181,7 +183,7 @@ test("an invalid explicit browser never silently falls back to prepared Chrome",
   await writeFile(input, JSON.stringify(diagram));
   const result = await command(["author", "--input", input, "--name", "invalid-browser", "--browser", join(root, "missing Chrome")]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.visual).toMatchObject({ status: "failed", capturedFrames: [], resources: { browser: "not-created" } });
   expect(report.visual.reason).toContain("not a readable executable file");
   expect((await readdir(join(root, "browser temp"))).filter((name) => name.startsWith("playwright_chromiumdev_profile"))).toEqual([]);
@@ -195,7 +197,7 @@ test("review recording requires an explicit source revision and preserves the dr
   await writeFile(review, JSON.stringify({ reviewer: "model", viewed: true, frames: [] }));
   const result = await command(["author", "--input", input, "--name", "review-invalid", "--visual-review", review, "--browser", "none"]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.revision).toBe(null);
   expect(report.checks.visual).toBe("not-run");
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "VISUAL_REVIEW_INVALID" }));
@@ -206,18 +208,18 @@ test.skipIf(!browserPath)("a later explicit image-review attestation creates a n
   const input = join(root, "review-source.json");
   const reviewPath = join(root, "review-evidence.json");
   await writeFile(input, JSON.stringify(diagram));
-  const originalResult = await command(["author", "--input", input, "--name", "review-history", "--browser", browserPath!]);
+  const originalResult = await command(["author", "--input", input, "--checkpoint", "--name", "review-history", "--browser", browserPath!]);
   expect(originalResult.code, originalResult.stdout).toBe(0);
-  const original = JSON.parse(originalResult.stdout);
+  const original = (await readCommandReport(originalResult.stdout));
   const originalReport = await readFile(join(original.revision.directory, "report.json"));
   const image = original.visual.capturedFrames[0];
   const review = { reviewer: "contract-test actor; synthetic attestation", viewed: true, frames: [{ id: image.id, sha256: image.sha256,
     observations: { readingOrder: "Synthetic left-to-right observation", density: "Synthetic density observation", occlusion: "Synthetic overlap observation", narrative: "Synthetic narrative observation" },
     issues: [{ reason: "Synthetic issue retained for the user's decision", nextStep: "Ask the user whether to adjust spacing" }] }] };
   await writeFile(reviewPath, JSON.stringify(review));
-  const result = await command(["author", "--from", original.revision.id, "--name", "review-history", "--browser", "none", "--visual-review", reviewPath]);
+  const result = await command(["author", "--from", original.revision.id, "--checkpoint", "--name", "review-history", "--browser", "none", "--visual-review", reviewPath]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.revision).toMatchObject({ id: "v002", parent: "v001" });
   expect(report).toMatchObject({ checks: { visual: "reviewed" }, visual: { status: "review-recorded", capturedFrames: [], viewedFrames: [expect.objectContaining({
     id: image.id, path: image.path, sha256: image.sha256, sourceRevision: "v001", timeMs: image.timeMs
@@ -227,25 +229,25 @@ test.skipIf(!browserPath)("a later explicit image-review attestation creates a n
   expect(await readFile(join(original.revision.directory, "report.json"))).toEqual(originalReport);
   expect(createHash("sha256").update(await readFile(image.path)).digest("hex")).toBe(image.sha256);
   await writeFile(reviewPath, JSON.stringify({ ...review, frames: [{ ...review.frames[0], sha256: "0".repeat(64) }] }));
-  const rejected = JSON.parse((await command(["author", "--from", "v001", "--name", "review-history", "--browser", "none", "--visual-review", reviewPath])).stdout);
+  const rejected = (await readCommandReport((await command(["author", "--from", "v001", "--checkpoint", "--name", "review-history", "--browser", "none", "--visual-review", reviewPath])).stdout));
   expect(rejected).toMatchObject({ status: "failed", checks: { visual: "not-run" }, visual: { viewedFrames: [] } });
   expect(rejected.diagnostics).toContainEqual(expect.objectContaining({ code: "VISUAL_REVIEW_INVALID" }));
   expect(await readFile(join(original.revision.directory, "report.json"))).toEqual(originalReport);
 }, 90_000);
 
-test.skipIf(!browserPath)("complete clean preview review marks quality as passed", async () => {
+test.skipIf(!browserPath)("complete clean preview review leaves actual HTML viewing incomplete", async () => {
   const input = join(root, "review-pass.json");
   const reviewPath = join(root, "review-pass-evidence.json");
   await writeFile(input, JSON.stringify(diagram));
-  const originalResult = await command(["author", "--input", input, "--name", "review-pass", "--browser", browserPath!]);
+  const originalResult = await command(["author", "--input", input, "--checkpoint", "--name", "review-pass", "--browser", browserPath!]);
   expect(originalResult.code, originalResult.stdout).toBe(0);
-  const original = JSON.parse(originalResult.stdout);
+  const original = (await readCommandReport(originalResult.stdout));
   const review = { reviewer: "model", viewed: true, frames: original.visual.capturedFrames.map((frame: { id: string; sha256: string }) => ({
     id: frame.id, sha256: frame.sha256,
     observations: { readingOrder: "Reviewed", density: "Reviewed", occlusion: "Reviewed", narrative: "Reviewed" }, issues: []
   })) };
   await writeFile(reviewPath, JSON.stringify(review));
-  const result = await command(["author", "--from", original.revision.id, "--name", "review-pass", "--browser", "none", "--visual-review", reviewPath]);
+  const result = await command(["author", "--from", original.revision.id, "--checkpoint", "--name", "review-pass", "--browser", "none", "--visual-review", reviewPath]);
   expect(result.code, result.stdout).toBe(0);
-  expect(JSON.parse(result.stdout).completion.quality).toBe("needs-user-decision");
+  expect((await readCommandReport(result.stdout)).completion.quality).toBe("incomplete");
 }, 120_000);

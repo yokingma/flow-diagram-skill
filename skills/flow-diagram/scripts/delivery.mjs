@@ -44,7 +44,7 @@ export async function deliverImage(report, context, settings) {
     result.status = context.signal?.aborted ? "cancelled" : "failed";
     if (context.signal?.aborted) { result.error = { code: "ABORT_ERR", reason: context.signal.reason?.message ?? "Task cancelled" }; throw context.signal.reason; }
     const error = cause instanceof ToolError ? cause : new ToolError("export", `${format.toUpperCase()}_${(cause.code || "EXPORT_FAILED").toUpperCase().replaceAll("-", "_")}`,
-      cause.message, "Keep successful files. Review the image settings and prepared browser; retry in a new revision.", format, cause);
+      cause.message, "Keep successful files. Review the image settings and prepared browser; retry the current draft.", format, cause);
     result.error = { code: error.code, reason: error.message };
     if (["SVG_TIME", "PNG_TIME"].includes(error.code)) throw error;
     recordFailure(report, error);
@@ -69,7 +69,7 @@ function exportTime(value, totalDuration, format) {
   const timeMs = value === undefined ? 0 : Number(value);
   if (typeof value === "string" && !value.trim() || !Number.isFinite(timeMs) || timeMs < 0 || timeMs > totalDuration) {
     throw new ToolError("export", `${format}_TIME`, `${format} time must be between 0 and ${totalDuration} milliseconds`,
-      "Choose a time from the compiled timeline and retry in a new revision.", "time");
+      "Choose a time from the compiled timeline and retry the current draft.", "time");
   }
   return timeMs;
 }

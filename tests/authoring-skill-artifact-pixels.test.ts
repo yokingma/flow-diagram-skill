@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Installed consumer regression: resized artifact evidence must preserve the actual PNG's visible pixels. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -30,9 +31,9 @@ function command(args: string[]) {
 
 test.skipIf(!executablePath)("changing SVG/PNG dimensions and backgrounds preserves original PNG content without compositor bands", async () => {
   const input = join(skill, "examples/staged-data-processing.json");
-  const sourceResult = await command(["author", "--input", input, "--name", "resized", "--svg", "--png", "--png-width", "960", "--background", "transparent", "--browser", executablePath!]);
+  const sourceResult = await command(["author", "--checkpoint", "--input", input, "--name", "resized", "--svg", "--png", "--png-width", "960", "--background", "transparent", "--browser", executablePath!]);
   expect(sourceResult.code, sourceResult.stdout + sourceResult.stderr).toBe(0);
-  const source = JSON.parse(sourceResult.stdout);
+  const source = (await readCommandReport(sourceResult.stdout));
   const svg = source.artifacts.find((item: { kind: string }) => item.kind === "svg");
   const png = source.artifacts.find((item: { kind: string }) => item.kind === "png");
   const settings = join(root, "surface switches.json");
@@ -47,9 +48,9 @@ test.skipIf(!executablePath)("changing SVG/PNG dimensions and backgrounds preser
     const page = await browser.newPage();
     const original = (await readFile(png.path)).toString("base64");
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const captureResult = await command(["author", "--from", source.revision.id, "--name", "resized", "--artifact-preview-settings", settings, "--browser", executablePath!]);
+      const captureResult = await command(["author", "--checkpoint", "--from", source.revision.id, "--name", "resized", "--artifact-preview-settings", settings, "--browser", executablePath!]);
       expect(captureResult.code, captureResult.stdout + captureResult.stderr).toBe(0);
-      const captured = JSON.parse(captureResult.stdout);
+      const captured = (await readCommandReport(captureResult.stdout));
       for (const item of captured.artifactEvidence.items.filter((item: { artifactId: string }) => item.artifactId === png.artifactId)) {
         const screenshot = (await readFile(item.path)).toString("base64");
         const mean = await comparePng(page, original, screenshot, item);
@@ -111,10 +112,10 @@ for (const fixture of [
   { name: "architecture", width: 640, background: "theme" },
   { name: "fan-in-bottleneck", width: 720, background: "transparent" }
 ]) test.skipIf(!executablePath)(`${fixture.name} PNG1280 retains every pixel at target width ${fixture.width}`, async () => {
-  const sourceResult = await command(["author", "--input", join(root, "fixtures", `${fixture.name}.json`),
+  const sourceResult = await command(["author", "--checkpoint", "--input", join(root, "fixtures", `${fixture.name}.json`),
     "--name", fixture.name, "--svg", "--png", "--png-width", "1280", "--background", fixture.background, "--browser", executablePath!]);
   expect(sourceResult.code, sourceResult.stdout + sourceResult.stderr).toBe(0);
-  const source = JSON.parse(sourceResult.stdout);
+  const source = (await readCommandReport(sourceResult.stdout));
   const svg = source.artifacts.find((item: { kind: string }) => item.kind === "svg");
   const png = source.artifacts.find((item: { kind: string }) => item.kind === "png");
   const settings = join(root, `${fixture.name} surfaces.json`);
@@ -128,10 +129,10 @@ for (const fixture of [
     const page = await browser.newPage();
     const original = (await readFile(png.path)).toString("base64");
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const result = await command(["author", "--from", source.revision.id, "--name", fixture.name,
+      const result = await command(["author", "--checkpoint", "--from", source.revision.id, "--name", fixture.name,
         "--artifact-preview-settings", settings, "--browser", executablePath!]);
       expect(result.code, result.stdout + result.stderr).toBe(0);
-      const captured = JSON.parse(result.stdout);
+      const captured = (await readCommandReport(result.stdout));
       for (const item of captured.artifactEvidence.items.filter((item: { artifactId: string }) => item.artifactId === png.artifactId)) {
         const screenshot = (await readFile(item.path)).toString("base64");
         expect(await comparePng(page, original, screenshot, item), `${fixture.name}, attempt ${attempt}, ${item.backdrop}`).toBeLessThan(0.05);

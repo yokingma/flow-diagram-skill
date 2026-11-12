@@ -1,4 +1,5 @@
 /** Compute required checks from the files and display surfaces selected for this delivery. */
+import { hasFormalReviewRequest } from "./formal-review.mjs";
 import { surfaceKey } from "./evidence-records.mjs";
 import { stateMatchesPoint } from "./review-contract.mjs";
 
@@ -7,13 +8,19 @@ const THEME_BACKDROPS = { light: "#ffffff", dark: "#111827" };
 
 /** Update the factual coverage and independent quality result after all authoring stages. */
 export function updateQualityCoverage(report) {
+  if (!hasFormalReviewRequest(report)) {
+    report.formalReview = { status: "not-requested" };
+    delete report.completion.quality;
+    delete report.qualityCoverage;
+    return;
+  }
   const required = [
     structuralCheck("validation", report.checks.validation),
-    structuralCheck("compilation", report.checks.compilation),
-    layoutCheck(report)
+    structuralCheck("compilation", report.checks.compilation)
   ];
-  const historicalIssues = invalidReviewIssues(report);
-  if (historicalIssues.length) required.push({ id: "review-issues", kind: "review", status: "needs-user-decision", issues: historicalIssues });
+  const historicalIssues = [...invalidReviewIssues(report), ...(report.visual?.viewedFrames ?? []).flatMap((frame) =>
+    (frame.issues ?? []).map((issue) => ({ ...issue, sourceRevision: frame.sourceRevision, id: frame.id, kind: "visual" })))];
+  if (historicalIssues.length) required.push({ id: "review-issues", kind: "review", status: "unresolved-issues", issues: historicalIssues });
   if (report.completion.requested.includes("html")) required.push(htmlCheck(report));
   for (const format of STATIC_FORMATS) if (report.completion.requested.includes(format)) {
     required.push(...staticChecks(report, format));
@@ -28,9 +35,11 @@ export function updateQualityCoverage(report) {
     schemaVersion: 1, status, required,
     completed: required.filter((item) => item.status === "passed").map((item) => item.id),
     incomplete: required.filter((item) => item.status === "incomplete").map((item) => item.id),
-    needsUserDecision: required.filter((item) => item.status === "needs-user-decision").map((item) => item.id)
+    unresolvedIssues: required.filter((item) => item.status === "unresolved-issues").map((item) => item.id)
   };
   report.completion.quality = status;
+  report.formalReview = { ...report.formalReview, status: required.filter((item) => item.kind !== "review").every((item) => item.coverageComplete ?? item.status === "passed") ? "complete" : "incomplete",
+    meaning: "Registered viewing and coverage only; design conclusions belong to the viewer." };
 }
 
 /** Image failure cannot resolve an observed issue, even when that image no longer contributes viewing coverage. */
@@ -46,15 +55,6 @@ function structuralCheck(id, checkStatus) {
   return { id, kind: "structural", status: checkStatus === "passed" ? "passed" : "incomplete", check: checkStatus };
 }
 
-function layoutCheck(report) {
-  const warnings = report.diagnostics.filter((item) => item.severity === "warning");
-  const unresolved = warnings.filter((item) => !isAcceptedDecision(report, item));
-  const acceptedWarnings = report.checks.layout === "warnings" && warnings.length > 0 && !unresolved.length;
-  return { id: "layout", kind: "layout", status: report.checks.layout === "passed" || acceptedWarnings ? "passed"
-    : unresolved.length ? "needs-user-decision" : "incomplete", check: report.checks.layout,
-  warnings: warnings.length, unresolved: unresolved.length };
-}
-
 function htmlCheck(report) {
   const inspection = report.htmlInspection;
   if (!inspection) return { id: "html", kind: "html", status: "incomplete", reason: "The actual diagram.html file was not inspected." };
@@ -66,7 +66,8 @@ function htmlCheck(report) {
   const coveredStates = requiredPoints ? requiredPoints.filter((point) => viewed.some((state) => stateMatchesPoint(state, point))).length
     : states.filter((state) => viewed.some((entry) => entry.id === state.id && entry.timeMs === state.timeMs)).length;
   const complete = report.checks.html === "reviewed" && coveredStates >= requiredStates && !issues.length;
-  return { id: "html", kind: "html", status: issues.length ? "needs-user-decision" : complete ? "passed" : "incomplete",
+  return { id: "html", kind: "html", status: issues.length ? "unresolved-issues" : complete ? "passed" : "incomplete",
+    coverageComplete: report.checks.html === "reviewed" && coveredStates >= requiredStates,
     fileSha256: inspection.file?.sha256, sourceRevision: inspection.sourceRevision,
     requestedStates: requiredStates, viewedStates: coveredStates, display: inspection.display,
     reason: complete ? undefined : inspection.reason ?? "Actual HTML states are not fully viewed." };
@@ -96,7 +97,8 @@ function staticChecks(report, format) {
       const issues = reviews.flatMap((review) => review.issues ?? []);
       return { id: `artifact-${format}-${artifact.artifactId}-${index + 1}`, kind: "artifact", format,
         artifactId: artifact.artifactId, artifactSha256: artifact.sha256, displayWidth: surface.displayWidth,
-        displayHeight: surface.displayHeight, backdrop: surface.backdrop, status: issues.length ? "needs-user-decision" : reviews.length ? "passed" : "incomplete",
+        displayHeight: surface.displayHeight, backdrop: surface.backdrop, status: issues.length ? "unresolved-issues" : reviews.length ? "passed" : "incomplete",
+        coverageComplete: reviews.length > 0,
         evidenceId: surface.evidenceId ?? null, evidenceStatus: ["invalid", "not-verified"].includes(surface.operationStatus)
           ? surface.operationStatus : surface.status,
         reason: reviews.length ? undefined : artifactReason(report, artifact, surface) };
@@ -116,11 +118,7 @@ function artifactReason(report, artifact, surface) {
   return `${description} has no captured artifact evidence.${preview} Save explicit settings ${settings}; run evidence --from ${report.revision?.id ?? artifact.artifactSourceRevision} --name <same-name> --artifact-preview-settings <settings.json> --browser <prepared-executable>, view the saved evidence PNG, then submit --artifact-review.`;
 }
 
-function isAcceptedDecision(report, diagnostic) {
-  return Boolean(diagnostic.issueId && report.userDecisions.some((decision) => decision.issueId === diagnostic.issueId && decision.decision === "intentional"));
-}
-
 function summarize(required) {
-  if (required.some((item) => item.status === "needs-user-decision")) return "needs-user-decision";
+  if (required.some((item) => item.status === "unresolved-issues")) return "unresolved-issues";
   return required.every((item) => item.status === "passed") ? "passed" : "incomplete";
 }

@@ -2,7 +2,6 @@
 import { readFile, realpath } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { basename, dirname, join } from "node:path";
-import { saveDecisions } from "./decision-records.mjs";
 import { ToolError } from "./runtime.mjs";
 
 /** Resolve only an explicitly selected revision under the chosen output/name, never an inferred latest. */
@@ -11,7 +10,7 @@ export async function resolveRevisionInput(report, options) {
   if (options.from && options.input) throw revisionError("Choose --from or --input, not both.");
   if (options.from && options.parent && options.from !== options.parent) throw revisionError("--from and --parent must identify the same revision.");
   const parent = options.from || options.parent;
-  if (parent && !/^v\d{3,}$/u.test(parent)) throw revisionError("Parent must be an explicit revision ID such as v001.");
+  if (parent && parent !== "current" && !/^v\d{3,}$/u.test(parent)) throw revisionError("Select current or an explicit checkpoint ID such as v001.");
   const directory = parent ? join(dirname(report.revision.directory), parent) : null;
   if (directory === report.revision.directory) throw revisionError("The new revision cannot be its own parent.");
   if (options.from) await checkParentScope(directory, dirname(report.revision.directory));
@@ -23,7 +22,6 @@ export async function inheritRevision(report, options) {
   report.stage = "revision";
   const parent = options.from || options.parent;
   if (!parent) {
-    if (options.decisions) throw revisionError("User decisions require an explicit --parent or --from revision.");
     if (basename(report.input.path) === "diagram.json" && /^v\d{3,}$/u.test(basename(dirname(report.input.path)))) {
       throw revisionError("Input belongs to a historical revision; select its explicit --parent or use --from.");
     }
@@ -45,6 +43,18 @@ export async function inheritRevision(report, options) {
   }
   if (record.revision?.id !== parent || !Array.isArray(record.diagnostics) || !Array.isArray(record.userDecisions)) throw revisionError("Selected parent does not contain a valid authoring report.");
   const inputSha256 = options.from ? report.input.sha256 : createHash("sha256").update(bytes).digest("hex");
+  if (parent === "current") {
+    if (report.workingDraft && options.from && record.workingDraft?.editableSource) {
+      report.workingDraft.editableSource = { path: record.workingDraft.editableSource.path, sha256: report.input.sha256 };
+    }
+    report.provenance.parent = { id: parent, directory, inputSha256, recordedInputSha256: record.input?.sha256 ?? null,
+      externallyModified: record.input?.sha256 !== inputSha256 };
+    report.sources = [...report.sources, ...(record.sources ?? []).filter((item) => item.kind !== "diagram-json")];
+    if (options.from && report.input.sha256 === record.input?.sha256) {
+      report.completion.requested = [...new Set([...report.completion.requested, ...(record.completion?.requested ?? [])])];
+    }
+    return record;
+  }
   report.provenance = { parent: { id: parent, directory, inputSha256, recordedInputSha256: record.input?.sha256 ?? null,
     externallyModified: record.input?.sha256 !== inputSha256 }, originalIssues: [...(record.provenance?.originalIssues ?? []),
       ...record.diagnostics.map((issue) => ({ ...issue, revision: parent }))] };
@@ -55,12 +65,12 @@ export async function inheritRevision(report, options) {
   if (report.command === "author" && options.from && report.input.sha256 === record.input?.sha256) {
     report.completion.requested = [...new Set([...(report.completion.requested ?? []), ...(record.completion?.requested ?? [])])];
   }
-  if (options.decisions) await saveDecisions(report, options.decisions);
   return record;
 }
 
 /** Adopt completed files only after validation establishes the actual source, theme and runtime SDK identity. */
 export function inheritDeliveryContext(report, record, options) {
+  if (record?.workingDraft || report.workingDraft) return;
   if (!record || report.command !== "author" || !options.from || report.input.sha256 !== record.input?.sha256
     || report.theme !== record.theme || report.sdk.version !== record.sdk?.version || report.sdk.integrity !== record.sdk?.integrity) return;
   report.completion.completed = [...new Set([...(report.completion.completed ?? []), ...(record.completion?.completed ?? [])])];

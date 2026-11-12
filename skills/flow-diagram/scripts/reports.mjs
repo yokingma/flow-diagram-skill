@@ -1,4 +1,4 @@
-/** Append-only diagram revisions. Each invocation owns one atomically allocated version directory. */
+/** Shared authoring reports and explicit immutable checkpoint allocation. */
 import { mkdir, readdir, readFile, writeFile, rename } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { basename, join, resolve } from "node:path";
@@ -6,9 +6,7 @@ import { ToolError } from "./runtime.mjs";
 
 /** Reserve a fresh revision; failed and interrupted revisions keep their numbers. */
 export async function allocateRevision(outputRoot, name, parent = null) {
-  if (!name || name === "." || name === ".." || /[<>:"/\\|?*\x00-\x1f]/u.test(name) || /[. ]$/u.test(name) || /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)/iu.test(name)) {
-    throw new ToolError("save", "DIAGRAM_NAME", "Diagram name is not a portable directory name", "Use a nonempty name without path separators or reserved filename characters.", "name");
-  }
+  assertDiagramName(name);
   const directory = resolve(outputRoot, name);
   await mkdir(directory, { recursive: true });
   const entries = await readdir(directory);
@@ -21,11 +19,19 @@ export async function allocateRevision(outputRoot, name, parent = null) {
   }
 }
 
+/** Reject names that cannot safely identify a portable diagram directory. */
+export function assertDiagramName(name) {
+  if (!name || name === "." || name === ".." || /[<>:"/\\|?*\x00-\x1f]/u.test(name) || /[. ]$/u.test(name) || /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)/iu.test(name)) {
+    throw new ToolError("save", "DIAGRAM_NAME", "Diagram name is not a portable directory name", "Use a nonempty name without path separators or reserved filename characters.", "name");
+  }
+
+}
+
 /** Create the shared structured report; later stages append only facts actually observed. */
 export function createReport(command, revision, input) {
   return {
     schemaVersion: 1, toolVersion: "0.1.0", command, status: "pending", stage: "save",
-    revision, theme: null, completion: { delivery: "not-requested", quality: "incomplete", requested: [], completed: [] }, sources: [{ path: resolve(input), kind: "diagram-json" }], sdk: null,
+    revision, theme: null, formalReview: { status: "not-requested" }, completion: { delivery: "not-requested", quality: "incomplete", requested: [], completed: [] }, sources: [{ path: resolve(input), kind: "diagram-json" }], sdk: null,
     checks: { validation: "not-run", compilation: "not-run", layout: "not-run", visual: "not-run", html: "not-run" },
     diagnostics: [], artifacts: [], exports: [], artifactEvidence: { status: "not-requested", items: [] }, visual: { status: "not-run", viewedFrames: [], artifactReviews: [] },
     provenance: { parent: null, originalIssues: [] }, userDecisions: [], samples: []
@@ -50,7 +56,7 @@ export function recordFailure(report, error) {
   report.stage = error.stage || report.stage;
   report.diagnostics.push({
     severity: "error", stage: report.stage, code: error.code || "OPERATION_FAILED", location: error.location || "$",
-    reason: error.message || String(error), nextStep: error.nextStep || "Review the saved draft and diagnostic; retry in a new revision after resolving the cause."
+    reason: error.message || String(error), nextStep: error.nextStep || "Review the saved draft and diagnostic; retry the current draft after resolving the cause."
   });
 }
 
@@ -64,7 +70,9 @@ export async function saveReport(report) {
   const lines = ["# FlowSVG authoring report", "", `Status: ${report.status}`, `Stage: ${report.stage}`,
     `Revision: ${report.revision.id}`, `Theme: ${report.theme ?? "not resolved"}`, `Parent: ${report.revision.parent ?? "none"}`,
     `SDK: ${report.sdk ? `${report.sdk.version} (${report.sdk.source})` : "not loaded"}`, "", "## Completion", "",
-    `- delivery: ${report.completion.delivery}`, `- quality: ${report.completion.quality}`,
+    `- delivery: ${report.completion.delivery}`,
+    ...(report.completion.quality ? [`- formal review coverage: ${report.completion.quality}`] : []),
+    `- formal review: ${report.formalReview?.status ?? "not-requested"}`,
     `- requested: ${report.completion.requested.join(", ") || "none"}`,
     `- completed: ${report.completion.completed.join(", ") || "none"}`, "", "## Sources", ""];
   for (const source of report.sources) lines.push(`- ${source.kind}: ${source.reference ?? source.path}${source.scope ? ` (scope: ${source.scope})` : ""}${source.description ? ` — ${source.description}` : ""}`);
@@ -87,7 +95,8 @@ export async function saveReport(report) {
   }
   if (!report.diagnostics.length) lines.push("No diagnostics recorded.");
   lines.push("", "## Visual coverage", "", `Status: ${report.visual.status}`,
-    `Captured frames: ${report.visual.capturedFrames?.length ?? 0}`, `Viewed frames: ${report.visual.viewedFrames.length}`);
+    `Captured frames: ${report.visual.capturedFrames?.length ?? 0}`,
+    ...(report.formalReview?.status !== "not-requested" ? [`Viewed frames: ${report.visual.viewedFrames.length}`] : []));
   if (report.visual.reason) lines.push(`Reason: ${report.visual.reason}`);
   if (report.visual.plan) {
     lines.push(`Preview scope: ${report.visual.plan.mode ?? "unspecified"}`, report.visual.plan.coverage, report.visual.plan.overviewProjection, `Omitted candidates: ${report.visual.plan.omitted.length}`);
@@ -105,7 +114,7 @@ export async function saveReport(report) {
       `HTML SHA-256: ${report.htmlInspection.file?.sha256 ?? "not recorded"}`, `Display: ${JSON.stringify(report.htmlInspection.display ?? {})}`);
     if (report.htmlInspection.reason) lines.push(`Reason: ${report.htmlInspection.reason}`);
     if (report.htmlInspection.plan) lines.push(`Inspection scope: ${report.htmlInspection.plan.coverage}`);
-    if (report.htmlInspection.coverage) lines.push(`Coverage: requested ${report.htmlInspection.coverage.requested}; viewed ${report.htmlInspection.coverage.viewed}; unviewed ${report.htmlInspection.coverage.unviewed}`);
+    if (report.formalReview?.status !== "not-requested" && report.htmlInspection.coverage) lines.push(`Coverage: requested ${report.htmlInspection.coverage.requested}; viewed ${report.htmlInspection.coverage.viewed}; unviewed ${report.htmlInspection.coverage.unviewed}`);
     for (const state of report.htmlInspection.states ?? []) lines.push(`- captured ${state.id}: ${state.timeMs}ms; paused ${state.paused}; offline ${state.offline}; SHA-256 ${state.sha256}`);
     for (const state of report.htmlInspection.viewedStates ?? []) lines.push(`- viewed ${state.id}: ${state.timeMs}ms; SHA-256 ${state.sha256}; ${JSON.stringify(state.observations)}`);
     if (report.htmlInspection.review) lines.push(`Reviewer: ${report.htmlInspection.review.reviewer}`, report.htmlInspection.review.scope);

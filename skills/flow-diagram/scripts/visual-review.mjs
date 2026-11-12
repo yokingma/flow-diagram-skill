@@ -33,8 +33,8 @@ export async function recordVisualReview(report, options) {
         scope: "Only listed source images were viewed. Newly generated images and other times remain unviewed." } };
     report.checks.visual = "reviewed";
     for (const frame of viewedFrames) for (const issue of frame.issues) report.diagnostics.push({ severity: "warning", stage: "visual-review", code: "VISUAL_REVIEW_ISSUE",
-      location: `${parent.id}/${frame.id}`, timeMs: frame.timeMs, reason: issue.reason, nextStep: `${issue.nextStep} Wait for the user's decision before changing the diagram.` });
-    if (viewedFrames.some((frame) => frame.issues.length)) report.completion.quality = "needs-user-decision";
+      location: `${parent.id}/${frame.id}`, timeMs: frame.timeMs, reason: issue.reason, nextStep: issue.nextStep });
+    if (viewedFrames.some((frame) => frame.issues.length)) report.completion.quality = "unresolved-issues";
     else if (source.visual?.capturedFrames?.length > 0
       && viewedFrames.length === source.visual.capturedFrames.length
       && source.artifactEvidence?.status !== "awaiting-review") report.completion.quality = "passed";

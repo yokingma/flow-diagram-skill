@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Diagnostics and estimates are observed through the copied installed CLI. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -14,6 +15,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {
+  if (["author", "validate", "layout"].includes(args[0])) args = [...args, "--geometry"];
   return new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache") }
@@ -32,7 +34,7 @@ test("measure reports deterministic baseline estimates for each content version"
   ] }));
   const result = await command(["measure", "--input", input]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.measurement).toMatchObject({ estimatedLineCount: expect.any(Number), estimatedLineCountMethod: "public-sdk-baseline-y-estimate",
     perContent: [
       { index: 0, estimatedLineCount: expect.any(Number), estimatedLineCountMethod: "public-sdk-baseline-y-estimate" },
@@ -41,7 +43,7 @@ test("measure reports deterministic baseline estimates for each content version"
   expect(report.measurement.estimatedLineCount).toBe(Math.max(...report.measurement.perContent.map((item: { estimatedLineCount: number }) => item.estimatedLineCount)));
 }, 60_000);
 
-test("warning groups retain each time and identity while leaving flat decisions intact", async () => {
+test("optional geometry observations retain their time and source identities", async () => {
   const input = join(root, "warning-groups.json");
   await writeFile(input, JSON.stringify({ version: 1, viewport: { width: 400, height: 240 }, nodes: [
     { id: "a", kind: "rect", x: 20, y: 20, width: 100, height: 60, label: "a" },
@@ -49,15 +51,14 @@ test("warning groups retain each time and identity while leaving flat decisions 
   ], edges: [], scenes: [{ id: "move", label: "move", beats: [{ durationMs: 100, transitionMs: 20, actions: [{ type: "updateNode", target: "b", value: { x: 220 } }] }] }] }));
   const result = await command(["author", "--input", input, "--name", "warning-groups", "--output", join(root, "history"), "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
-  expect(report.layout.warningGroups.length).toBeGreaterThan(0);
-  const group = report.layout.warningGroups.find((item: { code: string }) => item.code === "node-overlap");
-  expect(group).toMatchObject({ objectId: expect.any(String), relatedObjectIds: expect.any(Array), count: expect.any(Number), records: expect.any(Array) });
-  expect(group.records.every((record: { issueId: string; warningKey: string; timeMs: number; location: string }) => record.issueId && record.warningKey && Number.isFinite(record.timeMs) && record.location)).toBe(true);
-  expect(report.diagnostics.filter((item: { code: string }) => item.code === "node-overlap").length).toBeGreaterThanOrEqual(group.count);
+  const report = (await readCommandReport(result.stdout));
+  const records = report.diagnostics.filter((item: { code: string }) => item.code === "node-overlap");
+  expect(records.length).toBeGreaterThan(0);
+  expect(records.every((record: { issueId: string; warningKey: string; timeMs: number; location: string; severity: string }) =>
+    record.issueId && record.warningKey && Number.isFinite(record.timeMs) && record.location && record.severity === "info")).toBe(true);
   const saved = JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"));
-  expect(saved.diagnostics.length).toBe(report.diagnostics.length);
-  expect(saved.layout.warningGroups).toEqual(report.layout.warningGroups);
+  expect(saved.diagnostics).toEqual(report.diagnostics);
+  expect(saved.layout).toEqual(report.layout);
 }, 60_000);
 
 
@@ -77,12 +78,12 @@ test.each([
   const repeat = await command(["measure", "--input", input]);
   expect(measured.code, measured.stdout).toBe(0);
   expect(repeat.stdout).toBe(measured.stdout);
-  expect(JSON.parse(measured.stdout).measurement.nodes[0]).toMatchObject({ requiredHeight, estimatedLineCount: 2 });
+  expect((await readCommandReport(measured.stdout)).measurement.nodes[0]).toMatchObject({ requiredHeight, estimatedLineCount: 2 });
   await writeFile(plan, JSON.stringify({ schemaVersion: 1, strategy: "layered", layers: ["label"], overrides: { label: { height: 1 } } }));
   const layout = await command(["layout", "--input", input, "--plan", plan, "--output", output]);
   expect(layout.code, layout.stdout).toBe(0);
-  expect(JSON.parse(layout.stdout).labelOnlyMeasurements[0]).toMatchObject({ requiredHeight, estimatedLineCount: 2 });
+  expect((await readCommandReport(layout.stdout)).labelOnlyMeasurements[0]).toMatchObject({ requiredHeight, estimatedLineCount: 2 });
   const validated = await command(["validate", "--input", output, "--name", `label-${kind}`, "--output", join(root, "history")]);
   expect(validated.code, validated.stdout).toBe(0);
-  expect(JSON.parse(validated.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", currentHeight: 1, requiredHeight, estimatedLineCount: 2 }));
+  expect((await readCommandReport(validated.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", currentHeight: 1, requiredHeight, estimatedLineCount: 2 }));
 }, 60_000);

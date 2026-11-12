@@ -1,4 +1,5 @@
 /** Build unviewed review forms from verified registered evidence without producing a diagram. */
+import { saveFormalRequest } from "./formal-requests.mjs";
 import { realpath } from "node:fs/promises";
 import { basename, dirname, resolve, sep } from "node:path";
 import { loadReviewSource, verifyReviewEntries } from "./review-preflight.mjs";
@@ -26,9 +27,10 @@ export async function createReviewTemplate(options, signal) {
     await verifyReviewEntries(context, kind, review);
     signal?.throwIfAborted();
     await publishDraftCopy(target, JSON.stringify(review, null, 2) + "\n", signal);
+    await saveFormalRequest(context, kind, signal);
     return { command: "review-template", status: "template-created", stage: "review-template", kind,
       sourceRevision: context.parent.id, source: { inputSha256: context.source.input.sha256, sdk: context.source.sdk, theme: context.source.theme },
-      evidenceSource: context.artifactEvidenceSource?.locator, revision: null, viewed: false, diagnostics: [], artifacts: [{ kind: "review-template", path: target }] };
+      evidenceSource: context.artifactEvidenceSource?.locator, revision: null, viewed: false, formalReview: { status: "incomplete" }, diagnostics: [], artifacts: [{ kind: "review-template", path: target }] };
   } catch (cause) {
     if (cause.name === "AbortError") throw cause;
     throw new ToolError("review-template", "REVIEW_TEMPLATE_INVALID", cause.message,

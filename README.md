@@ -46,6 +46,8 @@ Restart Codex if the new Skill is not discovered. See the [installation guide](d
 
 ## Use it
 
+Default creation follows understand → create → validate → view and revise → deliver. It reuses one source draft, current outputs and one temporary `issues.md` for substantive findings. View the actual delivered HTML and requested images. SDK previews and registered formal reviews are requested separately; machine checks and screenshot generation do not establish visual quality. Design guidance supports authoring and revision rather than acting as an acceptance gate.
+
 In Codex, send:
 
 ```text
@@ -81,13 +83,15 @@ After successful finalization, open `.diagrams/order-platform/diagram.html` in a
 | `report.json`, `report.md` | Sources, completed checks, warnings, and unfinished work |
 | `diagram.svg` | Static export explicitly requested in the example |
 
-SVG, PNG, and GIF are optional exports. The HTML page carries only a heading, a one-sentence answer to the reader's question, functional reading hints when needed and the player; source, decision and check records stay in the delivery explanation and reports. Page text is not included in image exports. Keep the HTML, JSON and reports together for later edits that preserve the page design. Successful finalization removes the task's drafts and screenshots unless you request history retention; failed tasks retain recovery files.
+SVG, PNG, and GIF are optional exports. The HTML page carries only a heading, a one-sentence answer to the reader's question, functional reading hints when needed and the player; source, decision and check records stay in the delivery explanation and reports. Page text is not included in image exports. Keep the HTML, JSON and reports together for later edits that preserve the page design. Authoring reuses one working draft and current outputs; immutable checkpoints are saved only on request. Successful finalization removes the task's drafts and screenshots unless you request retention; failed tasks retain source-identified recovery files.
+
+Direct CLI users receive a concise saved-authoring result; follow its `detailsPath` for the full report. Read-only validation and measurement return necessary results inline.
 
 ## What it covers
 
 - System architecture and boundaries, request/response flows, retries, state changes, and staged processing.
 - Source-based diagrams with recorded references and content decisions.
-- Revisions, read-only validation, layout diagnostics, and checks of delivered files.
+- Working drafts, read-only validation, optional factual geometry observations, and checks of delivered files.
 - Offline explanations, web illustrations, and image assets for presentations. PPTX files and native PowerPoint shapes are outside the Skill's scope.
 
 ## Powered by FlowSVG

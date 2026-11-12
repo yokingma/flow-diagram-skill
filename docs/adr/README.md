@@ -15,3 +15,5 @@ This index covers public-SDK integration, shared diagnostics, and Skill contract
 - [0016: SDK 与 Skill 使用独立仓库和发布周期](0016-independent-sdk-and-skill-repositories.md)
 - [0017: Skill owns HTML page composition](0017-skill-owned-html-composition.md)
 - [0018: Keep project preferences in one Markdown record](0018-project-preferences-in-markdown.md)
+- [0019: Separate visual inspection from formal review](0019-separate-visual-inspection-from-formal-review.md)
+- [0020: Reuse working drafts by default](0020-reuse-working-drafts-during-ordinary-authoring.md)

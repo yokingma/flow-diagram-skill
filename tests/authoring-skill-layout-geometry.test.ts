@@ -172,9 +172,8 @@ test.each(["left", "right"])("the %s sidebar uses its own geometry and explicit 
 
 test.each([
   { nodeId: "a", width: 99, recommendedHeight: 100, diagnostics: [] },
-  { nodeId: "a", width: 100, recommendedHeight: -1, diagnostics: [] },
-  { nodeId: "a", width: 100, recommendedHeight: 100, diagnostics: [{ dimension: "width", message: "overflow" }] }
-])("stale or unresolved measurements cannot be consumed by geometry", (measurement) => {
+  { nodeId: "a", width: 100, recommendedHeight: -1, diagnostics: [] }
+])("stale or invalid measurements cannot be consumed by geometry", (measurement) => {
   expect(() => layoutDraft(draft, plan, [measurement])).toThrowError(expect.objectContaining({
     code: "LAYOUT_MEASUREMENT_INVALID", stage: "layout", location: "measurements[0]"
   }));

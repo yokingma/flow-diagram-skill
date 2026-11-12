@@ -1,4 +1,5 @@
 /** Source-bound static layout through the isolated public SDK; no author revision or quality approval is created. */
+import { openEditableDraft, replaceEditableDraft, closeEditableDraft } from "./editable-draft.mjs";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { importSdk, prepareRuntime, ToolError } from "./runtime.mjs";
@@ -9,17 +10,19 @@ import { getLayoutMeasurementInputs, layoutDraft } from "./layout-geometry.mjs";
 import { diagnoseLayout } from "./diagnostics.mjs";
 import { publishDraftCopy } from "./atomic-draft.mjs";
 import { LABEL_ESTIMATE_METHOD, measureLabel } from "./label-measurement.mjs";
+import { measurementObservations } from "./measurement-sources.mjs";
 
 const PRESERVED_SEMANTIC_FIELDS = ["nodes.id", "nodes.kind", "nodes.parentId", "nodes.content", "nodes.label", "nodes array order", "edges.id", "edges.from", "edges.to", "edges array order", "scenes"];
-const DRAFT_WARNING_NEXT_STEP = "Run author on this draft to create a source revision before recording any warning decision.";
 
-/** Return one layout report; only a complete, checked new draft can be published. */
+/** Return one layout report; publish a checked copy or replace the explicitly selected task draft. */
 export async function layoutContent(options, signal) {
   const result = { schemaVersion: 1, toolVersion: "0.1.0", command: "layout", status: "pending", stage: "layout-input", revision: null,
     diagnostics: [], artifacts: [], sdk: null, checks: { validation: "not-run", plan: "not-run", measurement: "not-run", compilation: "not-run", layout: "not-run" } };
+  let editable;
   try {
-    checkOutputPath(options);
-    const [input, plan] = await Promise.all([readLayoutJson(options.input, "input"), readLayoutJson(options.plan, "plan")]);
+    if (options["in-place"]) editable = await openEditableDraft(options.input);
+    else checkOutputPath(options);
+    const [input, plan] = await Promise.all([readLayoutJson(options.input, "input", editable?.bytes), readLayoutJson(options.plan, "plan")]);
     result.input = input.identity;
     result.plan = plan.identity;
     result.stage = "environment";
@@ -31,6 +34,7 @@ export async function layoutContent(options, signal) {
     result.stage = "measurement";
     result.checks.measurement = "failed";
     const measurements = measurePlannedNodes(sdk, input.document, plan.document);
+    result.diagnostics.push(...measurementObservations(measurements.flatMap((item) => item.diagnostics)));
     result.checks.measurement = "passed";
     result.stage = "layout";
     const geometry = layoutDraft(input.document, plan.document, measurements);
@@ -44,23 +48,24 @@ export async function layoutContent(options, signal) {
     const diagram = sdk.createDiagram(document);
     result.checks.compilation = "passed";
     const text = JSON.stringify(document, null, 2) + "\n";
-    result.output = { path: resolve(options.output), sha256: digest(text), bytes: Buffer.byteLength(text) };
-    diagnoseOutput(result, document, diagram, sdk);
+    result.output = { path: editable ? editable.path : resolve(options.output), sha256: digest(text), bytes: Buffer.byteLength(text) };
+    diagnoseOutput(result, document, diagram, sdk, options);
     result.stage = "layout-output";
-    await publishLayoutDraft(options.output, text, signal);
+    if (editable) await replaceEditableDraft(editable, text, signal);
+    else await publishLayoutDraft(options.output, text, signal);
     result.artifacts = [{ kind: "diagram-draft", ...result.output }];
     result.preservedSemanticFields = PRESERVED_SEMANTIC_FIELDS;
-    result.warningDecisionScope = DRAFT_WARNING_NEXT_STEP;
     result.status = "laid-out";
   } catch (error) {
+    delete result.output;
     const failure = error.nextStep ? error : new ToolError(error.stage ?? result.stage, error.code ?? "LAYOUT_FAILED", error.message,
-      "Review this layout diagnostic and retry using a new output draft path.", error.location ?? "$", error);
+      "Resolve the diagnostic and retry the selected draft operation.", error.location ?? "$", error);
     if (error.name === "AbortError") failure.name = "AbortError";
     const failedCheck = { validation: "validation", "layout-plan": "plan", measurement: "measurement", compilation: "compilation", "layout-output": "outputValidation", layout: "layout" }[failure.stage];
     if (failedCheck) result.checks[failedCheck] = "failed";
     recordFailure(result, failure);
     if (Array.isArray(error.diagnostics)) result.diagnostics = [...result.diagnostics.slice(0, -1), ...error.diagnostics];
-  }
+  } finally { await closeEditableDraft(editable); }
   return result;
 }
 
@@ -81,9 +86,9 @@ async function publishLayoutDraft(path, text, signal) {
   }
 }
 
-async function readLayoutJson(path, kind) {
+async function readLayoutJson(path, kind, snapshot) {
   let bytes;
-  try { bytes = await readFile(path); }
+  try { bytes = snapshot ?? await readFile(path); }
   catch (cause) { throw new ToolError("layout-input", kind === "plan" ? "LAYOUT_PLAN_READ_FAILED" : "LAYOUT_INPUT_READ_FAILED",
     cause.message, "Provide a readable JSON file at this path and rerun layout.", resolve(path), cause); }
   try { return { document: JSON.parse(bytes.toString("utf8")), identity: { path: resolve(path), sha256: digest(bytes), bytes: bytes.length } }; }
@@ -115,27 +120,26 @@ function measurePlannedNodes(sdk, draft, plan) {
     const contentMeasurement = input.content === undefined ? null : sdk.measureNodeContent(contentInput);
     const labelMeasurement = input.label === undefined ? null : measureLabel(sdk, input);
     const requiredHeight = Math.max(contentMeasurement?.height ?? 0, labelMeasurement?.requiredHeight ?? 0);
-    const diagnostics = [...(contentMeasurement?.diagnostics ?? []), ...(labelMeasurement?.diagnostics ?? [])];
-    if (diagnostics.length) throw new LayoutDiagnosticsError(diagnostics.map((issue) => ({ severity: "error", stage: "measurement",
-      code: "LAYOUT_MEASUREMENT_DIAGNOSTIC", location: `nodes[${draft.nodes.findIndex((node) => node.id === nodeId)}].${issue.path?.startsWith("label") ? "label" : "content"}`, objectId: nodeId,
-      reason: issue.message, nextStep: "Resolve the reported measurement issue at its final planned width before rerunning layout." })));
+    const diagnostics = [...(contentMeasurement?.diagnostics ?? []), ...(labelMeasurement?.diagnostics ?? [])]
+      .map((issue) => ({ ...issue, objectId: nodeId,
+        sourcePath: `nodes[${draft.nodes.findIndex((candidate) => candidate.id === nodeId)}].${issue.path?.replace(/^(content|label)(?:\[\d+\])?/u, "$1")}` }));
     return { nodeId, width: input.width, currentHeight: node.height, requiredHeight, recommendedHeight: requiredHeight,
       heightChange: Math.max(0, requiredHeight - node.height),
       ...(labelMeasurement ? { estimatedLineCount: labelMeasurement.estimatedLineCount, estimatedLineCountMethod: LABEL_ESTIMATE_METHOD, labelOnly: input.content === undefined } : {}), diagnostics };
   });
 }
 
-function diagnoseOutput(result, document, diagram, sdk) {
-  // Draft warnings bind the output bytes. A null source revision cannot be used as an author-history decision target.
+function diagnoseOutput(result, document, diagram, sdk, options) {
+  // Optional geometry observations bind the output bytes, without creating design-approval requirements.
   const diagnosticReport = { ...result, revision: { id: null }, input: result.output,
     theme: document.theme ?? "light", reducedMotion: false, checks: { ...result.checks }, diagnostics: [] };
-  try { diagnoseLayout(diagnosticReport, { document, diagram, sdk }); }
+  try { diagnoseLayout(diagnosticReport, { document, diagram, sdk }, options); }
   finally {
     result.theme = diagnosticReport.theme;
     result.reducedMotion = false;
     result.checks = diagnosticReport.checks;
     result.layout = diagnosticReport.layout;
-    result.diagnostics.push(...diagnosticReport.diagnostics.map((item) => ({ ...item, nextStep: `${DRAFT_WARNING_NEXT_STEP} ${item.nextStep}` })));
+    result.diagnostics.push(...diagnosticReport.diagnostics);
   }
 }
 

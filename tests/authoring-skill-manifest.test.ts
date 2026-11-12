@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Batch contracts run only through a copied skill and its isolated installed SDK. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -25,7 +26,7 @@ beforeAll(async () => {
   sourceSha256 = createHash("sha256").update(bytes).digest("hex");
   const prepared = await command(["prepare"]);
   expect(prepared.code, prepared.stdout + prepared.stderr).toBe(0);
-  sdk = JSON.parse(prepared.stdout).sdk;
+  sdk = (await readCommandReport(prepared.stdout)).sdk;
 }, 60_000);
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], onBrowser?: (child: ChildProcess) => void) {
@@ -54,7 +55,7 @@ test("bound manifests save original bytes and allow separately named identical t
   const saved = await manifest("same-time", [{ name: "总览", timeMs: 137, formats: ["svg"] }, { name: "same-time", timeMs: 137, formats: ["svg"] }]);
   const result = await author("same-time", saved.path, ["--background", "transparent"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion).toMatchObject({ delivery: "complete", requested: ["json", "html", "svg"], completed: ["json", "html", "svg"] });
   expect(report.exports).toEqual([expect.objectContaining({ name: "总览", format: "svg", timeMs: 137, status: "succeeded", background: "transparent" }), expect.objectContaining({ name: "same-time", status: "succeeded" })]);
   expect(await readFile(join(report.revision.directory, "export-manifest.json"), "utf8")).toBe(saved.bytes);
@@ -85,7 +86,7 @@ test("whole preflight rejects invalid names, formats, timeline and source/SDK bi
     const saved = await manifest(`invalid-${scenario.name}`, scenario.frames, scenario.overrides);
     const result = await author(`invalid-${scenario.name}`, saved.path);
     expect(result.code, scenario.name + result.stdout).toBe(1);
-    const report = JSON.parse(result.stdout);
+    const report = (await readCommandReport(result.stdout));
     expect(report.diagnostics, scenario.name).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
     expect(report.artifacts.some((item: { kind: string }) => ["svg", "png"].includes(item.kind)), scenario.name).toBe(false);
     expect(report.completion).toMatchObject({ delivery: "incomplete", completed: ["json", "html"] });
@@ -96,7 +97,7 @@ test("whole preflight rejects invalid names, formats, timeline and source/SDK bi
   await writeFile(input, original + " ");
   const changed = await author("changed-whitespace", saved.path);
   expect(changed.code).toBe(1);
-  expect(JSON.parse(changed.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
+  expect((await readCommandReport(changed.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
   await writeFile(input, original);
 }, 60_000);
 
@@ -105,17 +106,17 @@ test("shared PNG options and single-frame selection are checked before a batch w
   for (const width of ["", "0", "Infinity", "9000", "8000"]) {
     const result = await author(`width-${width || "empty"}`, saved.path, ["--png-width", width]);
     expect(result.code, result.stdout).toBe(1);
-    const report = JSON.parse(result.stdout);
+    const report = (await readCommandReport(result.stdout));
     expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
     expect(report.artifacts.some((item: { kind: string }) => ["svg", "png"].includes(item.kind))).toBe(false);
   }
   const svgOnly = await manifest("svg-only");
   const orphan = await author("orphan-width", svgOnly.path, ["--png-width", "480"]);
-  expect(JSON.parse(orphan.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
+  expect((await readCommandReport(orphan.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID" }));
   for (const flags of [["--svg"], ["--png"], ["--time", "0"]]) {
     const result = await author("selection", saved.path, flags);
     expect(result.code).toBe(1);
-    expect(JSON.parse(result.stdout).stage).toBe("arguments");
+    expect((await readCommandReport(result.stdout)).stage).toBe("arguments");
   }
 }, 60_000);
 
@@ -123,7 +124,7 @@ test("runtime PNG failure continues later SVG items and leaves the PNG category 
   const saved = await manifest("independent", [{ name: "one", timeMs: 0, formats: ["png", "svg"] }, { name: "two", timeMs: 1000, formats: ["svg", "png"] }]);
   const result = await author("independent", saved.path);
   expect(result.code, result.stdout).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.exports.map((item: { status: string }) => item.status)).toEqual(["failed", "succeeded", "succeeded", "failed"]);
   expect(report.completion).toMatchObject({ delivery: "incomplete", completed: ["json", "html", "svg"] });
   expect(report.exportManifest.status).toBe("failed");
@@ -135,12 +136,12 @@ test.skipIf(!browser)("one failed SVG cannot complete its category and existing 
   const saved = await manifest("collision", [{ name: "slow", timeMs: 137, formats: ["png"] }, { name: "blocked", timeMs: 0, formats: ["svg"] }, { name: "good", timeMs: 1000, formats: ["svg"] }]);
   const collision = join(root, ".diagrams", ".history", "collision", "v001", "exports", "blocked.svg");
   let observed = false;
-  const result = await command(["author", "--input", input, "--name", "collision", "--export-manifest", saved.path, "--png-width", "480", "--browser", browser!], () => {
+  const result = await command(["author", "--input", input, "--name", "collision", "--checkpoint", "--export-manifest", saved.path, "--png-width", "480", "--browser", browser!], () => {
     writeFileSync(collision, "external destination", { flag: "wx" }); observed = true;
   });
   expect(observed).toBe(true);
   expect(result.code, result.stdout + result.stderr).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.exports.map((item: { status: string }) => item.status)).toEqual(["succeeded", "failed", "succeeded"]);
   expect(report.completion).toMatchObject({ delivery: "incomplete", completed: ["json", "html", "png"] });
   expect(report.exports[1].error.code).toBe("SVG_EEXIST");
@@ -148,32 +149,31 @@ test.skipIf(!browser)("one failed SVG cannot complete its category and existing 
   expect(report.artifacts.some((item: { name: string }) => item.name === "blocked")).toBe(false);
 }, 60_000);
 
-test.skipIf(!browser)("cancellation retains finished images, records unexecuted items and retries in a new revision", async () => {
+test.skipIf(!browser)("cancellation retains finished images, records unexecuted items and retries in current", async () => {
   const saved = await manifest("cancel", [{ name: "first", timeMs: 0, formats: ["svg", "png"] }, { name: "later", timeMs: 1000, formats: ["svg", "png"] }]);
   const result = await command(["author", "--input", input, "--name", "cancel", "--export-manifest", saved.path, "--browser", browser!], (child) => { child.kill("SIGTERM"); });
   expect(result.code, result.stdout + result.stderr).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.status).toBe("cancelled");
   expect(report.exportManifest.status).toBe("cancelled");
   expect(report.exports.map((item: { status: string }) => item.status)).toEqual(["succeeded", "cancelled", "not-run", "not-run"]);
   expect(report.exports[2].error).toMatchObject({ code: "BATCH_NOT_EXECUTED", reason: expect.stringContaining("cancel") });
   expect(report.completion.completed).toEqual(["json", "html"]);
-  const history = await Promise.all(["diagram.json", "diagram.html", "export-manifest.json", "exports/first.svg", "report.json", "report.md"].map((name) => readFile(join(report.revision.directory, name))));
-  const retry = await command(["author", "--from", "v001", "--name", "cancel", "--export-manifest", saved.path, "--png-width", "480", "--browser", browser!]);
+  const firstImage = await readFile(join(report.revision.directory, "exports/first.svg"));
+  const retry = await command(["author", "--from", "current", "--name", "cancel", "--browser", browser!]);
   expect(retry.code, retry.stdout + retry.stderr).toBe(0);
-  expect(JSON.parse(retry.stdout).revision).toMatchObject({ id: "v002", parent: "v001" });
-  expect(JSON.parse(retry.stdout).completion.delivery).toBe("complete");
-  const after = await Promise.all(["diagram.json", "diagram.html", "export-manifest.json", "exports/first.svg", "report.json", "report.md"].map((name) => readFile(join(report.revision.directory, name))));
-  expect(after).toEqual(history);
+  expect((await readCommandReport(retry.stdout)).revision).toMatchObject({ id: "current", parent: null });
+  expect((await readCommandReport(retry.stdout)).completion.delivery).toBe("complete");
+  expect(await readFile(join(report.revision.directory, "exports/first.svg"))).toEqual(firstImage);
 }, 60_000);
 
 test.skipIf(!browser)("report write failure stays explicit after all requested images have been saved", async () => {
   const saved = await manifest("report-failure", [{ name: "one", timeMs: 0, formats: ["png", "svg"] }]);
-  const result = await command(["author", "--input", input, "--name", "report-failure", "--export-manifest", saved.path, "--png-width", "480", "--browser", browser!], () => {
+  const result = await command(["author", "--input", input, "--name", "report-failure", "--checkpoint", "--export-manifest", saved.path, "--png-width", "480", "--browser", browser!], () => {
     mkdirSync(join(root, ".diagrams", ".history", "report-failure", "v001", "report.json.tmp"));
   });
   expect(result.code, result.stdout + result.stderr).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.exports.every((item: { status: string }) => item.status === "succeeded")).toBe(true);
   expect(report.status).toBe("failed");
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "REPORT_SAVE_FAILED" }));
@@ -182,14 +182,14 @@ test.skipIf(!browser)("report write failure stays explicit after all requested i
 
 test("explicitly rebuilt bindings retain the rejected parent manifest and confirmation source", async () => {
   const old = await manifest("old-binding", undefined, { sdk: { version: sdk.version, integrity: "sha512-old" } });
-  const rejected = JSON.parse((await author("rebind", old.path)).stdout);
+  const rejected = (await readCommandReport((await author("rebind", old.path, ["--checkpoint"])).stdout));
   const oldBytes = await readFile(join(rejected.revision.directory, "export-manifest.json"));
   const saved = await manifest("confirmed-binding");
   const sources = join(root, "rebind-confirmation.json");
   await writeFile(sources, JSON.stringify([{ kind: "prompt", reference: "Test-only explicit confirmation of overview at 0ms after reading installed SDK and compiled beats." }]));
-  const result = await command(["author", "--from", "v001", "--name", "rebind", "--export-manifest", saved.path, "--sources", sources, "--browser", "none"]);
+  const result = await command(["author", "--from", "v001", "--name", "rebind", "--checkpoint", "--export-manifest", saved.path, "--sources", sources, "--browser", "none"]);
   expect(result.code, result.stdout).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.provenance.exportManifests).toEqual([expect.objectContaining({ revision: "v001", sha256: rejected.exportManifest.sha256, source: old.path, status: "preflight-failed" })]);
   expect(report.sources).toContainEqual(expect.objectContaining({ reference: expect.stringContaining("explicit confirmation") }));
   expect(await readFile(join(rejected.revision.directory, "export-manifest.json"))).toEqual(oldBytes);
@@ -197,9 +197,9 @@ test("explicitly rebuilt bindings retain the rejected parent manifest and confir
 
 test.skipIf(!browser)("mixed batch evidence and viewing scope remain separate by artifact, format and display width", async () => {
   const saved = await manifest("batch-evidence", [{ name: "selected", timeMs: 137, formats: ["png", "svg"] }, { name: "other", timeMs: 500, formats: ["svg"] }]);
-  const sourceResult = await command(["author", "--input", input, "--name", "batch-evidence", "--export-manifest", saved.path, "--png-width", "480", "--background", "transparent", "--browser", browser!]);
+  const sourceResult = await command(["author", "--input", input, "--name", "batch-evidence", "--checkpoint", "--export-manifest", saved.path, "--png-width", "480", "--background", "transparent", "--browser", browser!]);
   expect(sourceResult.code, sourceResult.stdout + sourceResult.stderr).toBe(0);
-  const source = JSON.parse(sourceResult.stdout);
+  const source = (await readCommandReport(sourceResult.stdout));
   expect(source.completion.delivery).toBe("complete");
   expect(source.exports.map((item: { format: string }) => item.format)).toEqual(["png", "svg", "svg"]);
   const images = source.artifacts.filter((item: { kind: string }) => ["svg", "png"].includes(item.kind));
@@ -207,18 +207,18 @@ test.skipIf(!browser)("mixed batch evidence and viewing scope remain separate by
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: images[0].artifactId, displayWidth: 720, backdrop: "#ffffff" },
     { artifactId: images[1].artifactId, displayWidth: 720, backdrop: "#111827" }, { artifactId: images[1].artifactId, displayWidth: 1280, backdrop: "#ffffff" },
     { artifactId: images[2].artifactId, displayWidth: 720, backdrop: "#ffffff" }] }));
-  const captureResult = await command(["author", "--from", "v001", "--name", "batch-evidence", "--artifact-preview-settings", settings, "--browser", browser!]);
+  const captureResult = await command(["author", "--from", "v001", "--name", "batch-evidence", "--checkpoint", "--artifact-preview-settings", settings, "--browser", browser!]);
   expect(captureResult.code, captureResult.stdout + captureResult.stderr).toBe(0);
-  const captured = JSON.parse(captureResult.stdout);
+  const captured = (await readCommandReport(captureResult.stdout));
   expect(captured.artifactEvidence.items).toHaveLength(4);
   expect(captured.artifactEvidence.items.map((item: { displayWidth: number }) => item.displayWidth)).toEqual([720, 720, 1280, 720]);
   const evidence = captured.artifactEvidence.items[0];
   const review = join(root, "batch viewing.json");
   await writeFile(review, JSON.stringify({ reviewer: "contract test only; no acceptance", viewed: true, items: [{ evidenceId: evidence.evidenceId, sha256: evidence.sha256,
     observations: { readingOrder: "Fixture scope.", density: "720px PNG only.", occlusion: "Fixture scope.", narrative: "137ms only." }, issues: [] }] }));
-  const reviewedResult = await command(["author", "--from", "v002", "--name", "batch-evidence", "--artifact-review", review, "--browser", "none"]);
+  const reviewedResult = await command(["author", "--from", "v002", "--name", "batch-evidence", "--checkpoint", "--artifact-review", review, "--browser", "none"]);
   expect(reviewedResult.code, reviewedResult.stdout).toBe(0);
-  const reviewed = JSON.parse(reviewedResult.stdout);
+  const reviewed = (await readCommandReport(reviewedResult.stdout));
   expect(reviewed.artifactEvidenceCoverage).toMatchObject({ requested: 4, viewed: 1, unviewed: 3 });
   expect(reviewed.visual.artifactReviews).toHaveLength(1);
   expect(reviewed.visual.artifactReviews[0]).toMatchObject({ artifactSourceRevision: "v001", evidenceRevision: "v002", artifactId: images[0].artifactId });
@@ -232,7 +232,7 @@ test("unreadable or malformed manifests explain failure and preserve default del
   for (const path of [join(root, "missing-manifest.json"), malformed]) {
     const result = await author("unreadable-manifest", path);
     expect(result.code, result.stdout).toBe(1);
-    const report = JSON.parse(result.stdout);
+    const report = (await readCommandReport(result.stdout));
     expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "EXPORT_MANIFEST_INVALID", stage: "export-manifest" }));
     expect(report.completion.completed).toEqual(["json", "html"]);
     expect(report.artifacts.some((item: { kind: string }) => ["svg", "png"].includes(item.kind))).toBe(false);
@@ -242,18 +242,18 @@ test("unreadable or malformed manifests explain failure and preserve default del
 test("an empty manifest path cannot silently become default delivery", async () => {
   const result = await author("empty-manifest-path", "");
   expect(result.code, result.stdout).toBe(1);
-  expect(JSON.parse(result.stdout).stage).toBe("arguments");
+  expect((await readCommandReport(result.stdout)).stage).toBe("arguments");
 });
 
 
 test("named export identities survive multiple review-only revisions", async () => {
   const name = "transitive-exports";
   const saved = await manifest(name);
-  const first = JSON.parse((await author(name, saved.path)).stdout);
-  const second = JSON.parse((await command(["author", "--from", first.revision.id, "--name", name, "--browser", "none"])).stdout);
-  const thirdResult = await command(["author", "--from", second.revision.id, "--name", name, "--browser", "none"]);
+  const first = (await readCommandReport((await author(name, saved.path, ["--checkpoint"])).stdout));
+  const second = (await readCommandReport((await command(["author", "--from", first.revision.id, "--name", name, "--checkpoint", "--formal-review", "--browser", "none"])).stdout));
+  const thirdResult = await command(["author", "--from", second.revision.id, "--name", name, "--checkpoint", "--formal-review", "--browser", "none"]);
   expect(thirdResult.code, thirdResult.stdout + thirdResult.stderr).toBe(0);
-  const third = JSON.parse(thirdResult.stdout);
+  const third = (await readCommandReport(thirdResult.stdout));
   expect(third.inheritedExports).toEqual(first.exports);
   expect(third.qualityCoverage.required).toContainEqual(expect.objectContaining({ artifactId: first.exports[0].artifactId, kind: "artifact", format: "svg", status: "incomplete" }));
 });

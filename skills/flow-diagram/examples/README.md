@@ -32,7 +32,7 @@ These observations cover the stated sizes and host. Actual PowerPoint/WPS placem
 
 ## Use a recipe
 
-Copy the selected JSON into the task workspace and adapt source-supported content. [recipe-sources.json](recipe-sources.json) records the invented facts and derivations used for these examples; replace that metadata with the user's real sources for a real task. Measure with the document's actual typography after changing widths or content, then use the existing validate, author, evidence and review workflow. Read [task workspace and retention rules](../references/tool-contract.md#task-workspace) before saving files.
+Copy the selected JSON into the task workspace and adapt source-supported content. [recipe-sources.json](recipe-sources.json) records the invented facts and derivations used for these examples; replace that metadata with the user's real sources for a real task. Measure with the document's actual typography after changing widths or content, then validate, generate and actually view the current outputs. Registered evidence and review are added only for an explicit formal request. Read [task workspace and retention rules](../references/tool-contract.md#task-workspace) before saving files.
 
 For the card example, measurement gives required heights below the shared authored height. Shared height is an authoring choice; the tool does not infer which objects should match. The layered example's annotation nodes are explanations of the existing group-to-group arrows, not new business entities. If changing annotation position makes ownership ambiguous, reserve a clearer channel rather than deleting the relationship.
 

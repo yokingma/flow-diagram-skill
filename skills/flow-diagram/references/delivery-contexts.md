@@ -4,19 +4,15 @@ Before drafting, establish the audience, the message to retain, the intended dis
 
 ## Preferences and missing context
 
-For new or revised drafts, read [project preferences](preferences.md) before the five authoring steps. Here, establish purpose, display dimensions, carrying background, playback and files from the conversation and existing task decisions. Apply relevant saved defaults to open choices. A purpose preset supplies starting dimensions and typography for the actual context.
+Apply [project preferences](preferences.md#locate-and-read) to open choices. Reuse known purpose, display dimensions, background, playback and requested formats. Missing display conditions use the existing defaults below; state adopted assumptions in the delivery explanation. Clarify factual gaps that would change meaning before drafting.
 
-Collect relevant missing context in one concise question, combined with any preference gaps where practical. Reuse answers already given. Clarify missing facts or relationships that would change meaning before drafting. Ordinary visual adjustments within the agreed scope can proceed without another approval.
+With unknown purpose, start with a static Web explanation, a `960 × 600` canvas, an assumed `720 CSS px` display width and a light background unless an applicable preference overrides it. A known PPT purpose keeps its presentation context when exact placement dimensions are missing; use its purpose preset and state the assumed placement. Choose grouping and layout from the reader's question.
 
-When purpose is unknown and the user explicitly chooses “use defaults” or “just make it,” author a static Web explanation with a `960 × 600` canvas, an assumed `720 CSS px` display width and a light background unless an applicable preference overrides the appearance. Choose grouping and layout from the reader's question. An unanswered question is not a choice of defaults. A known PPT purpose keeps its presentation context even when precise placement dimensions are missing.
-
-Record the adopted preferences, display conditions and their sources (request, project convention, user preference or assumption) in the existing task plan and final explanation. In the absence of a request or applicable preference for other files, deliver JSON, paused offline HTML and reports. Static composition alone does not call for SVG or PNG. An export-only task preserves its input and uses preferences only for relevant open choices.
-
-PPT placement determines layout, while the resolved file kinds determine exports. If the user needs a slide-import image and the format remains unresolved, include that choice in the initial context question. If they explicitly choose to proceed with default files, state that the delivery contains HTML/JSON/reports and that no slide-import image was requested; avoid implying it is already an integrated slide asset.
+Without another requested or applicable output preference, deliver JSON, paused offline HTML and reports. Static composition alone does not request SVG or PNG. An export-only task preserves its input and applies preferences only to relevant open choices. For slide-import images, use the requested image format; when formats remain unspecified, keep default JSON/HTML/reports and state that a slide-import image was not requested.
 
 ## Content placement
 
-Before choosing diagram geometry, assign the explanation's content to its carrying surface in the existing task plan. Complete this choice when every planned heading and explanation has a location and each requested format retains the context needed for its use.
+Place content on the surface where readers need it. Each requested format needs enough context for its intended use; these choices can be made directly in the draft.
 
 | Content | Default location |
 | --- | --- |
@@ -45,7 +41,7 @@ For new or revised HTML explanations, author the page HTML/CSS around the player
 
 The whitelist governs visible content blocks, not the HTML implementation structure. Semantic wrappers such as `main`, `header` and `section`, ARIA attributes, keyboard focus handling and CSS are allowed when they support the listed blocks. Keep CSS, scripts, fonts and images inline or in data URLs so the delivered file remains self-contained; do not add CDN or other external resources.
 
-**Keep these materials outside the page:** source transcriptions and paraphrases; complete relationship or object inventories; `retained` / `merged` / `omitted` / `unknown` accounts; assumptions, limits, QA scope and production notes; repeated node text; and any second explanation of the diagram. Put object detail in nodes, groups and nearby labels; put source facts and decisions in `sources[].description`, `report.json`, `report.md` or the delivery explanation; put changing explanation in existing player captions. [Source fidelity](source-fidelity.md#before-and-after-a-meaning-change) step 5 is a delivery requirement, not permission to add a page chapter. If a full inventory is needed for reference, create a separate file outside the page and mention it in the delivery explanation.
+**Keep these materials outside the page:** source transcriptions and paraphrases; complete relationship or object inventories; `retained` / `merged` / `omitted` / `unknown` accounts; assumptions, limits, QA scope and production notes; repeated node text; and any second explanation of the diagram. Put object detail in nodes, groups and nearby labels; put source facts and decisions in `sources[].description`, `report.json`, `report.md` or the delivery explanation; put changing explanation in existing player captions. [Source fidelity](source-fidelity.md#before-and-after-a-meaning-change) places material information choices in delivery prose, not permission to add a page chapter. If a full inventory is needed for reference, create a separate file outside the page and mention it in the delivery explanation.
 
 **Apply this deletion test before authoring:** remove any block that repeats visible diagram content, describes how the diagram was made, or can disappear without reducing the reader's ability to use the page. Delete the starter's explanatory comment instead of filling it. If the page needs section headings, a table of contents or scrolling prose, stop and move that material to the delivery explanation or a separate file.
 
@@ -68,9 +64,9 @@ This is an Agent authoring contract. Do not implement it as page-text length, he
 
 When HTML and SVG/PNG are requested together, record whether each image will be read on its own or inside a known article or slide. Before authoring, assign its necessary title, legend and qualifications to either the image or the named host. Keep object identities, relationship directions and essential conditions understandable in that recorded use. An HTML introduction covers only the page.
 
-Use the same diagram when its content serves both destinations. If an image needs additional context, explicitly author it in the diagram or confirm the target host supplies it. If the destinations need different diagrams, save separate, clearly named drafts and sources; an export time or camera selection changes the selected view, not its underlying explanation. Follow the existing source-fidelity decision process before omissions, aggregation or scope changes.
+Use the same diagram when its content serves both destinations. If an image needs additional context, explicitly author it in the diagram or confirm the target host supplies it. If the destinations need different diagrams, save separate, clearly named drafts and sources; an export time or camera selection changes the selected view, not its underlying explanation. Use [source fidelity](source-fidelity.md#before-and-after-a-meaning-change) when information choices affect meaning.
 
-Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for planned images and [artifact evidence](artifact-evidence.md) for the real SVG/PNG at its recorded width and backdrop. Pure export preserves the selected JSON bytes and page design; page text edits alone do not request images.
+Mark mixed file delivery complete only when every requested format exists; report quality separately from the applicable checks and actual viewing of each HTML/image. Follow [image export](export.md#requested-svg-and-png) for requested files and view the actual SVG/PNG at its intended width and backdrop. [Registered artifact evidence](artifact-evidence.md) is for explicitly requested formal review. Pure export preserves the selected JSON bytes and page design; page text edits alone do not request images.
 
 ## Static assets for presentations
 
@@ -111,7 +107,7 @@ For a new draft, choose a purpose preset and write its concrete viewport and typ
 | Full-slide presentation starting point | 1280 × 720 | 32 / 24 / 20 |
 | Web article starting point | 960 × 600 | 20 / 18 / 16 |
 | Local asset | Author the allocated dimensions | Choose concrete sizes for the allocated display width |
-| Ordinary defaults | Author explicit dimensions | Omitted roles use 16 / 14 / 12 |
+| SDK typography defaults | Author explicit dimensions | Omitted roles use 16 / 14 / 12 |
 
 For example, a new web draft can include:
 
@@ -121,4 +117,4 @@ For example, a new web draft can include:
 
 This fragment is not a complete document. Add the required version, nodes, edges and scenes. Structured content's omitted font sizes scale with `nodeLabel`; explicit font sizes remain unchanged. Measure content with the same typography context before choosing node heights. Larger typography does not automatically enlarge nodes or rearrange geometry.
 
-Default outputs remain editable JSON, paused offline HTML and reports. Use [export options](export.md) for any additional formats in the delivery plan. Formal SVG/PNG files have independent [target-size artifact evidence](artifact-evidence.md); fixed 1440 × 1000 sampling images do not establish readability at 720px or 1280px.
+Default outputs remain editable JSON, paused offline HTML and reports. Use [export options](export.md) for any additional formats in the delivery plan. View requested SVG/PNG at their intended size and background; fixed 1440 × 1000 samples do not establish readability at 720px or 1280px. Explicit formal review adds [registered artifact evidence](artifact-evidence.md).

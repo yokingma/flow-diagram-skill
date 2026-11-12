@@ -6,7 +6,7 @@
 
 The skill authors the diagram document and guides its inspection. The FlowSVG SDK renders and plays that document; application embedding uses the SDK integrations. The [SDK manual at the source snapshot](https://github.com/yokingma/FlowSVG/blob/726a31bb52c0af50439d6bdf1d087814af48f70c/docs/guides/sdk-guide.md) is the authority for SDK APIs; bundled references remain available offline for the Skill workflow. Executable diagrams play authored visual states and transitions; they do not execute the system or business process being explained.
 
-This guide explains how to install and use Flow Diagram in a coding assistant that supports skills. Describe a diagram in natural language. The assistant chooses an expression model from the reader's question, organizes source-supported content, writes diagram JSON, runs the tools and explains the checks. Default delivery presents one selected final revision with editable JSON, offline HTML with playback controls, and an authoring report; drafts and inspection images are temporary and removed after successful finalization. Full history is retained only on explicit request.
+This guide explains how to install and use Flow Diagram in a coding assistant. Describe the reader's question and source facts in natural language. The assistant understands, creates, validates, views and revises, then delivers one selected final diagram. A task uses one editable source draft, current generated files and one temporary `issues.md` for substantive problems. Default delivery includes JSON, paused offline HTML and reports. Successful finalization removes the task workspace; failed work remains recoverable. Immutable checkpoints and registered formal review are added only when explicitly requested.
 
 The skill is experimental and uses an exact registry SDK baseline. The supported SDK version is exactly `0.3.1`; installations still use the exact version and integrity recorded by the runtime manifest and lockfile. Platform and assistant-host verification is limited. See [known platform limits](../development/flow-diagram-maintenance.md#ci-and-platform-evidence) and the [host verification procedure](../development/flow-diagram-maintenance.md#host-verification). Installation instructions do not establish that every host and platform has passed acceptance.
 
@@ -38,15 +38,15 @@ This guide covers installation, creation, revision, validation and export for hu
 
 Specify the audience, display size and output formats to help the assistant choose information density and pacing. JSON and offline HTML remain the default delivery. Request SVG, PNG or GIF when needed, or set a project preference for repeated use. The skill creates diagram assets, not PPTX files or native PowerPoint shapes. Import and playback behavior depend on the presentation software.
 
-The assistant uses [visual design methods](../../skills/flow-diagram/references/visual-design.md) to coordinate typography, spacing, colors, containers, tags, connections and animation for the usage context. Tool checks and AI inspection provide evidence and observations; you judge the final design. A reported quality pass describes the recorded checks and coverage.
+The assistant uses [visual design methods](../../skills/flow-diagram/references/visual-design.md) to coordinate text, spacing, color, containers, connections and animation. These standards guide production and visual revision; they are not an acceptance gate. Actual viewing against the reader's question and display conditions supports design judgments. Machine success or registered coverage does not establish design approval.
 
-For a clear request, the assistant completes the initial layout directly. It asks before changing a relationship, boundary, omission, aggregation or other meaning. It checks the main path, entry ports, labels, target-size content and the actual displayed result when a browser or image viewer is available. A simple task with a clear source scope and no semantic ambiguity does not need an extra confirmation round.
+A clear request can proceed directly to creation. The assistant may reorder, group, merge duplicate explanations and choose abstraction while preserving meaning. It asks before changing facts, key relationships, boundaries or scope, or when the SDK cannot express the request faithfully. An independent plan or design-compliance record is unnecessary.
 
 The bundled [semantic pattern guide](../../skills/flow-diagram/references/semantic-patterns.md) covers request/response, retries and state transitions, fan-in and bottlenecks, staged data processing, system boundaries, and a layered architecture teaching setup. Its examples are labeled teaching scenarios that can serve as starting points; real business relationships must come from your sources. The [delivery context guide](../../skills/flow-diagram/references/delivery-contexts.md) explains sizes and inspection scope for presentation assets, web illustrations and offline interactive HTML. The tool has no formal delivery-context preset field or CLI preset; documented sizes are starting suggestions. SVG, PNG and GIF are available on request. PNG and GIF require a runnable Chrome/Chromium executable.
 
 For flowchart decisions, input/output, reports and defined subprocesses, use the four [preset shapes](../../skills/flow-diagram/references/document-model.md#preset-labels). They support plain labels and reject structured content. The [mixed approval flow](../../skills/flow-diagram/examples/mixed-approval-flow.json) is a fictional teaching example with a visible missing-materials branch and an animated complete-materials path. Run `measure` on the full draft to include all preset label replacements; widen nodes when width diagnostics remain. `layout` stays static-only: establish geometry before adding scenes, then remeasure and recheck spacing. For standalone preset experiments, `label` can be a string (including empty) or a nonempty version array. Batch labels remain descriptive metadata.
 
-For a layered architecture exercise, start with [layered-architecture.json](../../skills/flow-diagram/examples/layered-architecture.json). It intentionally has multiple columns in each layer, heading space inside groups, labelled cross-layer edges and a governance sidebar. Layer order does not establish call order, grouping does not automatically establish deployment or trust boundaries, and dashed governance annotations do not add undeclared runtime dependencies. Run `measure --input` on the draft and write a separate output draft before authoring; the recorded row heights, column gaps and label clearance are verified starting values for this example and its typography, not general layout parameters.
+For a layered architecture exercise, start with [layered-architecture.json](../../skills/flow-diagram/examples/layered-architecture.json). It intentionally has multiple columns in each layer, heading space inside groups, labelled cross-layer edges and a governance sidebar. Layer order does not establish call order, grouping does not automatically establish deployment or trust boundaries, and dashed governance annotations do not add undeclared runtime dependencies. Copy the example into the task workspace, use `measure --input <draft.json> --in-place` when height backfill is needed, then author from that same source; the recorded row heights, column gaps and label clearance are verified starting values for this example and its typography, not general layout parameters.
 
 During design, consult [rendering gotchas](../../skills/flow-diagram/references/rendering-gotchas.md) for relevant failure conditions; adapt their candidate treatments to the reader's question and display context. Revisit technical details as the draft develops. For layered structures with sidebars, branching processes with returns, or repeated cards with longer content, the [composition recipes](../../skills/flow-diagram/references/visual-design.md#composition-recipes) offer starting points; [recipe sample checks](../../skills/flow-diagram/examples/README.md) distinguish those starting points from capability demonstrations. Recheck at your actual display width. Decide which logs must survive cleanup when [creating task files](../../skills/flow-diagram/references/tool-contract.md#task-workspace).
 
@@ -60,7 +60,7 @@ The skill includes a browser control library, but no browser executable, and nev
 
 For direct CLI use, run `node <skill-directory>/scripts/flowsvg.mjs --help` or append `--help` to `author`, `validate` or `measure` to see the current options. `author --samples <count>` selects a smaller deterministic preview plan when a focused visual review is sufficient; the report lists omitted candidates.
 
-To size structured-content and label-only nodes from the draft itself, run `measure --input <draft.json>`. The command associates each node ID with its current and required height, height change and deterministic estimated line count, using the draft's typography. The line count is a public-SDK estimate, so it is not browser pixel or formal SVG/PNG evidence. Structured content includes every initial and animated replacement version. Add `--output <new-draft.json>` only when a separate backfilled draft is wanted; it preserves the source bytes, refuses animated width/height changes and unresolved measurement diagnostics, increases heights only, and never overwrites an existing target. A generated draft still needs explicit positioning, layout diagnostics and visual checks.
+To size structured-content and label-only nodes from the draft itself, run `measure --input <draft.json>`. The command associates each node ID with its current and required height, height change and deterministic estimated line count, using the draft's typography. The line count is a public-SDK estimate, so it is not browser pixel or formal SVG/PNG evidence. Structured content includes every initial and animated replacement version. Use `--in-place` to backfill the same canonical task-root source draft; generated current JSON, checkpoints, external files and aliases remain protected. Backfill increases heights only and rejects unsupported animated width/height changes. Use `--output <new-draft.json>` instead only for an explicit separate copy; it preserves the source and never overwrites an existing target. Cancellation and save failure preserve the source. Reauthor after edits; finalization rejects stale generated files. SDK overflow estimates are auxiliary and allow backfill to continue. Coordinate positions and inspect the actual generated image.
 
 Add `--lines` to `measure --input <json>` when you want source-bound `estimatedLines` before rendering. The flag adds one list per result or draft node, retains all already-measured versions and distinct text roles, and leaves default output, heights, diagnostics and backfill unchanged. Batch labels remain metadata; ordinary draft labels remain initial-only. Records can extend outside the safe area and their count need not equal the baseline count. They are estimates for inspection, not actual visible glyphs or automatic readability judgments. Failed complete-draft measurement still returns only diagnostics; `--output` never writes the records into the document. Other commands reject this flag. See [estimated text lines](../../skills/flow-diagram/references/tool-contract.md#inspect-estimated-text-lines).
 
@@ -68,7 +68,7 @@ When measurement reports a problem, follow `sourcePath` (and draft `location`) t
 
 For repeated static geometry, use the [layout plan workflow](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow). The Agent chooses semantic structure, ownership, order and overrides; the layout strategy computes coordinates for existing IDs. Use direct coordinates when the scene is irregular. A plan only changes geometry and does not infer meaning or remove warnings. The bundled [layout assistance teaching draft](../../skills/flow-diagram/examples/layout-assistance.json) and [plan](../../skills/flow-diagram/examples/layout-assistance-plan.json) are invented teaching data; their gaps are not general spacing promises.
 
-The workflow requires an explicit static draft and plan. After `measure`, run `layout --input <draft> --plan <layout-plan.json> --output <new-draft.json>`, then `validate` the new draft before authoring. Layout applies measured heights as lower bounds and reflows groups and later layers; `overrides[id].height` remains exact and retains a `text-overflow` warning when it is smaller than the estimate. A layout result is a draft, not a revision or quality approval. For target-size SVG/PNG review, use explicit `--artifact-preview-settings` from the artifact source revision, view each saved evidence image, then use `review --artifact-review` with explicit subject and evidence source. Ordinary preview and HTML review cover their own sampled surfaces and do not cover the formal artifact.
+The optional layout command needs a static draft and explicit layout plan. After optional `measure --in-place`, run `layout --input <draft> --plan <layout-plan.json> --in-place`, then validate and author the same source. Measured heights are lower bounds; `overrides[id].height` stays exact. Optional `--geometry` returns finite auxiliary estimates. Layout is a geometry result, not design approval. View requested SVG/PNG at intended size and background; [registered artifact evidence](../../skills/flow-diagram/references/artifact-evidence.md) is added for an explicit formal review.
 
 ## 2. Install in a host
 
@@ -191,11 +191,11 @@ Say “Use Chinese labels for architecture diagrams in this project from now on�
 
 You can change a preference, forget one, or reset the record. A change replaces the previous value for the same scope; a specific exception can have its own line. If conflicting lines affect the current task, the assistant points them out and continues without that default. Failed writes or deletions are reported. Reset removes only `.diagrams/preferences.md`. The old `.diagrams/.preferences.json` stays untouched and no longer applies. To keep an old choice, add it to the Markdown or ask the assistant to save it again.
 
-If the purpose is unknown and you explicitly choose defaults or ask the assistant to proceed, the starting point is a static Web composition with a 960×600 canvas, assumed 720 CSS px display width and light background unless an applicable preference changes the appearance. Choosing to follow the Skill’s visual defaults does not pick a purpose for future tasks. Delivery defaults to JSON, paused offline HTML and reports; extra formats come from your request or an applicable project preference. Silence does not select defaults.
+When purpose is unknown, the assistant adopts a static Web composition with a 960 × 600 canvas, an assumed 720 CSS px display width and light background unless an applicable preference changes the appearance. It states these assumptions; no “use defaults” confirmation is required. Known PPT use keeps its context. Default files are JSON, paused offline HTML and reports; extra formats come from your request or an applicable project preference. Saving a project preference still requires explicit future-reuse intent.
 
 For PPT assets, specify full-slide or local placement, available width **and height**, background, and whether the slide or the asset carries the title and footer. Known PPT use stays in that context; missing exact dimensions are recorded as assumptions. Target-size viewing covers those conditions; actual PowerPoint/WPS integration is reported separately. For animation, specify browser HTML playback or GIF; MP4, PPTX and native PowerPoint animation are outside this skill's export capability.
 
-If you need an image to import into a slide, specify SVG or PNG. If neither your request nor an applicable project preference settles the format, the assistant asks. Choosing default files produces HTML/JSON/reports, with no implicit slide-import image.
+If you need an image to import into a slide, specify SVG or PNG. With no requested image format, the assistant keeps the default file set and explains that it contains no slide-import image. Choosing default files produces HTML/JSON/reports, with no implicit slide-import image.
 
 The [reader-question table](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question) helps choose capability inventories, source mappings or processes. The [teaching recipes](../../skills/flow-diagram/examples/README.md#presentation-recipe-checks) include a no-edge capability overview, Chinese source/service cards and an all-visible parallel-flow animation. Reuse their organization with your own facts and dimensions.
 
@@ -251,13 +251,13 @@ The assistant keeps its drafts, temporary helper scripts and measurement/review 
 | `report.md` | Read completed checks, warnings, delivered files and unfinished work. |
 | `report.json` | Structured facts from the same authoring report, for tools or later tasks. |
 
-During a task, authoring, validation, retries and review records use temporary revisions. Successful finalization removes these intermediate revisions and screenshots; the final report uses relative file paths and retains review facts without links to deleted evidence. Later edits import the final JSON into a fresh task workspace.
+During a task, editing, validation, measurement, layout, capture and retries reuse the same source draft and current outputs. Keep substantive questions, errors and viewing findings in one `issues.md`; update the same issue with its location, status and handling result. Normal command logs and full stdout are unnecessary. Before publication, the assistant summarizes unresolved effects with optional `finalize --notes <markdown>`. The CLI copies Agent-authored notes without parsing or grading them. Successful publication cleans only this task; requested checkpoints or work records may be retained.
 
-File delivery and quality checks are recorded separately. The authoring tool opens the actual delivered `diagram.html` when a prepared browser is available and records its file hash, paused start, offline behavior, playback and sampled states. This programmatic HTML check does not mean that the assistant has viewed the screenshots; use `review --from <source-revision> --name <same-name> --output <same-root> --html-review <json>` after actually viewing the listed states. HTML can be delivered with layout warnings that await your review. Without a browser or host image-viewing capability, HTML/image inspection remains unperformed and is recorded as such.
+File completion, machine checks and actual viewing are reported separately. With a prepared browser, the tool opens saved `diagram.html` and records its hash, paused start, offline behavior, playback and captured states. Capture does not mean that the assistant viewed them. The assistant views actual files, revises problems, and describes viewed dimensions/stages and gaps at delivery. Default viewing needs no review form or CLI submission. Missing browser or image-viewing capability limits the stated viewing scope; complete files can still be delivered with disclosed gaps.
 
-For animation, the assistant selects key stages from the reader's question and the stage plan, then matches them to actual compiled times, planned points, omitted candidates, captured images and actual viewing. One suitable image can cover concurrent flows when each route and marker is distinguishable. The overview removes focus and does not replace the real timeline start or a focused state. Static diagrams have one frame; animated `--samples 2` omits the final frame, while `--samples 3` can cover overview, start and end without covering an intermediate stage.
+For animation, the assistant selects key stages from the reader's question and the stage plan, then matches them to actual compiled times, planned points, omitted candidates, captured images and actual viewing. One suitable image can cover concurrent flows when each route and marker is distinguishable. Actual HTML captures preserve authored focus and use unique timeline times. Static diagrams have one frame; animated `--samples 2` covers initial and final states, while larger bounds can include intermediate stages. The separate SDK `--preview` plan reserves one slot for a focus-free overview.
 
-If a key stage is missing, the assistant first tries a larger sample budget through `author` in a new revision. For a time that remains unavailable, it uses the existing timed-export and image-evidence workflow or inspects the actual HTML or playback. New images remain unviewed until opened and recorded. The report identifies the viewed surface and times, or the remaining stage gap and its effect; an image review does not establish HTML or continuous-playback inspection. These steps use the existing quality status and add no narrative score or automatic aesthetic threshold. See [key-stage inspection](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages).
+If a key stage is missing, the assistant can increase `author --samples` against current, inspect actual HTML/playback at that time or view a timed export. New captures need actual viewing; old observations do not establish viewing of regenerated files. The delivery explanation identifies viewed surfaces/times and remaining effects. Actual playback is needed to judge pacing; sample viewing covers only its states. See [key-stage inspection](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages).
 
 ## 6. Revise an existing diagram
 
@@ -269,26 +269,24 @@ Change the database label to "Order database"; keep all other relationships and 
 Publish the replacement only after the complete revised result is ready.
 ```
 
-A finalized JSON starts a fresh task. If you explicitly retained a workspace and want to continue an unfinished task, identify the saved parent revision in that workspace.
+A finalized JSON starts a fresh task. During a task, continue editing one working draft; authoring replaces its current outputs without creating a version per call. Resume an unfinished saved draft with `--from current`, or select an explicitly retained checkpoint when historical comparison or rollback is needed. Before publication, the Agent summarizes unresolved issues from its single temporary problem record; optional `finalize --notes <markdown>` carries that opaque Agent-authored summary into the final report.
 
-When the assistant finds overlap, clipping, missing characters or semantic problems, it explains the impact and options. It asks you when the choice changes meaning and applies already authorized mechanical corrections. For example:
+When viewing reveals overlap, clipping, missing characters or connection ambiguity, the assistant corrects it within the source meaning and re-views affected files. It asks when a proposed correction changes key meaning. For example:
 
 ```text
-This overlap is intentional. Keep the layout and record my decision and the original warning in a new revision.
+This overlap is intentional. Keep it and explain its effect in the delivery notes.
 ```
 
 ```text
 Use your proposed move to the right. Move only node cache and keep everything else unchanged.
-Create a new revision using the revision with the reported issue as its parent.
+Update the same source draft and regenerate current outputs.
 ```
 
-At finite timeline samples, the tool checks four existing layout risks and three SDK geometry risks: edges crossing unrelated nodes, labels overlapping unrelated nodes, and labels overlapping other labels. `LABEL_VERTICAL_RUN` also flags conservative runs of very short soft-wrapped edge-label lines. Explicit newlines are distinguished from additional wrapping within each paragraph. Diagnosis needs no browser. Text baselines and bounds use deterministic estimates and do not replace visual inspection at the actual display size.
-
-New decisions select one warning through `sourceRevision` and `issueId` in the report. Different object pairs, text fields, lines and sample times retain separate decision scopes. Changes to source JSON bytes, the SDK baseline or the theme do not authorize new warnings through an earlier decision. Historical records without IDs are preserved; diagnose again before submitting a new exact decision. See [diagnosis and revision decisions](../../skills/flow-diagram/references/diagnostics-and-revisions.md).
-
-Recording an intentional design neither removes the original warning nor completes quality acceptance. Intermediate revisions, including failures, remain available during the task; successful finalization removes them unless you requested history.
+Add `--geometry` to `validate`, `author` or `layout` for finite SDK geometry calculations when useful. Informational observations identify their method, objects, source and time; text and curve estimates retain their limits. A rectangle intersection is not a visual obstruction verdict. Short-line/vertical-label heuristics and warning-approval submissions are removed. The user or LLM judges the actual image using design guidance; geometry observations do not require an exception record. See [diagnosis and revision decisions](../../skills/flow-diagram/references/diagnostics-and-revisions.md).
 
 ## 7. Export SVG, PNG or GIF on request
+
+During a task, repeated exports replace the current files. `author --from current` retains omitted export formats, selected time, background, image width, explicit theme override, saved manifest bytes, GIF options and requested capture scope, then regenerates the requested outputs. Browser selection remains per invocation. Changed source or SDK identity invalidates a saved batch manifest; supply a newly bound manifest after selecting the intended stages. Missing requested files keep delivery incomplete and preserve the previous complete published delivery. Animation and image formats do not create checkpoints or require formal review.
 
 A static SVG represents one selected time:
 
@@ -302,16 +300,16 @@ PNG can specify a width and transparent background, and requires a usable browse
 ```text
 Use the flow-diagram skill to read ./.diagrams/order-platform/diagram.json and export transparent SVG and PNG.
 Use the reported time of 0 milliseconds and a PNG width of 1440 pixels.
-Generate formal artifact review images at a web content width of 720 CSS pixels on both white and dark backgrounds, and actually view them.
+Actually view the exported files at a web content width of 720 CSS pixels on both white and dark backgrounds.
 ```
 
-Formal image evidence is separate from sampled timeline screenshots. The assistant first generates target-size review images from the original artifact revision, then appends actual viewing through independent `review --artifact-review`. `--from` selects the diagram subject; use `--evidence-from` for a separate evidence source. This operation does not remake the diagram or open a browser. Each size and display background has its own record. See [formal image evidence](../../skills/flow-diagram/references/artifact-evidence.md).
+Export and actual viewing need no formal review record. If you explicitly need traceable review, follow [formal review](#formal-review-on-explicit-request) and the [formal image evidence contract](../../skills/flow-diagram/references/artifact-evidence.md).
 
-Named static batches use a separate export manifest. It binds the diagram's exact source-byte hash and the actual SDK version and integrity, and specifies a name and SVG/PNG formats for each time. The assistant reads compiled beats and asks you to confirm the selected times before creating the manifest. Source or SDK changes require confirmation again; bindings are not silently replaced.
+Named static batches use a separate export manifest bound to exact source bytes and actual SDK version/integrity. The assistant uses compiled beats to select requested explanatory states and describe them, asking only when selection would change key meaning. Source or SDK changes need a newly bound manifest rather than silently replacing identity. Each item has its own name, time and SVG/PNG formats.
 
 ```text
 Use the flow-diagram skill to read ./.diagrams/article/diagram.json and confirm two static states from the actual compiled beats.
-In a new revision, use an export manifest to generate named SVG and PNG files, sharing a transparent background and PNG width of 1440 pixels.
+In the current task, use an export manifest to generate named SVG and PNG files, sharing a transparent background and PNG width of 1440 pixels.
 Keep the manifest in the task workspace. Report each item separately and retry failed items before finalizing.
 ```
 
@@ -331,6 +329,8 @@ After a failed or cancelled GIF export, completed JSON/HTML/SVG remain usable, b
 
 ## 8. Validate only, or use the command line
 
+Saved authoring commands return a concise JSON summary. Read the returned `detailsPath` for the full report, including HTML inspection states and sampling details. Read-only validation and measurement keep their operation results inline. Errors before report creation explain the failure directly; they do not return a nonexistent report path.
+
 To inspect existing JSON only, ask:
 
 ```text
@@ -338,7 +338,7 @@ Use the flow-diagram skill to validate only ./draft.json and report structural, 
 Preserve the input. Do not export HTML, SVG, PNG or GIF, and do not fix it automatically.
 ```
 
-`validate --input <draft.json>` returns structured diagnostics, exact input-byte identity and the actual SDK baseline without creating history, snapshots or delivery files. `revision` is null and `validation.snapshotCreated` is false. Keep the working draft; redirect stdout into the task workspace if needed. Use `validate --from <revision> --name <name> --output <task-workspace>/history` only for a known saved version. Formal warning decisions need the exact warning in a saved `author` report; draft diagnostics cannot supply `sourceRevision`.
+`validate --input <draft.json>` returns structured diagnostics, exact input-byte identity and the actual SDK baseline without creating history, snapshots or delivery files. `revision` is null and `validation.snapshotCreated` is false. Keep the working draft; redirect stdout into the task workspace if needed. Use `validate --from <revision> --name <name> --output <task-workspace>/history` only for a known saved version. Geometry estimates require no approval or exception record.
 
 For visual diagnosis only, the assistant reuses valid registered screenshots when available. With only JSON or a finalized delivery, it preserves the input bytes and generates temporary inspection materials in an isolated task workspace, retaining the matching page when supplied. A prepared browser enables capture; actual image viewing remains a separate check. The assistant reports findings, evidence locations and unavailable checks, then retains the workspace without publishing a replacement. Corrections require authorization. See [inspection-only preparation](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation).
 
@@ -347,16 +347,22 @@ You can also invoke the installation unit's single CLI entry in a terminal. Repl
 ```text
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
 node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/architecture.json" --name architecture --output ".diagrams/.work/architecture/<task-id>/history" --browser none
-node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture --from v001
+node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture
 ```
 
 The second command generates temporary JSON, HTML and reports from the bundled example. The third publishes final files and removes this task workspace. `--browser none` explicitly skips screenshots so you can verify delivery without a browser. Direct CLI execution does not replace the assistant's semantic analysis or actual visual judgment. The bundled architecture teaching example retains known relationship-label/group-overlap warnings; read the report and resolve them within the requested scope rather than treating this smoke test as a clean design template.
 
 See [the tool contract](../../skills/flow-diagram/references/tool-contract.md) for full arguments, isolated caches and report fields. See [troubleshooting](../../skills/flow-diagram/references/troubleshooting.md) for preparation, cancellation or export failures.
 
-## 9. Required quality coverage
+## 9. View results and request formal review when needed
 
-The report separates `completion.delivery` from `completion.quality`. `qualityCoverage` names the structural checks, the actual `diagram.html` states and each requested SVG/PNG display surface. If no target size is specified, an image uses its intrinsic dimensions and the resolved theme backdrop. A complete file set can be delivered while quality is `incomplete` when a browser or actual viewing is unavailable; unresolved or deferred warnings are `needs-user-decision`. Review-only revisions carry the parent's requested formats and artifact identities so an earlier static file cannot disappear from the required coverage.
+Default authoring captures the actual delivered HTML; `--samples` selects its capture budget. SDK previews require `--preview`. Captures do not establish actual viewing. Ordinary reports describe file completion and machine checks, with formal review marked `not-requested`; they omit unified quality and formal viewing counts. The assistant views actual HTML and requested SVG/PNG at the intended display conditions, revises as needed, and states the actual viewing scope and gaps.
+
+### Formal review on explicit request
+
+For traceable review, `author --from current --formal-review` saves one immutable `v###`; use that returned ID for evidence, templates, review and finalization. `--checkpoint` alone preserves history without requesting review. Later ordinary edits replace `current` and do not inherit viewing conclusions. Creating a review template or requesting artifact evidence persists formal intent without changing the saved source report.
+
+Only an explicit formal review request adds `completion.quality` and `qualityCoverage`. These record structural checks and registered viewing coverage of the actual HTML and requested SVG/PNG surfaces; geometric estimates do not require approval. `formalReview.status: complete` means declared coverage is present; viewer issues remain `unresolved-issues` with their supplied action. A complete record does not establish user design acceptance. Complete files remain deliverable with disclosed viewing gaps.
 
 Before submitting preview, HTML or SVG/PNG evidence reviews, use `review-template` to generate an unviewed form with registered IDs and hashes. Fill observations only after viewing. Read the [complete three-kind input contracts](../../skills/flow-diagram/references/review-inputs.md); invalid submissions fail before allocating a revision or rendering.
 

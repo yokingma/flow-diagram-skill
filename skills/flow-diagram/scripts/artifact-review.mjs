@@ -41,8 +41,8 @@ export async function recordArtifactReview(report, options) {
     updateArtifactCoverage(report, [...source.artifactEvidence.items, ...report.artifactEvidence.items]);
     for (const item of reviewed) for (const issue of item.issues) report.diagnostics.push({ severity: "warning", stage: "artifact-review",
       code: "ARTIFACT_VISUAL_ISSUE", location: item.evidenceId, timeMs: item.timeMs, reason: issue.reason,
-      nextStep: `${issue.nextStep} Wait for the user's decision before changing the diagram.` });
-    if (reviewed.some((item) => item.issues.length)) report.completion.quality = "needs-user-decision";
+      nextStep: issue.nextStep });
+    if (reviewed.some((item) => item.issues.length)) report.completion.quality = "unresolved-issues";
   } catch (cause) {
     throw new ToolError("artifact-review", "ARTIFACT_REVIEW_INVALID", cause.message,
       "Actually view registered evidence and submit its exact IDs, hashes and observations with the evidence revision as parent.", path, cause);

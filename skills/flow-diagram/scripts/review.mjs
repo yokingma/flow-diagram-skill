@@ -26,7 +26,7 @@ export async function submitReview(options, signal) {
   signal?.throwIfAborted();
   const saved = await appendReviewRecord(context, record, signal);
   return { command: "review", status: "review-recorded", stage: "review", revision: null, sourceRevision: context.parent.id,
-    record: saved, checks: projection.checks, completion: projection.completion, qualityCoverage: projection.qualityCoverage,
+    record: saved, formalReview: projection.formalReview, checks: projection.checks, completion: projection.completion, qualityCoverage: projection.qualityCoverage,
     reviewRecords: projection.reviewRecords, diagnostics: projection.diagnostics, htmlInspection: projection.htmlInspection,
     visual: projection.visual, artifacts: [{ kind: "review-record", path: saved.path }] };
 }

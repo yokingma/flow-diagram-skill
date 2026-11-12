@@ -1,7 +1,10 @@
 /** Collapse a finished task into portable final files, then remove only its scoped temporary workspace. */
-import { lstat, mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
+import { hasFormalReviewRequest } from "./formal-review.mjs";
+import { lstat, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { digest, readArtifact, scopedFile } from "./artifact-identity.mjs";
+import { replaceDelivery } from "./delivery-publication.mjs";
+import { readCurrentDraft, reserveDraftOperation, releaseWorkingDraft } from "./working-draft.mjs";
 import { readSavedRevisions } from "./saved-revisions.mjs";
 import { loadReviewRecords } from "./review-records.mjs";
 import { loadEvidenceProjection } from "./evidence-projection.mjs";
@@ -17,17 +20,23 @@ export async function finalizeTask(options, signal) {
   const root = resolve(".diagrams");
   const destination = join(root, options.name);
   const lock = `${destination}.lock`;
-  await mkdir(lock).catch((cause) => { throw invalid("FINALIZE_BUSY", `Cannot reserve final delivery: ${cause.message}`); });
+  const series = join(workspace, "history", options.name);
+  const operationLock = await reserveDraftOperation(series);
   let staging;
+  let destinationReserved = false;
   try {
-    const records = await readSavedRevisions(join(workspace, "history", options.name), options.from);
+    await mkdir(lock).catch((cause) => { throw invalid("FINALIZE_BUSY", `Cannot reserve final delivery: ${cause.message}`); });
+    destinationReserved = true;
+    const current = !options.from || options.from === "current";
+    const records = current ? [await readCurrentDraft(series)] : await readSavedRevisions(series, options.from);
     const selected = records[0].report;
     const checksPassed = selected.checks?.validation === "passed" && selected.checks?.compilation === "passed";
     const qualityGapOnly = selected.status === "failed" && checksPassed && selected.completion?.delivery === "complete";
     if (selected.command !== "author" || (selected.status !== "delivered" && !qualityGapOnly) || selected.completion?.delivery !== "complete") {
       throw invalid("FINALIZE_INCOMPLETE", "Select a successful authoring revision before finalizing.");
     }
-    const files = await collectFiles(records, signal);
+    if (current) await verifyEditableSource(selected.workingDraft.editableSource, workspace);
+    const files = current ? await collectCurrentFiles(records[0], signal) : await collectFiles(records, signal);
     if (selected.htmlInspection?.file?.sha256 && files.find((file) => file.kind === "html")?.sha256 !== selected.htmlInspection.file.sha256) {
       throw invalid("FINALIZE_SOURCE", "Selected HTML bytes changed after authoring or inspection.");
     }
@@ -36,11 +45,12 @@ export async function finalizeTask(options, signal) {
       throw invalid("FINALIZE_INCOMPLETE", "A requested export is missing; complete it before finalizing.");
     }
     staging = await mkdtemp(join(root, `.${options.name}-publish-`));
-    const independent = await loadReviewRecords(records);
-    const evidence = await loadEvidenceProjection(records);
-    const projection = aggregateReviews(records, independent, { htmlSha256: files.find((file) => file.kind === "html").sha256, evidence });
+    const independent = current ? null : await loadReviewRecords(records);
+    const evidence = current ? null : await loadEvidenceProjection(records);
+    const projection = current ? selected : aggregateReviews(records, independent, { htmlSha256: files.find((file) => file.kind === "html").sha256, evidence });
     const projectedRecords = [{ ...records[0], report: projection }, ...records.slice(1)];
     const summary = deliverySummary(projection, projectedRecords, files, requested, workspace);
+    if (options.notes) summary.agentNotes = await readFile(resolve(options.notes), "utf8");
     for (const file of files) {
       signal?.throwIfAborted();
       await mkdir(dirname(join(staging, file.path)), { recursive: true });
@@ -54,16 +64,28 @@ export async function finalizeTask(options, signal) {
     const cleanup = await cleanupWorkspace(workspace, options["keep-work"]);
     return { status: "delivered", stage: "finalize", command: "finalize", directory: destination,
       artifacts: summary.artifacts.map((item) => ({ ...item, path: join(destination, item.path) })),
-      completion: summary.completion, cleanup, diagnostics: [] };
+      completion: summary.completion, formalReview: summary.formalReview, cleanup, diagnostics: [] };
   } finally {
     if (staging) await rm(staging, { recursive: true, force: true });
-    await rm(lock, { recursive: true, force: true });
+    if (destinationReserved) await rm(lock, { recursive: true, force: true });
+    await releaseWorkingDraft({ lock: operationLock });
   }
 }
 
+/** A capture resume retains the consumed editable source even when input.path names generated JSON. */
+async function verifyEditableSource(source, workspace) {
+  if (!source?.path || !source.path.startsWith(workspace + sep)) return;
+  try {
+    if (await realpath(source.path) === source.path && digest(await readFile(source.path)) === source.sha256) return;
+  } catch (cause) {
+    throw invalid("FINALIZE_SOURCE", `Cannot verify the editable task source: ${cause.message}. Preserve the draft and regenerate current outputs.`);
+  }
+  throw invalid("FINALIZE_SOURCE", "The editable task source changed after authoring; regenerate current outputs before finalizing.");
+}
+
 async function taskWorkspace(options) {
-  if (!options.workspace || !options.name || !REVISION_ID.test(options.from ?? "")) {
-    throw invalid("FINALIZE_WORKSPACE", "finalize requires --workspace, --name and --from <revision>.");
+  if (!options.workspace || !options.name || options.from && options.from !== "current" && !REVISION_ID.test(options.from)) {
+    throw invalid("FINALIZE_WORKSPACE", "finalize requires --workspace and --name; select current or an explicit checkpoint with --from.");
   }
   const workspace = resolve(options.workspace);
   const parent = resolve(".diagrams", ".work", options.name);
@@ -107,6 +129,28 @@ async function collectFiles(records, signal) {
   return [...files.values()];
 }
 
+async function collectCurrentFiles({ directory, report }, signal) {
+  const manifest = JSON.parse(await readFile(new URL("../runtime/manifest.json", import.meta.url), "utf8"));
+  if (report.sdk?.version !== manifest.sdk.version || report.sdk?.integrity !== manifest.sdk.integrity) {
+    throw invalid("FINALIZE_SOURCE", "Current SDK identity differs from the installed baseline; regenerate current outputs.");
+  }
+  const files = [];
+  for (const artifact of report.artifacts.filter((item) => OUTPUT_KINDS.has(item.kind))) {
+    signal?.throwIfAborted();
+    const path = relative(directory, artifact.path).split(sep).join("/");
+    if (!/^(diagram\.(json|html|svg|png|gif)|exports\/[^/\\]+\.(svg|png))$/u.test(path)) throw invalid("FINALIZE_SOURCE", "Unrecognized current artifact path.");
+    const { bytes } = await scopedFile(directory, artifact.path);
+    if (digest(bytes) !== artifact.sha256 || artifact.sourceSha256 !== report.input.sha256
+      || artifact.theme !== report.theme || artifact.sdk?.version !== report.sdk.version || artifact.sdk?.integrity !== report.sdk.integrity) {
+      throw invalid("FINALIZE_SOURCE", "Current artifact bytes or source context changed after authoring.");
+    }
+    files.push({ kind: artifact.kind, path, bytes, sha256: artifact.sha256, sourceRevision: "current",
+      ...(artifact.timeMs === undefined ? {} : { timeMs: artifact.timeMs }) });
+  }
+  if (!files.some((item) => item.kind === "json") || !files.some((item) => item.kind === "html")) throw invalid("FINALIZE_INCOMPLETE", "Current JSON and HTML are required.");
+  return files;
+}
+
 function deliverySummary(selected, records, files, requested, workspace) {
   const frames = uniqueReviews(records.flatMap(({ report }) => report.visual?.viewedFrames ?? [])
     .map(({ id, timeMs, view, sha256, observations, issues, sourceRevision, reviewer, reviewRecord, attestations }) => ({ id, timeMs, view, sha256, observations, issues, sourceRevision, reviewer, reviewRecord, attestations })));
@@ -117,11 +161,13 @@ function deliverySummary(selected, records, files, requested, workspace) {
     .map((item) => [JSON.stringify(item), item])).values()];
   const summary = { schemaVersion: 1, toolVersion: selected.toolVersion, command: "finalize", status: "delivered",
     selectedRevision: selected.revision.id, inputSha256: selected.input.sha256,
+    ...(selected.workingDraft ? { workingDraft: { id: "current", inputSha256: selected.input.sha256 } } : {}),
     sdk: { version: selected.sdk.version, integrity: selected.sdk.integrity }, theme: selected.theme,
-    completion: { delivery: "complete", quality: reviewIssues.length ? "needs-user-decision" : selected.completion.quality, requested, completed: requested },
+    completion: { delivery: "complete", ...(hasFormalReviewRequest(selected) ? { quality: reviewIssues.length ? "unresolved-issues" : selected.completion.quality } : {}), requested, completed: requested },
+    formalReview: selected.formalReview ?? { status: "not-requested" },
     reviewRecords: selected.reviewRecords,
     evidenceRecords: selected.evidenceRecords,
-    checks: selected.checks, qualityCoverage: selected.qualityCoverage ?? null, sources,
+    checks: selected.checks, ...(hasFormalReviewRequest(selected) ? { qualityCoverage: selected.qualityCoverage } : {}), sources,
     ...(selected.htmlPage ? { htmlPage: selected.htmlPage } : {}),
     htmlInspection: selected.htmlInspection ? {
       status: selected.htmlInspection.status, sourceRevision: selected.htmlInspection.sourceRevision,
@@ -132,7 +178,9 @@ function deliverySummary(selected, records, files, requested, workspace) {
     } : null,
     diagnostics: selected.diagnostics.filter((item) => item.severity !== "info"),
     provenance: { originalIssues: selected.provenance.originalIssues },
-    visual: { scope: "Only the recorded frames and display surfaces were reviewed; intermediate image files are temporary.",
+    visual: { scope: hasFormalReviewRequest(selected)
+      ? "Only the recorded frames and display surfaces were reviewed; intermediate image files are temporary."
+      : "Formal review was not requested. Actual viewing is described by the author; capture does not establish viewing.",
       frames, surfaces },
     userDecisions: selected.userDecisions,
     artifacts: [...files.map(({ bytes, ...file }) => file), { kind: "report-json", path: "report.json" }, { kind: "report-markdown", path: "report.md" }] };
@@ -145,37 +193,22 @@ function uniqueReviews(reviews) {
 }
 
 function readableSummary(report) {
-  return ["# FlowSVG delivery", "", `Delivery: ${report.completion.delivery}`, `Quality: ${report.completion.quality}`,
+  return ["# FlowSVG delivery", "", `Delivery: ${report.completion.delivery}`,
+    `Formal review: ${report.formalReview.status}`,
+    ...(hasFormalReviewRequest(report) ? [`Formal review coverage: ${report.completion.quality}`] : []),
     `Selected revision: ${report.selectedRevision}`, `Source SHA-256: ${report.inputSha256}`, "", "## Files", "",
     ...report.artifacts.map((item) => `- [${item.path.replaceAll("[", "\\[").replaceAll("]", "\\]")}](<${item.path}>)${item.sha256 ? ` — SHA-256 ${item.sha256}` : ""}`),
     "", "## Checks", "", ...Object.entries(report.checks).map(([key, value]) => `- ${key}: ${value}`),
-    "", "## Required quality coverage", "", `Status: ${report.qualityCoverage?.status ?? report.completion.quality}`,
-    ...(report.qualityCoverage?.required ?? []).map((item) => `- ${item.id}: ${item.status}${item.reason ? ` — ${item.reason}` : ""}`),
+    ...(hasFormalReviewRequest(report) ? ["", "## Required quality coverage", "", `Status: ${report.qualityCoverage?.status ?? report.completion.quality}`,
+      ...(report.qualityCoverage?.required ?? []).map((item) => `- ${item.id}: ${item.status}${item.reason ? ` — ${item.reason}` : ""}`)] : []),
     "", "## HTML inspection", "", `Status: ${report.htmlInspection?.status ?? "not-run"}`,
-    `HTML states viewed: ${report.htmlInspection?.coverage?.viewed ?? 0}/${report.htmlInspection?.coverage?.requested ?? 0}`,
+    ...(hasFormalReviewRequest(report) ? [`HTML states viewed: ${report.htmlInspection?.coverage?.viewed ?? 0}/${report.htmlInspection?.coverage?.requested ?? 0}`] : []),
     "", "## Unresolved issues", "", ...report.diagnostics.map((item) => `- ${item.code}: ${item.reason}`),
     ...[...new Set([...report.visual.frames, ...report.visual.surfaces].flatMap((item) => item.issues.map((issue) => issue.reason)))].map((reason) => `- Visual review: ${reason}`),
-    "", `Reviewed frames: ${report.visual.frames.length}; reviewed display surfaces: ${report.visual.surfaces.length}.`,
-    report.visual.scope, ""].join("\n");
+    ...(hasFormalReviewRequest(report) ? ["", `Reviewed frames: ${report.visual.frames.length}; reviewed display surfaces: ${report.visual.surfaces.length}.`] : []),
+    report.visual.scope, ...(report.agentNotes ? ["", "## Agent-authored notes", "", report.agentNotes] : []), ""].join("\n");
 }
 
-async function replaceDelivery(staging, destination) {
-  let backup;
-  try {
-    const existing = await lstat(destination);
-    if (!existing.isDirectory() || existing.isSymbolicLink()) throw invalid("FINALIZE_DESTINATION", "Final destination must be a real directory.");
-    const report = JSON.parse(await readFile(join(destination, "report.json"), "utf8"));
-    const inputHash = report.command === "finalize" ? report.inputSha256 : report.input?.sha256;
-    if (!["author", "finalize"].includes(report.command) || report.status !== "delivered" || !/^[a-f0-9]{64}$/u.test(inputHash ?? "")) {
-      throw invalid("FINALIZE_DESTINATION", "Existing directory is not a FlowSVG final delivery.");
-    }
-    backup = `${staging}-previous`;
-    await rename(destination, backup);
-  } catch (error) { if (error.code !== "ENOENT") throw error; }
-  try { await rename(staging, destination); }
-  catch (error) { if (backup) await rename(backup, destination); throw error; }
-  if (backup) await rm(backup, { recursive: true, force: true });
-}
 
 async function cleanupWorkspace(workspace, keep) {
   if (keep) return { status: "retained", reason: "Explicit --keep-work request." };

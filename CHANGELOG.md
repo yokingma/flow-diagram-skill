@@ -1,6 +1,25 @@
 # Changelog
 
+- Align independent consumer acceptance with mutable drafts, explicit checkpoints and formal review, optional geometry facts and actual HTML capture; retain artifact decoding, source protection, cancellation and isolated-runtime checks.
+
 ## Unreleased
+
+- Sample distinct actual HTML timeline states within the requested budget, prioritizing initial and final states. Keep the SDK focus-free overview in its explicit preview path.
+
+- Serialize stale operation-lock recovery before reading its owner, preserving live reservations during concurrent retries. Keep editable-source path and byte identity across current recaptures so finalization rejects newer source edits before workspace cleanup.
+
+- Simplify installed authoring to understand, create, validate, actually view/revise, and deliver. Reuse one source draft and one temporary issue record; disclose branch-specific reading and make display defaults automatic. Preserve design knowledge as guidance, clarify meaning-changing confirmation, align bilingual guides and migrate general CLI regressions to current versus explicit formal/checkpoint behavior.
+
+- Freeze one immutable source for explicit `author --formal-review`; keep checkpoint retention independent. Persist template requests beside hash-bound source reports, retain evidence requests through finalization, and report formal completion from declared coverage. Preserve viewer issues and actions as unresolved observations without forced user approval.
+- Add explicit `measure/layout --in-place` for one canonical task-root source draft. Reuse task reservations and atomic replacement, preserve external/checkpoint/copy protection, and reject stale finalization after source edits. Measurement versions, semantic fields and the exact SDK baseline remain unchanged.
+
+- Persist current SVG/PNG/GIF requests and exact manifest/GIF-options bytes and requested capture scope across continuation. Regenerate requested files on every current replacement, retain explicit manifest source/SDK binding, and preserve the prior complete delivery after partial export failure or cancellation.
+- Capture actual HTML by default and make SDK previews explicit with `--preview`; `--samples` selects HTML capture scope. Ordinary reports describe machine and capture facts without formal quality or viewing-count conclusions. `--formal-review` opts into registered coverage, which excludes geometric design approval and does not imply user design acceptance.
+
+- Restrict CLI diagnostics to verifiable input and operation failures. Add opt-in `--geometry` source-bound computation observations, remove short-line/vertical-label heuristics and warning-approval submissions, and let auxiliary content-size estimates accompany successful draft backfill and layout. Design guidance and actual viewing retain design judgment; preserve the exact SDK baseline.
+
+- Reuse one mutable `current` authoring result instead of allocating a version per retry. Stage replacements, retain one source-bound recovery result after failure, publish current files without ancestry, and preserve unrelated destinations. Add explicit `author --checkpoint` and optional opaque Agent notes at finalization.
+- Return concise saved-authoring summaries with a readable `detailsPath`; keep full HTML state signatures and sampling details in registered reports. Preserve inline results for read-only validation and measurement, expose saved record locations for evidence/review, and migrate consumers without legacy output branches.
 
 - Add opt-in `measure --lines` source-bound text-layout records for the existing content/label version scope. Preserve distinct text roles, exclude graph-internal labels from the new list, and retain existing baseline counts (including SDK graph-label baselines), diagnostics and exclusive draft backfill. Estimates do not establish actual visibility or aesthetic quality.
 

@@ -2,7 +2,7 @@
 
 For user cancellation, follow the [stopping rule](#cancellation-and-completion) first. Otherwise, keep the draft and successful outputs. Read stdout JSON or the saved `report.json`. Use `stage`, diagnostic `code`, `location`, `reason`, `nextStep`, and actual `artifacts` to explain the failure.
 
-After an unexpected interruption, check the retained task files and [select the explicit saved revision](diagnostics-and-revisions.md#selecting-a-parent) when one exists. Identify the unfinished steps. Follow [diagnosis and revision decisions](diagnostics-and-revisions.md) to address the cause within the current authorization. Ask the user when a correction changes meaning. Retry only the affected operations: `validate` saves no revision, `author` saves a new revision, and `review` and `evidence` use independent records. If the same failure recurs without new evidence, stop and report the next recovery action.
+After an unexpected interruption, check the retained task files and [select current or an explicit retained checkpoint](diagnostics-and-revisions.md#selecting-a-parent) when one exists. Identify the unfinished steps. Follow [diagnosis and revision decisions](diagnostics-and-revisions.md) to address the cause within the current authorization. Ask the user when a correction changes meaning. Retry only the affected operations: `validate` saves no revision, `author` replaces current outputs, and `review` and `evidence` use independent records. If the same failure recurs without new evidence, stop and report the next recovery action.
 
 ## Environment and browser preparation
 
@@ -10,7 +10,7 @@ Run `node <skill-directory>/scripts/flowsvg.mjs doctor` for Node 20+, npm and is
 
 For GIF or screenshot startup failures, read [prepared browser selection](visual-checks.md#prepared-browser). Verify that the chosen executable exists, has execution permission and runs on this operating system. Prepare Chrome/Chromium separately when needed.
 
-`GIF_BROWSER_UNAVAILABLE` means browser use was disabled or no prepared browser was selected or detected. `GIF_ENVIRONMENT` means the SDK could not start or run the selected executable. Check the reported path and operating-system dependencies. Successful JSON/HTML/SVG remain available; the GIF is unfinished. Supply a usable browser and retry in a new revision.
+`GIF_BROWSER_UNAVAILABLE` means browser use was disabled or no prepared browser was selected or detected. `GIF_ENVIRONMENT` means the SDK could not start or run the selected executable. Check the reported path and operating-system dependencies. Successful JSON/HTML/SVG remain available; the GIF is unfinished. Supply a usable browser and retry against current.
 
 ## Continuing after an SDK upgrade
 
@@ -21,20 +21,24 @@ An Agent-composed HTML page with a filled managed region from another SDK fails 
 ## GIF settings and export errors
 
 - `GIF_OPTIONS`: inspect the reported field/reason and [supported settings](export.md). Correct malformed JSON, unsupported fields, invalid values or a range outside the compiled timeline.
-- `GIF_LIMIT`: reduce the selected duration, sample rate, dimensions or final hold after the user chooses the tradeoff. The report retains the SDK's specific limit reason.
-- `GIF_CAPTION_OVERFLOW`: show the reported scene/beat and caption to the user. Candidate changes are a larger caption region, wider output or shorter caption text. Resizing still must satisfy the 1920 px final-long-edge limit. Preserve the original draft until the user decides.
+- `GIF_LIMIT`: reduce the selected duration, sample rate, dimensions or final hold within the requested scope; ask if the tradeoff changes meaning. The report retains the SDK's specific limit reason.
+- `GIF_CAPTION_OVERFLOW`: show the reported scene/beat and caption to the user. Candidate changes are a larger caption region, wider output or shorter caption text. Resizing still must satisfy the 1920 px final-long-edge limit. Adjust dimensions or wording within scope; ask before changing the caption meaning.
 - `GIF_RASTERIZATION` or `GIF_ENCODING`: retain the report, supplied settings and complete files. Check the specific SDK reason and browser environment before another attempt. Do not register partial bytes as a complete GIF.
 - A destination/write error: inspect output permission, disk space and existing files. The tool uses exclusive creation for GIF, preserves an existing same-name file, and removes its own incomplete write.
 
 ## Cancellation and completion
 
-Ctrl+C and termination signals cancel the current task. Authoring saves a cancellation report when writable; read-only validation returns cancellation on stdout and preserves its input without a saved report. The SDK releases its owned browser resources. Successful earlier files remain listed; an unfinished GIF stays absent from `completion.completed`. A force-killed process cannot write a final report. Preserve that revision as interruption evidence.
+Ctrl+C and termination signals cancel the current task. Authoring saves a cancellation report when writable; read-only validation returns cancellation on stdout and preserves its input without a saved report. The SDK releases its owned browser resources. Successful earlier files remain listed; an unfinished GIF stays absent from `completion.completed`. A force-killed process cannot write a final report. Preserve the task and interrupted staging for recovery.
 
-When the user asks to stop or cancels the task, stop any running task commands and do not start further commands or retries. Report retained files and unfinished work. Resume only after the user asks; a resumed authoring attempt creates a new revision, while validation remains read-only. For an unexpected interruption, apply the recovery conditions above.
+A normal retry reclaims a dead operation owner. Concurrent recovery uses an exclusive `<task-series>/.current.lock.recovery` reservation. If the recovery process itself was interrupted, the CLI fails closed and identifies that reservation. Preserve task files, inspect its `owner.json`, and verify no author, in-place edit or finalization process is running before removing the recovery reservation and retrying.
+
+`FINALIZE_SOURCE` can identify an editable task draft that changed after rendering, including after `--from current` recapture. Regenerate from the selected editable draft with `author --input` before finalizing; the rejected finalization retains the changed draft and prior delivery.
+
+When the user asks to stop or cancels the task, stop any running task commands and do not start further commands or retries. Report retained files and unfinished work. Resume only after the user asks; a resumed authoring attempt replaces current outputs, while validation remains read-only. For an unexpected interruption, apply the recovery conditions above.
 
 State delivery and quality separately. `completion.delivery: complete` requires every requested export to finish. Layout warnings, unviewed screenshots and skipped visual inspection still need an explicit explanation even when all files exist. Follow the report's actual checks; an HTML file or GIF progress message is not evidence that the full task passed visual review.
 
-For `REVIEW_RECORD_INVALID`, retain the task, review record and prior delivery. Read the named record/source diagnostic and restore or regenerate the affected evidence. Repeating a clean observation does not overwrite a prior issue. Use `review` for existing HTML, preview and formal-image observations; use a new author revision only when the diagram or required production outputs change. See [review input and recovery rules](review-inputs.md).
+For `REVIEW_RECORD_INVALID`, retain the task, review record and prior delivery. Read the named record/source diagnostic and restore or regenerate the affected evidence. Repeating a clean observation does not overwrite a prior issue. Use `review` for existing HTML, preview and formal-image observations; use `author` to regenerate current when the diagram or production outputs change. See [review input and recovery rules](review-inputs.md).
 
 ## Evidence recovery
 

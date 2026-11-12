@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Copied-install delivery keeps page prose and source-bound standalone images independently observable. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
@@ -52,9 +53,9 @@ async function sources(name: string) {
 
 test.skipIf(!browser)("delivers an introduced HTML and explicit standalone images with separate source-bound evidence", async () => {
   const { input, html, bytes } = await sources("mixed");
-  const result = await command(["author", "--input", input, "--html", html, "--name", "mixed", "--svg", "--png", "--png-width", "720", "--browser", browser!]);
+  const result = await command(["author", "--input", input, "--html", html, "--name", "mixed", "--checkpoint", "--svg", "--png", "--png-width", "720", "--browser", browser!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion).toMatchObject({ delivery: "complete", completed: ["json", "html", "svg", "png"] });
   expect(await readFile(join(report.revision.directory, "diagram.json"), "utf8")).toBe(bytes);
   const images = report.artifacts.filter((item: { kind: string }) => ["svg", "png"].includes(item.kind));
@@ -78,7 +79,7 @@ test.skipIf(!browser)("delivers an introduced HTML and explicit standalone image
   await writeFile(settings, JSON.stringify({ items: images.map((item: { artifactId: string }) => ({ artifactId: item.artifactId, displayWidth: 720, backdrop: "#ffffff" })) }));
   const captured = await command(["evidence", "--from", report.revision.id, "--name", "mixed", "--artifact-preview-settings", settings, "--browser", browser!]);
   expect(captured.code, captured.stdout + captured.stderr).toBe(0);
-  const evidence = JSON.parse(captured.stdout);
+  const evidence = (await readCommandReport(captured.stdout));
   expect(evidence.artifactEvidence.items).toHaveLength(2);
   for (const item of evidence.artifactEvidence.items) {
     expect(item).toMatchObject({ status: "captured", displayWidth: 720, displayHeight: 360, backdrop: "#ffffff" });
@@ -86,21 +87,22 @@ test.skipIf(!browser)("delivers an introduced HTML and explicit standalone image
     expect(item.artifactSha256).not.toBe(report.htmlInspection.file.sha256);
   }
   expect(report.visual.artifactReviews).toEqual([]);
-  expect(report.completion.quality).toBe("incomplete");
+  expect(report.completion.quality).toBeUndefined();
+  expect(report.formalReview.status).toBe("not-requested");
 }, 90_000);
 
 test("default pages add no images and explicit export preserves original JSON and the selected page bytes", async () => {
   const { input, html, bytes } = await sources("unchanged");
   const initial = await command(["author", "--input", input, "--html", html, "--name", "unchanged", "--browser", "none"]);
   expect(initial.code, initial.stdout + initial.stderr).toBe(0);
-  const source = JSON.parse(initial.stdout);
+  const source = (await readCommandReport(initial.stdout));
   expect(source.completion.completed).toEqual(["json", "html"]);
   expect((await readdir(source.revision.directory)).some((file) => /\.(svg|png)$/u.test(file))).toBe(false);
   const selectedHtml = join(source.revision.directory, "diagram.html");
   const pageBytes = await readFile(selectedHtml);
   const exported = await command(["author", "--input", input, "--html", selectedHtml, "--name", "unchanged", "--svg", "--browser", "none"]);
   expect(exported.code, exported.stdout + exported.stderr).toBe(0);
-  const report = JSON.parse(exported.stdout);
+  const report = (await readCommandReport(exported.stdout));
   expect(await readFile(input, "utf8")).toBe(bytes);
   expect(await readFile(join(report.revision.directory, "diagram.json"), "utf8")).toBe(bytes);
   expect(await readFile(join(report.revision.directory, "diagram.html"))).toEqual(pageBytes);
@@ -113,7 +115,7 @@ test("a missing PNG browser preserves the composed HTML and SVG but leaves the m
   const { input, html } = await sources("partial");
   const result = await command(["author", "--input", input, "--html", html, "--name", "partial", "--svg", "--png", "--browser", "none"]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion).toMatchObject({ delivery: "incomplete", completed: ["json", "html", "svg"] });
   expect(report.exports).toEqual([expect.objectContaining({ format: "svg", status: "succeeded" }), expect.objectContaining({ format: "png", status: "failed" })]);
   expect(await readFile(join(report.revision.directory, "diagram.html"), "utf8")).toContain("<h1>如何理解审批条件</h1>");

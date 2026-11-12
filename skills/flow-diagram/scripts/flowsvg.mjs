@@ -11,6 +11,7 @@ import { measureContent } from "./measurement.mjs";
 import { layoutContent } from "./layout.mjs";
 import { recordFailure } from "./reports.mjs";
 import { finalizeTask } from "./finalize.mjs";
+import { commandResult } from "./command-result.mjs";
 
 const controller = new AbortController();
 const cancel = () => controller.abort(new DOMException("Task cancelled; saved drafts remain available", "AbortError"));
@@ -45,12 +46,13 @@ const HELP = {
     "       flowsvg validate --from <revision> --name <diagram> [--output <history-root>] [--theme light|dark]",
     "",
     "Reads input once and returns JSON diagnostics; no revision or delivery files are written.",
-    "Finite layout checks include LABEL_VERTICAL_RUN; see references/diagnostics-and-revisions.md for limits.",
+    "Geometry observations are optional calculations; see references/diagnostics-and-revisions.md for limits.",
     "  --input <json>       Diagram draft",
     "  --from <revision>    Explicit unchanged saved revision; requires --name",
     "  --name <diagram>     Saved revision series name; optional for drafts",
     "  --output <directory> History root used only to locate --from",
     "  --theme <light|dark> Rendering theme for this check",
+    "  --geometry          Return optional finite SDK geometry observations",
     "  -h, --help           Show this help"
   ].join("\n"),
   author: [
@@ -61,12 +63,13 @@ const HELP = {
     "  --html <html>        Agent-composed Skill page with a managed playback region",
     "  --sync-html          Explicitly update verified playback for the selected JSON/theme",
     "  --name <diagram>     Required revision series name",
-    "  --output <directory> Explicit history root",
+    "  --output <directory> Task result root; current draft is reused",
+    "  --checkpoint         Save an explicit immutable version instead",
     "  --parent <revision>  Explicit parent revision",
-    "  --from <revision>    Use a saved parent JSON",
-    "  --decisions <json>   User decision records",
+    "  --from <source>      Resume current or an explicit checkpoint JSON",
     "  --sources <json>     Source metadata records",
     "  --theme <light|dark> Rendering theme",
+    "  --geometry           Return finite SDK geometry calculations on demand",
     "  --svg                Export a static SVG",
     "  --png                Export a static PNG",
     "  --png-width <px>     PNG width",
@@ -75,7 +78,9 @@ const HELP = {
     "  --gif                Export an animated GIF",
     "  --gif-options <json> GIF range and sampling options",
     "  --browser <path|none> Browser executable selection",
-    "  --samples <count>    Maximum preview points",
+    "  --samples <count>    Maximum actual HTML inspection points",
+    "  --preview            Capture additional SDK state previews on request",
+    "  --formal-review      Fix one immutable review source and report coverage",
     "  --visual-review <json> Record reviewed preview frames",
     "  --html-review <json> Record reviewed states from the actual diagram.html",
     "  --export-manifest <json> Named static exports",
@@ -102,37 +107,42 @@ const HELP = {
     "Read references/review-inputs.md for all three complete review JSON contracts."
   ].join("\n"),
   finalize: [
-    "Usage: flowsvg finalize --workspace <task-directory> --name <diagram> --from <revision>",
+    "Usage: flowsvg finalize --workspace <task-directory> --name <diagram> [--from current|<checkpoint>]",
     "",
     "  --workspace <path>   One task under .diagrams/.work/<name>/<task-id>",
     "  --name <diagram>     Diagram name",
-    "  --from <revision>    Successful authoring/review revision in workspace/history",
+    "  --from <source>      Current result (default) or explicit checkpoint",
+    "  --notes <markdown>   Optional opaque Agent-authored unresolved-issue summary",
     "  --keep-work          Retain task history only when explicitly requested",
     "  -h, --help           Show this help"
   ].join("\n"),
   layout: [
-    "Usage: flowsvg layout --input <draft.json> --plan <layout-plan.json> --output <new-draft.json>",
+    "Usage: flowsvg layout --input <draft.json> --plan <layout-plan.json> (--in-place | --output <new-draft.json>)",
     "",
     "Options:",
     "  --input <draft.json>       Existing static draft; scenes must be []",
     "  --plan <layout-plan.json>  Versioned geometry plan for existing IDs",
-    "  --output <new-draft.json>  Required new file; never overwrites a target",
+    "  --output <new-draft.json>  Explicit new copy; never overwrites a target",
+    "  --in-place                Atomically update the selected workspace-root source draft",
+    "  --geometry                Return optional finite SDK geometry observations",
     "  -h, --help                Show this help",
     "",
-    "No author revision is allocated. Warnings remain; successful layout is not visual approval."
+    "No author revision is allocated. Successful calculation does not judge visual quality."
   ].join("\n"),
   measure: [
-    "Usage: flowsvg measure --input <json> [--lines] [--output <new-draft.json>]",
+    "Usage: flowsvg measure --input <json> [--lines] [--in-place | --output <new-draft.json>]",
     "",
     "Input is a diagram draft, one label/content measurement object, or an array of content measurement objects.",
     "Options:",
     "  --input <json>       Measurement JSON path",
     "  --lines              Include source-bound estimated text lines; not actual visible glyphs",
-    "  --output <json>      Write a new height-filled draft; never overwrites an existing file",
+    "  --output <json>      Explicit new height-filled copy; never overwrites an existing file",
+    "  --in-place           Atomically backfill the selected workspace-root source draft",
     "  -h, --help           Show this help",
     "",
     "Results are SDK layout estimates, not actual glyph visibility or design approval.",
-    "Draft measurement diagnostics block all results and backfill; inspect location and nextStep."
+    "SDK sizing estimates are auxiliary; invalid input, unsupported operations or writes still fail.",
+    "--in-place requires .diagrams/.work/<name>/<task>/<draft>.json; generated current files and checkpoints stay protected."
   ].join("\n")
 };
 function helpText(command) { return HELP[command] || HELP.all; }
@@ -142,10 +152,16 @@ if (requestedHelp) {
   process.exitCode = 0;
 } else try {
   const { positionals, values } = parseArgs({ allowPositionals: true, strict: true, options: {
-    lines: { type: "boolean" }, "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, html: { type: "string" }, "sync-html": { type: "boolean" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" }, decisions: { type: "string" },
+    "in-place": { type: "boolean" }, preview: { type: "boolean" }, "formal-review": { type: "boolean" }, geometry: { type: "boolean" }, checkpoint: { type: "boolean" }, notes: { type: "string" }, lines: { type: "boolean" }, "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, html: { type: "string" }, "sync-html": { type: "boolean" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" },
     gif: { type: "boolean" }, "gif-options": { type: "string" }, sources: { type: "string" }, theme: { type: "string" }, svg: { type: "boolean" }, png: { type: "boolean" }, "export-manifest": { type: "string" }, "png-width": { type: "string" }, background: { type: "string" }, "artifact-preview-settings": { type: "string" }, "artifact-review": { type: "string" }, time: { type: "string" }, browser: { type: "string" }, "visual-review": { type: "string" }, "html-review": { type: "string" }, samples: { type: "string" }, workspace: { type: "string" }, "keep-work": { type: "boolean" }
   } });
   const command = positionals[0];
+  if (values["in-place"] !== undefined && !["measure", "layout"].includes(command)) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--in-place requires measure or layout.", "Run `flowsvg <command> --help`.", "in-place");
+  if (values["in-place"] && values.output !== undefined) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "Choose --in-place or --output.", "Use --in-place for the selected workspace draft or --output for a new copy.", "output");
+  for (const key of ["preview", "formal-review"]) if (values[key] !== undefined && command !== "author") throw new ToolError("arguments", "ERR_OPTION_SCOPE", `--${key} requires author.`, "Run `flowsvg author --help`.", key);
+  if (values.checkpoint !== undefined && command !== "author") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--checkpoint requires author.", "Run `flowsvg author --help`.", "checkpoint");
+  if (values.notes !== undefined && command !== "finalize") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--notes requires finalize.", "Run `flowsvg finalize --help`.", "notes");
+  if (values.geometry !== undefined && !["author", "validate", "layout"].includes(command)) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--geometry requires author, validate or layout.", "Run `flowsvg <command> --help`.", "geometry");
   if (values.lines !== undefined && command !== "measure") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--lines requires measure.", "Run `flowsvg measure --help`.", "lines");
   if (values.html !== undefined && (command !== "author" || !values.html.trim())) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--html requires author and a nonempty HTML path.", "Run `flowsvg author --help`.", "html");
   if (values["sync-html"] !== undefined && command !== "author") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--sync-html requires author.", "Run `flowsvg author --help`.", "sync-html");
@@ -168,7 +184,7 @@ if (requestedHelp) {
   else if (command === "review") result = await submitReview(values, controller.signal);
   else if (command === "review-template") result = await createReviewTemplate(values, controller.signal);
   else if (command === "finalize") {
-    if (Object.keys(values).some((key) => !["workspace", "name", "from", "keep-work"].includes(key))) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "finalize accepts only --workspace, --name, --from and --keep-work.", "Run `flowsvg finalize --help`.");
+    if (Object.keys(values).some((key) => !["workspace", "name", "from", "keep-work", "notes"].includes(key))) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "finalize accepts only --workspace, --name, --from, --notes and --keep-work.", "Run `flowsvg finalize --help`.");
     result = await finalizeTask(values, controller.signal);
   }
   else if (command === "doctor") { result.stage = "environment"; result = await diagnoseRuntime(controller.signal); }
@@ -176,7 +192,7 @@ if (requestedHelp) {
     result.stage = "environment";
     const runtime = await prepareRuntime(controller.signal);
     result = { status: "ready", stage: "environment", ...runtime, diagnostics: [], artifacts: [] };
-  } else if (command === "layout" && values.input && values.plan && values.output) result = await layoutContent(values, controller.signal);
+  } else if (command === "layout" && values.input && values.plan && (values.output || values["in-place"])) result = await layoutContent(values, controller.signal);
   else if (command === "measure" && values.input) result = await measureContent(values, controller.signal);
   else if (["validate", "author"].includes(command) && (values.input || values.from)) {
     if (values.samples !== undefined && command !== "author") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--samples requires author.", "Run `flowsvg author --help` to list valid options.", "samples");
@@ -204,24 +220,24 @@ finally {
   process.removeListener("SIGTERM", cancel);
 }
 if (!requestedHelp) {
-  process.stdout.write(JSON.stringify(result) + "\n");
+  process.stdout.write(JSON.stringify(await commandResult(result)) + "\n");
   process.exitCode = ["failed", "cancelled"].includes(result.status) ? 1 : 0;
 }
 
-/** Layout uses a new draft path rather than revision/export options. */
+/** Layout requires an explicit copy target or an explicit task-source replacement. */
 function checkLayoutOptions(command, values) {
   if (command !== "layout" && values.plan !== undefined) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--plan requires layout.", "Run `flowsvg layout --help`.", "plan");
   if (command !== "layout") return;
-  const unsupported = Object.keys(values).find((key) => !["input", "plan", "output"].includes(key));
-  if (unsupported) throw new ToolError("arguments", "ERR_OPTION_SCOPE", `--${unsupported} is not supported by layout.`, "Layout accepts only --input, --plan and --output. Run `flowsvg layout --help`.", unsupported);
-  const missing = ["input", "plan", "output"].find((key) => !values[key]?.trim());
-  if (missing) throw new ToolError("arguments", "LAYOUT_ARGUMENT_REQUIRED", `layout requires --${missing}.`, "Provide --input <draft.json>, --plan <layout-plan.json> and --output <new-draft.json>.", missing);
+  const unsupported = Object.keys(values).find((key) => !["input", "plan", "output", "geometry", "in-place"].includes(key));
+  if (unsupported) throw new ToolError("arguments", "ERR_OPTION_SCOPE", `--${unsupported} is not supported by layout.`, "Layout accepts --input, --plan, --output or --in-place, and optional --geometry. Run `flowsvg layout --help`.", unsupported);
+  const missing = ["input", "plan", ...(values["in-place"] ? [] : ["output"])].find((key) => !values[key]?.trim());
+  if (missing) throw new ToolError("arguments", "LAYOUT_ARGUMENT_REQUIRED", `layout requires --${missing}.`, "Provide --input <draft.json>, --plan <layout-plan.json> and either --in-place or --output <new-draft.json>.", missing);
 }
 
 /** Validation is a read-only command; saved-source options only locate explicit historical bytes. */
 function checkValidationOptions(command, values) {
   if (command !== "validate") return;
-  const unsupported = Object.keys(values).find((key) => !["input", "from", "name", "output", "theme"].includes(key));
+  const unsupported = Object.keys(values).find((key) => !["input", "from", "name", "output", "theme", "geometry"].includes(key));
   if (unsupported) throw new ToolError("arguments", "ERR_OPTION_SCOPE", `--${unsupported} is not supported by validate.`,
-    "Use author to save revisions, metadata or decisions. Run `flowsvg validate --help`.", unsupported);
+    "Use author to save current artifacts or source metadata. Run `flowsvg validate --help`.", unsupported);
 }

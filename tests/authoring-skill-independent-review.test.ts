@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Independent review records are tested at the copied-install CLI and immutable task-file boundary. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
@@ -17,7 +18,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], environment: Record<string, string> = {}) {
-  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done) => {
+  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done, reject) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache"), DEBUG: "pw:browser", ...environment }
     });
@@ -25,7 +26,7 @@ function command(args: string[], environment: Record<string, string> = {}) {
     let stderr = "";
     child.stdout.on("data", (data) => { stdout += data; });
     child.stderr.on("data", (data) => { stderr += data; });
-    child.on("close", (code) => done({ code, report: JSON.parse(stdout), stderr }));
+    child.on("close", (code) => { void readCommandReport(stdout).then((report) => done({ code, report, stderr }), reject); });
   });
 }
 async function tree(directory: string): Promise<Record<string, string>> {
@@ -58,7 +59,7 @@ test.skipIf(!browser)("combined independent review writes one record, repeats wi
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const html = await form(workspace, history, name, "html");
   const visual = await form(workspace, history, name, "visual");
@@ -93,7 +94,7 @@ test.skipIf(!browser)("same HTML state reviewed in two ancestors counts once and
   await writeFile(input, JSON.stringify({ ...document, scenes: [{ id: "change", label: "Change", beats: [
     { durationMs: 400, transitionMs: 200, actions: [{ type: "updateNode", target: "a", value: { label: "Done" } }] }
   ] }] }));
-  const first = await command(["author", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
+  const first = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
   expect(first.code, JSON.stringify(first)).toBe(0);
   const html = await form(workspace, history, name, "html");
   const all = [...html.review.states];
@@ -103,8 +104,8 @@ test.skipIf(!browser)("same HTML state reviewed in two ancestors counts once and
   await writeFile(html.path, JSON.stringify(html.review));
   const firstReview = await command(["review", "--from", "v001", "--name", name, "--output", history, "--html-review", html.path]);
   expect(firstReview.code, JSON.stringify(firstReview)).toBe(0);
-  expect(firstReview.report).toMatchObject({ completion: { quality: "needs-user-decision" } });
-  const second = await command(["author", "--from", "v001", "--name", name, "--output", history, "--browser", browser!]);
+  expect(firstReview.report).toMatchObject({ completion: { quality: "unresolved-issues" } });
+  const second = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", name, "--output", history, "--browser", browser!]);
   expect(second.code, JSON.stringify(second)).toBe(0);
   const secondReport = second.report as { htmlInspection: { states: { id: string; sha256: string }[] } };
   html.review.states = [{ ...secondReport.htmlInspection.states[0], observations: all[0].observations, issues: [] }];
@@ -113,13 +114,13 @@ test.skipIf(!browser)("same HTML state reviewed in two ancestors counts once and
   await writeFile(html.path, JSON.stringify(html.review));
   const secondReview = await command(["review", "--from", "v002", "--name", name, "--output", history, "--html-review", html.path]);
   expect(secondReview.code, JSON.stringify(secondReview)).toBe(0);
-  expect(secondReview.report).toMatchObject({ completion: { quality: "needs-user-decision" } });
+  expect(secondReview.report).toMatchObject({ completion: { quality: "unresolved-issues" } });
   const finalized = await command(["finalize", "--workspace", workspace, "--name", name, "--from", "v002", "--keep-work"]);
   expect(finalized.code, JSON.stringify(finalized)).toBe(0);
   const summary = JSON.parse(await readFile(join(root, ".diagrams", name, "report.json"), "utf8"));
   expect(summary.htmlInspection.coverage.viewed).toBe(1);
   expect(summary.htmlInspection.viewedStates).toHaveLength(1);
-  expect(summary.completion.quality).toBe("needs-user-decision");
+  expect(summary.completion.quality).toBe("unresolved-issues");
   expect(summary.htmlInspection.viewedStates[0].issues).toContainEqual({ reason: "Synthetic prior issue.", nextStep: "Await a real decision." });
   expect(summary.reviewRecords.adopted).toHaveLength(2);
 }, 90_000);
@@ -131,7 +132,7 @@ test.skipIf(!browser)("tampered recorded screenshot, HTML and review bytes canno
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", browser!]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", browser!]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const html = await form(workspace, history, name, "html");
   const visual = await form(workspace, history, name, "visual");
@@ -177,11 +178,11 @@ test.skipIf(!browser)("ancestor reviews cannot shrink a selected plan or cover a
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const first = await command(["author", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
+  const first = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--browser", browser!]);
   expect(first.code, JSON.stringify(first)).toBe(0);
   const html = await form(workspace, history, name, "html");
   expect((await command(["review", "--from", "v001", "--name", name, "--output", history, "--html-review", html.path])).code).toBe(0);
-  const second = await command(["author", "--from", "v001", "--name", name, "--output", history, "--browser", "none"]);
+  const second = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", name, "--output", history, "--browser", "none"]);
   expect(second.code, JSON.stringify(second)).toBe(0);
   const reportPath = join(history, name, "v002/report.json");
   const target = JSON.parse(await readFile(reportPath, "utf8"));
@@ -197,26 +198,15 @@ test.skipIf(!browser)("ancestor reviews cannot shrink a selected plan or cover a
   }
 }, 90_000);
 
-test("portable finalization keeps exact intentional-warning and decision identities after cleanup", async () => {
-  const name = "intentional";
-  const workspace = join(root, ".diagrams/.work", name, "task");
-  const history = join(workspace, "history");
+test("removed design decisions are rejected without changing saved sources", async () => {
+  const name = "no-design-gate";
+  const history = join(root, ".diagrams/.work", name, "task/history");
   const input = join(root, `${name}.json`);
-  await writeFile(input, JSON.stringify({ ...document, nodes: [...document.nodes,
-    { id: "b", kind: "rect", x: 100, y: 80, width: 160, height: 80, label: "Target" }] }));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--browser", "none"]);
-  expect(source.code, JSON.stringify(source)).toBe(0);
-  const warning = (source.report.diagnostics as { severity: string; issueId: string; issueContext: unknown }[]).find((issue) => issue.severity === "warning")!;
-  expect(warning.issueId).toMatch(/^sha256-/);
-  const decisions = join(workspace, "decisions.json");
-  await writeFile(decisions, JSON.stringify([{ sourceRevision: "v001", issueId: warning.issueId, decision: "intentional", reason: "User accepts this fixture overlap." }]));
-  const accepted = await command(["author", "--from", "v001", "--name", name, "--output", history, "--decisions", decisions, "--browser", "none"]);
-  expect(accepted.code, JSON.stringify(accepted)).toBe(0);
-  const finalized = await command(["finalize", "--workspace", workspace, "--name", name, "--from", "v002"]);
-  expect(finalized.code, JSON.stringify(finalized)).toBe(0);
-  const summary = JSON.parse(await readFile(join(root, ".diagrams", name, "report.json"), "utf8"));
-  expect(summary.userDecisions).toContainEqual(expect.objectContaining({ sourceRevision: "v001", issueId: warning.issueId,
-    issueContext: warning.issueContext, decision: "intentional", reason: "User accepts this fixture overlap." }));
-  expect(summary.diagnostics).toContainEqual(expect.objectContaining({ issueId: warning.issueId, sourceRevision: "v002", issueContext: warning.issueContext }));
-  await expect(readFile(join(history, name, "v001/report.json"))).rejects.toMatchObject({ code: "ENOENT" });
+  await writeFile(input, JSON.stringify(document));
+  expect((await command(["author", "--checkpoint", "--input", input, "--name", name, "--output", history, "--browser", "none"])).code).toBe(0);
+  const before = await tree(history);
+  const rejected = await command(["author", "--from", "v001", "--name", name, "--output", history, "--decisions", "unused.json"]);
+  expect(rejected.code).toBe(1);
+  expect(rejected.report).toMatchObject({ diagnostics: [expect.objectContaining({ code: "ERR_PARSE_ARGS_UNKNOWN_OPTION" })] });
+  expect(await tree(history)).toEqual(before);
 });

@@ -8,14 +8,14 @@ export function checkDocument(report, sdk, text, options) {
   try { document = JSON.parse(text); }
   catch (cause) {
     report.checks.validation = "failed";
-    throw new ToolError("validation", "JSON_SYNTAX", cause.message, "Correct the JSON syntax in a new draft.", "$", cause);
+    throw new ToolError("validation", "JSON_SYNTAX", cause.message, "Correct the JSON syntax in the working draft and retry.", "$", cause);
   }
   const issues = sdk.validateDocument(document);
   if (issues.length) {
     report.checks.validation = "failed";
     report.status = "failed";
     report.diagnostics.push(...issues.map((issue) => ({ severity: "error", stage: "validation", code: "DOCUMENT_INVALID", location: issue.path,
-      reason: issue.message, nextStep: "Review the field or reference with the user; save any correction as a new revision." })));
+      reason: issue.message, nextStep: "Correct the named field or reference in the working draft and retry." })));
     return null;
   }
   report.checks.validation = "passed";
@@ -30,9 +30,9 @@ export function checkDocument(report, sdk, text, options) {
     return { document, diagram };
   } catch (cause) {
     report.checks.compilation = "failed";
-    if (!Array.isArray(cause.issues)) throw new ToolError("compilation", "COMPILE_FAILED", cause.message, "Review the saved input and derived timing; correct it in a new revision.", "$", cause);
+    if (!Array.isArray(cause.issues)) throw new ToolError("compilation", "COMPILE_FAILED", cause.message, "Correct the input or derived timing in the working draft and retry.", "$", cause);
     report.diagnostics.push(...cause.issues.map((issue) => ({ severity: "error", stage: "compilation", code: "COMPILE_FAILED", location: issue.path,
-      reason: issue.message, nextStep: "Review derived timing and the saved input with the user; create a new revision after deciding the correction." })));
+      reason: issue.message, nextStep: "Correct the named input or derived timing in the working draft and retry." })));
     report.status = "failed";
     return null;
   }

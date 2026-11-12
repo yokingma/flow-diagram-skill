@@ -4,6 +4,8 @@ Read this reference before generating or submitting preview, HTML or formal-imag
 
 ## Select the source and generate a template
 
+For traceable review, run `author --from current --formal-review` with the same name and output root, or add `--formal-review` to the author call that produces the source. This retains one immutable `v###`; use the returned ID for evidence, templates, reviews and finalization. `--checkpoint` independently retains a version without requesting review. Later ordinary author calls replace `current` and do not inherit viewing conclusions.
+
 Use the explicit saved evidence revision, diagram name and history root. No command infers the latest revision. Preview and HTML reviews select the revision that captured those images. Formal-image reviews keep `--from` as the diagram subject; `--evidence-from <revision-or-evidence-record>` selects another registered evidence source when needed. The source must stay in the same task/diagram and match the subject source bytes, theme and locked SDK. Original artifact revision remains independently recorded in each evidence item.
 
 ```sh
@@ -14,6 +16,8 @@ node <skill-directory>/scripts/flowsvg.mjs review-template \
 ```
 
 `--kind` is `visual`, `html` or `artifact`. The source must contain registered, readable evidence with matching hashes. The tool prepopulates exact IDs and SHA-256 values. The result identifies the source revision, input hash, SDK and theme. It writes only the explicit new template file, inside the same canonical `.diagrams/.work/<name>/<task>/` workspace. The target parent must already exist. Existing targets, symlink escapes, cross-task destinations and absent evidence fail without changing source files. Template generation does not allocate a diagram revision, prepare the runtime, render HTML, open a browser or capture images.
+
+Creating a template persists an incomplete formal request separately from the immutable source report. Evidence requests also survive without a submitted review. Finalization rechecks source and request identities. `formalReview.status: complete` means declared coverage is present; observed issues remain `unresolved-issues`, with the viewer’s own action text. CLI coverage is not design approval.
 
 The form contains `reviewer: ""`, `viewed: false`, empty observations and `issues: []`. Open the actual identified images, then fill the reviewer, all observations and discovered issues. Set `viewed: true` only after actual viewing. Keep unavailable viewing explicit instead of submitting the template as a completed review.
 
@@ -125,4 +129,4 @@ The existing author review options remain preflighted: all supplied forms and ev
 
 Authoring uses `--theme`, then the input document's theme, then `light`. If a source used an explicit theme override, author review submissions must pass that original override. Independent `review` uses the verified source context directly. Input bytes, saved source and locked SDK must match; missing viewing cannot be replaced by an attestation.
 
-When an invalid saved observation or independent entry still has issues, `qualityCoverage` includes a `review-issues` requirement with `needs-user-decision` and the original issue facts. Missing images cannot resolve those issues. Invalid entries without issues contribute only their missing viewing coverage.
+When an invalid saved observation or independent entry still has issues, `qualityCoverage` includes a `review-issues` requirement with `unresolved-issues` and the original issue facts. Missing images cannot resolve those issues. Invalid entries without issues contribute only their missing viewing coverage.

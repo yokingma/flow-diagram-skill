@@ -1,4 +1,5 @@
 /** Render public SVG states in an owned Playwright task page; screenshots never imply model approval. */
+import { hasFormalReviewRequest } from "./formal-review.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
@@ -12,6 +13,11 @@ const PREVIEW_TIMEOUT_MS = 15_000;
 /** Capture bounded samples after browser-free delivery. Missing browsers preserve all default exports. */
 export async function capturePreviews(report, context) {
   const { document, diagram, options, runtime, signal } = context;
+  if (!options.preview) {
+    report.visual.status = "not-requested";
+    report.visual.capturedFrames = [];
+    return;
+  }
   report.stage = "preview";
   const maxPoints = options.samples === undefined ? undefined : Number(options.samples);
   report.visual = { status: "not-run", viewedFrames: [], artifactReviews: [], capturedFrames: [], plan: createPreviewPlan(document, diagram, maxPoints),
@@ -54,7 +60,7 @@ export async function capturePreviews(report, context) {
       process.stderr.write(`Capturing preview ${point.id} at ${point.timeMs} ms…\n`);
       await captureFrame(report, { point, diagram: point.view === "overview" ? overview : diagram, page, signal });
     }
-    report.visual.status = "awaiting-review";
+    report.visual.status = hasFormalReviewRequest(report) ? "awaiting-review" : "captured";
   } catch (cause) {
     report.visual.status = signal?.aborted ? "cancelled" : "failed";
     report.visual.reason = cause.message;

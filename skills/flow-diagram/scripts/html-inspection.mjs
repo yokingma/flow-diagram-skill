@@ -3,9 +3,10 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { pathToFileURL } from "node:url";
+import { hasFormalReviewRequest } from "./formal-review.mjs";
 import { ToolError } from "./runtime.mjs";
 import { findBrowser, importPlaywright } from "./browser.mjs";
-import { createPreviewPlan } from "./preview-plan.mjs";
+import { createHtmlPlan } from "./preview-plan.mjs";
 
 const HTML_VIEWPORT = { width: 1440, height: 1000 };
 const SEEK_SUBMILLISECOND_PRECISION = 1000;
@@ -16,14 +17,14 @@ const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 export async function inspectDeliveredHtml(report, context) {
   const htmlPath = join(report.revision.directory, "diagram.html");
   const htmlSha256 = digest(await readFile(htmlPath));
-  const plan = createPreviewPlan(context.document, context.diagram);
+  const plan = createHtmlPlan(context.document, context.diagram, context.options.samples === undefined ? undefined : Number(context.options.samples));
   report.stage = "html-inspection";
   report.htmlInspection = {
     schemaVersion: 1, status: "not-run", sourceRevision: report.revision.id,
     file: { path: htmlPath, sha256: htmlSha256 }, inputSha256: report.input.sha256,
     sdk: { version: report.sdk.version, integrity: report.sdk.integrity }, theme: report.theme,
     display: { viewport: HTML_VIEWPORT, background: report.theme === "dark" ? "#111827" : "#ffffff", surface: "actual-file" },
-    plan: { ...plan, points: plan.points.map((point) => ({ ...point, view: "html" })) }, states: [],
+    plan, states: [],
     playback: { attempted: false }, viewedStates: [],
     resources: { page: "not-created", context: "not-created", browser: "not-created" }
   };
@@ -101,9 +102,9 @@ export async function inspectDeliveredHtml(report, context) {
     if (externalRequests.length) {
       throw new Error(`Offline HTML attempted external resource requests: ${[...new Set(externalRequests)].join(", ")}`);
     }
-    report.htmlInspection.status = "awaiting-review";
+    report.htmlInspection.status = hasFormalReviewRequest(report) ? "awaiting-review" : "captured";
     report.checks.html = "captured";
-    report.htmlInspection.coverage = { requested: report.htmlInspection.states.length, viewed: 0, unviewed: report.htmlInspection.states.length };
+    if (hasFormalReviewRequest(report)) report.htmlInspection.coverage = { requested: report.htmlInspection.states.length, viewed: 0, unviewed: report.htmlInspection.states.length };
   } catch (cause) {
     report.htmlInspection.status = context.signal?.aborted ? "cancelled" : "failed";
     report.htmlInspection.reason = cause.message;
@@ -147,8 +148,8 @@ export async function recordHtmlReview(report, options) {
       unviewed: Math.max(0, inspection.states.length - viewedStates.length) };
     report.checks.html = "reviewed";
     for (const state of viewedStates) for (const issue of state.issues) report.diagnostics.push({ severity: "warning", stage: "html-review", code: "HTML_REVIEW_ISSUE",
-      location: `${parent.id}/${state.id}`, timeMs: state.timeMs, reason: issue.reason, nextStep: `${issue.nextStep} Wait for the user's decision before changing the diagram.` });
-    if (viewedStates.some((state) => state.issues.length)) report.completion.quality = "needs-user-decision";
+      location: `${parent.id}/${state.id}`, timeMs: state.timeMs, reason: issue.reason, nextStep: issue.nextStep });
+    if (viewedStates.some((state) => state.issues.length)) report.completion.quality = "unresolved-issues";
   } catch (cause) {
     throw new ToolError("html-review", "HTML_REVIEW_INVALID", cause.message,
       "Open the actual diagram.html screenshots and provide their hashes and observations with the explicit source revision.", options["html-review"], cause);

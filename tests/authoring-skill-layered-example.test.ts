@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 import { expect, test } from "vitest";
 import { cp, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
@@ -63,7 +64,6 @@ test("copied skill measures the layered draft, preserves IDs and finalizes the b
       child.stderr.on("data", (chunk) => { stderr += chunk; });
       child.on("close", (code) => done({ code, stdout, stderr }));
     });
-    const measuredPath = join(workspace, "layered-measured.json");
     const draftPath = join(workspace, "layered-draft.json");
     const draft = JSON.parse(sourceBytes.toString("utf8")) as { nodes: Array<{ id: string; height: number }> };
     for (const node of draft.nodes) {
@@ -72,33 +72,31 @@ test("copied skill measures the layered draft, preserves IDs and finalizes the b
       if (node.id === "policy") node.height = 140;
     }
     await writeFile(draftPath, JSON.stringify(draft, null, 2) + "\n");
-    const measuredResult = await run(["measure", "--input", draftPath, "--output", measuredPath]);
+    const measuredResult = await run(["measure", "--input", draftPath, "--in-place"]);
     expect(measuredResult.code, measuredResult.stdout + measuredResult.stderr).toBe(0);
-    const measured = JSON.parse(measuredResult.stdout) as { measurement: { nodes: Array<{ nodeId: string; heightChange: number }> } };
+    const measured = (await readCommandReport(measuredResult.stdout)) as { measurement: { nodes: Array<{ nodeId: string; heightChange: number }> } };
     expect(measured.measurement.nodes).toEqual(expect.arrayContaining([
       expect.objectContaining({ nodeId: "ingress-gateway", heightChange: 45 }),
       expect.objectContaining({ nodeId: "domain-api", heightChange: 55.875 })
     ]));
     expect(await readFile(source)).toEqual(sourceBytes);
-    const measuredDraft = JSON.parse(await readFile(measuredPath, "utf8")) as { nodes: Array<{ id: string; height: number }> };
+    const measuredDraft = JSON.parse(await readFile(draftPath, "utf8")) as { nodes: Array<{ id: string; height: number }> };
     expect(measuredDraft.nodes.find((node) => node.id === "domain-api")?.height).toBe(165.875);
     const history = join(workspace, "history");
-    const authoredResult = await run(["author", "--input", measuredPath, "--output", history, "--name", "layered-architecture", "--svg", "--browser", "none"]);
+    const authoredResult = await run(["author", "--input", draftPath, "--output", history, "--name", "layered-architecture", "--svg", "--browser", "none"]);
     expect(authoredResult.code, authoredResult.stdout + authoredResult.stderr).toBe(0);
-    const authored = JSON.parse(authoredResult.stdout) as {
+    const authored = (await readCommandReport(authoredResult.stdout)) as {
       revision: { id: string; directory: string };
       checks: Record<string, string>;
       completion: { delivery: string; completed: string[] };
-      qualityCoverage: { status: string; required: Array<{ id: string; status: string }> };
       diagnostics: Array<{ stage?: string }>;
     };
-    expect(authored.checks).toMatchObject({ validation: "passed", compilation: "passed", layout: "passed" });
+    expect(authored.checks).toMatchObject({ validation: "passed", compilation: "passed", layout: "not-run" });
     expect(authored.completion).toMatchObject({ delivery: "complete", completed: ["json", "html", "svg"] });
-    expect(authored.qualityCoverage.required).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: "validation", status: "passed" }),
-      expect.objectContaining({ id: "layout", status: "passed" })
-    ]));
+    expect(authored).not.toHaveProperty("qualityCoverage");
     expect(authored.diagnostics.filter((item) => item.stage === "layout")).toHaveLength(0);
+    expect((await readdir(workspace)).filter((path) => path.endsWith(".json"))).toEqual(["layered-draft.json"]);
+    expect(await readdir(join(history, "layered-architecture"))).not.toEqual(expect.arrayContaining(["v001"]));
     const finalizedResult = await run(["finalize", "--workspace", workspace, "--name", "layered-architecture", "--from", authored.revision.id]);
     expect(finalizedResult.code, finalizedResult.stdout + finalizedResult.stderr).toBe(0);
     expect(await readdir(join(root, ".diagrams", "layered-architecture"))).toEqual(expect.arrayContaining(["diagram.json", "diagram.html", "diagram.svg", "report.json", "report.md"]));
@@ -127,9 +125,11 @@ test.skipIf(!browser)("copied layered example can complete PNG delivery when a p
     });
     const result = await run(["author", "--input", source, "--name", "layered-png", "--svg", "--png", "--browser", browser!]);
     expect(result.code, result.stdout + result.stderr).toBe(0);
-    const report = JSON.parse(result.stdout) as { completion: { delivery: string; completed: string[] }; qualityCoverage: { required: Array<{ format?: string; status: string }> } };
+    const report = (await readCommandReport(result.stdout)) as { completion: { delivery: string; completed: string[] }; revision: { directory: string } };
     expect(report.completion).toMatchObject({ delivery: "complete", completed: expect.arrayContaining(["png"]) });
-    expect(report.qualityCoverage.required).toEqual(expect.arrayContaining([expect.objectContaining({ format: "png", status: "incomplete" })]));
+    expect(report).not.toHaveProperty("qualityCoverage");
+    const png = await readFile(join(report.revision.directory, "diagram.png"));
+    expect(png.subarray(0, 8)).toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
   } finally {
     await rm(root, { recursive: true, force: true });
   }

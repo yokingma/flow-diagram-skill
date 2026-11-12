@@ -25,7 +25,7 @@ The complete installation unit is `skills/flow-diagram/`. Its [SKILL.md](../skil
 - [Project preferences](../skills/flow-diagram/references/preferences.md): applying and saving user-stated project defaults.
 - [Layout workflow](../skills/flow-diagram/references/static-layout.md#layout-plan-workflow) and [visual design](../skills/flow-diagram/references/visual-design.md): diagram production.
 - [Runtime and result contract](../skills/flow-diagram/references/tool-contract.md): commands, workspaces, reports, and finalization.
-- [Review contracts](../skills/flow-diagram/references/review-inputs.md) and [artifact evidence](../skills/flow-diagram/references/artifact-evidence.md): inspections and actual-viewing records.
+- [Review contracts](../skills/flow-diagram/references/review-inputs.md) and [artifact evidence](../skills/flow-diagram/references/artifact-evidence.md): explicit traceable review and registered viewing records. Default visual inspection needs no formal record.
 
 ## Documentation scope
 

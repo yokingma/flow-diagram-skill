@@ -1,11 +1,12 @@
-/** Read-only author-time content measurement through the isolated public SDK, without layout or browser metrics. */
+/** SDK content measurement and explicit height backfill, without browser metrics or design judgment. */
+import { openEditableDraft, replaceEditableDraft, closeEditableDraft } from "./editable-draft.mjs";
 import { readFile } from "node:fs/promises";
 import { publishDraftCopy } from "./atomic-draft.mjs";
 import { resolve } from "node:path";
 import { importSdk, prepareRuntime, ToolError } from "./runtime.mjs";
 import { recordFailure } from "./reports.mjs";
 import { LABEL_ESTIMATE_METHOD, isPresetLabelKind, measureLabel } from "./label-measurement.mjs";
-import { contentSourcesForNode, labelSourcesForNode, mapMeasurementDiagnostics, sourcesForValue } from "./measurement-sources.mjs";
+import { contentSourcesForNode, labelSourcesForNode, mapMeasurementDiagnostics, measurementObservations, sourcesForValue } from "./measurement-sources.mjs";
 import { estimateMeasurementLines } from "./measurement-lines.mjs";
 
 const MEASUREMENT_FIELDS = ["kind", "width", "content", "label", "typography"];
@@ -14,8 +15,10 @@ const MEASUREMENT_FIELDS = ["kind", "width", "content", "label", "typography"];
 export async function measureContent(options, signal) {
   const result = { schemaVersion: 1, toolVersion: "0.1.0", command: "measure", status: "pending", stage: "measurement",
     sources: [{ path: resolve(options.input), kind: "content-measurement" }], diagnostics: [], artifacts: [], sdk: null };
+  let editable;
   try {
-    const text = await readFile(options.input, "utf8");
+    if (options["in-place"]) editable = await openEditableDraft(options.input);
+    const text = editable ? editable.bytes.toString("utf8") : await readFile(options.input, "utf8");
     let input;
     try { input = JSON.parse(text); }
     catch (cause) { throw new ToolError("measurement", "JSON_SYNTAX", cause.message, "Correct the measurement JSON syntax.", "$", cause); }
@@ -26,12 +29,18 @@ export async function measureContent(options, signal) {
     signal?.throwIfAborted();
     result.stage = "measurement";
     const draft = isDiagramDraft(input);
+    if (editable && !draft) throw new ToolError("measurement", "MEASUREMENT_DRAFT_REQUIRED", "--in-place requires a complete diagram draft.",
+      "Select the task diagram JSON.", options.input);
     if (draft) result.sources = [{ path: resolve(options.input), kind: "diagram-draft" }];
     result.measurement = draft
-      ? await measureDraft(sdk, input, options, signal)
+      ? await measureDraft(sdk, input, options, signal, editable)
       : Array.isArray(input)
       ? { items: input.map((item, index) => measureBatchItem(sdk, item, index, options.lines)), method: "sdk-content-estimate", units: "diagram" }
       : measureOne(sdk, input, "", options.lines);
+    const estimates = result.measurement.items
+      ? result.measurement.items.flatMap((item) => item.diagnostics ?? [])
+      : result.measurement.diagnostics ?? [];
+    result.diagnostics = measurementObservations(estimates);
     result.status = "measured";
   } catch (error) {
     recordFailure(result, error);
@@ -40,12 +49,12 @@ export async function measureContent(options, signal) {
         nextStep: issue.nextStep || "Resolve the reported draft measurement issue before retrying.", ...(issue.objectId ? { objectId: issue.objectId } : {}) }
       : { severity: "error", stage: "measurement", code: "MEASUREMENT_INVALID", location: issue.location || issue.path, reason: issue.message,
         nextStep: "Review node kind, positive width and content versions; choose any content or width change with the user." });
-  }
+  } finally { await closeEditableDraft(editable); }
   return result;
 }
 
-/** Measure initial ordinary labels and all preset/content versions without changing the source draft. */
-async function measureDraft(sdk, draft, options, signal) {
+/** Measure initial ordinary labels and all preset/content versions, then apply the explicit write mode. */
+async function measureDraft(sdk, draft, options, signal, editable) {
   const issues = sdk.validateDocument(draft);
   if (issues.length) throw new DraftMeasurementError(issues.map((issue) => ({ path: issue.path, message: issue.message })));
   const nodes = draft.nodes;
@@ -73,10 +82,9 @@ async function measureDraft(sdk, draft, options, signal) {
       ...(options.lines ? { estimatedLines: estimateMeasurementLines(sdk, { ...node, typography: draft.typography }, contentSources, labelSources) } : {}) }];
   });
   const diagnostics = measurements.flatMap((item) => item.diagnostics.map((diagnostic) => ({ ...diagnostic, objectId: item.nodeId })));
-  if (diagnostics.length) throw new DraftMeasurementError(diagnostics.map((diagnostic) => ({ ...diagnostic, code: "MEASUREMENT_DIAGNOSTIC",
-    location: diagnostic.sourcePath, reason: diagnostic.message })));
-  const measurement = { kind: "draft", method: "sdk-content-estimate", units: "diagram", nodes: measurements, output: options.output ? resolve(options.output) : null };
-  if (!options.output) return measurement;
+  const measurement = { kind: "draft", method: "sdk-content-estimate", units: "diagram", nodes: measurements, diagnostics,
+    output: editable ? editable.path : options.output ? resolve(options.output) : null };
+  if (!options.output && !editable) return measurement;
   const filled = {
     ...draft,
     nodes: nodes.map((node) => {
@@ -85,7 +93,9 @@ async function measureDraft(sdk, draft, options, signal) {
     })
   };
   signal?.throwIfAborted();
-  await writeDraftCopy(options.output, JSON.stringify(filled, null, 2) + "\n", signal);
+  const text = JSON.stringify(filled, null, 2) + "\n";
+  if (editable) await replaceEditableDraft(editable, text, signal);
+  else await writeDraftCopy(options.output, text, signal);
   return measurement;
 }
 

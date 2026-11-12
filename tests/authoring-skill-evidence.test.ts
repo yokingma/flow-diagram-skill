@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** On-demand evidence consumes copied-install artifacts and exposes only source-bound capture/reuse side effects. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
@@ -17,7 +18,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[], env: Record<string, string> = {}, interruptAt?: string) {
-  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done) => {
+  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done, reject) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache"), DEBUG: "pw:browser", ...env }
     });
@@ -28,7 +29,7 @@ function command(args: string[], env: Record<string, string> = {}, interruptAt?:
       stderr += data;
       if (interruptAt && stderr.includes(interruptAt)) { interruptAt = undefined; child.kill("SIGINT"); }
     });
-    child.on("close", (code) => done({ code, report: JSON.parse(stdout), stderr }));
+    child.on("close", (code) => { void readCommandReport(stdout).then((report) => done({ code, report, stderr }), reject); });
   });
 }
 async function tree(directory: string): Promise<Record<string, string>> {
@@ -47,7 +48,7 @@ test.skipIf(!browser)("evidence captures existing artifacts once, retains immuta
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const before = await tree(history);
   const args = ["evidence", "--from", "v001", "--name", name, "--output", history];
@@ -88,7 +89,7 @@ test.skipIf(!browser)("new surfaces extend complete requirements, stay unviewed 
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", browser!]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", browser!]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const args = ["evidence", "--from", "v001", "--name", name, "--output", history];
   const first = await command([...args, "--browser", browser!]);
@@ -126,11 +127,11 @@ test.skipIf(!browser)("changed source and theme start fresh requirements without
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  expect((await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
   const first = await command(["evidence", "--from", "v001", "--name", name, "--output", history, "--browser", browser!]);
   expect(first.code, JSON.stringify(first)).toBe(0);
   await writeFile(input, JSON.stringify({ ...document, title: "Changed source" }));
-  const second = await command(["author", "--input", input, "--parent", "v001", "--name", name, "--output", history, "--svg", "--theme", "dark", "--browser", "none"]);
+  const second = await command(["author", "--checkpoint", "--preview", "--input", input, "--parent", "v001", "--name", name, "--output", history, "--svg", "--theme", "dark", "--browser", "none"]);
   expect(second.code, JSON.stringify(second)).toBe(0);
   const capture = await command(["evidence", "--from", "v002", "--name", name, "--output", history, "--browser", browser!]);
   expect(capture.code, JSON.stringify(capture)).toBe(0);
@@ -144,12 +145,12 @@ test.skipIf(!browser)("revision-owned evidence can be reused alongside one new c
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const artifact = (source.report.artifacts as { kind: string; artifactId: string }[]).find((item) => item.kind === "svg")!;
   const settings = join(workspace, "settings.json");
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: 320, backdrop: "#ffffff" }] }));
-  const previous = await command(["author", "--from", "v001", "--name", name, "--output", history, "--artifact-preview-settings", settings, "--browser", browser!]);
+  const previous = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", name, "--output", history, "--artifact-preview-settings", settings, "--browser", browser!]);
   expect(previous.code, JSON.stringify(previous)).toBe(0);
   const oldItem = (previous.report.artifactEvidence as { items: { evidenceId: string }[] }).items[0];
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: 240, backdrop: "#111827" }] }));
@@ -176,7 +177,7 @@ test.skipIf(!browser)("missing browser records all conditions and a later reques
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  expect((await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
   const args = ["evidence", "--from", "v001", "--name", name, "--output", history];
   const missing = await command([...args, "--browser", "none"], { FLOWSVG_CACHE_DIR: input });
   expect(missing.code).toBe(1);
@@ -199,7 +200,7 @@ test.skipIf(!browser)("corrupt screenshots are recaptured, while changed source 
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const authored = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const authored = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(authored.code, JSON.stringify(authored)).toBe(0);
   const args = ["evidence", "--from", "v001", "--name", name, "--output", history];
   const first = await command([...args, "--browser", browser!]);
@@ -251,7 +252,7 @@ test.skipIf(!browser || process.platform === "win32")("cancellation retains comp
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const artifact = (source.report.artifacts as { kind: string; artifactId: string }[]).find((item) => item.kind === "svg")!;
   const settings = join(workspace, "settings.json");
@@ -279,12 +280,12 @@ test.skipIf(!browser)("defaults cover named SVG/PNG animation exports and new di
   await writeFile(input, JSON.stringify({ ...document, scenes: [{ id: "change", label: "Change", beats: [
     { durationMs: 400, actions: [{ type: "updateNode", target: "a", value: { label: "Done" } }] }
   ] }] }));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const manifest = join(workspace, "manifest.json");
   await writeFile(manifest, JSON.stringify({ schemaVersion: 1, sourceSha256: (source.report.input as { sha256: string }).sha256,
     sdk: { version: (source.report.sdk as { version: string }).version, integrity: (source.report.sdk as { integrity: string }).integrity }, frames: [{ name: "start", timeMs: 0, formats: ["svg"] }, { name: "selected", timeMs: 137, formats: ["svg", "png"] }] }));
-  const exported = await command(["author", "--from", "v001", "--name", name, "--output", history, "--export-manifest", manifest, "--background", "transparent", "--browser", browser!]);
+  const exported = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", name, "--output", history, "--export-manifest", manifest, "--background", "transparent", "--browser", browser!]);
   expect(exported.code, JSON.stringify(exported)).toBe(0);
   const args = ["evidence", "--from", "v002", "--name", name, "--output", history];
   const first = await command([...args, "--browser", browser!]);
@@ -313,7 +314,7 @@ test("invalid settings and unsupported execution flags fail without snapshot or 
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  expect((await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"])).code).toBe(0);
   const before = await tree(history);
   const settings = join(workspace, "bad-settings.json");
   for (const value of ["not-json", JSON.stringify({ items: [] }), JSON.stringify({ items: [{ artifactId: "missing", displayWidth: 240, backdrop: "#ffffff" }] })]) {
@@ -334,7 +335,7 @@ test.skipIf(!browser)("valid new conditions survive an invalid explicit browser 
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const args = ["evidence", "--from", "v001", "--name", name, "--output", history];
   const first = await command([...args, "--browser", browser!]);
@@ -373,7 +374,7 @@ test.skipIf(!browser)("one damaged formal image preserves valid combined-review 
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  expect((await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--png", "--browser", browser!])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--png", "--browser", browser!])).code).toBe(0);
   const base = ["--from", "v001", "--name", name, "--output", history];
   const first = await command(["evidence", ...base, "--browser", browser!]);
   expect(first.code, JSON.stringify(first)).toBe(0);
@@ -427,9 +428,9 @@ test.skipIf(!browser)("one damaged formal image preserves valid combined-review 
   const replacementImage = (replacement.report.artifactEvidence as { items: { evidenceId: string; path: string }[] }).items.find((item) => item.evidenceId === freshForm.items[0].evidenceId)!;
   await writeFile(replacementImage.path, "damaged replacement image with historical issue");
   const issueReview = await command(["review", ...base, "--html-review", forms.html]);
-  expect(issueReview.report).toMatchObject({ completion: { quality: "needs-user-decision" } });
-  expect((issueReview.report.qualityCoverage as { required: { id: string; status: string }[] }).required.find((item) => item.id === "review-issues")?.status).toBe("needs-user-decision");
-  expect((await command(finalArgs)).report).toMatchObject({ completion: { quality: "needs-user-decision" } });
+  expect(issueReview.report).toMatchObject({ completion: { quality: "unresolved-issues" } });
+  expect((issueReview.report.qualityCoverage as { required: { id: string; status: string }[] }).required.find((item) => item.id === "review-issues")?.status).toBe("unresolved-issues");
+  expect((await command(finalArgs)).report).toMatchObject({ completion: { quality: "unresolved-issues" } });
   const issueHistory = JSON.parse(await readFile(summaryPath, "utf8"));
   expect(issueHistory.diagnostics.some((item: { reason: string }) => item.reason === "Preserve this observed issue after image damage.")).toBe(true);
   expect(issueHistory.visual.surfaces.map((item: { evidenceId: string }) => item.evidenceId)).toEqual([images[1].evidenceId]);
@@ -441,12 +442,12 @@ test.skipIf(!browser)("sequential failed capture requests reuse revision evidenc
   const history = join(workspace, "history");
   const input = join(root, `${name}.json`);
   await writeFile(input, JSON.stringify(document));
-  const original = await command(["author", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
+  const original = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", name, "--output", history, "--svg", "--browser", "none"]);
   expect(original.code, JSON.stringify(original)).toBe(0);
   const artifact = (original.report.artifacts as { kind: string; artifactId: string }[]).find((item) => item.kind === "svg")!;
   const settings = join(workspace, "settings.json");
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: 300, backdrop: "#ffffff" }] }));
-  const legacy = await command(["author", "--from", "v001", "--name", name, "--output", history, "--artifact-preview-settings", settings, "--browser", browser!]);
+  const legacy = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", name, "--output", history, "--artifact-preview-settings", settings, "--browser", browser!]);
   expect(legacy.code, JSON.stringify(legacy)).toBe(0);
   for (const width of [240, 200]) {
     await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: width, backdrop: "#111827" }] }));

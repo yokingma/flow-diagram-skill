@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { execFile } from "node:child_process";
 import { cp, mkdtemp, readFile, realpath, rm } from "node:fs/promises";
@@ -17,7 +18,7 @@ const RECIPE_CASES = [
 interface RecipeReport {
   checks: Record<string, string>;
   diagnostics: Array<{ severity: string }>;
-  completion: { delivery: string; quality: string };
+  completion: { delivery: string; quality?: string };
   compilation: { totalDurationMs: number; beats: Array<{ startMs: number; endMs: number }> };
   revision: { directory: string };
 }
@@ -44,21 +45,22 @@ test.each(RECIPE_CASES)("copied $name fits its content and exports the complete 
     });
     return result.stdout;
   };
-  const measured = JSON.parse(await run(["measure", "--input", input])) as {
+  const measured = (await readCommandReport(await run(["measure", "--input", input]))) as {
     measurement: { nodes: Array<{ heightChange: number; diagnostics: unknown[] }> };
   };
   for (const node of measured.measurement.nodes) {
     expect(node.heightChange).toBeLessThanOrEqual(0);
     expect(node.diagnostics).toEqual([]);
   }
-  const report = JSON.parse(await run([
+  const report = (await readCommandReport(await run([
     "author", "--input", input, "--name", name, "--browser", "none", "--svg",
     "--sources", join(installedSkill, "examples", "recipe-sources.json")
-  ])) as RecipeReport;
-  expect(report.checks).toMatchObject({ validation: "passed", compilation: "passed", layout: "passed" });
+  ]))) as RecipeReport;
+  expect(report.checks).toMatchObject({ validation: "passed", compilation: "passed", layout: "not-run" });
   expect(report.diagnostics.filter((item) => item.severity !== "info")).toEqual([]);
   expect(report.compilation.totalDurationMs).toBe(duration);
-  expect(report.completion).toMatchObject({ delivery: "complete", quality: "incomplete" });
+  expect(report.completion.delivery).toBe("complete");
+  expect(report.completion.quality).toBeUndefined();
   const svg = await readFile(join(report.revision.directory, "diagram.svg"), "utf8");
   for (const label of labels) expect(svg).toContain(label);
   expect(await readFile(input)).toEqual(original);

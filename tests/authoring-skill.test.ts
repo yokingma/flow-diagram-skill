@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Installed CLI behavior: these tests copy the entire skill away from the repository. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { mkdtemp, cp, writeFile, readFile, mkdir, rm, realpath, stat } from "node:fs/promises";
@@ -40,7 +41,7 @@ test("CLI help is discoverable and unknown options explain the valid option list
   expect(measureHelp.stdout).toContain("--input");
   const unknown = await command(["author", "--bogus"]);
   expect(unknown.code).toBe(1);
-  const report = JSON.parse(unknown.stdout);
+  const report = (await readCommandReport(unknown.stdout));
   expect(report.diagnostics[0]).toMatchObject({ code: "ERR_PARSE_ARGS_UNKNOWN_OPTION" });
   expect(report.diagnostics[0].nextStep).toContain("flowsvg author --help");
   expect(report.diagnostics[0].nextStep).toContain("--visual-review");
@@ -53,7 +54,7 @@ test("installed tool saves a draft, pins its isolated SDK and leaves the applica
   await writeFile(join(root, "package-lock.json"), "application lock unchanged");
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "测试 diagram"]);
   expect(result.code, result.stderr + result.stdout).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.status).toBe("delivered");
   expect(report.checks.validation).toBe("passed");
   expect(report.checks.compilation).toBe("passed");
@@ -67,15 +68,15 @@ test("installed tool saves a draft, pins its isolated SDK and leaves the applica
 test("doctor reports missing SDK state without preparing dependencies", async () => {
   const result = await command(["doctor"], { FLOWSVG_CACHE_DIR: join(root, "doctor cache") });
   expect(result.code).toBe(0);
-  expect(JSON.parse(result.stdout).runtime.state).toBe("missing");
+  expect((await readCommandReport(result.stdout)).runtime.state).toBe("missing");
 });
 
 test("a changed SDK cannot mark historical exports complete without rendering new files", async () => {
   const input = join(root, "sdk-boundary.json");
   await writeFile(input, JSON.stringify(document));
-  const first = await command(["author", "--browser", "none", "--input", input, "--name", "sdk-boundary", "--svg"]);
+  const first = await command(["author", "--browser", "none", "--input", input, "--name", "sdk-boundary", "--svg", "--checkpoint"]);
   expect(first.code, first.stdout).toBe(0);
-  const source = JSON.parse(first.stdout);
+  const source = (await readCommandReport(first.stdout));
   // Synthetic archived metadata isolates the inheritance contract; it is not old-SDK acceptance evidence.
   const oldSdk = { ...source.sdk, version: "0.2.3", integrity: "archived-sdk-integrity" };
   const archived = { ...source, sdk: oldSdk, artifacts: source.artifacts.map((item: { kind: string }) =>
@@ -84,22 +85,26 @@ test("a changed SDK cannot mark historical exports complete without rendering ne
   const bytes = JSON.stringify(archived);
   await writeFile(record, bytes);
   const continued = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary"]);
-  const report = JSON.parse(continued.stdout);
+  const report = (await readCommandReport(continued.stdout));
   expect(report.sdk.version).toBe("0.3.1");
   expect(report.completion.requested).toContain("svg");
-  expect(report.completion.completed).not.toContain("svg");
-  expect(report.completion.delivery).toBe("incomplete");
+  expect(report.completion.completed).toContain("svg");
+  expect(report.completion.delivery).toBe("complete");
   expect(report.inheritedArtifacts ?? []).toEqual([]);
-  const rendered = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary", "--svg"]);
+  const regenerated = report.artifacts.find((item: { kind: string }) => item.kind === "svg");
+  expect(regenerated.sdk.version).toBe("0.3.1");
+  expect(regenerated.path).not.toBe(source.artifacts.find((item: { kind: string }) => item.kind === "svg").path);
+  expect(regenerated.sourceSha256).toBe(source.input.sha256);
+  const rendered = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary", "--svg", "--checkpoint"]);
   expect(rendered.code, rendered.stdout).toBe(0);
-  expect(JSON.parse(rendered.stdout).completion.delivery).toBe("complete");
+  expect((await readCommandReport(rendered.stdout)).completion.delivery).toBe("complete");
   expect(await readFile(record, "utf8")).toBe(bytes);
 }, 60_000);
 
 test("interrupted installation recovery removes abandoned temporary environments", async () => {
   const cache = join(root, "interrupted cache");
   const env = { FLOWSVG_CACHE_DIR: cache };
-  const prepared = JSON.parse((await command(["prepare"], env)).stdout);
+  const prepared = (await readCommandReport((await command(["prepare"], env)).stdout));
   const directory = prepared.directory;
   await rm(directory, { recursive: true });
   const orphan = `${directory}.tmp-2147483647-abandoned`;
@@ -112,9 +117,9 @@ test("interrupted installation recovery removes abandoned temporary environments
 }, 60_000);
 
 test("runtime cache identity includes the tool release content", async () => {
-  const first = JSON.parse((await command(["prepare"])).stdout);
+  const first = (await readCommandReport((await command(["prepare"])).stdout));
   await writeFile(join(skill, "scripts", "release-note.mjs"), '// changed tool release\n');
-  const second = JSON.parse((await command(["prepare"])).stdout);
+  const second = (await readCommandReport((await command(["prepare"])).stdout));
   expect(second.directory).not.toBe(first.directory);
 }, 60_000);
 
@@ -124,7 +129,7 @@ test("unwritable output reports a specific save failure without claiming a saved
   await writeFile(input, JSON.stringify(document));
   await writeFile(output, "keep");
   const result = await command(["author", "--browser", "none", "--input", input, "--output", output, "--name", "save-failure"]);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(result.code).toBe(1);
   expect(report.diagnostics[0]).toMatchObject({ stage: "save", code: "DRAFT_SAVE_FAILED" });
   expect(report.artifacts).toEqual([]);
@@ -137,7 +142,7 @@ test("field/reference errors and compile errors preserve exact draft bytes and d
   const input = join(root, "field errors.json");
   const bytes = JSON.stringify(invalid, null, 4) + "\n";
   await writeFile(input, bytes);
-  const failed = JSON.parse((await command(["author", "--browser", "none", "--input", input, "--name", "errors"])).stdout);
+  const failed = (await readCommandReport((await command(["author", "--browser", "none", "--input", input, "--name", "errors", "--checkpoint"])).stdout));
   expect(failed).toMatchObject({ status: "failed", checks: { validation: "failed", compilation: "not-run" } });
   expect(failed.diagnostics).toContainEqual(expect.objectContaining({ location: "edges[0].from", stage: "validation" }));
   expect(await readFile(join(failed.revision.directory, "diagram.json"), "utf8")).toBe(bytes);
@@ -147,7 +152,7 @@ test("field/reference errors and compile errors preserve exact draft bytes and d
     scenes: [{ id: "s", label: "send", beats: [{ durationMs: 1000, actions: [{ type: "flow", target: "e", direction: "forward" }] }] }]
   };
   await writeFile(input, JSON.stringify(compileInput));
-  const compile = JSON.parse((await command(["author", "--browser", "none", "--input", input, "--name", "errors"])).stdout);
+  const compile = (await readCommandReport((await command(["author", "--browser", "none", "--input", input, "--name", "errors", "--checkpoint"])).stdout));
   expect(compile.revision.id).toBe("v002");
   expect(compile).toMatchObject({ status: "failed", checks: { validation: "passed", compilation: "failed" } });
   expect(compile.diagnostics).toContainEqual(expect.objectContaining({ location: "scenes[0].beats[0].durationMs", stage: "compilation" }));
@@ -156,20 +161,20 @@ test("field/reference errors and compile errors preserve exact draft bytes and d
 }, 60_000);
 
 test("complete cache works offline, corruption rebuilds, and no-cache offline failure preserves the draft", async () => {
-  const ready = JSON.parse((await command(["prepare"])).stdout);
+  const ready = (await readCommandReport((await command(["prepare"])).stdout));
   const offline = { npm_config_offline: "true", npm_config_cache: join(root, "empty npm cache") };
-  const cached = JSON.parse((await command(["prepare"], offline)).stdout);
+  const cached = (await readCommandReport((await command(["prepare"], offline)).stdout));
   expect(cached).toMatchObject({ status: "ready", reused: true });
   const metadataPath = join(ready.sdk.path, "package.json");
   const metadata = JSON.parse(await readFile(metadataPath, "utf8"));
   await writeFile(metadataPath, JSON.stringify({ ...metadata, version: "999.0.0" }));
-  const repaired = JSON.parse((await command(["prepare"])).stdout);
+  const repaired = (await readCommandReport((await command(["prepare"])).stdout));
   expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.3.1" } });
   const input = join(root, "offline.json");
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "offline"], { ...offline, FLOWSVG_CACHE_DIR: join(root, "never prepared") });
   expect(result.code).toBe(1);
-  const failed = JSON.parse(result.stdout);
+  const failed = (await readCommandReport(result.stdout));
   expect(failed).toMatchObject({ status: "failed", stage: "environment", checks: { validation: "not-run" }, sdk: null });
   expect(failed.diagnostics[0]).toMatchObject({ code: "INSTALL_FAILED" });
   expect(JSON.parse(await readFile(join(failed.revision.directory, "diagram.json"), "utf8"))).toEqual(document);
@@ -179,10 +184,10 @@ test("parallel first runs prepare one environment and reserve different revision
   const input = join(root, "parallel.json");
   await writeFile(input, JSON.stringify(document));
   const env = { FLOWSVG_CACHE_DIR: join(root, "parallel cache") };
-  const results = await Promise.all([command(["author", "--browser", "none", "--input", input, "--name", "parallel", "--output", join(root, "parallel history")], env), command(["author", "--browser", "none", "--input", input, "--name", "parallel", "--output", join(root, "parallel history")], env)]);
+  const results = await Promise.all([command(["author", "--browser", "none", "--input", input, "--name", "parallel-two", "--checkpoint", "--output", join(root, "parallel history")], env), command(["author", "--browser", "none", "--input", input, "--name", "parallel", "--checkpoint", "--output", join(root, "parallel history")], env)]);
   expect(results.map((result) => result.code)).toEqual([0, 0]);
-  const reports = results.map((result) => JSON.parse(result.stdout));
-  expect(new Set(reports.map((report) => report.revision.id)).size).toBe(2);
+  const reports = await Promise.all(results.map((result) => readCommandReport(result.stdout)));
+  expect(new Set(reports.map((report) => report.revision.directory)).size).toBe(2);
   expect(new Set(reports.map((report) => report.sdk.path)).size).toBe(1);
   expect(reports.map((report) => report.environment.reused).sort()).toEqual([false, true]);
 }, 60_000);
@@ -192,7 +197,7 @@ test("missing npm is diagnosed before SDK installation while the draft remains s
   const input = join(root, "no npm.json");
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "no npm"], { PATH: join(root, "empty path") });
-  const failed = JSON.parse(result.stdout);
+  const failed = (await readCommandReport(result.stdout));
   expect(result.code).toBe(1);
   expect(failed.diagnostics[0]).toMatchObject({ stage: "environment", code: "NPM_UNAVAILABLE" });
   expect(failed.artifacts.some((artifact: { kind: string }) => artifact.kind === "json")).toBe(true);
@@ -211,7 +216,7 @@ test("cancellation keeps a cancelled report and releases its installation lock a
     child.stderr.on("data", (data) => { if (String(data).includes("Preparing the isolated")) child.kill("SIGINT"); });
     child.on("close", (code) => resolveResult({ code, stdout }));
   });
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(result.code).toBe(1);
   expect(report.status).toBe("cancelled");
   expect(JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"))).toEqual(report);
@@ -238,7 +243,7 @@ test("registry package integrity failure does not fall back to another SDK or cl
       FLOWSVG_CACHE_DIR: join(root, "integrity cache"), npm_config_cache: join(root, "integrity npm cache"), npm_config_fetch_retries: "0"
     });
     expect(result.code).toBe(1);
-    const report = JSON.parse(result.stdout);
+    const report = (await readCommandReport(result.stdout));
     expect(report).toMatchObject({ status: "failed", stage: "environment", sdk: null, checks: { validation: "not-run" } });
     expect(report.diagnostics[0].stage).toBe("environment");
     expect(report.diagnostics[0].reason).toMatch(/integrity|checksum/i);
@@ -249,11 +254,11 @@ test("registry package integrity failure does not fall back to another SDK or cl
 }, 60_000);
 
 test("a damaged cached ESM resolver is rebuilt before it can execute", async () => {
-  const ready = JSON.parse((await command(["prepare"])).stdout);
+  const ready = (await readCommandReport((await command(["prepare"])).stdout));
   const marker = join(root, "damaged-resolver-executed");
   await writeFile(join(ready.directory, "resolve.mjs"), `import {writeFileSync} from 'node:fs'; writeFileSync(${JSON.stringify(marker)}, 'bad'); throw Error('damaged resolver');`);
   const result = await command(["prepare"]);
   expect(result.code, result.stdout).toBe(0);
-  expect(JSON.parse(result.stdout).reused).toBe(false);
+  expect((await readCommandReport(result.stdout)).reused).toBe(false);
   await expect(stat(marker)).rejects.toMatchObject({ code: "ENOENT" });
 }, 60_000);

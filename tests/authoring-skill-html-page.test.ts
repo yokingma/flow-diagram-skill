@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Editable pages are exercised through the copied installed CLI and its actual offline output. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile, mkdir, readdir } from "node:fs/promises";
@@ -48,7 +49,7 @@ test("accepts an Agent page, preserves outer content and publishes one self-cont
   const { input, page } = await sources("static");
   const result = await command(["author", "--input", input, "--html", page, "--name", "static-page", "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const html = await readFile(join(report.revision.directory, "diagram.html"), "utf8");
   expect(html).toContain('<h1>如何生成下一个 token</h1>');
   expect(html).toContain('教学示意 &lt;说明&gt; &amp; 条件');
@@ -65,7 +66,7 @@ test.skipIf(!browser)("inspects the actual outer page and its embedded paused pl
   const { input, page } = await sources("browser");
   const result = await command(["author", "--input", input, "--html", page, "--name", "browser-page", "--browser", browser!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.checks.html).toBe("captured");
   expect(report.htmlInspection.playerSurface).toBe("managed-frame");
   expect(report.htmlInspection.initial).toMatchObject({ paused: true, offline: true, svg: true });
@@ -94,7 +95,7 @@ test("rejects a reserved playback host outside the managed region before creatin
   const { input, page } = await sources("duplicate-host", shell.replace('<h1>', '<iframe id="flowsvg-page-player"></iframe><h1>'));
   const result = await command(["author", "--input", input, "--html", page, "--name", "duplicate-host", "--browser", "none"]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.revision).toBeNull();
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_PAGE_INVALID" }));
 });
@@ -103,25 +104,25 @@ test("rejects a reserved playback host outside the managed region before creatin
 test("retains page-only edits and rejects mismatched or damaged playback", async () => {
   const { input, page } = await sources("retained");
   const initialResult = await command(["author", "--input", input, "--html", page, "--name", "retained", "--browser", "none"]);
-  const initial = JSON.parse(initialResult.stdout);
+  const initial = (await readCommandReport(initialResult.stdout));
   const html = await readFile(join(initial.revision.directory, "diagram.html"), "utf8");
   const edited = html.replace("如何生成下一个 token", "修改后的页面标题");
   await writeFile(page, edited);
   const accepted = await command(["author", "--input", input, "--html", page, "--name", "retained", "--browser", "none"]);
   expect(accepted.code, accepted.stdout + accepted.stderr).toBe(0);
-  const report = JSON.parse(accepted.stdout);
+  const report = (await readCommandReport(accepted.stdout));
   expect(await readFile(join(report.revision.directory, "diagram.html"), "utf8")).toBe(edited);
   expect(report.htmlPage.source.sha256).toBe(sha256(edited));
   await writeFile(input, JSON.stringify({ ...diagram, title: "另一张图" }));
   const mismatch = await command(["author", "--input", input, "--html", page, "--name", "retained", "--browser", "none"]);
   expect(mismatch.code).toBe(1);
-  expect(JSON.parse(mismatch.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_PAGE_INVALID" }));
+  expect((await readCommandReport(mismatch.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_PAGE_INVALID" }));
   expect(await readFile(join(root, ".diagrams", "retained", "diagram.html"), "utf8")).toBe(edited);
   await writeFile(input, JSON.stringify(diagram));
   await writeFile(page, edited.replace('title="Diagram player"', 'title="Changed playback"'));
   const damaged = await command(["author", "--input", input, "--html", page, "--name", "retained", "--browser", "none"]);
   expect(damaged.code).toBe(1);
-  expect(JSON.parse(damaged.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_PAGE_INVALID" }));
+  expect((await readCommandReport(damaged.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_PAGE_INVALID" }));
 }, 60_000);
 
 test("rejects malformed page regions and HTML options outside author", async () => {
@@ -130,11 +131,11 @@ test("rejects malformed page regions and HTML options outside author", async () 
     await writeFile(page, html);
     const result = await command(["author", "--input", input, "--html", page, "--name", "malformed", "--browser", "none"]);
     expect(result.code).toBe(1);
-    expect(JSON.parse(result.stdout)).toMatchObject({ revision: null, diagnostics: [expect.objectContaining({ code: "HTML_PAGE_INVALID" })] });
+    expect((await readCommandReport(result.stdout))).toMatchObject({ revision: null, diagnostics: [expect.objectContaining({ code: "HTML_PAGE_INVALID" })] });
   }
   const scoped = await command(["doctor", "--html", page]);
   expect(scoped.code).toBe(1);
-  expect(JSON.parse(scoped.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "ERR_OPTION_SCOPE", location: "html" }));
+  expect((await readCommandReport(scoped.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "ERR_OPTION_SCOPE", location: "html" }));
 });
 
 test("finalize preserves the actual page and portable identities after workspace cleanup", async () => {
@@ -147,7 +148,7 @@ test("finalize preserves the actual page and portable identities after workspace
   await writeFile(page, shell);
   const authored = await command(["author", "--input", input, "--html", page, "--name", name, "--output", join(workspace, "history"), "--browser", "none"]);
   expect(authored.code, authored.stdout + authored.stderr).toBe(0);
-  const source = JSON.parse(authored.stdout);
+  const source = (await readCommandReport(authored.stdout));
   const html = await readFile(join(source.revision.directory, "diagram.html"), "utf8");
   const result = await command(["finalize", "--workspace", workspace, "--name", name, "--from", source.revision.id]);
   expect(result.code, result.stdout + result.stderr).toBe(0);

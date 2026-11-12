@@ -6,7 +6,7 @@
 
 Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播放，应用内嵌使用 SDK 集成方式。“可执行”指播放作者定义的视觉状态与变化，不代表执行图中描述的系统或业务流程。
 
-这份指南说明如何在支持 skill 的编程助手中安装和使用 Flow Diagram。你用自然语言描述图解，助手先根据阅读问题选择表达模型，再组织来源支持的内容、编写图解 JSON、调用工具和解释检查结果。默认交付一个最终选定图解，包含可编辑 JSON、带播放控件的离线 HTML 和创作报告；草稿与检查截图只在任务期间保留，成功收尾后清理；只有明确要求时才保留完整历史。
+这份指南说明如何在支持 Skill 的编程助手中安装和使用 Flow Diagram。你说明读者问题和来源事实，助手依次理解、制作、校验、看图修改并交付最终选定图解。任务持续编辑一份源草稿、替换当前产物，并用一份临时 `issues.md` 汇集实质问题。默认交付 JSON、初始暂停的离线 HTML 和报告；成功收尾清理本任务工作区，失败时保留恢复材料。只有明确要求时才增加不可变检查点或注册正式复核。
 
 当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.3.1`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
 
@@ -40,23 +40,23 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 说明目标读者、展示尺寸和需要的输出格式，有助于助手安排信息密度和演示节奏。默认交付 JSON 和离线 HTML；需要 SVG、PNG 或 GIF 时，可以在本次提出，也可以设为项目偏好供以后复用。skill 生成图解素材，不生成 PPTX 或 PowerPoint 原生形状；导入和播放效果取决于演示软件。
 
-助手根据使用场景，采用[视觉设计方法](../../skills/flow-diagram/references/visual-design.md)协调文字、间距、色彩、容器、标签、连线和动画。工具检查与 AI 检查提供证据和观察，最终设计效果由你判断。报告中的质量通过状态描述已记录的检查与覆盖范围。
+助手借助[视觉设计方法](../../skills/flow-diagram/references/visual-design.md)协调文字、间距、色彩、容器、连线和动画。规范指导制作和看图修改，不作为验收门禁。设计判断来自结合读者问题与展示条件的实际查看；机器执行成功或正式覆盖完成均不代表设计获认可。
 
 随包的[语义模式指南](../../skills/flow-diagram/references/semantic-patterns.md)覆盖请求响应、重试与状态迁移、汇聚与瓶颈、分阶段数据处理、带边界的系统架构和分层架构教学设定。示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
 
 流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[混合审批流程](../../skills/flow-diagram/examples/mixed-approval-flow.json)使用虚构教学设定：缺失材料分支保持可见，动画只演示材料完整的路径。对完整草稿运行 `measure`，会测量这些形状的全部标签替换版本；若仍有宽度诊断，需要加宽节点。`layout` 仍只接受静态草稿：先排布几何，再加入 scenes，然后重新测量并检查间距。独立测量对象的 `label` 可为字符串（含空串）或非空版本数组；顶层批量数组中的 label 仍是描述性元数据。
 
-需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留多列、组内标题留白、层间带标签连线和治理侧栏。层序不等于调用时间顺序，分组不自动代表部署或信任边界，虚线治理说明也不增加未声明的运行时依赖。先对 draft 运行 `measure --input` 并写出独立的新草稿，再用新草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
+需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留多列、组内标题留白、层间带标签连线和治理侧栏。层序不等于调用时间顺序，分组不自动代表部署或信任边界，虚线治理说明也不增加未声明的运行时依赖。先将示例复制到任务工作区，需要高度回填时运行 `measure --input <draft.json> --in-place`，再从同一源草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
 
-从完整草稿测量结构化内容和普通标签时，运行 `measure --input <draft.json>`，使用草稿中的宽度和 typography。结构化内容包含初始值与全部动画替换；普通标签只测初始值，预设标签包含替换版本。需要独立回填草稿时追加 `--output <new-draft.json>`：源字节不变，只增加高度，不覆盖已有目标；动画宽高变化或未解决测量诊断会阻止回填。生成草稿仍需排布位置、检查诊断并实际查看。
+从完整草稿测量结构化内容和普通标签时，运行 `measure --input <draft.json>`，使用草稿中的宽度和 typography。结构化内容包含初始值与全部动画替换；普通标签只测初始值，预设标签包含替换版本。追加 `--in-place` 可直接回填任务根目录下的同一源草稿，只增加高度；生成的 current JSON、检查点、外部文件及文件别名保持写入保护。不支持的动画宽高变化仍会阻止操作。只有明确需要独立副本时才改用 `--output <new-draft.json>`，源字节不变且不覆盖已有目标。取消或保存失败保留源文件；修改后从同一路径重新 author，finalize 会拒绝已经过时的生成文件。SDK 越界估算只作辅助，不阻止回填。生成草稿仍需排布位置、检查诊断并实际查看。
 
 需要在渲染前查看有来源的逐行文本时，在 `measure --input <json>` 后追加 `--lines`。每个结果或草稿节点只增加一份 `estimatedLines`，保留既有测量范围内的全部版本和不同文本角色；默认输出、高度、诊断与回填行为不变。批量 label 仍是元数据，普通草稿标签仍只测初始值。记录可能超出安全区，其数量不保证等于基线行数。它们是供查看的估算，不代表实际可见字形，也不自动判断可读性。完整草稿测量失败时仍只返回诊断；`--output` 不把这些记录写入文档。其他命令拒绝此参数。详见[逐行排版估算](../../skills/flow-diagram/references/tool-contract.md#inspect-estimated-text-lines)。
 
 测量报告问题时，用 `sourcePath`（草稿另有 `location`）定位实际节点、内容块或动画动作。`objectId` 保留节点 ID，SDK 的 `path`、`versionIndex`、`dimension`、`message` 继续保留。`nextStep` 区分宽度/安全区检查与固定实体图块高度/局部坐标检查。增加外部节点高度不能修复横向越界，也不会放大固定图块；仅增加图块高度不能纠正负向范围越界。完整草稿测量失败时只返回诊断、不发布回填文件，表示请求的操作未完成，不表示图形视觉质量不合格。检查会在失败阶段停止，因此诊断不是全部问题清单。独立和批量输入仍返回带 SDK 诊断的测量结果。实际图片需另外查看。详见[测量诊断](../../skills/flow-diagram/references/tool-contract.md#locate-sdk-measurement-diagnostics)及[失败与文件保护](../../skills/flow-diagram/references/tool-contract.md#write-a-height-filled-draft)。
 
-如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。[布局辅助教学草稿](../../skills/flow-diagram/examples/layout-assistance.json)和[计划](../../skills/flow-diagram/examples/layout-assistance-plan.json)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时保留 `text-overflow` warning。
+如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。[布局辅助教学草稿](../../skills/flow-diagram/examples/layout-assistance.json)和[计划](../../skills/flow-diagram/examples/layout-assistance-plan.json)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时仍保留该高度；按需追加 `--geometry` 可取得对应的文字排版估算。
 
-工作流要求静态草稿和显式计划。`measure` 会返回当前高度、所需高度、变化量和确定性估算行数；行数来自公开 SDK 基线，不是浏览器像素或正式 SVG/PNG 证据。之后运行 `layout --input <draft> --plan <layout-plan.json> --output <new-draft.json>`，再对新草稿运行 `validate`，然后进入 author。布局结果是草稿，不是版本或质量批准。正式 SVG/PNG 审查使用 `evidence` 读取已有文件，按需通过 `--artifact-preview-settings` 指定展示条件，查看每张 evidence 图片，再通过 `review --artifact-review` 显式指定主体和 evidence 来源。普通 preview 和 HTML review 只覆盖各自的采样 surface，不能覆盖正式图片。
+可选的 layout 命令要求静态草稿和显式布局计划。按需运行 `measure --in-place`，再运行 `layout --input <draft> --plan <layout-plan.json> --in-place`，然后校验和制作同一源草稿。测量高度作为布局下限，`overrides[id].height` 保持精确；`--geometry` 按需返回有限辅助估算。布局结果不代表设计批准。请求的 SVG/PNG 需在预期尺寸和背景下实际查看；只有明确要求正式复核时才追加[注册图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
 
 设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[配方示例检查](../../skills/flow-diagram/examples/README.md)区分这些设计起点与能力演示。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
 
@@ -165,7 +165,7 @@ API 服务和数据库属于“订单平台”，客户端位于平台外。
 
 在 Claude Code 中，将第一行改为 `/flow-diagram`，其他要求保持一致。也可直接说明“使用 flow-diagram skill”，由支持自动选择的宿主识别。
 
-请求中最好包含要表达的对象、关系方向、分组边界和演示目的。需求明确时助手直接完成初次布局；关系方向、边界、删减或聚合等关键含义不明确时，助手会先询问。助手会检查主要路径、接入口、标签、目标尺寸下的内容和实际画面；没有浏览器或查看能力时明确记录未执行。来源范围明确且没有语义歧义的简单任务无需额外确认。能力不足时，助手会解释限制并请你选择替代表达。
+请求中最好包含对象、关系方向、分组边界和读者问题。需求明确时可直接制作；助手可以在保留含义的前提下重排、分组、合并重复说明和选择抽象层级。改变事实、关键关系、边界或范围前才需要询问；SDK 无法忠实表达时，说明限制并请你选择替代方案。独立计划或设计合规证明不是前提。
 
 如果图解用于演示文稿，可追加具体约束：
 
@@ -190,11 +190,11 @@ API 服务和数据库属于“订单平台”，客户端位于平台外。
 
 可以修改偏好、忘掉一条，或重置全部。同一范围的新值替换旧值，明确的例外可以另记一行。条目冲突且影响本次任务时，助手会指出冲突，跳过有问题的默认值。写入或删除失败会明确报告。重置只删除 `.diagrams/preferences.md`；旧的 `.diagrams/.preferences.json` 保留原样，但不再生效。要保留某个旧选择，可以手动写入 Markdown，或请助手重新保存。
 
-用途未知且你明确选择默认值或要求直接制作时，起点为 Web 静态构图：960×600 画布、假定 720 CSS px 展示宽度，以及浅色背景；适用的项目偏好可以覆盖外观。选择跟随 Skill 的视觉默认值，不代表替后续任务选定用途。默认交付 JSON、暂停离线 HTML 和报告；额外格式来自本次要求或适用的项目偏好。未回复不等于选择默认值。
+用途未知时，助手采用 Web 静态构图：960 × 600 画布、假定 720 CSS px 展示宽度和浅色背景，适用项目偏好可覆盖外观。助手说明这些假设，无需另行确认“使用默认值”；已知 PPT 用途保持对应上下文。默认交付 JSON、暂停离线 HTML 和报告；额外格式来自本次要求或适用偏好。保存项目偏好仍需明确的今后复用意图。
 
 PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景，以及标题和页脚由幻灯片还是素材承载。已知 PPT 用途继续使用该上下文，缺少精确尺寸时记录假设。目标尺寸查看只覆盖相应条件，真实 PowerPoint/WPS 集成单独记录。动画请明确浏览器 HTML 播放还是 GIF；MP4、PPTX 和原生 PowerPoint 动画不在本技能导出能力内。
 
-需要导入幻灯片的图片时，请指定 SVG 或 PNG；如果本次要求和项目偏好都没定格式，助手会询问。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
+需要导入幻灯片的图片时，请指定 SVG 或 PNG；未请求图片格式时，助手采用默认文件，并说明没有幻灯片导入图片。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
 
 [读者问题选择表](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)用于选择能力全景、来源映射或流程等结构。[教学配方](../../skills/flow-diagram/examples/README.md#presentation-recipe-checks)包含无连线能力全景、中文来源与业务卡片、全图常显的并行流动动画。复用组织方式时，替换为自己的事实和展示尺寸。
 
@@ -250,13 +250,13 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 | `report.md` | 阅读实际检查、警告、交付文件和未完成事项。 |
 | `report.json` | 同一创作报告的结构化事实记录，供工具或后续任务读取。 |
 
-任务期间，创作、校验、重试和复核记录使用临时版本。成功收尾后清理这些版本和截图；最终报告使用相对文件路径，保留复核事实，不链接已删除的证据。后续修订读取最终 JSON，在新的任务目录中执行。
+任务期间，编辑、校验、测量、布局、截图和重试复用同一源草稿与当前产物。一份 `issues.md` 汇集实质疑问、错误和看图发现，同一问题持续更新位置、状态与处理结果，无需抄录正常命令和完整 stdout。发布前助手整理未解决问题及影响，按需通过 `finalize --notes <markdown>` 带入报告。CLI 原样复制 Agent 整理的说明，不解析或评分。成功发布后只清理本任务；明确要求的检查点或工作记录可保留。
 
-文件交付与质量检查分别记录。有可用浏览器时，创作工具会打开实际交付的 `diagram.html`，记录文件哈希、初始暂停、离线行为、播放和采样状态。这些程序事实不代表助手已经查看截图；实际查看列出的状态后，使用 `review --from <来源版本> --name <同名图解> --output <同一历史根> --html-review <json>` 记录查看范围。生成截图不代表助手已查看。没有浏览器或宿主无法查看图片时，HTML/图片检查保持未执行并明确记录。
+文件完成、程序检查和实际查看分别报告。有可用浏览器时，工具打开已保存的 `diagram.html`，记录哈希、初始暂停、离线行为、播放和捕获状态。截图生成不代表助手已查看。助手实际查看文件、修改问题，并在交付时说明查看尺寸、动画阶段和缺口。默认查看无需复核表单或 CLI 提交。缺少浏览器或图片查看能力时，查看结论限于已检查范围；文件齐备仍可带明确缺口交付。
 
-动画任务中，助手根据读者问题与阶段计划选择关键阶段，再对应实际编译时间、计划采样点、省略候选、已捕获图片与实际查看记录。同拍并发 flow 的每条路径和标记都可辨识时，一张合适的图片可以共同检查这些传递。全景移除了 focus，不能替代真实时间线初态或聚焦状态。静态图只有一张；动画 `--samples 2` 会省略终态，`--samples 3` 可容纳全景、起点与终点，但不保证覆盖中间阶段。
+动画任务中，助手根据读者问题与阶段计划选择关键阶段，再对应实际编译时间、计划采样点、省略候选、已捕获图片与实际查看记录。同拍并发 flow 的每条路径和标记都可辨识时，一张合适的图片可以共同检查这些传递。实际 HTML 截图保留原有 focus，并按不同时间点采样。静态图只有一张；动画 `--samples 2` 覆盖初态和终态，提高预算可纳入中间阶段。独立 SDK `--preview` 计划会为移除 focus 的全景保留一个名额。
 
-关键阶段缺失时，助手先通过新一轮 `author` 版本提高采样预算。所需时刻仍不可用时，使用现有定时导出及图片证据流程，或检查实际 HTML 或播放。新图片在实际打开并登记前保持未查看。报告指出已查看的表面与时刻，或剩余阶段缺口及影响；图片复核不代表已检查 HTML 或连续播放。这些步骤沿用现有质量状态，不新增叙事评分或自动审美阈值。详见[关键阶段核对](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages)。
+关键阶段缺失时，助手可对 current 提高 `author --samples`、检查该时刻的实际 HTML/播放，或查看定时导出。新截图需要实际查看，旧观察不能代表已看过重新生成的文件。交付说明指出查看的表面、时刻与剩余影响；节奏判断需要实际播放，采样查看只覆盖对应状态。详见[关键阶段核对](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages)。
 
 ## 6. 修订已有图解
 
@@ -268,26 +268,24 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 完整修订结果就绪后，再发布到最终目录。
 ```
 
-最终 JSON 在新的任务中读取。如果你明确保留了工作目录，并要继续未完成的任务，请同时指定该目录中的父版本。
+最终 JSON 在新的任务中读取。任务内持续编辑一份工作草稿，制作调用替换当前产物，不按调用创建版本。恢复未完成的已保存草稿可使用 `--from current`；需要历史比较或回退时才选择明确保留的检查点。发布前，Agent 从一份临时问题记录整理未解决项，可通过 `finalize --notes <markdown>` 将这份 Markdown 摘要原样带入最终报告，并标明由 Agent 整理。
 
 助手发现重叠、裁切、缺字或语义问题后，会解释影响与候选方案，在选择会改变含义时请你决定；已经授权的机械修正直接执行。例如：
 
 ```text
-这处重叠是有意设计，请保留布局，并在新版本中记录我的决定和原始警告。
+这处重叠是有意设计，请保留，并在交付说明中解释影响。
 ```
 
 ```text
 采用你提出的右移方案，仅移动节点 cache，其他内容保持不变。
-以刚才报告中发现问题的版本为父版本，创建新版本。
+修改同一源草稿并重新生成当前产物。
 ```
 
-工具在有限时间点检查既有四类布局风险，以及连线穿过无关节点、标签与无关节点重叠、标签之间重叠三类 SDK 几何风险。另有 `LABEL_VERTICAL_RUN`，保守提示连线标签中连续的极短自动换行；显式换行与各段内新增的自动换行分别处理。诊断不需要浏览器，文字基线和边界使用确定性估算，不能代替实际尺寸的视觉检查。
-
-新决定通过报告中的 `sourceRevision` 和 `issueId` 选中单条警告；不同对象对、文字字段、行或采样时间各自保留决定范围。源 JSON 字节、SDK 基线或主题变化后，原决定不会成为对新警告的授权。历史无标识记录原样保留，需要先重新诊断才能对它提交新的精确决定。详见[诊断与修订决定](../../skills/flow-diagram/references/diagnostics-and-revisions.md)。
-
-记录“有意设计”不会删除原始警告或自动完成质量验收。任务期间保留修正、重试和追加导出的临时版本，包括失败版本；成功收尾后默认清理，明确要求保留历史时除外。
+需要辅助计算时，在 `validate`、`author` 或 `layout` 后追加 `--geometry`。结果说明计算方法、对象、来源和有限时间范围；文字与曲线估算保留其限制，矩形相交不等于实际视觉遮挡。CLI 已移除短行、竖排等设计启发式和警告审批提交。用户或 LLM 借助设计指导查看实际图形，几何计算不要求例外登记。详见[诊断与修订决定](../../skills/flow-diagram/references/diagnostics-and-revisions.md)。
 
 ## 7. 按需导出 SVG、PNG 或 GIF
+
+任务内重复导出会替换当前文件。`author --from current` 保留未重新指定的导出格式、时刻、背景、图片宽度、显式主题覆盖、已保存清单字节、GIF 参数和已请求的截图范围，再重新生成请求产物；浏览器按本次调用选择。源字节或 SDK 身份改变后，已保存批量清单的绑定失效，需选定预期阶段并提供新绑定的清单。缺少请求文件时交付仍未完成，并保留此前完整发布结果。动画或图片格式本身不创建检查点，也不要求正式复核。
 
 静态 SVG 是指定时点的画面：
 
@@ -301,16 +299,16 @@ PNG 可明确指定宽度和透明背景，需要可用浏览器。默认不生�
 ```text
 使用 flow-diagram skill，读取 ./.diagrams/order-platform/diagram.json，导出透明 SVG 和 PNG。
 时间点使用报告中的 0 毫秒，PNG 宽度为 1440 像素。
-按正文 720 CSS 像素宽度，分别放到白色和深色背景上生成正式产物审查图，并实际查看。
+按正文 720 CSS 像素宽度，分别在白色和深色背景上实际查看导出的文件。
 ```
 
-正式图片的证据独立于时间线采样截图。助手先按原始产物版本生成目标尺寸审查图，再用独立 `review --artifact-review` 追加实际查看。`--from` 选择图解主体；证据来源不同时，用 `--evidence-from` 显式选择。复核不会重新制作图解或打开浏览器；不同尺寸和承载背景分别登记。详见[正式图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
+导出和实际查看无需正式复核记录。明确需要可追溯复核时，按[正式复核](#明确请求时的正式复核)和[正式图片证据合同](../../skills/flow-diagram/references/artifact-evidence.md)操作。
 
-批量静态图片使用独立导出清单。清单绑定图解原始字节的哈希和实际 SDK 的版本、完整性，并为每个时点指定名称和 SVG/PNG 格式。助手先读取编译节拍并请你确认选帧，再创建清单；源字节或 SDK 改变后重新确认，不自动替换绑定。
+批量静态图片使用独立导出清单，绑定源字节哈希与实际 SDK 版本、完整性。助手根据编译节拍选择所请求的解释状态并说明选择；只有改变关键含义时才询问。源字节或 SDK 变化后需重新绑定清单，不能静默替换身份。每项独立指定名称、时刻和 SVG/PNG 格式。
 
 ```text
 使用 flow-diagram skill，读取 ./.diagrams/article/diagram.json，按实际编译节拍确认两张静态画面。
-在新版本中用导出清单生成命名的 SVG 和 PNG，共用透明背景和 1440 像素 PNG 宽度。
+在当前任务中用导出清单生成命名的 SVG 和 PNG，共用透明背景和 1440 像素 PNG 宽度。
 清单保存在任务目录中；分别报告每项结果，失败项在收尾前重试。
 ```
 
@@ -330,6 +328,8 @@ GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请�
 
 ## 8. 只校验，或直接使用命令行
 
+保存创作结果的命令返回简明 JSON 摘要。需要完整报告、HTML 检查状态或采样详情时，读取返回的 `detailsPath`。只读校验与测量仍直接返回操作结果。报告创建前失败时直接说明原因，不返回不存在的报告路径。
+
 只检查已有 JSON，可向助手提出：
 
 ```text
@@ -337,7 +337,7 @@ GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请�
 保留输入，不导出 HTML、SVG、PNG 或 GIF，也不自动修复。
 ```
 
-`validate --input <draft.json>` 返回结构化诊断、输入字节身份和实际 SDK 基线，不创建历史目录、快照或交付文件。`revision` 为 null，`validation.snapshotCreated` 为 false。保留工作草稿；需要留存诊断时，将 stdout 重定向到任务目录。只有检查明确已保存版本时，才使用 `validate --from <revision> --name <name> --output <task-workspace>/history`。正式告警决定必须引用已保存的 `author` 报告；草稿诊断不能提供持久化的 `sourceRevision`。
+`validate --input <draft.json>` 返回结构化诊断、输入字节身份和实际 SDK 基线，不创建历史目录、快照或交付文件。`revision` 为 null，`validation.snapshotCreated` 为 false。保留工作草稿；需要留存诊断时，将 stdout 重定向到任务目录。只有检查明确已保存版本时，才使用 `validate --from <revision> --name <name> --output <task-workspace>/history`。几何估算无需审批或例外登记。
 
 仅做视觉诊断时，助手优先复用已登记且有效的截图。只有 JSON 或最终交付文件时，保持输入字节不变，在隔离任务目录中生成临时检查材料；提供了匹配页面时保留该页面。有可用浏览器才能截图，实际查看图片仍是独立检查。助手报告发现、证据位置和未执行检查后，保留工作目录，不发布替换结果；修正图解需要相应授权。详见[仅检查任务的准备流程](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation)。
 
@@ -346,16 +346,22 @@ GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请�
 ```text
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
 node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/architecture.json" --name architecture --output ".diagrams/.work/architecture/<task-id>/history" --browser none
-node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture --from v001
+node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture
 ```
 
 第二条命令使用随包示例，生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于先验证不依赖浏览器的交付。直接运行命令不会代替助手的语义分析或实际视觉判断。随包架构教学示例保留已知的关系标签与分组重叠告警；应阅读报告并按授权范围处理，不能把这次命令验证当成无告警的设计模板。
 
 完整参数、隔离缓存和报告字段见[工具合同](../../skills/flow-diagram/references/tool-contract.md)。环境准备、取消或导出失败见[故障恢复](../../skills/flow-diagram/references/troubleshooting.md)。
 
-## 9. 必需质量覆盖
+## 9. 查看结果与按需正式复核
 
-报告将 `completion.delivery` 与 `completion.quality` 分开记录。`qualityCoverage` 列出字段、编译和布局检查、实际 `diagram.html` 状态，以及每个请求的 SVG/PNG 展示条件。未指定尺寸时，图片使用原生尺寸和解析后的主题背景。文件齐备时可以交付，但缺少浏览器或实际查看时质量保持 `incomplete`；未解决或暂缓的问题为 `needs-user-decision`。仅记录审查的后续版本会继承父版本的请求格式和图片身份，不能让先前的静态文件从必需覆盖中消失。
+默认制作只捕获实际交付 HTML，`--samples` 选择捕获预算；需要 SDK 预览时显式传入 `--preview`。捕获不代表实际查看。默认报告说明文件完成和机器检查，正式复核为 `not-requested`，省略统一质量结论及正式查看计数。助手在目标展示条件下查看实际 HTML 与请求的 SVG/PNG，按需要修改，并说明实际查看范围与缺口。
+
+### 明确请求时的正式复核
+
+需要可追溯复核时，`author --from current --formal-review` 固定一个不可变 `v###`；后续 evidence、模板、review 和 finalize 使用返回的 ID。仅 `--checkpoint` 保存历史，不请求复核。之后普通编辑继续替换 `current`，不继承查看结论。创建复核模板或请求产物证据会单独保存正式意图，不改写来源报告。
+
+只有明确请求正式复核，才增加 `completion.quality` 和 `qualityCoverage`。这些字段记录结构检查、实际 HTML 和请求图片的注册查看覆盖；几何估算不要求审批。`formalReview.status: complete` 只表示声明范围的覆盖完整；查看者问题保留为 `unresolved-issues`，并保留查看者的行动建议。记录完整不代表用户认可设计。文件齐备时仍可带明确查看缺口交付。
 
 提交预览、HTML 或正式 SVG/PNG 证据复核前，使用 `review-template` 从指定证据生成含真实 ID 和哈希的未查看模板。实际查看后再填写观察。详见[三类复核完整入参契约](../../skills/flow-diagram/references/review-inputs.md)；无效提交会在分配版本或渲染之前失败。
 

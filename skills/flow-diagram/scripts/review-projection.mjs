@@ -1,4 +1,5 @@
 /** Project verified append-only review facts into a report in memory; historical files stay unchanged. */
+import { requestFormalReview } from "./formal-review.mjs";
 import { updateArtifactCoverage } from "./artifact-evidence.mjs";
 import { stateMatchesPoint } from "./review-contract.mjs";
 import { updateQualityCoverage } from "./quality-coverage.mjs";
@@ -7,6 +8,8 @@ import { canonicalJson } from "./review-records.mjs";
 /** Adopt exact source-context reviews; coverage de-duplicates evidence while preserving every observed issue. */
 export function aggregateReviews(records, { records: independent, savedInvalid }, { htmlSha256, evidence = { items: [], records: [], invalid: [] } } = {}) {
   const report = structuredClone(records[0].report);
+  if (independent.length || evidence.records.length || evidence.requests?.length || records.some(({ report: source }) => source.formalReview?.status !== "not-requested" && source.formalReview)) requestFormalReview(report);
+  if (evidence.requests?.length) report.formalReview.requests = evidence.requests;
   report.completion.requested = [...new Set(records.flatMap(({ report: item }) => item.completion?.requested ?? []))];
   report.inheritedArtifacts = records.flatMap(({ report: item }) => [...(item.artifacts ?? []), ...(item.inheritedArtifacts ?? [])]);
   report.inheritedExports = records.flatMap(({ report: item }) => [...(item.exports ?? []), ...(item.inheritedExports ?? [])]);

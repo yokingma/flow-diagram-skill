@@ -1,5 +1,6 @@
 /** Publish the selected default authoring revision as the user-facing final delivery. */
-import { copyFile, mkdir, rename, rm } from "node:fs/promises";
+import { replaceDelivery } from "./delivery-publication.mjs";
+import { copyFile, mkdir, rm } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 const DEFAULT_HISTORY_ROOT = resolve(".diagrams", ".history");
@@ -8,7 +9,7 @@ const COPIED_ARTIFACT_KINDS = new Set(["json", "html", "report-json", "report-ma
 
 /** Copy complete authoring outputs only after the requested delivery has succeeded. */
 export async function publishFinalDelivery(report, options) {
-  if (report.command !== "author" || report.completion.delivery !== "complete") return null;
+  if (report.command !== "author" || report.completion.delivery !== "complete" || report.status === "cancelled") return null;
   const historyRoot = resolve(options.output || DEFAULT_HISTORY_ROOT);
   if (historyRoot !== DEFAULT_HISTORY_ROOT) return null;
 
@@ -26,8 +27,7 @@ export async function publishFinalDelivery(report, options) {
       if (item.status === "succeeded" && item.path) files.add(relative(report.revision.directory, item.path));
     }
     for (const file of files) await copyRevisionFile(report.revision.directory, temporaryDirectory, file);
-    await rm(finalDirectory, { recursive: true, force: true });
-    await rename(temporaryDirectory, finalDirectory);
+    await replaceDelivery(temporaryDirectory, finalDirectory);
     return finalDirectory;
   } catch (error) {
     await rm(temporaryDirectory, { recursive: true, force: true });

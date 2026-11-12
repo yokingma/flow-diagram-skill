@@ -38,9 +38,17 @@ Use `flow` for a directed transfer along an existing edge. Set required `directi
 
 Use `highlight` to emphasize an object without claiming a transfer. Explicit highlighting persists across beats and scenes until `unhighlight`. The ordinary style remains under the highlight layer. `show` and `hide` change visibility. Hiding a group masks its connected edges; showing it restores their saved visibility. `focus` targets a node/group; `target: null` restores the full view. A focused view can intentionally crop the wider graph.
 
+In the pinned SDK, highlight colors come from the selected light/dark theme and have no author-configurable palette override. Both explicit highlights and flow highlights use those theme colors. A flow temporarily recolors its edge and edge-label text even with `highlightParticipants: false`; that option controls endpoints only. Line dashing remains unchanged. Under full motion, a single flow fades its automatic edge highlight back toward the ordinary color during the final 200 ms, unless explicit highlighting remains active. When color carries relationship meaning, inspect that meaning during the flow as well as before and after it. For emphasis without transfer, `updateNode` or `updateEdge` can set supported ordinary style fields to chosen colors; restore those fields explicitly when the emphasis ends. Ordinary color updates do not disable the flow highlight layer.
+
 One flow in a beat derives its duration from routed path length at the beat's target state: movement at 180 diagram units/second with a 400 ms minimum, followed by a 500 ms arrival hold. This effective duration replaces authored duration and shifts later beats. Multiple distinct edge flows use authored duration and synchronized progress. Use separate beats for sequential transfers and for longer reading time.
 
 Always read `compilation.totalDurationMs` and `compilation.beats` in the authoring report before choosing SVG times or discussing animation length. Summing authored durations gives the wrong timeline for single-flow beats. The preview plan uses those compiled intervals. See [visual inspection](visual-checks.md) for coverage and evidence.
+
+### Caption reading time
+
+Use the compiled beats' effective captions and start/end times to find each continuous caption window. Extend a window only through adjacent beats that display the same caption; a different caption or an empty caption ends it. For example, a 900 ms flow followed by a 2200 ms hold gives 3100 ms for the original caption only if the hold keeps that caption. If the hold supplies a new caption, the original still has only 900 ms. Increasing the authored duration of a single-flow beat does not extend its compiled window; add or adjust a separate hold that retains the caption.
+
+Use these windows to identify short reading opportunities, then judge pacing through actual playback with the intended audience and display conditions in mind. Character counts and durations can assist that judgment; the CLI supplies no automatic reading-speed verdict. Paused final text can remain available after playback ends, but that does not add playback time to its compiled interval.
 
 ## Animation in an editable HTML page
 

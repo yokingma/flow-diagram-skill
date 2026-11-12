@@ -1,4 +1,5 @@
 /** Load every applicable evidence request before quality calculation, including not-run and unviewed conditions. */
+import { loadFormalRequests } from "./formal-requests.mjs";
 import { loadEvidenceRecords, surfaceKey, verifyIndependentEvidence } from "./evidence-records.mjs";
 
 /** Verify new captures and retain missing images as explicit gaps; source/record metadata errors remain fatal. */
@@ -22,7 +23,7 @@ export async function loadEvidenceProjection(records) {
       items.push({ ...requested, status: "not-run", operationStatus: "invalid", reason: cause.message });
     }
   }
-  return { items, records: operations.map(({ record, locator }) => ({ id: record.id, source: locator, subject: record.subject,
+  return { items, requests: await loadFormalRequests(records), records: operations.map(({ record, locator }) => ({ id: record.id, source: locator, subject: record.subject,
     status: record.status, requested: record.requested, invalidPriorEvidence: record.invalidPriorEvidence,
     items: record.items.map(({ path, ...item }) => item) })), invalid };
 }

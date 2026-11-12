@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Copied-install contracts for shape-safe labels across measurement, layout and diagnostics. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -50,7 +51,7 @@ test.each(PRESETS)("$kind measurement uses its safe area and accepts empty label
     await writeFile(input, bytes);
     const result = await command(["measure", "--input", input]);
     expect(result.code, result.stdout + result.stderr).toBe(0);
-    const measurement = JSON.parse(result.stdout).measurement;
+    const measurement = (await readCommandReport(result.stdout)).measurement;
     expect(measurement.height).toBeCloseTo(expectedHeight);
     expect(measurement.requiredHeight).toBeCloseTo(expectedHeight);
     expect(measurement.diagnostics).toEqual([]);
@@ -74,10 +75,10 @@ test("draft backfill measures all preset label versions and preserves source and
   expect(await readFile(input, "utf8")).toBe(bytes);
   const validation = await command(["validate", "--input", output]);
   expect(validation.code, validation.stdout).toBe(0);
-  expect(JSON.parse(validation.stdout).diagnostics.filter((item: { code: string }) => item.code === "text-overflow")).toEqual([]);
+  expect((await readCommandReport(validation.stdout)).diagnostics.filter((item: { code: string }) => item.code === "text-overflow")).toEqual([]);
   const repeated = await command(["measure", "--input", input, "--output", output]);
   expect(repeated.code).toBe(1);
-  expect(JSON.parse(repeated.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_OUTPUT_EXISTS" }));
+  expect((await readCommandReport(repeated.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_OUTPUT_EXISTS" }));
   expect(JSON.parse(await readFile(output, "utf8"))).toEqual(written);
 }, 60_000);
 
@@ -104,29 +105,31 @@ test("static layout measures preset labels at their final widths and retains emp
   expect(await readFile(input, "utf8")).toBe(bytes);
 }, 60_000);
 
-test.each(PRESETS)("$kind keeps width diagnostics and prevents unsafe draft or layout publication", async ({ kind }) => {
+test.each(PRESETS)("$kind keeps width estimates while allowing draft and layout publication", async ({ kind }) => {
   const input = join(root, `${kind}-narrow.json`);
   await writeFile(input, JSON.stringify({ kind, width: 24, label: "界" }));
   const measured = await command(["measure", "--input", input]);
   expect(measured.code, measured.stdout).toBe(0);
-  expect(JSON.parse(measured.stdout).measurement.diagnostics).toContainEqual(expect.objectContaining({ dimension: "width" }));
+  expect((await readCommandReport(measured.stdout)).measurement.diagnostics).toContainEqual(expect.objectContaining({ dimension: "width" }));
   const draft = { ...animatedDraft(), nodes: [{ id: kind, kind, x: 20, y: 20, width: 24, height: 1000, label: "界" }], scenes: [] };
   const bytes = JSON.stringify(draft);
   await writeFile(input, bytes);
   const output = join(root, `${kind}-narrow-output.json`);
   const backfill = await command(["measure", "--input", input, "--output", output]);
-  expect(backfill.code, backfill.stdout).toBe(1);
-  expect(JSON.parse(backfill.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC", objectId: kind, location: "nodes[0].label", sourcePath: "nodes[0].label" }));
+  expect(backfill.code, backfill.stdout).toBe(0);
+  expect((await readCommandReport(backfill.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_ESTIMATE", severity: "info", objectId: kind, location: "nodes[0].label", sourcePath: "nodes[0].label" }));
   const plan = join(root, `${kind}-narrow-plan.json`);
   await writeFile(plan, JSON.stringify({ schemaVersion: 1, strategy: "layered", layers: [kind] }));
-  const layout = await command(["layout", "--input", input, "--plan", plan, "--output", output]);
-  expect(layout.code, layout.stdout).toBe(1);
-  expect(JSON.parse(layout.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_MEASUREMENT_DIAGNOSTIC", location: "nodes[0].label" }));
-  await expect(readFile(output, "utf8")).rejects.toMatchObject({ code: "ENOENT" });
+  const layoutOutput = join(root, `${kind}-narrow-layout.json`);
+  const layout = await command(["layout", "--input", input, "--plan", plan, "--output", layoutOutput]);
+  expect(layout.code, layout.stdout).toBe(0);
+  expect((await readCommandReport(layout.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_ESTIMATE", severity: "info", location: "nodes[0].label" }));
+  expect(JSON.parse(await readFile(output, "utf8")).nodes[0].label).toBe("界");
+  expect(JSON.parse(await readFile(layoutOutput, "utf8")).nodes[0].label).toBe("界");
   expect(await readFile(input, "utf8")).toBe(bytes);
-  const validation = await command(["validate", "--input", input]);
+  const validation = await command(["validate", "--geometry", "--input", input]);
   expect(validation.code, validation.stdout).toBe(0);
-  const warning = JSON.parse(validation.stdout).diagnostics.find((item: { code: string }) => item.code === "text-overflow");
+  const warning = (await readCommandReport(validation.stdout)).diagnostics.find((item: { code: string }) => item.code === "text-overflow");
   expect(warning.reason).toContain("width");
   expect(warning.reason).not.toContain("exceeds its height");
 }, 60_000);
@@ -147,7 +150,7 @@ test("preset standalone versions use the largest label and reject an empty colle
   await writeFile(input, JSON.stringify({ kind: "diamond", width: 240, label: ["A", "审核\nReady\n归档"] }));
   const measured = await command(["measure", "--input", input]);
   expect(measured.code, measured.stdout).toBe(0);
-  expect(JSON.parse(measured.stdout).measurement).toMatchObject({ height: 168, estimatedLineCount: 3, diagnostics: [] });
+  expect((await readCommandReport(measured.stdout)).measurement).toMatchObject({ height: 168, estimatedLineCount: 3, diagnostics: [] });
   await writeFile(input, JSON.stringify({ kind: "diamond", width: 240, label: [] }));
   const invalid = await command(["measure", "--input", input]);
   expect(invalid.code, invalid.stdout).toBe(1);
@@ -166,7 +169,7 @@ test("bundled mixed flow retains measured presets through page and image deliver
   if (browser) args.push("--png", "--gif");
   const delivered = await command(args);
   expect(delivered.code, delivered.stdout + delivered.stderr).toBe(0);
-  const report = JSON.parse(delivered.stdout);
+  const report = (await readCommandReport(delivered.stdout));
   expect(report.sdk.version).toBe("0.3.1");
   expect(report.completion.delivery).toBe("complete");
   const svg = await readFile(join(report.revision.directory, "diagram.svg"), "utf8");

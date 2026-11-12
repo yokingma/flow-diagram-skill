@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Portable quality acceptance exercises two unrelated diagram shapes through the installed CLI. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -9,7 +10,8 @@ type CommandResult = { code: number | null; stdout: string; stderr: string };
 type Report = {
   status: string;
   checks: { validation: string; compilation: string; visual: string };
-  completion: { delivery: string; quality: string };
+  completion: { delivery: string };
+  formalReview: { status: string };
   visual: { status: string; viewedFrames: unknown[] };
   userDecisions: unknown[];
   sources: unknown[];
@@ -83,15 +85,16 @@ async function author(name: string, document: typeof architecture, reference: st
   await writeFile(sources, JSON.stringify([{ kind: "prompt", reference, description: "用户明确描述" }]));
   const result = await command(["author", "--input", input, "--sources", sources, "--name", name, "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  return JSON.parse(result.stdout) as Report;
+  return (await readCommandReport(result.stdout)) as Report;
 }
 
 async function assertFinalDelivery(report: Report, expectedIds: string[]) {
   expect(report).toMatchObject({
     status: "delivered",
     checks: { validation: "passed", compilation: "passed", visual: "not-run" },
-    completion: { delivery: "complete", quality: "needs-user-decision" },
-    visual: { status: "not-run", viewedFrames: [] },
+    completion: { delivery: "complete" },
+    formalReview: { status: "not-requested" },
+    visual: { status: "not-requested", viewedFrames: [] },
     userDecisions: []
   });
   expect(report.sources).toEqual(expect.arrayContaining([expect.objectContaining({ kind: "prompt" })]));
@@ -102,7 +105,8 @@ async function assertFinalDelivery(report: Report, expectedIds: string[]) {
     expect(await readFile(join(finalDirectory, name))).toEqual(await readFile(join(report.revision.directory, name)));
   }
   const markdown = await readFile(join(finalDirectory, "report.md"), "utf8");
-  expect(markdown).toContain("quality: needs-user-decision");
+  expect(markdown).not.toContain("quality:");
+  expect(report.completion).not.toHaveProperty("quality");
   expect(markdown).toContain("Status: not-run");
 }
 
@@ -111,6 +115,6 @@ test("architecture and fan-in cases retain distinct relationships in final deliv
   const fanInReport = await author("fan-in-case", fanIn, "两个来源将批次送入共享处理器并生成汇总结果");
   await assertFinalDelivery(architectureReport, ["submit", "persist"]);
   await assertFinalDelivery(fanInReport, ["source-a-worker", "source-b-worker", "worker-report"]);
-  expect(architectureReport.revision.directory).toContain(".diagrams/.history/architecture-case/v001");
-  expect(fanInReport.revision.directory).toContain(".diagrams/.history/fan-in-case/v001");
+  expect(architectureReport.revision.directory).toContain(".diagrams/.history/architecture-case/current");
+  expect(fanInReport.revision.directory).toContain(".diagrams/.history/fan-in-case/current");
 }, 90_000);

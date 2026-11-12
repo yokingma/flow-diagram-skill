@@ -1,13 +1,16 @@
-/** Coordinate saved author snapshots through SDK checks and exports; invalid reviews stop before allocation. */
+/** Coordinate current drafts and explicit checkpoints through SDK checks, rendering and recoverable publication. */
+import { allocateWorkingDraft, bindWorkingArtifacts, finishWorkingDraft, releaseWorkingDraft, reserveDraftOperation } from "./working-draft.mjs";
+import { configureFormalReview, hasFormalReviewRequest } from "./formal-review.mjs";
 import { readHtmlPage, inheritHtmlPage } from "./html-page.mjs";
 import { preflightReviews } from "./review-preflight.mjs";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { prepareRuntime, importSdk, ToolError } from "./runtime.mjs";
-import { allocateRevision, createReport, saveDraft, recordFailure, saveReport } from "./reports.mjs";
+import { allocateRevision, assertDiagramName, createReport, saveDraft, recordFailure, saveReport } from "./reports.mjs";
 import { resolveRevisionInput, inheritRevision, inheritDeliveryContext } from "./revisions.mjs";
 import { checkDocument } from "./document-checks.mjs";
 import { diagnoseLayout } from "./diagnostics.mjs";
+import { inheritExportRequest } from "./export-request.mjs";
 import { deliverManifest } from "./export-manifest.mjs";
 import { deliverStatic } from "./delivery.mjs";
 import { deliverGif } from "./gif-delivery.mjs";
@@ -19,20 +22,38 @@ import { recordArtifactReview } from "./artifact-review.mjs";
 import { updateQualityCoverage } from "./quality-coverage.mjs";
 import { publishFinalDelivery } from "./final-delivery.mjs";
 
-/** Save and deliver a revision; failures preserve its snapshot, successful artifacts and actual checks. */
+/** Author one selected source; default runs replace current while explicit checkpoints remain immutable. */
 export async function runRevision(options, signal, command = "author") {
   const report = createReport(command, null, options.input || options.from);
   if (command === "author") report.completion = { delivery: "pending", quality: "incomplete",
     requested: ["json", "html", ...(options.svg ? ["svg"] : []), ...(options.png ? ["png"] : []), ...(options.gif ? ["gif"] : []), ...(options["export-manifest"] ? ["exports"] : [])], completed: [] };
+  let operation;
+  let checkpointLock;
+  configureFormalReview(report, options);
   try {
     const selectedHtmlPage = await readHtmlPage(options.html);
     await preflightReviews(options, { authoring: true, htmlPage: selectedHtmlPage });
-    report.revision = await allocateRevision(options.output || resolve(".diagrams", ".history"), options.name || "diagram", options.from || options.parent || null);
-    const input = await resolveRevisionInput(report, options);
+    if (options.checkpoint || hasFormalReviewRequest(report)) {
+      assertDiagramName(options.name || "diagram");
+      const series = resolve(options.output || resolve(".diagrams", ".history"), options.name || "diagram");
+      await mkdir(series, { recursive: true });
+      checkpointLock = await reserveDraftOperation(series);
+      report.revision = await allocateRevision(options.output || resolve(".diagrams", ".history"), options.name || "diagram",
+        /^v\d{3,}$/u.test(options.from || options.parent || "") ? options.from || options.parent : null);
+    }
+    else {
+      operation = await allocateWorkingDraft(options.output || resolve(".diagrams", ".history"), options.name || "diagram");
+      report.revision = operation.revision;
+      report.workingDraft = { id: "current", directory: operation.current };
+    }
+    const sourceOptions = operation?.previous && !options.from && !options.parent ? { ...options, parent: "current" } : options;
+    const input = await resolveRevisionInput(report, sourceOptions);
     report.stage = "save";
     report.sources = [{ path: resolve(input), kind: "diagram-json" }];
     const text = await saveDraft(report, input);
-    const parent = await inheritRevision(report, options);
+    if (report.workingDraft && !options.from) report.workingDraft.editableSource = { path: report.input.path, sha256: report.input.sha256 };
+    const parent = await inheritRevision(report, sourceOptions);
+    if (command === "author") options = await inheritExportRequest(report, parent, options);
     const htmlPage = command === "author" ? await inheritHtmlPage(report, selectedHtmlPage) : null;
     if (options["sync-html"] && !htmlPage) throw new ToolError("html-page", "HTML_PAGE_INVALID", "--sync-html requires an explicit or inherited Agent HTML page.", "Select --html or a parent with an Agent page.", "sync-html");
     await saveReport(report);
@@ -46,7 +67,7 @@ export async function runRevision(options, signal, command = "author") {
     const checked = checkDocument(report, sdk, text, options);
     if (!checked) return report;
     inheritDeliveryContext(report, parent, options);
-    diagnoseLayout(report, { ...checked, sdk });
+    diagnoseLayout(report, { ...checked, sdk }, options);
     report.status = "validated";
     if (command === "author") {
       const context = { ...checked, runtime, options, signal, htmlPage };
@@ -60,12 +81,16 @@ export async function runRevision(options, signal, command = "author") {
       : error;
     recordFailure(report, failure);
   } finally {
-    await finishReport(report);
-    try { await publishFinalDelivery(report, options); }
-    catch (error) {
-      recordFailure(report, new ToolError("save", "FINAL_DELIVERY_FAILED", error.message, "Review the saved revision and retry the final delivery in a new revision.", "finalDelivery", error));
+    try {
+      if (report.workingDraft) await bindWorkingArtifacts(report);
       await finishReport(report);
+      await finishWorkingDraft(report, operation);
+      await publishFinalDelivery(report, options);
     }
+    catch (error) {
+      recordFailure(report, new ToolError("save", "FINAL_DELIVERY_FAILED", error.message, "Review the saved revision and retry the current draft or final delivery.", "finalDelivery", error));
+      if (!operation || report.revision?.directory === operation.current) await finishReport(report);
+    } finally { await releaseWorkingDraft(operation || (checkpointLock ? { lock: checkpointLock } : null)); }
   }
   return report;
 }

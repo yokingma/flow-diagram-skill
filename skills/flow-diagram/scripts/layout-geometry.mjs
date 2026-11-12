@@ -26,7 +26,7 @@ export function getLayoutMeasurementInputs(draft, plan) {
  * Geometry uses diagram units; node coordinates remain relative to the existing immediate parent.
  * Omitted canvas dimensions grow from the original viewport; explicit dimensions and node overrides stay exact.
  * Measurement heights are lower bounds unless an explicit height override takes precedence.
- * @throws {LayoutGeometryError} If measurements are stale/unresolved or geometry arithmetic is unrepresentable.
+ * @throws {LayoutGeometryError} If measurements are stale/invalid or geometry arithmetic is unrepresentable.
  */
 export function layoutDraft(draft, plan, measurements = []) {
   validateMeasurements(draft, plan, measurements);
@@ -73,9 +73,9 @@ function validateMeasurements(draft, plan, measurements) {
   for (const [index, item] of measurements.entries()) {
     const node = draft.nodes.find((candidate) => candidate.id === item.nodeId);
     if (!node || !ids.has(item.nodeId) || seen.has(item.nodeId) || item.width !== widths.get(item.nodeId)
-      || !Number.isFinite(item.recommendedHeight) || item.recommendedHeight <= 0 || !Array.isArray(item.diagnostics) || item.diagnostics.length) {
+      || !Number.isFinite(item.recommendedHeight) || item.recommendedHeight <= 0 || !Array.isArray(item.diagnostics)) {
       throw new LayoutGeometryError("LAYOUT_MEASUREMENT_INVALID", `measurements[${index}]`,
-        "Measurements must identify one planned node, match its final width, and provide a positive finite height with no unresolved diagnostics.");
+        "Measurements must identify one planned node, match its final width, and provide a positive finite height with a diagnostic array.");
     }
     seen.add(item.nodeId);
   }

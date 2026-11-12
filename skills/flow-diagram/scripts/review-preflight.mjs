@@ -13,7 +13,7 @@ export async function loadReviewSource(options) {
   const id = options.from || options.parent;
   if (!/^v\d{3,}$/u.test(id ?? "") || !options.name || basename(options.name) !== options.name || [".", ".."].includes(options.name)
     || (options.from && options.parent && options.from !== options.parent) || (options.from && options.input)) {
-    throw new Error("Review requires an explicit --from (or --parent), one diagram name, and unambiguous input selection.");
+    throw new Error("Review requires one immutable v### source, one diagram name, and unambiguous input selection. Fix current with author --from current --formal-review, then select its returned ID.");
   }
   const root = resolve(options.output || resolve(".diagrams", ".history"), options.name);
   const canonicalHistory = await realpath(dirname(root));

@@ -67,9 +67,11 @@ async function command(args, options = {}) {
     ...options, env: { FLOWSVG_CACHE_DIR: cache, DEBUG: 'pw:browser', TMPDIR: join(root, 'browser temp'), TMP: join(root, 'browser temp'), TEMP: join(root, 'browser temp'), ...options.env }
   });
   assert.equal(result.timedOut, false, 'CLI timed out');
-  const report = JSON.parse(result.stdout);
+  const summary = JSON.parse(result.stdout);
+  const report = summary.command === 'author' && summary.detailsPath
+    ? JSON.parse(await readFile(summary.detailsPath, 'utf8')) : summary;
   evidence.commands.push({ args, code: result.code, status: report.status, stage: report.stage, stdoutSha256: digest(result.stdout), diagnostics: report.diagnostics?.map(({ code, stage }) => ({ code, stage })) });
-  return { ...result, report };
+  return { ...result, report, summary };
 }
 
 async function check(id, run) {
@@ -203,12 +205,13 @@ const environmentChecks = [
       } finally { await writeFile(archive, bytes); }
     }
   }],
-  ['parallel-prepare-and-revision-reservation', async () => {
+  ['parallel-prepare-and-independent-drafts', async () => {
     const input = await saveInput('parallel');
     const env = { FLOWSVG_CACHE_DIR: join(root, 'parallel cache') };
-    const results = await Promise.all([0, 1].map(() => command(['author', '--browser', 'none', '--input', input, '--name', 'parallel', '--output', join(root, 'parallel history')], { env })));
+    const results = await Promise.all([0, 1].map((index) => command(['author', '--browser', 'none', '--input', input, '--name', `parallel-${index}`, '--output', join(root, 'parallel history')], { env })));
     assert.deepEqual(results.map((result) => result.code), [0, 0]);
-    assert.equal(new Set(results.map((result) => result.report.revision.id)).size, 2);
+    assert.ok(results.every((result) => result.report.workingDraft.id === 'current'));
+    assert.equal(new Set(results.map((result) => result.report.workingDraft.directory)).size, 2);
     assert.equal(new Set(results.map((result) => result.report.sdk.path)).size, 1);
     assert.deepEqual(results.map((result) => result.report.environment.reused).sort(), [false, true]);
   }],
@@ -238,12 +241,13 @@ const diagnosisChecks = [
       assert.equal(result.report.input.sha256, digest(bytes));
       assert.equal(result.report.checks.validation, 'passed');
       assert.equal(result.report.checks.compilation, 'passed');
-      assert.equal(result.report.layout.continuousCoverage, false);
+      assert.equal(result.report.checks.layout, 'not-run');
+      assert.equal(result.report.layout, undefined);
       assert.deepEqual(result.report.artifacts, []);
       assert.deepEqual(await readFile(input), bytes);
       await assert.rejects(access(history));
     }
-    return { diagramFilesWritten: 0, sourceUnchanged: true, browser: 'not-run', scope: 'Finite structural/layout diagnosis, not visual review.' };
+    return { diagramFilesWritten: 0, sourceUnchanged: true, browser: 'not-run', scope: 'Structural and compilation checks; geometry is optional, visual judgment belongs to the viewer.' };
   }],
   ['field-and-compilation-failures', async () => {
     const input = await saveInput('invalid', { ...base, edges: [{ id: 'bad', from: 'unknown', to: 'absent' }] });
@@ -260,7 +264,7 @@ const diagnosisChecks = [
     assert.equal(compile.report.checks.compilation, 'failed');
     await verifySaved(compile);
   }],
-  ['four-layout-risks-and-counterexamples', async () => {
+  ['optional-geometry-facts-and-counterexamples', async () => {
     const nodes = [
       { id: 'g', kind: 'group', x: 20, y: 20, width: 300, height: 250 },
       { id: 'a', parentId: 'g', kind: 'rect', x: 20, y: 50, width: 100, height: 60, label: '很长的中文说明文字'.repeat(20) },
@@ -269,40 +273,41 @@ const diagnosisChecks = [
       { id: 'clip', kind: 'rect', x: 470, y: 330, width: 100, height: 60 }
     ];
     const input = await saveInput('warnings', { ...base, viewport: { width: 500, height: 400 }, nodes, edges: [], scenes: [] });
-    const result = await command(['author', '--input', input, '--name', 'warnings', '--browser', 'none']);
+    const result = await command(['author', '--input', input, '--name', 'warnings', '--browser', 'none', '--geometry', '--checkpoint']);
     assert.equal(result.code, 0);
     for (const code of ['text-overflow', 'node-overlap', 'child-outside-parent', 'canvas-clipping']) hasDiagnostic(result.report, code);
+    assert.equal(result.report.checks.layout, 'computed');
+    assert.ok(result.report.diagnostics.filter((item) => item.stage === 'layout').every((item) => item.severity === 'info' && item.method && item.limitations));
+    assert.equal(result.report.completion.quality, undefined);
     await verifySaved(result);
     assert.equal(await readFile(input, 'utf8'), await readFile(join(result.report.revision.directory, 'diagram.json'), 'utf8'));
     const negative = await saveInput('negative', { ...base, viewport: { width: 500, height: 400 }, nodes: [nodes[0], { ...nodes[1], label: '短' }, { ...nodes[2], x: 120 }, { id: 'hidden', kind: 'rect', x: -10, y: 0, width: 500, height: 500, visible: false }],
       scenes: [{ id: 'focus', label: '局部', beats: [{ durationMs: 500, actions: [{ type: 'focus', target: 'a' }] }, { durationMs: 500, actions: [{ type: 'hide', target: 'g' }] }] }] });
-    const noWarnings = await command(['validate', '--input', negative, '--name', 'negative']);
+    const noWarnings = await command(['validate', '--input', negative, '--name', 'negative', '--geometry']);
     assert.equal(noWarnings.code, 0);
     assert.deepEqual(noWarnings.report.diagnostics, []);
   }],
-  ['history-decisions-and-failed-number-protection', async () => {
+  ['explicit-checkpoints-and-current-retry-protection', async () => {
     const parent = join(root, '.diagrams/.history/warnings/v001');
     const reportBytes = await readFile(join(parent, 'report.json'));
     await writeFile(join(parent, 'diagram.html'), 'USER EXTERNAL EDIT');
-    const decisions = join(root, 'user decisions.json');
-    const sourceReport = JSON.parse(reportBytes);
-    const sourceIssue = sourceReport.diagnostics.find((issue) => issue.code === 'canvas-clipping' && issue.objectId === 'clip');
-    await writeFile(decisions, JSON.stringify([{ sourceRevision: sourceReport.revision.id, issueId: sourceIssue.issueId, decision: 'intentional', reason: '用户明确保留' }]));
-    const revised = await command(['author', '--from', 'v001', '--name', 'warnings', '--decisions', decisions, '--browser', 'none']);
+    const revised = await command(['author', '--from', 'v001', '--name', 'warnings', '--checkpoint', '--geometry', '--browser', 'none']);
     assert.equal(revised.code, 0);
     assert.equal(revised.report.revision.parent, 'v001');
     hasDiagnostic(revised.report, 'canvas-clipping');
-    assert.equal(revised.report.userDecisions[0].decision, 'intentional');
+    assert.equal(revised.report.revision.id, 'v002');
     assert.equal(await readFile(join(parent, 'diagram.html'), 'utf8'), 'USER EXTERNAL EDIT');
     assert.deepEqual(await readFile(join(parent, 'report.json')), reportBytes);
     const invalid = await saveInput('invalid retry', { version: 1 });
     const failed = await command(['author', '--browser', 'none', '--input', invalid, '--name', 'failed retry']);
     assert.equal(failed.code, 1);
+    assert.equal(failed.report.workingDraft.id, 'current');
+    assert.equal(JSON.parse(await readFile(join(failed.report.revision.directory, 'report.json'))).status, 'failed');
     const good = await saveInput('good retry');
     const retried = await command(['author', '--browser', 'none', '--input', good, '--name', 'failed retry']);
     assert.equal(retried.code, 0);
-    assert.equal(retried.report.revision.id, 'v002');
-    assert.equal(JSON.parse(await readFile(join(failed.report.revision.directory, 'report.json'))).status, 'failed');
+    assert.equal(retried.report.workingDraft.directory, failed.report.workingDraft.directory);
+    assert.deepEqual(await readdir(join(root, '.diagrams/.history/failed retry')), ['current']);
   }],
 ];
 
@@ -312,7 +317,7 @@ const browserArtifacts = [
     const workspace = join(root, '.diagrams/.work', name, 'acceptance');
     const history = join(workspace, 'history');
     const input = await saveInput(name, { ...base, scenes: [] });
-    const source = await command(['author', '--input', input, '--name', name, '--output', history, '--browser', browserPath]);
+    const source = await command(['author', '--input', input, '--name', name, '--output', history, '--browser', browserPath, '--formal-review']);
     assert.equal(source.code, 0);
     const template = join(workspace, 'html-review.json');
     const form = await command(['review-template', '--name', name, '--from', 'v001', '--output', history, '--kind', 'html', '--template', template]);
@@ -325,7 +330,7 @@ const browserArtifacts = [
     const rejected = await command(['author', '--name', name, '--from', 'v001', '--output', history, '--html-review', template, '--browser', browserPath]);
     assert.equal(rejected.code, 1);
     assert.equal(rejected.report.revision, null);
-    assert.deepEqual(await readdir(join(history, name)), ['v001']);
+    assert.deepEqual((await readdir(join(history, name))).filter((entry) => /^v\d+$/u.test(entry)), ['v001']);
     assert.deepEqual(await readFile(join(source.report.revision.directory, 'report.json')), before);
     assert.doesNotMatch(rejected.stderr, /<launched> pid=/u);
     review.reviewer = 'synthetic contract fixture; not visual acceptance';
@@ -349,7 +354,7 @@ const browserArtifacts = [
     const workspace = join(root, '.diagrams/.work', name, 'acceptance');
     const history = join(workspace, 'history');
     const input = await saveInput(name, { ...base, scenes: [] });
-    const source = await command(['author', '--input', input, '--name', name, '--output', history, '--svg', '--png', '--background', 'transparent', '--browser', browserPath]);
+    const source = await command(['author', '--input', input, '--name', name, '--output', history, '--svg', '--png', '--background', 'transparent', '--browser', browserPath, '--formal-review']);
     assert.equal(source.code, 0);
     const artifacts = source.report.artifacts.filter((item) => ['svg', 'png'].includes(item.kind));
     const settings = join(workspace, 'settings.json');
@@ -411,12 +416,15 @@ const browserArtifacts = [
     assert.equal(result.code, 0);
     assert.ok(result.report.compilation.totalDurationMs > 1040);
     const secondStart = result.report.compilation.beats[1].startMs;
-    const points = result.report.visual.plan.points;
+    const points = result.report.htmlInspection.plan.points;
     assert.ok(points.some((point) => point.timeMs === secondStart && point.reasons.includes('content-change')));
     assert.ok(points.some((point) => point.timeMs === secondStart + 200 && point.reasons.includes('transition-midpoint')));
-    assert.equal(result.report.visual.capturedFrames.length, points.length);
+    assert.equal(result.report.htmlInspection.states.length, points.length);
+    assert.deepEqual(result.report.visual.capturedFrames, []);
     const again = await command(['author', '--input', input, '--name', 'compiled beats', '--browser', 'none']);
-    assert.deepEqual(again.report.visual.plan, result.report.visual.plan);
+    assert.deepEqual(again.report.htmlInspection.plan, result.report.htmlInspection.plan);
+    assert.equal(again.report.revision.directory, result.report.revision.directory);
+    assert.equal(result.report.completion.quality, undefined);
     await resourcesReleased(result);
     return { compiledDurationMs: result.report.compilation.totalDurationMs, authorDurationMs: 1040, points };
   }],
@@ -426,7 +434,7 @@ const browserArtifacts = [
     const input = await saveInput('browser artifacts');
     const settings = join(root, 'gif options.json');
     await writeFile(settings, JSON.stringify({ startMs: 700, endMs: 1000, fps: 2, width: 400, captionHeight: 60, finalHoldMs: 200 }));
-    const result = await command(['author', '--input', input, '--name', 'browser artifacts', '--svg', '--time', '1000', '--gif', '--gif-options', settings, '--browser', browserPath]);
+    const result = await command(['author', '--input', input, '--name', 'browser artifacts', '--svg', '--time', '1000', '--gif', '--gif-options', settings, '--browser', browserPath, '--preview', '--checkpoint']);
     assert.equal(result.code, 0);
     assert.equal(result.report.completion.delivery, 'complete');
     assert.equal(result.report.checks.visual, 'not-run');
@@ -507,7 +515,7 @@ const failureChecks = [
     const before = await Promise.all(names.map((name) => readFile(join(directory, name))));
     const settings = join(root, 'history gif options.json');
     await writeFile(settings, JSON.stringify({ fps: 2, width: 400, includeCaptions: false }));
-    const result = await command(['author', '--from', 'v001', '--name', 'browser artifacts', '--gif', '--gif-options', settings, '--browser', browserPath]);
+    const result = await command(['author', '--from', 'v001', '--name', 'browser artifacts', '--gif', '--gif-options', settings, '--browser', browserPath, '--checkpoint']);
     assert.equal(result.code, 0);
     assert.equal(result.report.revision.id, 'v002');
     assert.equal(result.report.revision.parent, 'v001');
@@ -523,9 +531,9 @@ const failureChecks = [
     assert.equal(normal.code, 0);
     assert.equal(normal.report.checks.visual, 'not-run');
     assert.equal(normal.report.completion.delivery, 'complete');
-    const gif = await command(['author', '--from', 'v001', '--name', 'no browser', '--gif', '--browser', 'none']);
+    const gif = await command(['author', '--from', 'current', '--name', 'no browser', '--gif', '--browser', 'none']);
     assert.equal(gif.code, 1);
-    assert.equal(gif.report.revision.parent, 'v001');
+    assert.equal(gif.report.workingDraft.id, 'current');
     assert.equal(gif.report.completion.delivery, 'incomplete');
     hasDiagnostic(gif.report, 'GIF_BROWSER_UNAVAILABLE');
     assert.ok(!gif.report.artifacts.some((artifact) => artifact.kind === 'gif'));
@@ -539,13 +547,13 @@ const failureChecks = [
     assert.equal(result.code, 1);
     hasDiagnostic(result.report, 'GIF_CAPTION_OVERFLOW');
     assert.equal(result.report.completion.delivery, 'incomplete');
-    assert.ok(result.report.visual.capturedFrames.length > 0);
+    assert.ok(result.report.htmlInspection.states.length > 0);
     await resourcesReleased(result);
     await verifySaved(result);
   }],
   ['screenshot-failure-preserves-static-files', async () => {
     const input = await saveInput('screenshot crash');
-    const result = await command(['author', '--input', input, '--name', 'screenshot crash', '--browser', browserPath], { interrupt: { at: 'Capturing screenshot', browser: true } });
+    const result = await command(['author', '--input', input, '--name', 'screenshot crash', '--browser', browserPath, '--preview'], { interrupt: { at: 'Capturing screenshot', browser: true } });
     assert.equal(result.interrupted, true);
     assert.equal(result.code, 1);
     hasDiagnostic(result.report, 'PREVIEW_FAILED');

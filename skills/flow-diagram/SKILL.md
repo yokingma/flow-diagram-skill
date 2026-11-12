@@ -1,123 +1,99 @@
 ---
 name: flow-diagram
-description: Create and revise executable FlowSVG diagrams to explain systems, processes, and state changes with static views or animation. Validate or diagnose diagrams and export JSON, offline HTML, SVG, PNG, or GIF. Manage project preferences for FlowSVG diagrams. Reuse the document for playback and SDK embedding.
+description: Create and revise executable FlowSVG diagrams that explain systems, processes and state changes, with static views or animation. Validate or diagnose diagrams; export JSON, offline HTML, SVG, PNG or GIF; manage project diagram preferences.
 ---
 
 # Flow Diagram
 
-Flow Diagram is the authoring skill for executable system and process diagrams: author once, then play, embed, inspect, and export the result.
+Create accurate, understandable and visually clear explanations. Design standards guide the work; judge the result by actually viewing it against the reader's question and display conditions. Invest in reading, measurement, rendering and revision when they improve the result.
 
-Turn descriptions and source material into **visual explanations**: static or animated diagrams that make structures, relationships, and processes clear. The aim is to preserve the source meaning and help readers understand how things are organized, connected, and change over time.
+This skill produces diagram assets. PPTX and native PowerPoint shapes are outside its scope. Use Node 20+ and npm; run `node <skill-directory>/scripts/flowsvg.mjs` from the user's chosen working directory. Resolve tools and references inside this installed skill. Its pinned SDK runtime leaves application dependencies untouched.
 
 ## Choose the task
 
-This skill produces diagram assets; PPTX files and native PowerPoint shapes are outside its scope.
-
-Identify the task type, the input to use, and where to enter or resume the process.
-
-| Request | Starting point |
+| Request | Action |
 | --- | --- |
-| New diagram or JSON import that will be authored or revised | Start at step 0 and follow all five authoring steps. Preserve unchanged imported bytes where required. |
-| Revise a finalized diagram | Read the existing diagram and final report. Establish the requested changes and scope, then start at step 0. Reuse valid design decisions and carry forward requested formats unless the user changes them. |
-| Export an existing diagram without edits | Consult [project preferences](references/preferences.md#locate-and-read) only for a material export choice still open. Run `author` using the [export options](references/export.md). Preserve the selected JSON bytes and page design; skip drafting, styling, measurement, and layout changes. Inspect and finalize in steps 4 and 5. |
-| Continue an unfinished task | Read the task records and select the saved revision to continue. Resume at the unfinished steps or those affected by changes. |
-| Validation only | Use read-only [validation](references/tool-contract.md#revisions-and-reports). Report the checks performed, their limits, and discovered issues, then stop. |
-| Visual diagnosis without edits | Follow [inspection-only preparation](references/visual-checks.md#inspection-only-preparation), then the applicable checks in step 4. Report findings, evidence, and coverage gaps, then stop. |
+| New or revised diagram | Follow the process below; preserve imported facts and requested formats outside the authorized changes. |
+| Continue unfinished work | Read its source draft, `issues.md` if present and current report; resume the affected steps. See [source selection](references/diagnostics-and-revisions.md#selecting-a-parent). |
+| Export without edits | Preserve selected JSON bytes and page design. Read [exports](references/export.md), then generate, view and deliver the requested files. |
+| Validation only | Run read-only `validate`, report exact checks, limits and findings, then stop. |
+| Visual diagnosis without edits | Follow [inspection preparation](references/visual-checks.md#inspection-only-preparation), view the requested surfaces, report findings and gaps, then stop. |
+| Save, change or remove a project preference | Follow [preference writing](references/preferences.md#save-update-forget-or-reset). A one-off choice stays in this task; saving requires explicit intent to reuse it. |
 
-When the user clearly sets a default for future diagrams in this project or asks to save, change, forget or reset a preference, follow [preference management](references/preferences.md#save-update-forget-or-reset). Report standalone operations without creating a diagram.
+## Default process
 
-For imports, revisions, or exports from existing diagrams, read [input and parent selection](references/diagnostics-and-revisions.md#selecting-a-parent). Before creating task files, read [task workspace requirements](references/tool-contract.md#task-workspace); for validation commands and report states, read [runtime and result contracts](references/tool-contract.md).
+### 1. Understand
 
-Proceed when the input, authorized changes, and process entry point are clear.
+Start with the reader's question: what should this diagram explain? Read the user's designated sources or existing diagram within the authorized scope. When using designated source material, record its references and scope through [source metadata](references/tool-contract.md#source-metadata). Apply relevant [project preferences](references/preferences.md#locate-and-read) to open choices.
 
-## Process
+Use known display conditions and requested formats. For missing conditions, adopt and state the [existing defaults](references/delivery-contexts.md#preferences-and-missing-context); known PPT use remains PPT use. A clear brief can proceed directly to creation. Clarify factual gaps that change meaning, key relationships, boundaries or scope; explain SDK limits that prevent faithful expression before choosing an alternative.
 
-### 0. Resolve project preferences
+Finish when the reader's question and supporting facts are clear. An independent plan is optional.
 
-For new and revised drafts, follow [project preferences](references/preferences.md) before step 1. Apply relevant defaults only to open choices and record their sources. Resolve remaining material gaps with the delivery context. Verify any authorized save or report its failure. Resume unfinished tasks with their recorded decisions, revisiting preferences only when a relevant choice changes.
+### 2. Create
 
-### 1. Define the explanation goal
+For every new or revised draft, read [document model](references/document-model.md), [shared quality standards](references/visual-design.md#shared-quality-standards), [visual direction](references/visual-design.md#choose-a-visual-direction) and [visual inspection guidance](references/visual-design.md#inspect-the-visual-design). Reuse sections already loaded.
 
-Start with the reader's question: what should the reader understand after viewing the diagram? Use this question to guide later content, layout, and animation decisions.
+Organize content to answer the question. Reorder, group, merge duplicate explanations and select abstraction within the source meaning. Use [source fidelity](references/source-fidelity.md#before-and-after-a-meaning-change) when unknowns or information reduction affect interpretation. Ask before changing facts, key relationships, boundaries or scope.
 
-- **Define the question.** Identify the subject and what the reader should understand from the user's request.
-- **Establish the facts.** Read the user's designated sources or existing diagram within the authorized scope. Identify relevant objects, relationships, processes, and state changes. Distinguish known facts from information that needs clarification, and record sources through [source metadata](references/tool-contract.md#source-metadata).
+Read the branches relevant to the work:
 
-  For broad investigations, such as exploring a code repository, investigate the parts relevant to the reader's question. When the host supports sub-agents and delegation is permitted, delegate bounded parts with that question and authorized source scope; otherwise investigate them in the current session. In either case, collect relevant objects, relationships, processes, and state changes, with source locations and unresolved questions. Use those findings to establish the facts needed for the explanation.
+- **Structure:** use the [reader-question table](references/semantic-patterns.md#choose-by-the-readers-question), then the matching semantic pattern. With groups or cross-boundary edges, choose [relationship scope and endpoints](references/semantic-patterns.md#relationship-scope-and-endpoints).
+- **Text and containers:** use [typography](references/visual-design.md#typography-and-content-layout), [spacing](references/visual-design.md#spacing-and-spatial-hierarchy), [color](references/visual-design.md#color-roles-and-palette) and [cards/groups/tags](references/visual-design.md#cards-groups-and-tags). With edges, read [connections](references/visual-design.md#connections-and-relationship-labels). Select a [composition recipe](references/visual-design.md#composition-recipes) when it fits; consult only relevant shape/label/routing sections in [rendering gotchas](references/rendering-gotchas.md).
+- **HTML:** apply [page content](references/delivery-contexts.md#keep-the-html-page-minimal) and [editable pages](references/tool-contract.md#editable-html-pages); use the [starter](examples/html-page.html) when useful. Preserve existing page design through [page continuation](references/tool-contract.md#continue-an-existing-page).
+- **Display destination:** read [PPT conditions](references/delivery-contexts.md#static-assets-for-presentations) or [article conditions](references/delivery-contexts.md#static-illustrations-in-web-content) for those uses. Independent images need their own readable context.
+- **Geometry assistance:** read [measurement](references/tool-contract.md#content-measurement) when text sizing needs it. For repeated geometry, use [layout workflow](references/static-layout.md#layout-plan-workflow) and [layout-plan contract](references/layout-plan.md); irregular compositions can use direct coordinates.
+- **Animation:** read [purpose](references/timeline.md#choose-the-animation-purpose), [inherited state](references/timeline.md#scenes-and-inherited-state), [transfer/emphasis and effective timing](references/timeline.md#transfer-and-emphasis) and [rhythm](references/visual-design.md#animation-rhythm-and-visual-continuity). With captions, check their [continuous reading windows](references/timeline.md#caption-reading-time). Choose stages that help explain changes or transfers.
+- **Extra formats:** read [SVG/PNG](references/export.md#requested-svg-and-png), [named batches](references/export.md#named-batch-exports) or [GIF](references/export.md#gif-exports) when requested.
 
-  For a few articles, a small set of reference materials, or a short request such as "Explain the RAG workflow with a flowchart," establish the facts in the current session.
+Before saving, read [task workspace](references/tool-contract.md#task-workspace). Keep one editable source draft at the task-workspace root; update that file throughout creation. Current HTML, requested images and machine report are replaced when regenerated. Keep one `issues.md` for material questions, diagnostics, visible problems and failures, updating location, status and handling result. Normal steps and full stdout need no log; CLI does not parse or require this Markdown.
 
-- **Record the requirements.** Capture the audience, usage context, and delivery requirements already specified by the user. Follow [missing delivery context](references/delivery-contexts.md#preferences-and-missing-context) to reuse known choices, collect relevant gaps once, and record adopted assumptions before choosing geometry.
+Finish when the draft expresses the selected content and relationships. Concrete design choices belong in the draft; separate proof of design compliance is unnecessary.
 
-Proceed when you can state the reader's question in one sentence and identify the facts supporting its answer. Clarify information gaps that would change the diagram's meaning before drafting. If the SDK cannot express the request faithfully, explain the limit and wait for the user's choice.
+### 3. Validate
 
-### 2. Design the visual explanation
+Use read-only validation while editing:
 
-Choose how to present the subject so the reader can answer the question defined in step 1.
+```sh
+node <skill-directory>/scripts/flowsvg.mjs validate --input <task-workspace>/draft.json
+```
 
-For new or revised drafts, read [delivery contexts](references/delivery-contexts.md) before choosing the canvas and density, including when the purpose is unknown. Use the [reader-question selection table](references/semantic-patterns.md#choose-by-the-readers-question) for capability inventories, responsibilities, resource status, requests and responses, state transitions, data processing, or architecture.
+Correct exact input/reference/SDK errors. Read [diagnostics](references/diagnostics-and-revisions.md#interpreting-checks) when findings occur. Geometry and text estimates are optional aids with stated methods and limits; visible readability and connection clarity belong in viewing. When needed, `measure --input <draft> --in-place` and `layout --input <draft> --plan <plan> --in-place` update the same source draft.
 
-- **Learn from relevant failures.** Before choosing the structure and visual direction, consult [rendering gotchas](references/rendering-gotchas.md) for failure conditions relevant to the content and display context. Use the reader's question to judge which candidate treatments fit; record decisions that materially affect the design.
-- **Select the content.** Choose the objects, relationships, processes, and states needed for the explanation. Before omitting or aggregating content or deciding how to present unknown source information, read [source fidelity and information choices](references/source-fidelity.md). Preserve the source meaning in these choices.
-- **Allocate content to its surface.** Before diagram geometry, follow [content placement](references/delivery-contexts.md#content-placement) and the [page content contract](references/delivery-contexts.md#keep-the-html-page-minimal) to assign content to the page, diagram and delivery explanation. Record the allocation and the context required by each requested format.
-- **Organize the structure.** Define groups, hierarchy, and reading order so the reader can identify the main points and follow their relationships. For grouped or layered views, select [relationship scope and endpoints](references/semantic-patterns.md#relationship-scope-and-endpoints) before geometry; record collective relationships and necessary component exceptions.
-- **Set the visual direction.** Follow [visual design](references/visual-design.md#choose-a-visual-direction) to select a direction for the usage context. For layered structures with a sidebar, processes with branches or returns, or repeated cards with longer content, select an applicable [composition recipe](references/visual-design.md#composition-recipes). Record the concrete choices required for production.
-- **Choose static diagrams or animation.** Use static layout to explain structures and relationships. For animation, distinguish [persistent relationship flow, attention and staged change](references/timeline.md#choose-the-animation-purpose); a request for flowing lines can keep the entire diagram visible.
-- **Plan the animation narrative.** When using animation, follow [animation rhythm and visual continuity](references/visual-design.md#animation-rhythm-and-visual-continuity) to define each stage's explanation goal, state changes, transitions, and reading pauses.
+Generate the current result from that source:
 
-Proceed when the plan records the selected content, its carrying surfaces, groups, reading order, visual choices, and static or animated presentation. For grouped or layered views, establish the intended relationship level and resolve ambiguity that would change the meaning before geometry. For animation, include the stage plan and the key stages that need inspection to answer the reader's question.
+```sh
+node <skill-directory>/scripts/flowsvg.mjs author --input <task-workspace>/draft.json --name <name> --output <task-workspace>/history
+```
 
-### 3. Create the diagram
+Read the compact result and use its real `detailsPath` for detailed timing or capture facts. Default capture covers actual HTML; `--preview` adds SDK state captures for a specific diagnosis. `--samples` adjusts needed animation capture coverage; `--browser none` skips capture for intermediate HTML. Parameters remain discoverable through `--help`.
 
-Implement the design from step 2 and generate the artifacts needed for inspection in step 4.
+Finish when exact errors are fixed and requested inspection files exist, or an execution gap and its affected files are identified. A successful machine check is an execution fact.
 
-Use Node 20+ and npm. Run `node <skill-directory>/scripts/flowsvg.mjs` from the user's chosen working directory, with quoted paths when needed. Resolve tools and task resources within this installed skill. The CLI prepares its own pinned SDK runtime without changing application dependencies.
+### 4. View and revise
 
-- **Read the relevant authoring guidance.** For new or revised drafts, read [the document model](references/document-model.md) and [layout guidance](references/static-layout.md), and adapt the selected [design recipes](references/visual-design.md#design-methods-and-recipes). Revisit [rendering gotchas](references/rendering-gotchas.md) when the chosen shapes, labels, routes or changed dimensions expose a relevant technical risk. For animation, also read [scenes, inherited state, and timing](references/timeline.md). For requested SVG, PNG, or GIF files, read [export options and limits](references/export.md).
-- **Build the diagram document.** For new or revised drafts, implement the planned objects, groups, connections, text, and animation stages. Use the selected label language and visual direction while preserving source meaning. Use the endpoints selected by [relationship scope](references/semantic-patterns.md#relationship-scope-and-endpoints), then apply [connection design](references/visual-design.md#connections-and-relationship-labels) to choose ports, routes and label space. For a new diagram without a specified direction, start with a light theme and rounded groups. Measure text on the complete draft and follow the [layout plan workflow](references/static-layout.md#layout-plan-workflow) when repeated geometry needs a plan. Compare every object, relationship direction, parent boundary, and state change against the sources. Save authorized changes in a new workspace draft; for an unchanged import or export, use the selected input bytes directly.
-- **Validate and correct.** Use read-only `validate` during iteration and read every diagnostic. It returns exact input identity and finite checks without creating a diagram revision; keep the working draft. Apply corrections within the current authorization, following [diagnosis and revision decisions](references/diagnostics-and-revisions.md). Clarify corrections that would change the explanation's meaning with the user.
-- **Compose the HTML page.** For new or revised HTML explanations, implement step 2's page allocation under the [page content contract](references/delivery-contexts.md#keep-the-html-page-minimal) and submit the HTML/CSS through [editable HTML pages](references/tool-contract.md#editable-html-pages). For an existing result, follow [page continuation](references/tool-contract.md#continue-an-existing-page) to preserve its design and explicitly synchronize intended diagram changes. Reuse the installed starter for new pages when useful; preserve the managed player region and keep the complete page in the task workspace.
-- **Generate inspection artifacts.** Before browser capture or choosing a preview sample count, read [browser preparation and sampling](references/visual-checks.md). Use `author` to produce the required offline HTML, needed previews, and requested export files. Use `author --browser none` when only intermediate HTML is needed. For several named static states, follow [named batch exports](references/export.md#named-batch-exports); confirm selected times from actual compiled beats with the user before binding the manifest. Follow the [runtime and result contracts](references/tool-contract.md) for setup, SDK compatibility, and report fields; use CLI `--help` for command options.
+Read [actual HTML inspection](references/visual-checks.md#actual-offline-html). View the saved HTML, its captured images and requested SVG/PNG at intended dimensions and background. Trace important edges to their arrowheads; assess text, hierarchy, boundaries and reading order with the design guidance. For animation, read [key stages](references/visual-checks.md#check-the-selected-key-stages), view initial/important/final states and play it to judge pacing. HTML viewing does not substitute for actual exported-image viewing.
 
-Proceed when the draft implements the plan, or an unchanged input is preserved, blocking errors are resolved, remaining diagnostics have recorded handling decisions, and all required files for inspection are complete. On export failure, follow the recovery rules below and report completed and unfinished files separately.
+Edit the same source draft when the picture reveals a problem, regenerate and re-view affected files or stages. Record substantive problems in the same `issues.md`. Finish when needed surfaces have been viewed and findings corrected and rechecked, or retained problems and viewing gaps have a stated reason and effect. File completion alone does not establish a high-quality result.
 
-### 4. Inspect the result
+Only an explicit request for traceable review or audit adds [formal review inputs](references/review-inputs.md) and, for images, [formal artifact evidence](references/artifact-evidence.md). Use `author --formal-review` to retain a stable source and use its returned `v###` for formal commands. Historical comparison/rollback requests use `--checkpoint`. These steps are independent of animation, complexity and output format; later ordinary edits continue the mutable current draft.
 
-For delivered SVG/PNG, follow [on-demand artifact evidence](references/artifact-evidence.md): run `evidence` against the explicit saved subject, then view and independently review its images. Existing valid conditions are reused; new conditions stay unviewed until inspected.
+### 5. Deliver
 
-View the generated diagram and confirm that it explains the subject accurately and clearly.
+Read [finalization](references/tool-contract.md#finalize-the-task). Publish current JSON, paused offline HTML, `report.json`, `report.md` and requested formats:
 
-- **Check semantic accuracy.** Compare objects, relationship directions, group boundaries, and state changes against the sources. Check endpoint scope against the selected view: collective relations reach groups, specific exceptions reach their named components, and membership uses containment. Confirm that omissions and aggregation preserve the source meaning.
-- **Check visual readability.** View actual rendered images at the intended display size. Inspect text, spacing, occlusion, and reading order. Trace each relevant connection from its source through bends and crossings to its arrowhead; check ports, labels, and clearance from unrelated nodes.
-- **Assess visual design.** Follow [visual design inspection](references/visual-design.md#inspect-the-visual-design) to identify visible defects and record observations for the user's final design judgment.
-- **Check the animation explanation.** For animation, follow [key-stage inspection and supplementation](references/visual-checks.md#check-the-selected-key-stages) to match the stage plan to compiled times, captures and actual viewing. Supplement missing stages with existing capture or export capabilities, or disclose the gap and its impact. Use actual playback when assessing pacing; report sample-only inspection as limited to the viewed states.
-- **Check the delivered files.** Have the tool open the actual saved offline HTML and apply the [page completion checklist](references/delivery-contexts.md#page-completion-checklist) while checking its initial paused state, controls, offline requests and relevant playback states. View its captured images through the [HTML inspection workflow](references/visual-checks.md#actual-offline-html). Inspect requested export files as delivered; use [target-size artifact inspection](references/artifact-evidence.md) for final SVG/PNG files.
+```sh
+node <skill-directory>/scripts/flowsvg.mjs finalize --workspace <task-workspace> --name <name>
+```
 
-Before submitting reviews, read [the complete review input contracts and template workflow](references/review-inputs.md). Generate an unviewed form with `review-template` from the explicit diagram subject and, for separate formal evidence, `--evidence-from`, then use independent `review` for HTML, preview and formal SVG/PNG observations and record the IDs, hashes, observations, and issues only for images actually viewed. Repeated review submission does not require another diagram version. When a browser or image viewer is unavailable, record the unperformed checks and their impact explicitly.
+If issues remain, summarize their effects in Agent-authored Markdown and pass `--notes <summary.md>`; the CLI copies it without interpreting or grading it. Verify final paths under `.diagrams/<diagram-name>/` and scoped workspace cleanup. Keep history or work records only when requested.
 
-For diagnosis-only tasks, report discovered problems and stop. For authoring or revision tasks, return to step 3 to apply authorized corrections, regenerate the artifacts, and inspect the affected files and states again. Follow [diagnosis and revision decisions](references/diagnostics-and-revisions.md) when recording issues or clarifying meaning-changing corrections with the user.
+Lead with the viewable result and links. Briefly explain how the structure answers the reader's question and any material assumptions or information choices. Report file completion, machine checks, actual viewing (files, dimensions and animation stages) and unperformed checks separately. Default reports state formal review is not requested; registered formal coverage describes evidence and viewing, with viewer issues reported separately from design acceptance.
 
-Finish when each required file, state, and display condition has been inspected or its unperformed checks are explicit, and every observed issue has a recorded handling decision.
+Finish when files and notes are published and linked, viewing scope and remaining limitations are clear, and cleanup or requested retention is verified.
 
-### 5. Finalize and deliver
+## Recover interrupted work
 
-Turn the selected diagram into a delivery the user can view, use, and continue editing, and describe its completion status accurately.
+On execution failure, retain the source draft, `issues.md` and available files. Read the relevant [recovery branch](references/troubleshooting.md), correct the cause within authorization, then retry the affected operation against current. A previous complete `.recovery` result retains its own source identity and cannot represent a changed draft. Preserve any prior published delivery.
 
-Deliver one selected diagram with editable JSON, paused offline HTML with controls, `report.json`, and `report.md`, plus any SVG, PNG, or GIF files in the delivery plan.
-
-- **Confirm the final version.** Select the revision for delivery and verify that the requested files are complete and match the source and outputs covered by step 4's inspection records or explicit inspection gaps.
-- **Publish and organize the delivery.** Follow [finalization](references/tool-contract.md#finalize-the-task) to publish `.diagrams/<diagram-name>/`. Verify the returned final-file paths and task-workspace cleanup status. Preserve history or debug evidence when the user explicitly requests it; keep cleanup scoped to this task workspace.
-- **Present the result.** Show the selected final diagram or a directly openable entry point first. Then provide the editable JSON and requested export files, using verified final-file paths.
-- **Explain results and limits.** Summarize the selected structure and why it answers the reader's question, adopted preferences and display assumptions, checks performed, display and animation coverage, retained warnings, and unresolved issues. Explain omissions or aggregation that affect interpretation. Report file completion and quality coverage separately, following the [report contracts](references/tool-contract.md#revisions-and-reports). Report these as tool and inspection results; the user judges the final design.
-
-Finish when the final files have been verified and linked, check results and limitations have been explained, and workspace cleanup or intentional retention has been confirmed. Report cleanup failures even when the published files remain available.
-
-## Handle failures and interruptions
-
-When a task fails, is interrupted unexpectedly, or is cancelled by the user, follow [failure recovery](references/troubleshooting.md) and the conditions below.
-
-- **Execution failure.** Retain the draft, completed files, and available error reports. Explain the failed stage and reported cause. Address the cause within the current authorization, then retry the affected operation. Follow [operation-specific recovery](references/troubleshooting.md): `author` reserves a new revision, `review` and `evidence` use independent records, and `validate` writes no diagram history. If the same failure recurs without new evidence, stop retrying and report the next recovery action.
-- **Unexpected interruption.** Inspect the task records and files that actually remain. Identify completed and unfinished steps. Follow [input and parent selection](references/diagnostics-and-revisions.md#selecting-a-parent) to choose an explicit saved revision for recovery. Once the interruption cause is addressed within the current authorization, resume the unfinished or affected steps; a resumed `validate` call checks existing bytes without writing history; `author` saves a new revision.
-- **User cancellation.** Stop current commands and further retries. Retain existing results and report their saved locations and unfinished work. Resume only after the user asks to continue.
-
-Handling is complete when the retained results, current task status, unfinished work, and conditions for continuing have been verified and explained.
+After interruption, inspect remaining task files and continue the unfinished work; use explicit retained checkpoints only when needed. Stop repeated retries without new evidence and report the next action. On user cancellation, stop commands and retain work; resume when asked.

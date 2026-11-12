@@ -1,5 +1,6 @@
 /** Snapshot-bound batch planning. Validate every frame before any requested static image is written. */
-import { mkdir, readFile } from "node:fs/promises";
+import { readRequestFile } from "./export-request.mjs";
+import { mkdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { ToolError } from "./runtime.mjs";
 import { digest, saveComplete } from "./artifact-identity.mjs";
@@ -12,7 +13,7 @@ const MAX_PNG_PIXELS = 32_000_000;
 export async function deliverManifest(report, context) {
   report.stage = "export-manifest";
   let bytes;
-  try { bytes = await readFile(context.options["export-manifest"]); }
+  try { bytes = readRequestFile(context.options, "manifest"); }
   catch (cause) { throw invalid(`Cannot read manifest: ${cause.message}`); }
   const path = join(report.revision.directory, "export-manifest.json");
   await saveComplete(path, bytes, context.signal);

@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Actual offline HTML inspection is separate from SDK preview capture and model review. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -36,7 +37,7 @@ test("browser-free authoring records that actual HTML inspection was not run", a
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "html-static", "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.checks.html).toBe("not-run");
   expect(report.htmlInspection).toMatchObject({ status: "not-run", sourceRevision: report.revision.id, states: [] });
   expect(report.htmlInspection.reason).toMatch(/browser|inspection/i);
@@ -49,7 +50,7 @@ test("rejects HTML review evidence outside the author command", async () => {
   await writeFile(reviewPath, "{}");
   const result = await command(["doctor", "--html-review", reviewPath]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "ERR_OPTION_SCOPE", location: "html-review" }));
 });
 
@@ -58,7 +59,7 @@ test("an invalid explicit browser leaves a failed, explainable HTML inspection r
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "html-invalid-browser", "--browser", join(root, "missing-browser")]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.htmlInspection).toMatchObject({ status: "failed", reason: expect.stringMatching(/executable|browser/i), resources: { browser: "not-created" } });
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_BROWSER_FAILED" }));
 });
@@ -68,9 +69,9 @@ test.skipIf(!browser)("inspection opens the delivered HTML, verifies paused offl
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "html-browser", "--browser", browser!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.checks.html).toBe("captured");
-  expect(report.htmlInspection).toMatchObject({ status: "awaiting-review", sourceRevision: report.revision.id,
+  expect(report.htmlInspection).toMatchObject({ status: "captured", sourceRevision: report.revision.id,
     file: { path: join(report.revision.directory, "diagram.html"), sha256: expect.stringMatching(/^[a-f0-9]{64}$/u) },
     states: [expect.objectContaining({ id: "html-frame-01", timeMs: 0, paused: true, offline: true })],
     resources: { page: "closed", context: "closed", browser: "closed" } });
@@ -82,19 +83,19 @@ test.skipIf(!browser)("HTML review binds each attestation to the inspected file 
   const input = join(root, "review-source.json");
   const reviewPath = join(root, "html-review.json");
   await writeFile(input, JSON.stringify(document));
-  const sourceResult = await command(["author", "--input", input, "--name", "html-review", "--browser", browser!]);
-  const source = JSON.parse(sourceResult.stdout);
+  const sourceResult = await command(["author", "--input", input, "--checkpoint", "--name", "html-review", "--browser", browser!]);
+  const source = (await readCommandReport(sourceResult.stdout));
   const review = { reviewer: "synthetic HTML viewer", viewed: true, states: source.htmlInspection.states.map((state: { id: string; sha256: string }) => ({
     id: state.id, sha256: state.sha256,
     observations: { readingOrder: "Reviewed", density: "Reviewed", occlusion: "Reviewed", narrative: "Reviewed" }, issues: []
   })) };
   await writeFile(reviewPath, JSON.stringify(review));
-  const reviewedResult = await command(["author", "--from", source.revision.id, "--name", "html-review", "--browser", "none", "--html-review", reviewPath]);
+  const reviewedResult = await command(["author", "--from", source.revision.id, "--checkpoint", "--name", "html-review", "--browser", "none", "--html-review", reviewPath]);
   expect(reviewedResult.code, reviewedResult.stdout + reviewedResult.stderr).toBe(0);
-  const reviewed = JSON.parse(reviewedResult.stdout);
+  const reviewed = (await readCommandReport(reviewedResult.stdout));
   expect(reviewed).toMatchObject({ checks: { html: "reviewed" }, htmlInspection: { status: "review-recorded", viewedStates: expect.any(Array) } });
   await writeFile(join(source.revision.directory, "diagram.html"), "tampered");
-  const rejected = JSON.parse((await command(["author", "--from", source.revision.id, "--name", "html-review", "--browser", "none", "--html-review", reviewPath])).stdout);
+  const rejected = (await readCommandReport((await command(["author", "--from", source.revision.id, "--checkpoint", "--name", "html-review", "--browser", "none", "--html-review", reviewPath])).stdout));
   expect(rejected.status).toBe("failed");
   expect(rejected.diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_REVIEW_INVALID" }));
 }, 90_000);
@@ -105,7 +106,7 @@ test.skipIf(!browser)("animated HTML inspection records playback and compiled ke
     { durationMs: 500, transitionMs: 200, actions: [{ type: "updateNode", target: "target", value: { label: "完成" } }] }
   ] }] }));
   const result = await command(["author", "--input", input, "--name", "html-animated", "--browser", browser!]);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(result.code, result.stdout + result.stderr).toBe(0);
   expect(report.htmlInspection.playback).toMatchObject({ attempted: true, advanced: true, paused: true });
   expect(report.htmlInspection.plan.mode).toBe("animated");

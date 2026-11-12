@@ -1,10 +1,10 @@
 # Export files
 
-For ordinary skill tasks, first create a canonical [task workspace](tool-contract.md#task-workspace), then pass `--output <task-workspace>/history --name <diagram-name>` to every export, evidence and review invocation. Replace the workspace placeholder in the examples with that path. [Finalize](tool-contract.md#finalize-the-task) only when all requested files are ready; successful finalization keeps those files and removes temporary revisions and inspection images.
+For diagram tasks, first create a canonical [task workspace](tool-contract.md#task-workspace), then pass `--output <task-workspace>/history --name <diagram-name>` to every export, evidence and review invocation. Replace the workspace placeholder in the examples with that path. [Finalize](tool-contract.md#finalize-the-task) only when all requested files are ready; successful finalization keeps those files and removes the temporary workspace and inspection images.
 
 This reference carries the SDK export rules needed by the installed skill, plus CLI, report, revision, manifest and partial-delivery rules. Keep these rules aligned with the pinned SDK baseline in `runtime/manifest.json`; the installed skill must remain usable without this repository.
 
-Use `author` to save editable JSON and paused offline HTML with controls. These default files require no browser. `--svg --time <ms>` adds SVG at a finite time within the actual compiled duration; the default time is zero. Static diagrams accept only zero. Each invocation reserves a new diagram revision and uses its saved JSON snapshot for every export. Delivery completion and visual approval are separate report fields.
+Use `author` to save editable JSON and paused offline HTML with controls. These default files require no browser. `--svg --time <ms>` adds SVG at a finite time within the actual compiled duration; the default time is zero. Static diagrams accept only zero. Each invocation replaces this task’s `current` result and uses its saved JSON bytes for every export. Only explicit `--checkpoint` retains an immutable version. Delivery completion and visual approval are separate report fields.
 
 ## Requested SVG and PNG
 
@@ -16,7 +16,7 @@ PNG calls the installed public `flowsvg/node.exportPng` API and requires a prepa
 node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --name "article" --svg --png --time 0 --png-width 1440 --background transparent --browser "/path/to/chromium" --output "<task-workspace>/history"
 ```
 
-Single files are `diagram.svg` and `diagram.png`. Their report records include artifact ID, actual byte hash, original revision, source hash, SDK version/integrity, selected time/theme/background/camera and intrinsic dimensions. `exports` records each requested format's success or failure. Missing browsers and PNG errors preserve successful JSON/HTML/SVG; PNG remains incomplete. Generated files remain visually unreviewed until [actual artifact evidence](artifact-evidence.md) is viewed and recorded.
+Single files are `diagram.svg` and `diagram.png`. Their report records include artifact ID, actual byte hash, original revision, source hash, SDK version/integrity, selected time/theme/background/camera and intrinsic dimensions. `exports` records each requested format's success or failure. Missing browsers and PNG errors preserve successful JSON/HTML/SVG; PNG remains incomplete. View the actual requested files to judge their design. Use [formal artifact evidence](artifact-evidence.md) when a traceable review is requested.
 
 ### Include an Agent-authored page
 
@@ -32,7 +32,7 @@ For an unchanged finalized page, import its exact `diagram.json` and select its 
 
 ## Named batch exports
 
-Use `--export-manifest <json>` instead of single-frame `--svg`, `--png` or `--time`. First run `validate` or `author` on the exact source bytes. Read `input.sha256`, `sdk.version`, `sdk.integrity`, `compilation.totalDurationMs` and `compilation.beats` from that report, then confirm the selected times with the user. Build this independent manifest with those actual values:
+Use `--export-manifest <json>` instead of single-frame `--svg`, `--png` or `--time`. First run `validate` or `author` on the exact source bytes. Read `input.sha256`, `sdk.version`, `sdk.integrity`, `compilation.totalDurationMs` and `compilation.beats` from that report, then select the times that express the requested stages. Build this independent manifest with those actual values:
 
 ```json
 {
@@ -49,15 +49,15 @@ Use `--export-manifest <json>` instead of single-frame `--svg`, `--png` or `--ti
 node <skill-directory>/scripts/flowsvg.mjs author --input "draft.json" --name "article" --export-manifest "exports.json" --theme light --background transparent --png-width 1440 --browser "/path/to/chromium" --output "<task-workspace>/history"
 ```
 
-The source hash covers exact bytes, including whitespace. Both SDK fields must match the actual isolated installation, including same-version integrity changes. Missing or stale binding fields fail; the tool never rebinds a manifest. After a change, read the new compiled beats and identity, confirm the selected frames, and create a new manifest. Preserve that confirmation with `--sources`; use an explicit parent to retain the old manifest source/hash/settings in `provenance.exportManifests`.
+The source hash covers exact bytes, including whitespace. Both SDK fields must match the actual isolated installation, including same-version integrity changes. Missing or stale binding fields fail; the tool never rebinds a manifest. After a change, read the new compiled beats and identity, select the intended frames, and create a newly bound manifest. Explicit checkpoints retain prior manifest history.
 
 Every frame requires a nonempty unique portable name, finite numeric time within the compiled duration, and unique nonempty `svg`/`png` formats. Separators, reserved filenames, trailing dots/spaces, case collisions and Unicode normalization collisions are rejected. Different names may select the same time. Extra schema fields are rejected. The tool constructs `exports/<name>.svg` and `exports/<name>.png`; manifests cannot supply output paths.
 
 The task shares `--theme`, `--background` and `--png-width` across frames. PNG width requires at least one PNG item. All binding, frame and shared-size checks finish before any batch image is written. Invalid manifests preserve default JSON/HTML and original manifest bytes. The report records the original manifest SHA-256, parsed fields and shared settings.
 
-Frames and their formats run in manifest order. Each `exports` item records time, theme, background, intended path, dimensions and `succeeded`, `failed`, `not-run` or `cancelled`, with an error reason when relevant. Runtime failure continues other items; missing PNG browsers still permit SVG. Cancellation stops remaining items. Only complete exclusive writes register artifacts. A format enters `completion.completed` only when all its items succeed. Retry in a fresh revision; prior bytes are preserved. Report-write failure remains a failure even after all images were saved.
+Frames and their formats run in manifest order. Each `exports` item records time, theme, background, intended path, dimensions and `succeeded`, `failed`, `not-run` or `cancelled`, with an error reason when relevant. Runtime failure continues other items; missing PNG browsers still permit SVG. Cancellation stops remaining items. Only complete exclusive writes register artifacts. A format enters `completion.completed` only when all its items succeed. Retry the current draft; successful replacement removes superseded current files. A failed replacement retains one earlier complete result for recovery. Report-write failure remains a failure even after all images were saved.
 
-Select batch artifact IDs through the same [actual-file evidence workflow](artifact-evidence.md). One viewed format, time or display width does not cover the other items or sizes.
+View each requested actual file at its intended display condition. An explicit formal request uses [registered artifact evidence](artifact-evidence.md). One viewed format, time or display width does not cover the other items or sizes.
 
 ## GIF exports
 
@@ -107,6 +107,6 @@ Choose `endMs` from the input's actual compiled timeline; the example is valid o
 
 stdout remains one JSON result; GIF phase/count progress goes to stderr. A GIF artifact is registered only after the SDK returns the complete byte sequence and the tool saves the entire file. A failed or cancelled file write removes only the file created by that task. Existing destination files are preserved and produce an error.
 
-A missing browser, caption overflow, invalid range, encoding failure or cancellation leaves successful JSON/HTML/SVG files available. The report lists `gif` in `completion.requested`, omits it from `completion.completed`, and sets `completion.delivery` to `incomplete`. Explain that the GIF request is unfinished and link the successful files. HTML or SVG does not satisfy the GIF request. A generated GIF does not establish visual approval. After a noncancelled GIF failure, the tool still attempts independent previews and records both results. A preview failure does not erase completed exports. Cancellation stops subsequent stages.
+A missing browser, caption overflow, invalid range, encoding failure or cancellation leaves successful JSON/HTML/SVG files available. The report lists `gif` in `completion.requested`, omits it from `completion.completed`, and sets `completion.delivery` to `incomplete`. Explain that the GIF request is unfinished and link the successful files. HTML or SVG does not satisfy the GIF request. A generated GIF does not establish visual approval. After a noncancelled GIF failure, the tool still attempts requested inspection stages and records their results. A preview failure does not erase completed exports. Cancellation stops subsequent stages.
 
-To export a previously finalized diagram, import its final `diagram.json` into a fresh workspace. For an unfinished task or explicitly retained historical result, use the explicit parent revision workflow in [the tool contract](tool-contract.md#revisions-and-reports). Adding GIF creates a fresh revision; keep the earlier revision and input bytes. Retry failures in a new revision as well. Read [troubleshooting](troubleshooting.md) for browser preparation, cancellation and failure recovery.
+To export a previously finalized diagram, import its final `diagram.json` into a fresh workspace. For an unfinished task, resume `--from current` or edit its draft and run `author` with the same output/name. Omitted export requests retain their formats, time, background, width, explicit theme override, manifest bytes, GIF options and requested `--samples`/`--preview` scope. Each run regenerates requested files rather than treating old bytes as completion. Browser selection remains an environment choice for each call. Explicit `--export-manifest` replaces the saved batch selection; explicit `--svg` or `--png` switches a saved batch to single-frame selection. A changed source or SDK invalidates a saved manifest binding until a new manifest is supplied. Use `--checkpoint` only to retain history. Read [troubleshooting](troubleshooting.md) for browser preparation, cancellation and failure recovery.

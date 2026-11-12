@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Required quality coverage follows the final files and their actual display conditions. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -19,6 +20,8 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {
+  // This suite explicitly exercises registered review coverage and immutable source identity.
+  if (args[0] === "author") args = [...args, "--formal-review", "--checkpoint"];
   return new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache") }
@@ -36,7 +39,7 @@ function command(args: string[]) {
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "html", "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion).toMatchObject({ delivery: "complete", quality: "incomplete" });
   expect(report.qualityCoverage).toMatchObject({ status: "incomplete", required: expect.arrayContaining([
     expect.objectContaining({ kind: "html", status: "incomplete", fileSha256: expect.stringMatching(/^[a-f0-9]{64}$/u) })
@@ -50,7 +53,7 @@ test("quality coverage keeps each requested static artifact and its default nati
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "images", "--svg", "--png", "--browser", "none"]);
   expect(result.code).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const required = report.qualityCoverage.required;
   expect(required.filter((item: { kind: string }) => item.kind === "artifact")).toEqual(expect.arrayContaining([
     expect.objectContaining({ format: "svg", displayWidth: 480, displayHeight: 280, backdrop: "#ffffff", status: "incomplete" }),
@@ -63,9 +66,9 @@ test("quality coverage keeps each requested static artifact and its default nati
 test("a missing requested export cannot be represented as a passed quality result or replace a prior final", async () => {
   const input = join(root, "missing.json");
   await writeFile(input, JSON.stringify(document));
-  const first = JSON.parse((await command(["author", "--input", input, "--name", "missing", "--browser", "none"])).stdout);
+  const first = (await readCommandReport((await command(["author", "--input", input, "--name", "missing", "--browser", "none"])).stdout));
   expect(first.completion.delivery).toBe("complete");
-  const failed = JSON.parse((await command(["author", "--input", input, "--name", "missing", "--png", "--browser", "none"])).stdout);
+  const failed = (await readCommandReport((await command(["author", "--input", input, "--name", "missing", "--png", "--browser", "none"])).stdout));
   expect(failed.completion.delivery).toBe("incomplete");
   expect(failed.qualityCoverage.status).not.toBe("passed");
   expect(failed.qualityCoverage.required).toEqual(expect.arrayContaining([
@@ -77,8 +80,8 @@ test("a missing requested export cannot be represented as a passed quality resul
 test("review-only revisions keep prior requested static artifacts in the required coverage set", async () => {
   const input = join(root, "review-carry.json");
   await writeFile(input, JSON.stringify(document));
-  const first = JSON.parse((await command(["author", "--input", input, "--name", "review-carry", "--svg", "--browser", "none"])).stdout);
-  const reviewed = JSON.parse((await command(["author", "--from", first.revision.id, "--name", "review-carry", "--browser", "none"])).stdout);
+  const first = (await readCommandReport((await command(["author", "--input", input, "--name", "review-carry", "--svg", "--browser", "none"])).stdout));
+  const reviewed = (await readCommandReport((await command(["author", "--from", first.revision.id, "--name", "review-carry", "--browser", "none"])).stdout));
   expect(reviewed.completion.requested).toContain("svg");
   expect(reviewed.completion.completed).toContain("svg");
   expect(reviewed.qualityCoverage.required).toContainEqual(expect.objectContaining({ kind: "artifact", format: "svg", status: "incomplete" }));
@@ -89,7 +92,7 @@ test("missing artifact evidence explains the native surface and the explicit cap
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--input", input, "--name", "native-surface", "--svg", "--theme", "dark", "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion).toMatchObject({ delivery: "complete", quality: "incomplete" });
   const artifact = report.artifacts.find((item: { kind: string }) => item.kind === "svg");
   const surface = report.qualityCoverage.required.find((item: { kind: string }) => item.kind === "artifact");
@@ -101,7 +104,7 @@ test("missing artifact evidence explains the native surface and the explicit cap
   const saved = JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"));
   expect(saved.qualityCoverage.required).toContainEqual(surface);
   expect(markdown).toContain("delivery: complete");
-  expect(markdown).toContain("quality: incomplete");
+  expect(markdown).toContain("formal review coverage: incomplete");
   expect(markdown).toContain(surface.reason);
 });
 
@@ -117,9 +120,9 @@ test.skipIf(!browser)("HTML and ordinary previews leave static coverage incomple
   const input = join(root, "preview-gap.json");
   const name = "preview-gap";
   await writeFile(input, JSON.stringify(document));
-  const sourceResult = await command(["author", "--input", input, "--name", name, "--svg", "--browser", browser!]);
+  const sourceResult = await command(["author", "--input", input, "--name", name, "--preview", "--svg", "--browser", browser!]);
   expect(sourceResult.code, sourceResult.stdout + sourceResult.stderr).toBe(0);
-  const source = JSON.parse(sourceResult.stdout);
+  const source = (await readCommandReport(sourceResult.stdout));
   const artifact = source.artifacts.find((item: { kind: string }) => item.kind === "svg");
   const surface = source.qualityCoverage.required.find((item: { kind: string }) => item.kind === "artifact");
   expect(source.visual.capturedFrames.length).toBeGreaterThan(0);
@@ -133,20 +136,20 @@ test.skipIf(!browser)("HTML and ordinary previews leave static coverage incomple
   await saveScreenshotReview(htmlReview, "states", source.htmlInspection.states);
   const reviewedResult = await command(["author", "--from", source.revision.id, "--name", name, "--visual-review", previewReview, "--html-review", htmlReview, "--browser", "none"]);
   expect(reviewedResult.code, reviewedResult.stdout + reviewedResult.stderr).toBe(0);
-  const reviewed = JSON.parse(reviewedResult.stdout);
+  const reviewed = (await readCommandReport(reviewedResult.stdout));
   expect(reviewed).toMatchObject({ checks: { html: "reviewed", visual: "reviewed" }, completion: { delivery: "complete", quality: "incomplete" } });
   expect(reviewed.qualityCoverage.required).toContainEqual(expect.objectContaining({ kind: "html", status: "passed" }));
   expect(reviewed.qualityCoverage.required).toContainEqual(expect.objectContaining({ kind: "artifact", evidenceId: null, status: "incomplete", reason: expect.stringContaining("does not cover") }));
   const markdown = await readFile(join(reviewed.revision.directory, "report.md"), "utf8");
   expect(markdown).toContain("delivery: complete");
-  expect(markdown).toContain("quality: incomplete");
+  expect(markdown).toContain("formal review coverage: incomplete");
   expect(markdown).toContain(artifact.artifactId);
 
   const settings = join(root, "explicit-display.json");
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: 240, backdrop: "#111827" }] }));
   const capturedResult = await command(["author", "--from", source.revision.id, "--name", name, "--artifact-preview-settings", settings, "--browser", browser!]);
   expect(capturedResult.code, capturedResult.stdout + capturedResult.stderr).toBe(0);
-  const captured = JSON.parse(capturedResult.stdout);
+  const captured = (await readCommandReport(capturedResult.stdout));
   const evidence = captured.artifactEvidence.items[0];
   expect(captured.qualityCoverage.required).toContainEqual(expect.objectContaining({ artifactId: artifact.artifactId, displayWidth: 240, displayHeight: 140, backdrop: "#111827", status: "incomplete", evidenceId: evidence.evidenceId }));
   const artifactReview = join(root, "artifact-review.json");
@@ -155,12 +158,12 @@ test.skipIf(!browser)("HTML and ordinary previews leave static coverage incomple
   await saveScreenshotReview(htmlReview, "states", captured.htmlInspection.states);
   const completeResult = await command(["author", "--from", captured.revision.id, "--name", name, "--artifact-review", artifactReview, "--html-review", htmlReview, "--browser", "none"]);
   expect(completeResult.code, completeResult.stdout + completeResult.stderr).toBe(0);
-  const complete = JSON.parse(completeResult.stdout);
+  const complete = (await readCommandReport(completeResult.stdout));
   expect(complete.completion, JSON.stringify(complete.qualityCoverage)).toMatchObject({ delivery: "complete", quality: "passed" });
   expect(complete.qualityCoverage.incomplete).toEqual([]);
   expect(complete.qualityCoverage.required).toContainEqual(expect.objectContaining({ artifactId: artifact.artifactId, displayWidth: 240, displayHeight: 140, backdrop: "#111827", status: "passed", evidenceId: evidence.evidenceId }));
 
-  const fresh = JSON.parse((await command(["author", "--from", captured.revision.id, "--name", name, "--browser", "none"])).stdout);
+  const fresh = (await readCommandReport((await command(["author", "--from", captured.revision.id, "--name", name, "--browser", "none"])).stdout));
   expect(fresh.artifactEvidence.items).toHaveLength(1);
   expect(fresh.artifactEvidence.items[0]).toMatchObject({ evidenceId: evidence.evidenceId, evidenceRevision: captured.revision.id });
   await expect(readFile(join(fresh.revision.directory, "artifact-preview-settings.json"))).rejects.toMatchObject({ code: "ENOENT" });

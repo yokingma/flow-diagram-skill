@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Layout authoring is exercised through a copied installation, without internal helper calls. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
@@ -15,6 +16,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {
+  if (["layout", "validate", "author"].includes(args[0]) && !args.includes("--help")) args = [...args, "--geometry"];
   return new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache") }
@@ -42,11 +44,11 @@ test("layout creates a deterministic source-bound draft without allocating autho
   await Promise.all([writeFile(input, inputBytes), writeFile(planPath, planBytes)]);
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const outputBytes = await readFile(output, "utf8");
   expect(report).toMatchObject({ command: "layout", status: "laid-out", revision: null, strategy: "layered",
     input: { sha256: hash(inputBytes) }, plan: { sha256: hash(planBytes) }, output: { path: output, sha256: hash(outputBytes) },
-    checks: { validation: "passed", compilation: "passed", layout: "passed" } });
+    checks: { validation: "passed", compilation: "passed", layout: "computed" } });
   expect(JSON.parse(outputBytes).nodes.map((node: { x: number; y: number }) => [node.x, node.y])).toEqual([[20, 20], [20, 130]]);
   expect(await readFile(input, "utf8")).toBe(inputBytes);
   expect(await readFile(planPath, "utf8")).toBe(planBytes);
@@ -68,7 +70,7 @@ test("layout refuses existing and source targets and leaves no partial file on w
     [join(blockedParent, "output.json"), "LAYOUT_OUTPUT_WRITE_FAILED"]]) {
     const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
     expect(result.code, result.stdout).toBe(1);
-    expect(JSON.parse(result.stdout).diagnostics).toContainEqual(expect.objectContaining({ code }));
+    expect((await readCommandReport(result.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code }));
   }
   expect(await readFile(input, "utf8")).toBe(inputBytes);
   expect(await readFile(planPath, "utf8")).toBe(planBytes);
@@ -88,7 +90,7 @@ test("layout measures Chinese content at its final planned width before moving t
   await writeFile(planPath, JSON.stringify({ ...plan, overrides: { first: { width: 180 } } }));
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const written = JSON.parse(await readFile(output, "utf8"));
   expect(report.measuredNodes).toContainEqual(expect.objectContaining({ nodeId: "first", width: 180, recommendedHeight: expect.any(Number), diagnostics: [] }));
   expect(written.nodes[0].height).toBeGreaterThan(40);
@@ -112,7 +114,7 @@ test("layout applies label-only height at final width and preserves an explicit 
   await Promise.all([writeFile(input, JSON.stringify(document)), writeFile(planPath, JSON.stringify(layoutPlan))]);
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const summary = report.labelOnlyMeasurements.find((item: { nodeId: string }) => item.nodeId === "summary");
   expect(summary).toMatchObject({ nodeId: "summary", currentHeight: 20, requiredHeight: expect.any(Number), estimatedLineCount: expect.any(Number), labelOnly: true });
   expect(report.appliedHeightChanges).toContainEqual(expect.objectContaining({ objectId: "summary", field: "height", before: 20, after: summary.requiredHeight }));
@@ -126,7 +128,7 @@ test("layout applies label-only height at final width and preserves an explicit 
   const narrow = await command(["layout", "--input", input, "--plan", planPath, "--output", narrowOutput]);
   expect(narrow.code, narrow.stdout + narrow.stderr).toBe(0);
   expect(JSON.parse(await readFile(narrowOutput, "utf8")).nodes[0].height).toBe(20);
-  expect(JSON.parse(narrow.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", objectId: "summary" }));
+  expect((await readCommandReport(narrow.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", objectId: "summary" }));
 }, 60_000);
 
 test("expanded group labels are measured at child-derived width with exact height overrides", async () => {
@@ -144,7 +146,7 @@ test("expanded group labels are measured at child-derived width with exact heigh
   await Promise.all([writeFile(input, JSON.stringify(document)), writeFile(planPath, JSON.stringify(layoutPlan))]);
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const measurement = report.labelOnlyMeasurements[0];
   const laidOut = JSON.parse(await readFile(output, "utf8"));
   expect(measurement.width).toBe(132);
@@ -155,14 +157,14 @@ test("expanded group labels are measured at child-derived width with exact heigh
 
   const measured = await command(["measure", "--input", output]);
   expect(measured.code, measured.stdout).toBe(0);
-  expect(JSON.parse(measured.stdout).measurement.nodes[0].requiredHeight).toBe(measurement.requiredHeight);
+  expect((await readCommandReport(measured.stdout)).measurement.nodes[0].requiredHeight).toBe(measurement.requiredHeight);
   for (const height of [20, measurement.requiredHeight + 10]) {
     const overrideOutput = join(root, `group-height-${height}.json`);
     await writeFile(planPath, JSON.stringify({ ...layoutPlan, overrides: { group: { height } } }));
     const overridden = await command(["layout", "--input", input, "--plan", planPath, "--output", overrideOutput]);
     expect(overridden.code, overridden.stdout).toBe(0);
     expect(JSON.parse(await readFile(overrideOutput, "utf8")).nodes[0].height).toBe(height);
-    const warnings = JSON.parse(overridden.stdout).diagnostics.filter((item: { code: string }) => item.code === "text-overflow");
+    const warnings = (await readCommandReport(overridden.stdout)).diagnostics.filter((item: { code: string }) => item.code === "text-overflow");
     if (height === 20) expect(warnings).toContainEqual(expect.objectContaining({ objectId: "group", currentHeight: height, requiredHeight: measurement.requiredHeight }));
     else expect(warnings).toEqual([]);
   }
@@ -182,7 +184,7 @@ test.each([
   await Promise.all([writeFile(input, sourceBytes), writeFile(planPath, planBytes)]);
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout).toBe(1);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.checks[check]).toBe("failed");
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code }));
   await expect(readFile(output)).rejects.toMatchObject({ code: "ENOENT" });
@@ -190,22 +192,22 @@ test.each([
   expect(await readFile(planPath, "utf8")).toBe(planBytes);
 }, 60_000);
 
-test("unreadable input paths identify the file and unresolved measurement blocks publication", async () => {
+test("unreadable input paths identify the file while measurement estimates allow publication", async () => {
   const missing = join(root, "missing-draft.json");
   const planPath = join(root, "measurement-plan.json");
   const output = join(root, "measurement-output.json");
   await writeFile(planPath, JSON.stringify(plan));
   const missingResult = await command(["layout", "--input", missing, "--plan", planPath, "--output", output]);
-  expect(JSON.parse(missingResult.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_INPUT_READ_FAILED", location: missing }));
+  expect((await readCommandReport(missingResult.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_INPUT_READ_FAILED", location: missing }));
   const input = join(root, "narrow-content.json");
   await writeFile(input, JSON.stringify({ ...draft, nodes: [{ ...draft.nodes[0], label: undefined,
     content: { blocks: [{ type: "paragraph", text: "不可丢失的中文内容" }] } }, draft.nodes[1]] }));
   await writeFile(planPath, JSON.stringify({ ...plan, overrides: { first: { width: 20 } } }));
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
-  expect(result.code, result.stdout).toBe(1);
-  expect(JSON.parse(result.stdout).checks.measurement).toBe("failed");
-  expect(JSON.parse(result.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_MEASUREMENT_DIAGNOSTIC", objectId: "first" }));
-  await expect(readFile(output)).rejects.toMatchObject({ code: "ENOENT" });
+  expect(result.code, result.stdout).toBe(0);
+  expect((await readCommandReport(result.stdout)).checks.measurement).toBe("passed");
+  expect((await readCommandReport(result.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_ESTIMATE", severity: "info", objectId: "first" }));
+  expect(JSON.parse(await readFile(output, "utf8")).nodes[0].content.blocks[0].text).toBe("不可丢失的中文内容");
 }, 60_000);
 
 test("layout help names its contract and only layout accepts the plan option", async () => {
@@ -217,20 +219,20 @@ test("layout help names its contract and only layout accepts the plan option", a
     ["layout", "--input", "draft.json", "--plan", "plan.json", "--output", "out.json", "--name", "unexpected"]]) {
     const result = await command(args);
     expect(result.code, result.stdout).toBe(1);
-    expect(JSON.parse(result.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "ERR_OPTION_SCOPE" }));
+    expect((await readCommandReport(result.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "ERR_OPTION_SCOPE" }));
   }
   const missing = await command(["layout", "--input", "draft.json"]);
-  expect(JSON.parse(missing.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_ARGUMENT_REQUIRED" }));
+  expect((await readCommandReport(missing.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "LAYOUT_ARGUMENT_REQUIRED" }));
 });
 
-test("retained warnings identify the new draft and direct decisions through a formal revision", async () => {
+test("optional geometry observations identify the new draft without decision requirements", async () => {
   const input = join(root, "warning-draft.json");
   const planPath = join(root, "warning-plan.json");
   const output = join(root, "warning-output.json");
   await Promise.all([writeFile(input, JSON.stringify(draft)), writeFile(planPath, JSON.stringify({ ...plan, overrides: { first: { height: 1 } } }))]);
   const result = await command(["layout", "--input", input, "--plan", planPath, "--output", output]);
   expect(result.code, result.stdout).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const warning = report.diagnostics.find((item: { code: string; objectId: string }) => item.code === "text-overflow" && item.objectId === "first");
   expect(warning).toMatchObject({ sourceRevision: null, issueId: expect.any(String), warningKey: expect.any(String), timeMs: 0,
     currentHeight: 1, requiredHeight: expect.any(Number), estimatedLineCount: expect.any(Number),
@@ -238,7 +240,8 @@ test("retained warnings identify the new draft and direct decisions through a fo
   expect(warning.reason).toContain("current height 1");
   expect(warning.reason).toContain("required height");
   expect(warning.reason).toContain("estimated line count");
-  expect(warning.nextStep).toContain("Run author");
+  expect(warning.severity).toBe("info");
+  expect(warning.nextStep).not.toMatch(/decision|approval|ask|confirm/i);
   expect(report.overrides).toEqual([{ nodeId: "first", values: { height: 1 } }]);
   expect(report.preservedSemanticFields).toEqual(expect.arrayContaining(["nodes.id", "nodes.parentId", "edges.from", "edges.to", "nodes array order"]));
   const written = JSON.parse(await readFile(output, "utf8"));
@@ -247,15 +250,15 @@ test("retained warnings identify the new draft and direct decisions through a fo
   expect(written.edges).toEqual(draft.edges);
   const validated = await command(["validate", "--input", output, "--name", "layout-warning-validate", "--output", join(root, "validate-history")]);
   expect(validated.code, validated.stdout + validated.stderr).toBe(0);
-  expect(JSON.parse(validated.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", objectId: "first",
+  expect((await readCommandReport(validated.stdout)).diagnostics).toContainEqual(expect.objectContaining({ code: "text-overflow", objectId: "first",
     currentHeight: 1, requiredHeight: warning.requiredHeight, estimatedLineCount: warning.estimatedLineCount }));
   const authored = await command(["author", "--input", output, "--name", "layout-warnings", "--output", join(root, "history"), "--browser", "none"]);
   expect(authored.code, authored.stdout + authored.stderr).toBe(0);
-  const authorReport = JSON.parse(authored.stdout);
-  expect(authorReport).toMatchObject({ status: "delivered", revision: { id: "v001" }, checks: { compilation: "passed", layout: "warnings" } });
-  expect(authorReport.diagnostics).toContainEqual(expect.objectContaining({ issueId: warning.issueId, sourceRevision: "v001",
+  const authorReport = (await readCommandReport(authored.stdout));
+  expect(authorReport).toMatchObject({ status: "delivered", workingDraft: { id: "current" }, checks: { compilation: "passed", layout: "computed" } });
+  expect(authorReport.diagnostics).toContainEqual(expect.objectContaining({ issueId: warning.issueId, sourceRevision: "current",
     currentHeight: 1, requiredHeight: warning.requiredHeight, estimatedLineCount: warning.estimatedLineCount }));
   const markdown = await readFile(join(authorReport.revision.directory, "report.md"), "utf8");
   expect(markdown).toContain("current height 1");
-  expect(markdown).toContain("not browser pixel measurement or formal SVG/PNG artifact evidence");
+  expect(markdown).toContain("not browser pixel measurement or a visual design conclusion");
 }, 60_000);

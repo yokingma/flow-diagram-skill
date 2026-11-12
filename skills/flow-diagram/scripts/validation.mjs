@@ -26,7 +26,7 @@ export async function validateInput(options, signal) {
     const sdk = await importSdk(runtime);
     const checked = checkDocument(report, sdk, bytes.toString("utf8"), options);
     if (!checked) return report;
-    diagnoseLayout(report, { ...checked, sdk });
+    diagnoseLayout(report, { ...checked, sdk }, options);
     report.status = "validated";
   } catch (cause) {
     const error = report.stage === "input" && cause.name !== "AbortError" && !(cause instanceof ToolError)

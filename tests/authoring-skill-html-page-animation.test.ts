@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Editable pages are exercised through the copied installed CLI and its actual offline output. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -46,13 +47,14 @@ test.skipIf(!browser)("external page dependencies fail offline inspection while 
   const html = shell.replace("</head>", '<link rel="stylesheet" href="https://example.invalid/page.css"><script src="https://example.invalid/page.js"></script></head>');
   const { input, page } = await sources("external", html);
   const result = await command(["author", "--input", input, "--html", page, "--name", "external", "--browser", browser!]);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion.delivery).toBe("complete");
   expect(await readFile(join(report.revision.directory, "diagram.html"), "utf8")).toContain("https://example.invalid/page.css");
   expect(report.htmlInspection.status).toBe("failed");
   expect(report.checks.html).not.toBe("captured");
   expect(report.htmlInspection.reason).toMatch(/offline.*external|external.*offline/i);
-  expect(report.qualityCoverage.required).toContainEqual(expect.objectContaining({ id: "html", status: "incomplete" }));
+  expect(report).not.toHaveProperty("qualityCoverage");
+  expect(report.completion).not.toHaveProperty("quality");
   expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "HTML_INSPECTION_FAILED" }));
 }, 90_000);
 
@@ -65,7 +67,7 @@ test.skipIf(!browser)("animated pages report actual captions, compiled boundarie
   const { input, page } = await sources("animated", starter, teaching);
   const result = await command(["author", "--input", input, "--html", page, "--name", "animated", "--browser", browser!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.htmlInspection.initial).toMatchObject({ progress: "0", paused: true,
     caption: "教学设定：客户端发送一次查询；未定义超时或失败分支。" });
   expect(report.htmlInspection.playback).toMatchObject({ attempted: true, advanced: true, paused: true });
@@ -88,7 +90,7 @@ for (const theme of ["light", "dark"]) test.skipIf(!browser)(`starter keeps ${th
   const { input, page: pageSource } = await sources(`narrow-${theme}`, starter, teaching);
   const result = await command(["author", "--input", input, "--html", pageSource, "--name", `narrow-${theme}`, "--theme", theme, "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   const instance = await chromium.launch({ executablePath: browser!, headless: true });
   try {
     const page = await instance.newPage({ viewport: { width: 390, height: 844 }, offline: true, colorScheme: theme });
@@ -117,7 +119,7 @@ for (const theme of ["light", "dark"]) test.skipIf(!browser)(`starter keeps ${th
 test.skipIf(!browser)("relative page assets are diagnosed as dependencies of a supposedly single-file page", async () => {
   const { input, page } = await sources("relative", shell.replace("</body>", '<img src="missing-local.svg" alt="External asset"></body>'));
   const result = await command(["author", "--input", input, "--html", page, "--name", "relative", "--browser", browser!]);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.completion.delivery).toBe("complete");
   expect(report.htmlInspection.status).toBe("failed");
   expect(report.htmlInspection.offline.externalRequests).toContainEqual(expect.stringMatching(/missing-local\.svg$/));
@@ -144,7 +146,7 @@ test.skipIf(!browser)("backward seeking records visual-only state changes with u
   const teaching = JSON.parse(await readFile(join(skill, "examples/request-response.json"), "utf8"));
   const { input, page } = await sources("visual-backseek", html, teaching);
   const result = await command(["author", "--input", input, "--html", page, "--name", "visual-backseek", "--browser", browser!]);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(result.code, result.stdout + result.stderr).toBe(0);
   expect(report.completion.delivery).toBe("complete");
   expect(report.htmlInspection.initial.visualSignature).toEqual(expect.any(String));

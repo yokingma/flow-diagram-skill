@@ -4,13 +4,13 @@ Read this reference when a source has unknowns, a readability proposal aggregate
 
 ## Before and after a meaning change
 
-1. Map each source-supported object, relationship, direction, boundary and state to the draft. Use the source language by default; if the request or an applicable project preference selects another label language, translate without changing the meaning. Mark missing values as unknown, or explain the narrower scope if that value is outside the requested diagram.
-2. When readability needs improvement, offer concrete candidates: separate images, additional states or an aggregation with its lost distinctions stated. Node count is a readability signal, not an automatic deletion threshold.
-3. Obtain the user's decision before merging objects, omitting source-supported relationships or changing meaning. Apply an already explicit decision within its stated scope; a general “make it simpler” request leaves the affected facts unresolved.
-4. In `sources[].description`, connect the source facts, unknowns, actual decision and permitted scope. For an existing diagram, select an explicit parent and save the authorized draft in a new revision. Keep the parent and its original issues. If a parent diagnostic exists, record the actual choice with `--decisions` as well. That option requires a known diagnostic; a semantic choice alone does not justify inventing a diagnostic code.
-5. Deliver the saved files and an explanation of **retained**, **merged**, **omitted** and **unknown** information. Identify the source and decision for each change, and the effects on interpretation. State “none” where a category is empty. Keep unapproved proposals unresolved. This is delivery prose, not an HTML page section: do not copy the account, its table or the source inventory into the page. See [keep the HTML page minimal](delivery-contexts.md#keep-the-html-page-minimal).
+Preserve source-supported facts, key relationships, directions, boundaries and states. Translate labels without changing meaning when the request or project preference selects another language. Mark unknown values as unknown; distinguish teaching assumptions from measured facts.
 
-These are authoring actions and prose in existing metadata and delivery explanations, not a new report schema. A decision to merge three sources does not authorize a new queue policy, another omitted relationship or changes in a later source version.
+Reorder objects, group related content, merge duplicate explanations and choose an abstraction level that answers the reader's question. These are authoring decisions within the source meaning. A readability improvement can use different geometry, separate views or a more concise explanation without a separate approval or design record.
+
+Ask before a proposed change alters a fact, key relationship, system boundary or explanatory scope. Describe the affected meaning and a concrete alternative. Apply an already explicit user decision within its scope. Keep material questions and their resolution in the task's single `issues.md`; source descriptions may explain the facts and chosen scope. Continue editing the same source draft.
+
+In the delivery explanation, disclose information choices that affect interpretation and important unknowns. Keep that explanation outside the HTML page under [page content](delivery-contexts.md#keep-the-html-page-minimal). Use the actual source and actual authorization when one was needed; invented teaching decisions never authorize real edits.
 
 ## Worked teaching example: unknown capacity and requested aggregation
 
@@ -20,11 +20,11 @@ The following source and user turns are invented teaching material. They do not 
 
 **Initial user request U1:** “Make the slide less crowded; aggregate the sources if possible.”
 
-**Author's proposal:** “A, B and C could become one node labelled ‘3 sources × 1 item/second’. It would retain the stated combined arrival rate but hide individual source identities and their three separate incoming arrows. Keep the queue, worker and completed-output relationship. Capacity and overload policy would remain unknown. Do you approve that specific merge, or prefer separate images?”
+**Meaning-changing alternative:** “A, B and C could become one node labelled ‘3 sources × 1 item/second’. It would retain the stated combined arrival rate but hide individual source identities and their three separate incoming arrows. Keep the queue, worker and completed-output relationship. Capacity and overload policy would remain unknown. Do you approve that specific merge, or prefer separate images?”
 
 **Teaching user decision U2:** “Approve that merge for this slide only. Keep the queue, worker and completed-output relationship; label capacity and overload policy unknown.”
 
-Only after U2 does the author write a separate aggregated draft. The author retains the original teaching JSON and, for a revision, names its saved parent. For the installed tool, a sources array can use the existing fields below. In a real task replace these teaching references with the actual designated source and actual conversation reference; never copy U2 as real approval.
+For this example, removing individual source identities changes the stated scope, so U2 authorizes that change. The author updates the working draft; a separate retained checkpoint is optional when requested. For the installed tool, a sources array can use the existing fields below. In a real task replace these teaching references with the actual designated source and actual conversation reference; never copy U2 as real approval.
 
 ```json
 [
@@ -50,4 +50,4 @@ A delivery explanation for that teaching revision would say (in the delivery mes
 | Omitted | Individual names and separate incoming arrows are absent from this view, as disclosed in the proposal and accepted in U2. No additional relationship is omitted. |
 | Unknown | Capacity, overload policy, observed queue length and latency remain unknown. Neither S1 nor U2 supplies values. Sustained stated arrival exceeds processing rate; no exact delay, queue growth measurement or drop behavior is asserted. |
 
-The delivery explanation also identifies the actual selected time and display width, inspected files and unresolved warnings. Export success does not verify the facts, the aggregation decision or readability. If U2 is absent, retain the unmerged draft and present the proposal as awaiting the user's decision.
+The delivery explanation also identifies the actual selected time and display width, inspected files and unresolved warnings. Export success does not verify the facts, the aggregation decision or readability. If U2 is absent, retain source identities while simplifying their visual organization; ask before removing those distinctions.

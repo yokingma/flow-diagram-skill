@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Optional text-layout records are observed through the independently copied installed CLI. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -30,7 +31,7 @@ async function measure(name: string, input: unknown, args: string[] = []) {
   const path = join(root, `${name}.json`);
   await writeFile(path, JSON.stringify(input));
   const result = await command(["measure", "--input", path, ...args]);
-  return { ...result, report: JSON.parse(result.stdout), path };
+  return { ...result, report: (await readCommandReport(result.stdout)), path };
 }
 
 test("optional records preserve ordered mixed-script text roles without changing baseline estimates", async () => {
@@ -96,7 +97,7 @@ test("draft records locate replacement content and preset labels without expandi
   expect(written).not.toContain("estimatedLines");
   expect(await readFile(result.path, "utf8")).toBe(JSON.stringify(input));
   const baseline = await command(["measure", "--input", result.path]);
-  expect(nodes.map(({ estimatedLines: _lines, ...rest }: { estimatedLines: unknown }) => rest)).toEqual(JSON.parse(baseline.stdout).measurement.nodes);
+  expect(nodes.map(({ estimatedLines: _lines, ...rest }: { estimatedLines: unknown }) => rest)).toEqual((await readCommandReport(baseline.stdout)).measurement.nodes);
 }, 60_000);
 
 test("other commands reject lines before allocating history or preparing runtime", async () => {
@@ -105,7 +106,7 @@ test("other commands reject lines before allocating history or preparing runtime
   for (const name of ["doctor", "prepare", "validate", "author", "layout", "evidence", "review", "review-template", "finalize"]) {
     const result = await command([name, "--lines", "--input", input, "--name", "scope"]);
     expect(result.code, name + result.stdout).toBe(1);
-    expect(JSON.parse(result.stdout)).toMatchObject({ stage: "arguments", artifacts: [], diagnostics: [expect.objectContaining({ code: "ERR_OPTION_SCOPE", location: "lines" })] });
+    expect((await readCommandReport(result.stdout))).toMatchObject({ stage: "arguments", artifacts: [], diagnostics: [expect.objectContaining({ code: "ERR_OPTION_SCOPE", location: "lines" })] });
   }
   await expect(readFile(join(root, ".diagrams/.history/scope/v001/diagram.json"))).rejects.toMatchObject({ code: "ENOENT" });
 }, 60_000);
@@ -135,7 +136,7 @@ test("mixed labels, empty estimates, graph exclusions and long text retain their
   expect(long.report.measurement.estimatedLines.at(-1).text).toContain("THE_END");
 }, 60_000);
 
-test("lines preserve diagnostic failures and exclusive backfill protections", async () => {
+test("lines preserve auxiliary estimates and exclusive backfill protections", async () => {
   const standalone = await measure("diagnostic-label", { kind: "diamond", width: 24, label: "界" }, ["--lines"]);
   expect(standalone.code, standalone.stdout).toBe(0);
   expect(standalone.report.measurement.diagnostics.length).toBeGreaterThan(0);
@@ -146,10 +147,10 @@ test("lines preserve diagnostic failures and exclusive backfill protections", as
   ], edges: [], scenes: [] };
   const output = join(root, "failed-lines-output.json");
   const failed = await measure("failed-draft", input, ["--lines", "--output", output]);
-  expect(failed.code).toBe(1);
-  expect(failed.report).not.toHaveProperty("measurement");
-  expect(failed.report.diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC", location: "nodes[1].label" }));
-  await expect(readFile(output)).rejects.toMatchObject({ code: "ENOENT" });
+  expect(failed.code).toBe(0);
+  expect(failed.report.measurement.nodes[1].estimatedLines).toEqual([{ text: "界", sourcePath: "nodes[1].label", versionIndex: 0 }]);
+  expect(failed.report.diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_ESTIMATE", location: "nodes[1].label" }));
+  expect(JSON.parse(await readFile(output, "utf8")).nodes[1].label).toBe("界");
   expect(await readFile(failed.path, "utf8")).toBe(JSON.stringify(input));
   const healthy = { ...input, nodes: [input.nodes[0]] };
   await writeFile(output, "existing");

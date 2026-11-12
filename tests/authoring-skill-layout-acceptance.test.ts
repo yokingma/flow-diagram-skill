@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** High-density static layout acceptance through the copied CLI contract. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
@@ -49,14 +50,14 @@ test("31-node fixture measures and lays out deterministically while preserving s
   const planBytes = await readFile(plan, "utf8");
   const measuredResult = await command(["measure", "--input", source, "--output", measured]);
   expect(measuredResult.code, measuredResult.stdout + measuredResult.stderr).toBe(0);
-  const measuredReport = JSON.parse(measuredResult.stdout);
+  const measuredReport = (await readCommandReport(measuredResult.stdout));
   expect(measuredReport.measurement.nodes).toHaveLength(31);
   expect(measuredReport.measurement.nodes.filter((node: { contentVersions?: number }) => node.contentVersions === undefined)).toHaveLength(19);
   expect(measuredReport.measurement.nodes.filter((node: { requiredHeight?: number; estimatedLineCount?: number }) =>
     Number.isFinite(node.requiredHeight) && Number.isFinite(node.estimatedLineCount))).toHaveLength(31);
-  const result = await command(["layout", "--input", measured, "--plan", plan, "--output", first]);
+  const result = await command(["layout", "--input", measured, "--plan", plan, "--output", first, "--geometry"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report).toMatchObject({ command: "layout", status: "laid-out", checks: { validation: "passed", plan: "passed", compilation: "passed" }, strategy: "layered" });
   expect(report.overrides).toContainEqual(expect.objectContaining({ nodeId: "control-plane" }));
   expect(report.diagnostics.some((item: { code?: string }) => item.code === "node-overlap")).toBe(true);
@@ -87,7 +88,7 @@ test("Chinese content changes reuse the same plan and move later geometry withou
   expect(measuredResult.code, measuredResult.stdout + measuredResult.stderr).toBe(0);
   const result = await command(["layout", "--input", measured, "--plan", plan, "--output", output]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
-  const report = JSON.parse(result.stdout);
+  const report = (await readCommandReport(result.stdout));
   expect(report.measuredNodes).toEqual(expect.arrayContaining([expect.objectContaining({ nodeId: "card-01" }), expect.objectContaining({ nodeId: "card-10" })]));
   expect(report.labelOnlyMeasurements).toEqual(expect.arrayContaining([
     expect.objectContaining({ nodeId: "summary-1", requiredHeight: expect.any(Number) }),
@@ -102,7 +103,7 @@ test("Chinese content changes reuse the same plan and move later geometry withou
   expect(semantic(written)).toEqual(semantic(changedDocument));
 }, 90_000);
 
-test("layout output remains subject to author quality gates and PNG is incomplete without a browser", async () => {
+test("layout output keeps exact author checks and PNG is incomplete without a browser", async () => {
   const input = join(root, "layout-assistance.json");
   const plan = join(root, "layout-assistance-plan.json");
   const output = join(root, "quality-layout.json");
@@ -111,12 +112,11 @@ test("layout output remains subject to author quality gates and PNG is incomplet
   expect(result.code, result.stdout).toBe(0);
   const authored = await command(["author", "--input", output, "--name", "layout-assistance", "--output", authorRoot, "--svg", "--png", "--browser", "none"]);
   expect(authored.code).toBe(1);
-  const report = JSON.parse(authored.stdout);
+  const report = (await readCommandReport(authored.stdout));
   expect(report.completion.delivery).toBe("incomplete");
   expect(report.completion.completed).toContain("svg");
   expect(report.completion.completed).not.toContain("png");
-  expect(["incomplete", "needs-user-decision"]).toContain(report.qualityCoverage.status);
-  expect(report.qualityCoverage.required).toEqual(expect.arrayContaining([
-    expect.objectContaining({ kind: "artifact", format: "png", status: "incomplete" })
-  ]));
+  expect(report).not.toHaveProperty("qualityCoverage");
+  expect(report.completion).not.toHaveProperty("quality");
+  expect(report.exports).toContainEqual(expect.objectContaining({ format: "png", status: "failed" }));
 }, 90_000);

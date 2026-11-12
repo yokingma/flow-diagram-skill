@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Copied-install CLI review submission rejects mistakes without allocating work. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile, mkdir, symlink } from "node:fs/promises";
@@ -15,7 +16,7 @@ beforeAll(async () => {
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {
-  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done) => {
+  return new Promise<{ code: number | null; report: Record<string, unknown>; stderr: string }>((done, reject) => {
     const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
       cwd: root, env: { ...process.env, FLOWSVG_CACHE_DIR: join(root, "cache") }
     });
@@ -23,7 +24,7 @@ function command(args: string[]) {
     let stderr = "";
     child.stdout.on("data", (data) => { stdout += data; });
     child.stderr.on("data", (data) => { stderr += data; });
-    child.on("close", (code) => done({ code, report: JSON.parse(stdout), stderr }));
+    child.on("close", (code) => { void readCommandReport(stdout).then((report) => done({ code, report, stderr }), reject); });
   });
 }
 
@@ -42,13 +43,13 @@ test("invalid review submission preserves all saved files and skips runtime prep
   const review = join(root, "invalid-review.json");
   const history = join(root, ".diagrams/.work/example/task/history");
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", "example", "--output", history, "--browser", "none"]);
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", "example", "--output", history, "--browser", "none"]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const saved = join(history, "example/v001/report.json");
   const original = await readFile(saved);
   const originalTree = await fileTree(history);
   await writeFile(review, JSON.stringify({ reviewer: "viewer", viewed: false, items: [] }));
-  const rejected = await command(["author", "--from", "v001", "--name", "example", "--output", history,
+  const rejected = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "example", "--output", history,
     "--artifact-review", review, "--browser", join(root, "must-not-launch")]);
   expect(rejected.code).toBe(1);
   expect(rejected.report).toMatchObject({ status: "failed", revision: null,
@@ -64,7 +65,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("templates bind all three evidenc
   const workspace = join(root, ".diagrams/.work/templates/task");
   const history = join(workspace, "history");
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", "templates", "--output", history,
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", "templates", "--output", history,
     "--svg", "--browser", process.env.FLOWSVG_TEST_BROWSER!]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   for (const kind of ["visual", "html"]) {
@@ -83,7 +84,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("templates bind all three evidenc
       "--kind", kind, "--template", template]);
     expect(repeated.code).toBe(1);
     expect(await readFile(template, "utf8")).toBe(JSON.stringify(saved, null, 2) + "\n");
-    const rejected = await command(["author", "--from", "v001", "--name", "templates", "--output", history,
+    const rejected = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "templates", "--output", history,
       `--${kind}-review`, template, "--browser", "none"]);
     expect(rejected.code).toBe(1);
     expect(rejected.report.revision).toBe(null);
@@ -91,7 +92,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("templates bind all three evidenc
   const artifact = (source.report.artifacts as { kind: string; artifactId: string }[]).find((item) => item.kind === "svg")!;
   const settings = join(workspace, "settings.json");
   await writeFile(settings, JSON.stringify({ items: [{ artifactId: artifact.artifactId, displayWidth: 300, backdrop: "#ffffff" }] }));
-  const evidence = await command(["author", "--from", "v001", "--name", "templates", "--output", history,
+  const evidence = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "templates", "--output", history,
     "--artifact-preview-settings", settings, "--browser", process.env.FLOWSVG_TEST_BROWSER!]);
   expect(evidence.code, JSON.stringify(evidence)).toBe(0);
   const artifactTemplate = join(workspace, "artifact.json");
@@ -112,7 +113,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("templates bind all three evidenc
     "--kind", "html", "--template", join(workspace, "escape/review.json")]);
   expect(escaped.code).toBe(1);
   await expect(readFile(join(external, "review.json"))).rejects.toMatchObject({ code: "ENOENT" });
-  expect(await readdir(join(history, "templates"))).toEqual(["v001", "v002"]);
+  expect(await readdir(join(history, "templates"))).toEqual(["records", "v001", "v002"]);
 }, 90_000);
 
 test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("author review detects effective-theme mismatch before allocating work", async () => {
@@ -120,7 +121,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("author review detects effective-
   const history = join(root, ".diagrams/.work/theme/task/history");
   const template = join(root, ".diagrams/.work/theme/task/review.json");
   await writeFile(input, JSON.stringify(document));
-  const source = await command(["author", "--input", input, "--name", "theme", "--output", history,
+  const source = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", "theme", "--output", history,
     "--theme", "dark", "--browser", process.env.FLOWSVG_TEST_BROWSER!]);
   expect(source.code, JSON.stringify(source)).toBe(0);
   const generated = await command(["review-template", "--from", "v001", "--name", "theme", "--output", history,
@@ -131,18 +132,18 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("author review detects effective-
   review.viewed = true;
   for (const state of review.states) for (const key of ["readingOrder", "density", "occlusion", "narrative"]) state.observations[key] = "Synthetic fixture.";
   await writeFile(template, JSON.stringify(review));
-  const rejected = await command(["author", "--from", "v001", "--name", "theme", "--output", history,
+  const rejected = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "theme", "--output", history,
     "--html-review", template, "--browser", "none"]);
   expect(rejected.code).toBe(1);
   expect(rejected.report).toMatchObject({ revision: null, diagnostics: [expect.objectContaining({ code: "HTML_REVIEW_INVALID" })] });
-  expect(await readdir(join(history, "theme"))).toEqual(["v001"]);
+  expect(await readdir(join(history, "theme"))).toEqual(["records", "v001"]);
 }, 90_000);
 
 test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("invalid review fields and combined inputs leave the complete source tree unchanged", async () => {
   const input = join(root, "bounds-source.json");
   const history = join(root, ".diagrams/.work/bounds/task/history");
   await writeFile(input, JSON.stringify(document));
-  const authored = await command(["author", "--input", input, "--name", "bounds", "--output", history,
+  const authored = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", "bounds", "--output", history,
     "--browser", process.env.FLOWSVG_TEST_BROWSER!]);
   expect(authored.code, JSON.stringify(authored)).toBe(0);
   const source = authored.report as { visual: { capturedFrames: { id: string; sha256: string }[] }; htmlInspection: { states: { id: string; sha256: string }[] } };
@@ -162,18 +163,18 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("invalid review fields and combin
     JSON.stringify({ ...valid, frames: [{ ...frame, issues: {} }] }), JSON.stringify({ ...valid, extra: true })];
   for (const [index, value] of cases.entries()) {
     await writeFile(reviewPath, value);
-    const rejected = await command(["author", "--from", "v001", "--name", "bounds", "--output", history,
+    const rejected = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "bounds", "--output", history,
       "--html-review", htmlPath, "--visual-review", reviewPath, "--browser", "none"]);
     expect(rejected.code, String(index)).toBe(1);
     expect(rejected.report.revision, String(index)).toBe(null);
     expect(await readdir(join(history, "bounds"))).toEqual(["v001"]);
     expect(await readFile(reportPath)).toEqual(original);
   }
-  const missing = await command(["author", "--from", "v001", "--name", "bounds", "--output", history,
+  const missing = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "bounds", "--output", history,
     "--visual-review", join(root, "does-not-exist.json"), "--browser", "none"]);
   expect(missing.report.revision).toBe(null);
   await writeFile(reviewPath, JSON.stringify(valid));
-  const accepted = await command(["author", "--from", "v001", "--name", "bounds", "--output", history,
+  const accepted = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--name", "bounds", "--output", history,
     "--visual-review", reviewPath, "--html-review", htmlPath, "--browser", "none"]);
   expect(accepted.code, JSON.stringify(accepted)).toBe(0);
   expect(accepted.report).toMatchObject({ checks: { html: "reviewed", visual: "reviewed" } });
@@ -186,7 +187,7 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("template rejects a diagram-direc
   const targetWorkspace = join(root, ".diagrams/.work/escaped/task");
   const targetHistory = join(targetWorkspace, "history");
   await writeFile(input, JSON.stringify(document));
-  const authored = await command(["author", "--input", input, "--name", "original", "--output", sourceHistory,
+  const authored = await command(["author", "--checkpoint", "--preview", "--input", input, "--name", "original", "--output", sourceHistory,
     "--browser", process.env.FLOWSVG_TEST_BROWSER!]);
   expect(authored.code, JSON.stringify(authored)).toBe(0);
   await mkdir(targetHistory, { recursive: true });

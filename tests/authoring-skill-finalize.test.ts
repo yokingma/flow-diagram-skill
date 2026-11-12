@@ -1,3 +1,4 @@
+import { readCommandReport } from "./helpers/cli-report";
 /** Installed CLI acceptance: temporary task revisions collapse into one self-contained delivery. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { cp, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile, mkdir } from "node:fs/promises";
@@ -38,11 +39,11 @@ test("finalize preserves exports across unchanged review revisions and removes o
   const name = "final-exports";
   const t = await task(name);
   const other = await task(name, "other-task");
-  const first = await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"]);
+  const first = await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"]);
   expect(first.code, first.stdout + first.stderr).toBe(0);
-  const source = JSON.parse(first.stdout);
+  const source = (await readCommandReport(first.stdout));
   const svg = await readFile(join(source.revision.directory, "diagram.svg"));
-  const reviewed = await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
+  const reviewed = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
   expect(reviewed.code, reviewed.stdout).toBe(0);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v002"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
@@ -61,26 +62,28 @@ test("finalize preserves exports across unchanged review revisions and removes o
 test("finalize publishes complete files when optional browser checks fail", async () => {
   const name = "quality-gap";
   const t = await task(name);
-  const failed = await command(["author", "--input", t.input, "--output", t.output, "--name", name,
+  const failed = await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name,
     "--browser", join(root, "missing-browser")]);
   expect(failed.code).toBe(1);
-  const source = JSON.parse(failed.stdout);
+  const source = (await readCommandReport(failed.stdout));
   expect(source.status).toBe("failed");
   expect(source.completion).toMatchObject({ delivery: "complete" });
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v001"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
   const summary = JSON.parse(await readFile(join(root, ".diagrams", name, "report.json"), "utf8"));
-  expect(summary.completion).toMatchObject({ delivery: "complete", quality: "incomplete" });
+  expect(summary.completion).toMatchObject({ delivery: "complete" });
+  expect(summary.formalReview).toEqual({ status: "not-requested" });
+  expect(summary.completion.quality).toBeUndefined();
 }, 60_000);
 
 test("failed or tampered exports never replace the final delivery or remove working files", async () => {
   const name = "tampered-exports";
   const original = await task(name, "original-task");
-  await command(["author", "--input", original.input, "--output", original.output, "--name", name, "--svg", "--browser", "none"]);
+  await command(["author", "--checkpoint", "--preview", "--input", original.input, "--output", original.output, "--name", name, "--svg", "--browser", "none"]);
   await command(["finalize", "--workspace", original.workspace, "--name", name, "--from", "v001"]);
   const before = await readFile(join(root, ".diagrams", name, "diagram.svg"));
   const t = await task(name, "damaged-task");
-  const source = JSON.parse((await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"])).stdout);
+  const source = (await readCommandReport((await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"])).stdout));
   await writeFile(join(source.revision.directory, "diagram.svg"), "tampered");
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v001"]);
   expect(result.code).toBe(1);
@@ -96,7 +99,7 @@ test("finalize rejects broad and symlink workspace paths before deleting anythin
   for (const workspace of [root, join(root, ".diagrams"), join(root, ".diagrams", ".work", name), alias]) {
     const result = await command(["finalize", "--workspace", workspace, "--name", name, "--from", "v001"]);
     expect(result.code, result.stdout).toBe(1);
-    expect(JSON.parse(result.stdout).diagnostics[0].code).toBe("FINALIZE_WORKSPACE");
+    expect((await readCommandReport(result.stdout)).diagnostics[0].code).toBe("FINALIZE_WORKSPACE");
   }
   expect(await readFile(t.input, "utf8")).toBe(JSON.stringify(document));
 });
@@ -104,9 +107,9 @@ test("finalize rejects broad and symlink workspace paths before deleting anythin
 test("history retention is explicit and changed input never inherits stale images", async () => {
   const name = "keep-explicit";
   const t = await task(name);
-  await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"]);
+  await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--browser", "none"]);
   await writeFile(t.input, JSON.stringify({ ...document, title: "changed" }));
-  await command(["author", "--input", t.input, "--parent", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
+  await command(["author", "--checkpoint", "--preview", "--input", t.input, "--parent", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v002", "--keep-work"]);
   expect(result.code, result.stdout).toBe(0);
   expect(await readdir(join(root, ".diagrams", name))).not.toContain("diagram.svg");
@@ -116,12 +119,12 @@ test("history retention is explicit and changed input never inherits stale image
 test("an unfinished requested PNG cannot disappear during review-only finalization", async () => {
   const name = "missing-request";
   const t = await task(name);
-  const failed = await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--png", "--browser", "none"]);
+  const failed = await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--png", "--browser", "none"]);
   expect(failed.code).toBe(1);
-  await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
+  await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v002"]);
   expect(result.code).toBe(1);
-  expect(JSON.parse(result.stdout).diagnostics[0].code).toBe("FINALIZE_INCOMPLETE");
+  expect((await readCommandReport(result.stdout)).diagnostics[0].code).toBe("FINALIZE_INCOMPLETE");
   expect(await readFile(t.input, "utf8")).toBe(JSON.stringify(document));
 }, 60_000);
 
@@ -129,15 +132,15 @@ const browserPath = process.env.FLOWSVG_TEST_BROWSER;
 test.skipIf(!browserPath)("a reviewed PNG/SVG delivery stays complete after all screenshots and temporary revisions are removed", async () => {
   const name = "reviewed-images";
   const t = await task(name);
-  const exported = await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--png", "--samples", "2", "--browser", browserPath!]);
+  const exported = await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--svg", "--png", "--samples", "2", "--browser", browserPath!]);
   expect(exported.code, exported.stdout + exported.stderr).toBe(0);
-  const source = JSON.parse(exported.stdout);
+  const source = (await readCommandReport(exported.stdout));
   const png = await readFile(join(source.revision.directory, "diagram.png"));
   const reviewPath = join(t.workspace, "review.json");
   await writeFile(reviewPath, JSON.stringify({ reviewer: "contract test; synthetic viewing attestation", viewed: true,
     frames: source.visual.capturedFrames.map((item: { id: string; sha256: string }) => ({ id: item.id, sha256: item.sha256,
       observations: { readingOrder: "Contract fixture", density: "Contract fixture", occlusion: "Contract fixture", narrative: "Contract fixture" }, issues: [] })) }));
-  const reviewed = await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--visual-review", reviewPath, "--browser", "none"]);
+  const reviewed = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--visual-review", reviewPath, "--browser", "none"]);
   expect(reviewed.code, reviewed.stdout).toBe(0);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v002"]);
   expect(result.code, result.stdout).toBe(0);
@@ -154,7 +157,7 @@ test.skipIf(!browserPath)("a reviewed PNG/SVG delivery stays complete after all 
 test("finalize protects an unrelated final folder even if it contains report.json", async () => {
   const name = "unrelated-folder";
   const t = await task(name);
-  await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--browser", "none"]);
+  await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--browser", "none"]);
   const final = join(root, ".diagrams", name);
   await mkdir(final);
   await writeFile(join(final, "report.json"), "{}");
@@ -168,33 +171,33 @@ test("finalize protects an unrelated final folder even if it contains report.jso
 test.skipIf(!browserPath)("a later review-only revision cannot hide recorded visual issues from the final summary", async () => {
   const name = "unresolved-visual";
   const t = await task(name);
-  const exported = JSON.parse((await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--samples", "2", "--browser", browserPath!])).stdout);
+  const exported = (await readCommandReport((await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--samples", "2", "--browser", browserPath!])).stdout));
   const reviewPath = join(t.workspace, "review.json");
   await writeFile(reviewPath, JSON.stringify({ reviewer: "synthetic regression attestation", viewed: true,
     frames: exported.visual.capturedFrames.map((item: { id: string; sha256: string }) => ({ id: item.id, sha256: item.sha256,
       observations: { readingOrder: "Fixture", density: "Fixture", occlusion: "Fixture", narrative: "Fixture" },
       issues: [{ reason: "Fixture issue remains unresolved", nextStep: "Ask the user" }] })) }));
-  expect((await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--visual-review", reviewPath, "--browser", "none"])).code).toBe(0);
-  expect((await command(["author", "--from", "v002", "--output", t.output, "--name", name, "--browser", "none"])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--visual-review", reviewPath, "--browser", "none"])).code).toBe(0);
+  expect((await command(["author", "--checkpoint", "--preview", "--from", "v002", "--output", t.output, "--name", name, "--browser", "none"])).code).toBe(0);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v003"]);
   expect(result.code, result.stdout).toBe(0);
   const final = join(root, ".diagrams", name);
   const summary = JSON.parse(await readFile(join(final, "report.json"), "utf8"));
-  expect(summary.completion.quality).toBe("needs-user-decision");
+  expect(summary.completion.quality).toBe("unresolved-issues");
   expect(await readFile(join(final, "report.md"), "utf8")).toContain("Fixture issue remains unresolved");
 }, 90_000);
 
 test("finalize preserves named batch exports with portable punctuation, Unicode and spaces", async () => {
   const name = "named-batch";
   const t = await task(name);
-  const source = JSON.parse((await command(["author", "--browser", "none", "--input", t.input, "--output", t.output, "--name", name])).stdout);
+  const source = (await readCommandReport((await command(["author", "--checkpoint", "--preview", "--browser", "none", "--input", t.input, "--output", t.output, "--name", name])).stdout));
   const manifest = join(t.workspace, "exports.json");
   await writeFile(manifest, JSON.stringify({ schemaVersion: 1, sourceSha256: source.input.sha256,
     sdk: { version: source.sdk.version, integrity: source.sdk.integrity },
     frames: [{ name: "phase (1) 🚀", timeMs: 0, formats: ["svg"] }, { name: "总览", timeMs: 0, formats: ["svg"] }] }));
-  const exported = await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
+  const exported = await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
   expect(exported.code, exported.stdout).toBe(0);
-  const reviewed = await command(["author", "--from", "v002", "--output", t.output, "--name", name, "--browser", "none"]);
+  const reviewed = await command(["author", "--checkpoint", "--preview", "--from", "v002", "--output", t.output, "--name", name, "--browser", "none"]);
   expect(reviewed.code, reviewed.stdout).toBe(0);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v003"]);
   expect(result.code, result.stdout).toBe(0);
@@ -208,17 +211,17 @@ test("a failed batch preflight blocks finalization until a successful replacemen
   const t = await task(name);
   const manifest = join(t.workspace, "exports.json");
   await writeFile(manifest, "{}");
-  const failed = await command(["author", "--input", t.input, "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
+  const failed = await command(["author", "--checkpoint", "--preview", "--input", t.input, "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
   expect(failed.code).toBe(1);
-  const source = JSON.parse(failed.stdout);
-  await command(["author", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
+  const source = (await readCommandReport(failed.stdout));
+  await command(["author", "--checkpoint", "--preview", "--from", "v001", "--output", t.output, "--name", name, "--browser", "none"]);
   expect((await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v002"])).code).toBe(1);
   await writeFile(manifest, JSON.stringify({ schemaVersion: 1, sourceSha256: source.input.sha256,
     sdk: { version: source.sdk.version, integrity: source.sdk.integrity }, frames: [{ name: "fixed", timeMs: 0, formats: ["svg"] }] }));
-  const fixed = await command(["author", "--from", "v002", "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
+  const fixed = await command(["author", "--checkpoint", "--preview", "--from", "v002", "--output", t.output, "--name", name, "--export-manifest", manifest, "--browser", "none"]);
   expect(fixed.code, fixed.stdout).toBe(0);
   const result = await command(["finalize", "--workspace", t.workspace, "--name", name, "--from", "v003"]);
   expect(result.code, result.stdout).toBe(0);
-  expect(JSON.parse(result.stdout).completion.requested).toEqual(["json", "html", "svg"]);
+  expect((await readCommandReport(result.stdout)).completion.requested).toEqual(["json", "html", "svg"]);
   expect(await readFile(join(root, ".diagrams", name, "exports", "fixed.svg"), "utf8")).toContain("<svg");
 }, 60_000);

@@ -40,6 +40,14 @@ export function mapMeasurementDiagnostics(diagnostics, sources) {
   });
 }
 
+/** Describe SDK sizing estimates as auxiliary results, preserving their original field and version scope. */
+export function measurementObservations(diagnostics) {
+  return diagnostics.map((diagnostic) => ({ ...diagnostic, severity: "info", stage: "measurement", code: "MEASUREMENT_ESTIMATE",
+    method: "sdk-content-estimate", location: diagnostic.sourcePath ?? diagnostic.path,
+    reason: `SDK content-size estimate: ${diagnostic.message}`,
+    limitations: "Estimated text and content bounds, not browser glyph pixels or a visual design conclusion." }));
+}
+
 function measurementNextStep(diagnostic, value) {
   if (diagnostic.dimension === "height") return "Check the graph block's fixed height and graph-local coordinates, including negative extents. Increasing the outer node height does not enlarge the fixed block; a larger block height alone cannot correct negative extents.";
   const blockIndex = Number(/\.blocks\[(\d+)\]/u.exec(diagnostic.path)?.[1]);
