@@ -28,7 +28,9 @@ Start with the reader's question: what should this diagram explain? Read the use
 
 Use known display conditions and requested formats. For missing conditions, adopt and state the [existing defaults](references/delivery-contexts.md#preferences-and-missing-context); known PPT use remains PPT use. A clear brief can proceed directly to creation. Clarify factual gaps that change meaning, key relationships, boundaries or scope; explain SDK limits that prevent faithful expression before choosing an alternative.
 
-Finish when the reader's question and supporting facts are clear. An independent plan is optional.
+Before arranging nodes and edges, use [diagram selection](references/semantic-patterns.md#choose-by-the-readers-question) to match the reader's question and source relationships to a diagram type. Read the matched semantic pattern; use free composition when no listed type covers the main question.
+
+Finish when the reader's question and supporting facts are clear, and either a primary diagram type and its applicable guidance are selected or free composition has a defined main relationship. An independent plan is optional.
 
 ### 2. Create
 
@@ -38,7 +40,7 @@ Organize content to answer the question. Reorder, group, merge duplicate explana
 
 Read the branches relevant to the work:
 
-- **Structure:** use the [reader-question table](references/semantic-patterns.md#choose-by-the-readers-question), then the matching semantic pattern. With groups or cross-boundary edges, choose [relationship scope and endpoints](references/semantic-patterns.md#relationship-scope-and-endpoints).
+- **Relationship scope:** with groups or cross-boundary edges, choose [relationship scope and endpoints](references/semantic-patterns.md#relationship-scope-and-endpoints).
 - **Text and containers:** use [typography](references/visual-design.md#typography-and-content-layout), [spacing](references/visual-design.md#spacing-and-spatial-hierarchy), [color](references/visual-design.md#color-roles-and-palette) and [cards/groups/tags](references/visual-design.md#cards-groups-and-tags). With edges, read [connections](references/visual-design.md#connections-and-relationship-labels). Select a [composition recipe](references/visual-design.md#composition-recipes) when it fits; consult only relevant shape/label/routing sections in [rendering gotchas](references/rendering-gotchas.md).
 - **HTML:** apply [page content](references/delivery-contexts.md#keep-the-html-page-minimal) and [editable pages](references/tool-contract.md#editable-html-pages); use the [starter](resources/html-page.html) when useful. Preserve existing page design through [page continuation](references/tool-contract.md#continue-an-existing-page).
 - **Display destination:** read [PPT conditions](references/delivery-contexts.md#static-assets-for-presentations) or [article conditions](references/delivery-contexts.md#static-illustrations-in-web-content) for those uses. Independent images need their own readable context.

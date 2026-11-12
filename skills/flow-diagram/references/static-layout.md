@@ -4,7 +4,7 @@ Start with the message the reader should retain. List each source-supported obje
 
 ## Delivery context
 
-For a new or revised draft, read [delivery contexts](delivery-contexts.md) before choosing canvas and density. Reuse known preferences and purpose; follow its missing-context rule when information is absent. Read [semantic patterns](semantic-patterns.md#choose-by-the-readers-question) to select an organization by the reader's question, including inventories without runtime edges as well as relationship and process diagrams.
+For a new or revised draft, read [delivery contexts](delivery-contexts.md) before choosing canvas and density. Reuse known preferences and purpose; follow its missing-context rule when information is absent. Before choosing geometry, complete [diagram selection](semantic-patterns.md#choose-by-the-readers-question) and read the applicable semantic guidance. Reuse a selection already completed during understanding.
 
 ## Layout plan workflow
 
@@ -26,7 +26,7 @@ The example gaps are teaching settings for its content and viewport. They do not
 
 ## Structure and layout
 
-Choose a structure that explains the material. The following are examples, and can be mixed:
+Organize geometry around the selected diagram type or the defined main relationship of a free composition. Adapt the following examples within that semantic choice:
 
 - Architecture: group components by the stated system boundary, keep children in local coordinates, and label dependency arrows. Use a static overview so the whole structure is readable. For a layer overview, start from [layered architecture](../examples/layered-architecture.md); its groups are explanatory layers rather than system or deployment boundaries.
 - Deployment: show named hosts, replicas and data stores only when the input states them. Put replicas on parallel rows and retain the actual routing relationships. Name each boundary as a host, location or trust zone according to the source; a generic group establishes none of those meanings.

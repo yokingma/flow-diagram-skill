@@ -42,7 +42,9 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 助手借助[视觉设计方法](../../skills/flow-diagram/references/visual-design.md)协调文字、间距、色彩、容器、连线和动画。规范指导制作和看图修改，不作为验收门禁。设计判断来自结合读者问题与展示条件的实际查看；机器执行成功或正式覆盖完成均不代表设计获认可。
 
-随包的[语义模式指南](../../skills/flow-diagram/references/semantic-patterns.md)覆盖请求响应、重试与状态迁移、汇聚与瓶颈、分阶段数据处理、带边界的系统架构和分层架构教学设定。示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
+排列节点和连线前，助手先阅读随包的[图形选型指引](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)。索引按架构图、流程图、数据流图、交互图、状态图、概览与对比图、汇聚与容量图组织具体类型。你可以直接指定分层架构图、逻辑流程图等类型，也可以描述读者问题。助手根据问题和来源关系匹配类型，再读取对应指引。多个类型命中时，选择主类型，并为独立的次要问题补充相应模式；不同解释会改变讲解重点时，先询问你。没有已列类型覆盖主要问题时，才采用自由组合。缺失事实按来源保真规则澄清或保留为未知。
+
+指南中的示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。图形选型属于创作判断，静态或动画呈现及展示尺寸分别选择。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
 
 流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[申请审查范例](../../skills/flow-diagram/examples/approval-review.md)使用虚构教学设定：材料完整时进入审查并形成报告草稿，缺失材料时退回修订；静态图同时保留两种结果，不声明重提或重试。对完整草稿运行 `measure`，会测量这些形状的全部标签替换版本；若仍有宽度诊断，需要加宽节点。`layout` 仍只接受静态草稿：先排布几何，再加入 scenes，然后重新测量并检查间距。独立测量对象的 `label` 可为字符串（含空串）或非空版本数组；顶层批量数组中的 label 仍是描述性元数据。
 
@@ -196,7 +198,7 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 
 需要导入幻灯片的图片时，请指定 SVG 或 PNG；未请求图片格式时，助手采用默认文件，并说明没有幻灯片导入图片。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
 
-[读者问题选择表](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)用于选择能力全景、来源映射或流程等结构。[教学范例](../../skills/flow-diagram/examples/README.md)包含条件流程、有限重试、汇聚容量、数据转换、分层架构、无连线能力全景、来源与服务映射、内容卡片、请求响应和并行流动动画。每份说明解释构图原因、主要展示条件与查看局限；动画未完成连续视觉播放的限制已明确。复用组织方式时，替换为自己的事实和展示尺寸。
+完成图形选型后，可从[教学范例](../../skills/flow-diagram/examples/README.md)中的条件流程、有限重试、汇聚容量、数据转换、分层架构、无连线能力全景、来源与服务映射、内容卡片、请求响应和并行流动动画起稿。每份说明解释构图原因、主要展示条件与查看局限；动画未完成连续视觉播放的限制已明确。复用组织方式时，替换为自己的事实和展示尺寸。
 
 ## 3.2. 页面介绍与图内文字
 

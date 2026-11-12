@@ -1,6 +1,6 @@
 # Teaching examples
 
-These English examples explain fictional scenarios or diagram-authoring methods. Choose by the reader's question, then read the adjacent note for source facts, composition choices, display conditions and limits. [Teaching sources](../resources/teaching-sources.json) records their assumptions; replace them with the user's evidence for a real task and use the requested output language.
+These English examples explain fictional scenarios or diagram-authoring methods. Use [diagram selection](../references/semantic-patterns.md#choose-by-the-readers-question) before adapting an example; this gallery offers starting points for the selected explanation. Read the adjacent note for source facts, composition choices, display conditions and limits. [Teaching sources](../resources/teaching-sources.json) records their assumptions; replace them with the user's evidence for a real task and use the requested output language.
 
 | Reader's question | Example and source | Primary PNG display; diagram canvas |
 | --- | --- | --- |

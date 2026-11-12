@@ -1,24 +1,43 @@
 # Semantic patterns
 
-Choose a pattern by the relationship the reader must understand. Patterns can be combined and do not restrict supported diagrams or layouts. Every bundled scenario below is an invented teaching setup, not evidence about a real system. [Source metadata](../resources/teaching-sources.json) states its directions, conditions, quantities and unknowns. Use the matching record when adapting a sample; replace teaching assumptions with the user's evidence before describing a real system.
+Select a diagram type by the relationship the reader must understand, then use its semantic pattern to organize the content. A semantic pattern defines required objects, relationships, conditions and outcomes; layout choices follow that meaning. Every bundled scenario below is an invented teaching setup, not evidence about a real system. [Source metadata](../resources/teaching-sources.json) states its directions, conditions, quantities and unknowns. Use the matching record when adapting a sample; replace teaching assumptions with the user's evidence before describing a real system.
 
 ## Choose by the reader's question
 
-| Reader's question | Structure to consider | Relationship requirement |
-| --- | --- | --- |
-| What is the goal, and what resources are available? | Goal, participants and resource-status cards | Distinguish available, proposed and unknown resources; availability does not establish authorization or model access. |
-| What capabilities exist, and who owns them? | Responsibility layers or a capability inventory | Parallel cards can stand without edges; membership and layer order do not establish call order. |
-| What functions does a system provide? | Function matrix with a shared-capability band | Grouping compares functions; draw dependencies only when sources establish them. |
-| How do inputs become useful outputs? | Source → transformation → use channels | Label what is mapped, transferred or transformed at each boundary. |
-| How is work completed and improved? | Process with conditions, outcomes and returns | Keep direct replies, rejected work and conditional returns traceable. |
-| What was requested, and what returned? | [Request and response](#request-and-response) | Read required inputs and static-state choices; retain both directions. |
-| When does work retry or terminate? | [Retry and state transition](#retry-and-state-transition) | Read conditions, attempt counting and terminal-state requirements. |
-| Where does combined demand exceed capacity? | [Fan-in and bottleneck](#fan-in-and-bottleneck) | Read rate units, queue semantics and unknown overload behavior. |
-| How does data change at each stage? | [Staged data processing](#staged-data-processing) | Read boundary inputs, transformations and outputs. |
-| What belongs inside each system boundary? | [System architecture](#system-architecture-with-boundaries) | Read boundary meanings, membership and crossing directions. |
-| How do layers and shared columns relate? | [Layered architecture](#layered-architecture-with-teaching-boundaries) | Read layer semantics, relation directions and sidebar ownership. |
+Match the main reader question and the source-supported relationships against the table before choosing geometry. The family column groups related types; each diagram type links to its applicable guidance.
 
-Treat the table as a selection aid, not a requirement to use these exact compositions. For a capability inventory, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges) and use [capability-overview.json](../examples/capability-overview.json). For source mapping and business cards, use [the source/service recipe](visual-design.md#source-mapping-and-service-cards). The [teaching sources](../resources/teaching-sources.json) record invented facts and unknowns for all selected examples.
+| Family | Diagram type and guidance | Reader's question | Relationship requirement |
+| --- | --- | --- | --- |
+| Architecture | [Layered architecture](#layered-architecture-with-teaching-boundaries) | How do layers and their components relate? | Read layer semantics, relation directions and sidebar ownership. |
+| Architecture | [System boundary diagram](#system-architecture-with-boundaries) | What belongs inside each system boundary? | Read boundary meanings, membership and crossing directions. |
+| Process | [Business or logic flowchart, including approval](#decisions-and-conditional-process-paths) | How is work completed, branched or returned? | Keep steps, conditions, outcomes and source-supported returns traceable. |
+| Data flow | [Source-to-use mapping](#data-flow-and-source-mapping) | How do inputs become useful outputs? | Label what is mapped, transferred or transformed at each boundary. |
+| Data flow | [Staged data processing](#staged-data-processing) | How does data change at each stage? | Read boundary inputs, transformations and outputs. |
+| Interaction | [Request and response](#request-and-response) | What was requested, and what returned? | Read required inputs and static-state choices; retain both directions. |
+| State | [State transition, including retry and termination](#retry-and-state-transition) | What changes state, and when does work retry or terminate? | Read triggers, transition directions and terminal states; apply attempt-count rules to retry policies. |
+| Overview and comparison | [Goal and resource overview](#overview-and-comparison) | What is the goal, and what resources are available? | Distinguish available, proposed and unknown resources; availability does not establish authorization or model access. |
+| Overview and comparison | [Capability inventory or responsibility overview](#overview-and-comparison) | What capabilities exist, and who owns them? | Parallel cards can stand without edges; membership and layer order do not establish call order. |
+| Overview and comparison | [Function matrix](#overview-and-comparison) | What functions does a system provide? | Grouping compares functions; draw dependencies only when sources establish them. |
+| Convergence and capacity | [Fan-in and bottleneck](#fan-in-and-bottleneck) | Where does combined demand exceed capacity? | Read rate units, queue semantics and unknown overload behavior. |
+
+Apply the selection rules:
+
+1. **Match:** select the type that covers the main question. Use an explicitly requested type when it fits the source relationships. Read its linked guidance before arranging content; choose geometry for the actual content and display conditions.
+2. **Several matches:** choose the primary type by the main question. Read an additional pattern when a distinct secondary question requires it, retaining each relationship's meaning. If competing interpretations change the explanation's focus, clarify that focus with the user.
+3. **No match:** use free composition when no listed type covers the main question. Define the objects, main relationship, grouping and reading order, then apply the shared source-fidelity, visual-design and inspection guidance. Consult an existing pattern for any local relationship it covers.
+4. **Missing facts:** clarify material gaps or retain them as unknown under the source-fidelity rules. Missing information does not establish a type mismatch. Explain SDK limits before choosing an alternative expression.
+
+Selection is complete when a primary type and its applicable guidance are identified, or free composition has a defined main relationship and reading order. Static versus animated presentation, visual direction and layout remain separate choices. The table is an authoring index; the supported document model determines what can be expressed.
+
+## Overview and comparison
+
+Use for goals, resources, capabilities, responsibilities or functions that the reader needs to survey or compare. Establish the scope, the objects, the basis of grouping or comparison, and any supplied ownership or status. Organize comparable objects as parallel cards or a matrix; name matrix axes and shared capabilities. Distinguish available, proposed and unknown states. An edge requires a source-supported relationship; card order or membership alone supplies no execution order. The overview is ready when the reader can identify the comparison basis, object membership and material status or ownership differences.
+
+For capability cards, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges) and use [capability-overview.json](../examples/capability-overview.json) as a starting point. Its teaching setup supplies no facts about the user's system.
+
+## Data flow and source mapping
+
+Use when the reader needs to connect sources or inputs to transformations and uses. Establish each source, the mapped or transferred object, the destination, and any supplied transformation. Arrange source and destination regions around labelled mapping channels; distinguish an explanatory mapping from runtime data transfer. The diagram is ready when each important channel identifies what crosses it and how the destination uses or changes it. Read [the source/service recipe](visual-design.md#source-mapping-and-service-cards) for comparable source and service cards, or [staged data processing](#staged-data-processing) for ordered transformations. The [teaching sources](../resources/teaching-sources.json) record invented facts and unknowns for the selected examples.
 
 ## Relationship scope and endpoints
 
@@ -49,6 +68,8 @@ These invented cases illustrate the decision; they supply no facts about a user'
 
 ## Decisions and conditional process paths
 
+Use for business or logic flows whose main question concerns work steps and outcomes. Establish the entry, step order, source-supported branches, their conditions and destinations, and the supplied outcomes. Arrange a main reading direction with distinct branch and return paths. The flow is ready when the reader can trace each important path from its entry or condition to its stated outcome; preserve unspecified continuation as unknown. Use [the process recipe](visual-design.md#process-with-branches-and-returns) for geometry.
+
 For source-supported conditions, use a decision node and name each outgoing condition; a shape alone does not define the rule. [approval-review.json](../examples/approval-review.json) demonstrates input/output, decision, defined subprocess and report presets. Its fictional facts define complete materials leading to review and a draft report, while missing materials return for revision. Both alternatives remain visible in this static diagram. No resubmission, approval outcome, archive action, retry count or processing time is supplied. Follow [preset labels](document-model.md#preset-labels) for safe measurement before authoring.
 
 ## Request and response
@@ -62,7 +83,7 @@ Use this pattern when the reader must distinguish an initiating request from its
 
 ## Retry and state transition
 
-Use this pattern when a reader needs the conditions for continuing, repeating or exiting work.
+Use this pattern when a reader needs to understand an object's states and the conditions for changing them, including continuing, repeating or exiting work. For a general state diagram, establish the states, trigger or condition for each directed transition, and any supplied initial or terminal states. The diagram is ready when each important transition has an identifiable source, destination and trigger or condition. Apply the following additional requirements when the state changes describe retries.
 
 - **Required input:** states, transition direction, triggering conditions, attempt counting convention, retry limit, success exit, exhausted exit, and any stated delay or cancellation. If a limit or delay is absent, label it unknown rather than inventing it.
 - **Common misrepresentation:** an unlabelled loop implies endless retry; “3 retries” and “3 total attempts” have different limits. An animated arrow does not execute a retry policy or prove that a runtime can reach a state.

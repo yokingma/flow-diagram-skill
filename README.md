@@ -48,6 +48,8 @@ Restart Codex if the new Skill is not discovered. See the [installation guide](d
 
 Default creation follows understand → create → validate → view and revise → deliver. It reuses one source draft, current outputs and one temporary `issues.md` for substantive findings. View the actual delivered HTML and requested images. SDK previews and registered formal reviews are requested separately; machine checks and screenshot generation do not establish visual quality. Design guidance supports authoring and revision rather than acting as an acceptance gate.
 
+Before arranging nodes and edges, the assistant uses [diagram selection](skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question) to match your explanation goal to a diagram type and follow its guidance. It uses free composition when no listed type covers the main question. You can name a type, such as a layered architecture diagram or logic flowchart, or describe what the reader should understand.
+
 In Codex, send:
 
 ```text
