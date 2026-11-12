@@ -48,6 +48,12 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留多列、组内标题留白、层间带标签连线和治理侧栏。层序不等于调用时间顺序，分组不自动代表部署或信任边界，虚线治理说明也不增加未声明的运行时依赖。先对 draft 运行 `measure --input` 并写出独立的新草稿，再用新草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
 
+从完整草稿测量结构化内容和普通标签时，运行 `measure --input <draft.json>`，使用草稿中的宽度和 typography。结构化内容包含初始值与全部动画替换；普通标签只测初始值，预设标签包含替换版本。需要独立回填草稿时追加 `--output <new-draft.json>`：源字节不变，只增加高度，不覆盖已有目标；动画宽高变化或未解决测量诊断会阻止回填。生成草稿仍需排布位置、检查诊断并实际查看。
+
+需要在渲染前查看有来源的逐行文本时，在 `measure --input <json>` 后追加 `--lines`。每个结果或草稿节点只增加一份 `estimatedLines`，保留既有测量范围内的全部版本和不同文本角色；默认输出、高度、诊断与回填行为不变。批量 label 仍是元数据，普通草稿标签仍只测初始值。记录可能超出安全区，其数量不保证等于基线行数。它们是供查看的估算，不代表实际可见字形，也不自动判断可读性。完整草稿测量失败时仍只返回诊断；`--output` 不把这些记录写入文档。其他命令拒绝此参数。详见[逐行排版估算](../../skills/flow-diagram/references/tool-contract.md#inspect-estimated-text-lines)。
+
+测量报告问题时，用 `sourcePath`（草稿另有 `location`）定位实际节点、内容块或动画动作。`objectId` 保留节点 ID，SDK 的 `path`、`versionIndex`、`dimension`、`message` 继续保留。`nextStep` 区分宽度/安全区检查与固定实体图块高度/局部坐标检查。增加外部节点高度不能修复横向越界，也不会放大固定图块；仅增加图块高度不能纠正负向范围越界。完整草稿测量失败时只返回诊断、不发布回填文件，表示请求的操作未完成，不表示图形视觉质量不合格。检查会在失败阶段停止，因此诊断不是全部问题清单。独立和批量输入仍返回带 SDK 诊断的测量结果。实际图片需另外查看。详见[测量诊断](../../skills/flow-diagram/references/tool-contract.md#locate-sdk-measurement-diagnostics)及[失败与文件保护](../../skills/flow-diagram/references/tool-contract.md#write-a-height-filled-draft)。
+
 如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。[布局辅助教学草稿](../../skills/flow-diagram/examples/layout-assistance.json)和[计划](../../skills/flow-diagram/examples/layout-assistance-plan.json)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时保留 `text-overflow` warning。
 
 工作流要求静态草稿和显式计划。`measure` 会返回当前高度、所需高度、变化量和确定性估算行数；行数来自公开 SDK 基线，不是浏览器像素或正式 SVG/PNG 证据。之后运行 `layout --input <draft> --plan <layout-plan.json> --output <new-draft.json>`，再对新草稿运行 `validate`，然后进入 author。布局结果是草稿，不是版本或质量批准。正式 SVG/PNG 审查使用 `evidence` 读取已有文件，按需通过 `--artifact-preview-settings` 指定展示条件，查看每张 evidence 图片，再通过 `review --artifact-review` 显式指定主体和 evidence 来源。普通 preview 和 HTML review 只覆盖各自的采样 surface，不能覆盖正式图片。
@@ -247,6 +253,10 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 任务期间，创作、校验、重试和复核记录使用临时版本。成功收尾后清理这些版本和截图；最终报告使用相对文件路径，保留复核事实，不链接已删除的证据。后续修订读取最终 JSON，在新的任务目录中执行。
 
 文件交付与质量检查分别记录。有可用浏览器时，创作工具会打开实际交付的 `diagram.html`，记录文件哈希、初始暂停、离线行为、播放和采样状态。这些程序事实不代表助手已经查看截图；实际查看列出的状态后，使用 `review --from <来源版本> --name <同名图解> --output <同一历史根> --html-review <json>` 记录查看范围。生成截图不代表助手已查看。没有浏览器或宿主无法查看图片时，HTML/图片检查保持未执行并明确记录。
+
+动画任务中，助手根据读者问题与阶段计划选择关键阶段，再对应实际编译时间、计划采样点、省略候选、已捕获图片与实际查看记录。同拍并发 flow 的每条路径和标记都可辨识时，一张合适的图片可以共同检查这些传递。全景移除了 focus，不能替代真实时间线初态或聚焦状态。静态图只有一张；动画 `--samples 2` 会省略终态，`--samples 3` 可容纳全景、起点与终点，但不保证覆盖中间阶段。
+
+关键阶段缺失时，助手先通过新一轮 `author` 版本提高采样预算。所需时刻仍不可用时，使用现有定时导出及图片证据流程，或检查实际 HTML 或播放。新图片在实际打开并登记前保持未查看。报告指出已查看的表面与时刻，或剩余阶段缺口及影响；图片复核不代表已检查 HTML 或连续播放。这些步骤沿用现有质量状态，不新增叙事评分或自动审美阈值。详见[关键阶段核对](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages)。
 
 ## 6. 修订已有图解
 

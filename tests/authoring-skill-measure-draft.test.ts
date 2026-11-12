@@ -128,7 +128,7 @@ test("animated size changes stop draft height application and protect an existin
   const result = await command(["measure", "--input", input, "--output", output]);
   expect(result.code).toBe(1);
   const report = JSON.parse(result.stdout);
-  expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_SIZE_ANIMATION", objectId: "card" }));
+  expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_SIZE_ANIMATION", objectId: "card", location: "nodes[0]" }));
   expect(await readFile(output, "utf8")).toBe("keep me");
 });
 
@@ -180,4 +180,88 @@ test("standalone label measurement rejects unknown fields and invalid labels", a
     expect(result.code, result.stdout + result.stderr).toBe(1);
     expect(JSON.parse(result.stdout).status).toBe("failed");
   }
+}, 60_000);
+
+test("draft diagnostics locate every original block and animated version without losing SDK details", async () => {
+  const input = join(root, "located-diagnostics.json");
+  const output = join(root, "located-output.json");
+  const badGraph = { type: "graph", height: 12, nodes: [{ id: "entity", label: "E", x: 200, y: 0 }], edges: [] };
+  const overflowing = { blocks: [badGraph, badGraph] };
+  const bytes = JSON.stringify({ version: 1, viewport: { width: 600, height: 400 }, nodes: [
+    { id: "健康", kind: "rect", x: 0, y: 0, width: 180, height: 40, content: shortContent },
+    { id: "节点.一", kind: "rect", x: 200, y: 0, width: 180, height: 40, content: overflowing }
+  ], edges: [], scenes: [{ id: "scene", label: "Scene", beats: [{ durationMs: 100, actions: [
+    { type: "updateNode", target: "节点.一", value: { content: overflowing } }
+  ] }] }] });
+  await writeFile(input, bytes);
+  const result = await command(["measure", "--input", input, "--output", output]);
+  expect(result.code, result.stdout + result.stderr).toBe(1);
+  const report = JSON.parse(result.stdout);
+  expect(report.status).toBe("failed");
+  expect(report).not.toHaveProperty("measurement");
+  expect(report.diagnostics).toHaveLength(8);
+  for (const [versionIndex, prefix] of [[0, "nodes[1].content"], [1, "scenes[0].beats[0].actions[0].value.content"]] as const) {
+    for (const blockIndex of [0, 1]) for (const dimension of ["width", "height"]) {
+      expect(report.diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC", objectId: "节点.一",
+        location: `${prefix}.blocks[${blockIndex}]`, sourcePath: `${prefix}.blocks[${blockIndex}]`,
+        versionIndex, dimension, path: `content[${versionIndex}].blocks[${blockIndex}]`, nextStep: expect.any(String) }));
+    }
+  }
+  const width = report.diagnostics.find((issue: { dimension: string }) => issue.dimension === "width");
+  const height = report.diagnostics.find((issue: { dimension: string }) => issue.dimension === "height");
+  expect(width.nextStep).not.toBe(height.nextStep);
+  expect(width.nextStep).toContain("width");
+  expect(height.nextStep).toContain("negative");
+  expect(await readFile(input, "utf8")).toBe(bytes);
+  await expect(readFile(output, "utf8")).rejects.toMatchObject({ code: "ENOENT" });
+}, 60_000);
+
+test("standalone and batch diagnostics locate version arrays while batch labels stay metadata", async () => {
+  const input = join(root, "independent-diagnostics.json");
+  const graph = { blocks: [{ type: "graph", height: 10,
+    nodes: [{ id: "entity", label: "E", x: 200, y: 100 }], edges: [] }] };
+  const item = { kind: "rect", width: 180, content: [shortContent, graph] };
+  await writeFile(input, JSON.stringify(item));
+  const single = await command(["measure", "--input", input]);
+  expect(single.code, single.stdout + single.stderr).toBe(0);
+  const measurement = JSON.parse(single.stdout).measurement;
+  expect(measurement.diagnostics).toHaveLength(2);
+  expect(measurement.diagnostics).toContainEqual(expect.objectContaining({ versionIndex: 1, dimension: "height",
+    path: "content[1].blocks[0]", sourcePath: "content[1].blocks[0]", nextStep: expect.any(String) }));
+  expect(measurement.perContent[1].diagnostics).toContainEqual(expect.objectContaining({ sourcePath: "content[1].blocks[0]" }));
+  await writeFile(input, JSON.stringify([{ ...item, label: "Metadata does not become measured text" }]));
+  const batch = await command(["measure", "--input", input]);
+  expect(batch.code, batch.stdout + batch.stderr).toBe(0);
+  const batchItem = JSON.parse(batch.stdout).measurement.items[0];
+  expect(batchItem.label).toBe("Metadata does not become measured text");
+  expect(batchItem.height).toBe(measurement.height);
+  expect(batchItem.diagnostics).toContainEqual(expect.objectContaining({ versionIndex: 1, dimension: "width",
+    path: "content[1].blocks[0]", sourcePath: "[0].content[1].blocks[0]", nextStep: expect.any(String) }));
+  expect(batchItem.perContent[1].diagnostics).toContainEqual(expect.objectContaining({ sourcePath: "[0].content[1].blocks[0]" }));
+}, 60_000);
+
+test("batch validation and preset label diagnostics retain actual source fields", async () => {
+  const input = join(root, "batch-source-fields.json");
+  await writeFile(input, JSON.stringify([{ kind: "rect", width: 180, content: { blocks: [{ type: "paragraph", text: "Valid", typo: true }] } }]));
+  const invalid = await command(["measure", "--input", input]);
+  expect(invalid.code, invalid.stdout + invalid.stderr).toBe(1);
+  expect(JSON.parse(invalid.stdout).diagnostics).toContainEqual(expect.objectContaining({ location: "[0].content.blocks[0].typo" }));
+
+  await writeFile(input, JSON.stringify({ kind: "diamond", width: 24, label: ["", "界"] }));
+  const standalone = await command(["measure", "--input", input]);
+  expect(standalone.code, standalone.stdout + standalone.stderr).toBe(0);
+  expect(JSON.parse(standalone.stdout).measurement.diagnostics).toContainEqual(expect.objectContaining({
+    versionIndex: 1, dimension: "width", path: "label[1]", sourcePath: "label[1]" }));
+
+  await writeFile(input, JSON.stringify({ version: 1, viewport: { width: 300, height: 300 }, nodes: [
+    { id: "判断.甲", kind: "diamond", x: 0, y: 0, width: 24, height: 100, label: "" }
+  ], edges: [], scenes: [{ id: "labels", label: "Labels", beats: [{ durationMs: 100, actions: [
+    { type: "updateNode", target: "判断.甲", value: { label: "界" } }
+  ] }] }] }));
+  const draft = await command(["measure", "--input", input]);
+  expect(draft.code, draft.stdout + draft.stderr).toBe(1);
+  expect(JSON.parse(draft.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC",
+    objectId: "判断.甲", versionIndex: 1, path: "label[1]", dimension: "width",
+    location: "scenes[0].beats[0].actions[0].value.label", sourcePath: "scenes[0].beats[0].actions[0].value.label" }));
+  expect(JSON.parse(draft.stdout)).not.toHaveProperty("measurement");
 }, 60_000);

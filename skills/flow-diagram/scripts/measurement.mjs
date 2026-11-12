@@ -4,7 +4,9 @@ import { publishDraftCopy } from "./atomic-draft.mjs";
 import { resolve } from "node:path";
 import { importSdk, prepareRuntime, ToolError } from "./runtime.mjs";
 import { recordFailure } from "./reports.mjs";
-import { LABEL_ESTIMATE_METHOD, isPresetLabelKind, measureLabel, measurementLabelForNode } from "./label-measurement.mjs";
+import { LABEL_ESTIMATE_METHOD, isPresetLabelKind, measureLabel } from "./label-measurement.mjs";
+import { contentSourcesForNode, labelSourcesForNode, mapMeasurementDiagnostics, sourcesForValue } from "./measurement-sources.mjs";
+import { estimateMeasurementLines } from "./measurement-lines.mjs";
 
 const MEASUREMENT_FIELDS = ["kind", "width", "content", "label", "typography"];
 
@@ -28,15 +30,15 @@ export async function measureContent(options, signal) {
     result.measurement = draft
       ? await measureDraft(sdk, input, options, signal)
       : Array.isArray(input)
-      ? { items: input.map((item, index) => measureBatchItem(sdk, item, index)), method: "sdk-content-estimate", units: "diagram" }
-      : measureOne(sdk, input);
+      ? { items: input.map((item, index) => measureBatchItem(sdk, item, index, options.lines)), method: "sdk-content-estimate", units: "diagram" }
+      : measureOne(sdk, input, "", options.lines);
     result.status = "measured";
   } catch (error) {
     recordFailure(result, error);
     if (Array.isArray(error.issues)) result.diagnostics = error.issues.map((issue) => issue.code
-      ? { severity: "error", stage: "measurement", code: issue.code, location: issue.location || issue.path || "$", reason: issue.reason || issue.message,
+      ? { ...issue, severity: "error", stage: "measurement", code: issue.code, location: issue.location || issue.path || "$", reason: issue.reason || issue.message,
         nextStep: issue.nextStep || "Resolve the reported draft measurement issue before retrying.", ...(issue.objectId ? { objectId: issue.objectId } : {}) }
-      : { severity: "error", stage: "measurement", code: "MEASUREMENT_INVALID", location: issue.path, reason: issue.message,
+      : { severity: "error", stage: "measurement", code: "MEASUREMENT_INVALID", location: issue.location || issue.path, reason: issue.message,
         nextStep: "Review node kind, positive width and content versions; choose any content or width change with the user." });
   }
   return result;
@@ -49,26 +51,30 @@ async function measureDraft(sdk, draft, options, signal) {
   const nodes = draft.nodes;
   const dynamicSizes = findAnimatedSizeChanges(draft);
   if (dynamicSizes.length) throw new DraftMeasurementError(dynamicSizes.map((objectId) => ({ code: "MEASUREMENT_SIZE_ANIMATION", objectId,
-    location: `nodes.${objectId}`, reason: `Node ${objectId} changes width or height during animation; automatic height backfill is unsafe.`,
+    location: `nodes[${nodes.findIndex((node) => node.id === objectId)}]`, reason: `Node ${objectId} changes width or height during animation; automatic height backfill is unsafe.`,
     nextStep: "Measure the affected states separately and adjust this node with the existing authoring workflow." })));
-  const measurements = nodes.flatMap((node) => {
-    const versions = contentVersionsForNode(draft, node.id, node.content);
-    const label = measurementLabelForNode(draft, node);
+  const measurements = nodes.flatMap((node, nodeIndex) => {
+    const contentSources = contentSourcesForNode(draft, node, nodeIndex);
+    const versions = contentSources.map((source) => source.value);
+    const labelSources = labelSourcesForNode(draft, node, nodeIndex);
+    const label = labelSources.length ? (isPresetLabelKind(node.kind) ? labelSources.map((source) => source.value) : labelSources[0].value) : undefined;
     if (!versions.length && label === undefined) return [];
-    const contentMeasurement = versions.length ? measureStructuredNode(sdk, node, versions, draft.typography) : null;
+    const contentMeasurement = versions.length ? locateStructuredDiagnostics(
+      measureStructuredNode(sdk, node, versions, draft.typography), contentSources) : null;
     const labelMeasurement = label === undefined ? null : measureLabel(sdk, { ...node, label, typography: draft.typography });
     const requiredHeight = Math.max(contentMeasurement?.requiredHeight ?? 0, labelMeasurement?.requiredHeight ?? 0);
-    const diagnostics = [...(contentMeasurement?.diagnostics ?? []), ...(labelMeasurement?.diagnostics ?? [])];
+    const diagnostics = [...(contentMeasurement?.diagnostics ?? []),
+      ...mapMeasurementDiagnostics(labelMeasurement?.diagnostics ?? [], labelSources)];
     return [{ nodeId: node.id, kind: node.kind, width: node.width, currentHeight: node.height, requiredHeight,
       recommendedHeight: requiredHeight, heightChange: Math.max(0, requiredHeight - node.height),
       ...(contentMeasurement ? { contentVersions: versions.length, perContent: contentMeasurement.perContent } : {}), diagnostics,
       estimatedLineCount: Math.max(contentMeasurement?.estimatedLineCount ?? 0, labelMeasurement?.estimatedLineCount ?? 0),
-      estimatedLineCountMethod: LABEL_ESTIMATE_METHOD }];
+      estimatedLineCountMethod: LABEL_ESTIMATE_METHOD,
+      ...(options.lines ? { estimatedLines: estimateMeasurementLines(sdk, { ...node, typography: draft.typography }, contentSources, labelSources) } : {}) }];
   });
   const diagnostics = measurements.flatMap((item) => item.diagnostics.map((diagnostic) => ({ ...diagnostic, objectId: item.nodeId })));
-  if (diagnostics.length) throw new DraftMeasurementError(diagnostics.map((diagnostic) => ({ code: "MEASUREMENT_DIAGNOSTIC", objectId: diagnostic.objectId,
-    location: `nodes.${diagnostic.objectId}.${diagnostic.path?.startsWith("label") ? "label" : "content"}`, reason: diagnostic.message,
-    nextStep: "Resolve width or fixed graph overflow before applying automatic height backfill." })));
+  if (diagnostics.length) throw new DraftMeasurementError(diagnostics.map((diagnostic) => ({ ...diagnostic, code: "MEASUREMENT_DIAGNOSTIC",
+    location: diagnostic.sourcePath, reason: diagnostic.message })));
   const measurement = { kind: "draft", method: "sdk-content-estimate", units: "diagram", nodes: measurements, output: options.output ? resolve(options.output) : null };
   if (!options.output) return measurement;
   const filled = {
@@ -117,17 +123,6 @@ function isDiagramDraft(input) {
   return input && typeof input === "object" && !Array.isArray(input) && input.version !== undefined && Array.isArray(input.nodes);
 }
 
-function contentVersionsForNode(draft, nodeId, initialContent) {
-  const versions = [];
-  if (initialContent !== undefined && initialContent !== null) versions.push(...(Array.isArray(initialContent) ? initialContent : [initialContent]));
-  for (const scene of draft.scenes) for (const beat of scene.beats) for (const action of beat.actions) {
-    if (action.type === "updateNode" && action.target === nodeId && action.value?.content !== undefined && action.value.content !== null) {
-      versions.push(...(Array.isArray(action.value.content) ? action.value.content : [action.value.content]));
-    }
-  }
-  return versions;
-}
-
 function findAnimatedSizeChanges(draft) {
   const sizes = new Map(draft.nodes.map((node) => [node.id, { width: node.width, height: node.height }]));
   const ids = new Set();
@@ -144,37 +139,54 @@ function findAnimatedSizeChanges(draft) {
   return [...ids];
 }
 
-function measureBatchItem(sdk, item, index) {
+function measureBatchItem(sdk, item, index, includeLines) {
   if (!item || typeof item !== "object" || Array.isArray(item)) {
-    throw new ToolError("measurement", "MEASUREMENT_BATCH_ITEM", `Measurement item ${index} must be an object.`, "Use one measurement object per array item.", `items[${index}]`);
+    throw new ToolError("measurement", "MEASUREMENT_BATCH_ITEM", `Measurement item ${index} must be an object.`, "Use one measurement object per array item.", `[${index}]`);
   }
   const { label, ...input } = item;
   if (label !== undefined && typeof label !== "string") {
-    throw new ToolError("measurement", "MEASUREMENT_BATCH_ITEM", `Measurement item ${index} label must be a string.`, "Remove the label or provide a string label.", `items[${index}].label`);
+    throw new ToolError("measurement", "MEASUREMENT_BATCH_ITEM", `Measurement item ${index} label must be a string.`, "Remove the label or provide a string label.", `[${index}].label`);
   }
+  return { index, ...(label === undefined ? {} : { label }), ...measureOne(sdk, input, `[${index}].`, includeLines) };
+}
+
+function measureOne(sdk, input, sourcePrefix = "", includeLines = false) {
   try {
-    return { index, ...(label === undefined ? {} : { label }), ...measureOne(sdk, input) };
-  } catch (error) {
-    if (Array.isArray(error?.issues)) error.issues = error.issues.map((issue) => ({ ...issue,
-      path: issue.path === "$" ? `items[${index}]` : `items[${index}].${issue.path}` }));
+    const measurement = measureInput(sdk, input, sourcePrefix);
+    return { ...measurement, ...(includeLines ? { estimatedLines: estimateMeasurementLines(sdk, input,
+      sourcesForValue(input.content, `${sourcePrefix}content`), sourcesForValue(input.label, `${sourcePrefix}label`)) } : {}) };
+  }
+  catch (error) {
+    if (Array.isArray(error?.issues)) error.issues = error.issues.map((issue) => {
+      const path = issue.path.replace(/^(content|label)\[(\d+)\]/u, (match, field) => Array.isArray(input?.[field]) ? match : field);
+      return { ...issue, location: path === "$" ? sourcePrefix.slice(0, -1) || "$" : `${sourcePrefix}${path}` };
+    });
+    else if (error.location && sourcePrefix) error.location = `${sourcePrefix}${error.location}`;
     throw error;
   }
 }
 
-function measureOne(sdk, input) {
+function measureInput(sdk, input, sourcePrefix) {
   const { label, ...contentInput } = input ?? {};
   const unknownField = label === undefined ? undefined : Object.keys(input).find((key) => !MEASUREMENT_FIELDS.includes(key));
   if (unknownField) throw new ToolError("measurement", "MEASUREMENT_INVALID", "Unknown measurement field.",
     "Use kind, width, label, content and typography fields only.", unknownField);
-  const content = contentInput.content === undefined && label !== undefined ? null : measureStructuredInput(sdk, contentInput);
+  const rawContent = contentInput.content === undefined && label !== undefined ? null : measureStructuredInput(sdk, contentInput);
+  const content = rawContent && locateStructuredDiagnostics(rawContent, sourcesForValue(contentInput.content, `${sourcePrefix}content`));
   if (label === undefined) return content;
   if (!isPresetLabelKind(input.kind) && (typeof label !== "string" || label.length === 0)) throw new ToolError("measurement", "MEASUREMENT_INVALID",
     "A measurement label must be a nonempty string.", "Supply label text or omit the label field.", "label");
   const measuredLabel = measureLabel(sdk, { kind: input.kind, width: input.width, label, typography: input.typography });
   const requiredHeight = Math.max(content?.height ?? 0, measuredLabel.requiredHeight);
-  return { ...content, height: requiredHeight, requiredHeight, diagnostics: [...(content?.diagnostics ?? []), ...(measuredLabel.diagnostics ?? [])],
+  return { ...content, height: requiredHeight, requiredHeight, diagnostics: [...(content?.diagnostics ?? []), ...mapMeasurementDiagnostics(measuredLabel.diagnostics ?? [], sourcesForValue(label, `${sourcePrefix}label`))],
     estimatedLineCount: Math.max(content?.estimatedLineCount ?? 0, measuredLabel.estimatedLineCount),
     estimatedLineCountMethod: LABEL_ESTIMATE_METHOD, method: "sdk-content-estimate", units: "diagram" };
+}
+
+function locateStructuredDiagnostics(measurement, sources) {
+  return { ...measurement, diagnostics: mapMeasurementDiagnostics(measurement.diagnostics, sources),
+    ...(measurement.perContent ? { perContent: measurement.perContent.map((item, index) => ({ ...item,
+      diagnostics: mapMeasurementDiagnostics(item.diagnostics, [sources[index]]) })) } : {}) };
 }
 
 function measureStructuredInput(sdk, input) {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add opt-in `measure --lines` source-bound text-layout records for the existing content/label version scope. Preserve distinct text roles, exclude graph-internal labels from the new list, and retain existing baseline counts (including SDK graph-label baselines), diagnostics and exclusive draft backfill. Estimates do not establish actual visibility or aesthetic quality.
+
+- Preserve SDK measurement version, block and dimension diagnostics and map them to actual input fields, including animated replacements and batch entries. Add width/safe-area and fixed graph-block guidance while retaining strict draft failure, read-only source and exclusive height-backfill behavior. SDK layout estimates remain separate from actual image inspection.
+
 - Store reusable project preferences for design, expression and delivery in `.diagrams/preferences.md`, one Markdown item per line. Save only on clear authorization, including an explicit choice for future project tasks. Apply preferences to open choices without expanding a revision. The legacy JSON stays untouched and is no longer read. Agent guidance only; the CLI and SDK runtime are unchanged.
 
 - Clarify Agent page self-check versus user design judgment, allow finalization of complete files with disclosed inspection gaps, make spatial hierarchy an adaptable design starting point, and remove repeated page rules from the main workflow. Guidance only; no CLI, report or runtime behavior changed.

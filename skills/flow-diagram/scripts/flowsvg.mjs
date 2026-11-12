@@ -122,13 +122,17 @@ const HELP = {
     "No author revision is allocated. Warnings remain; successful layout is not visual approval."
   ].join("\n"),
   measure: [
-    "Usage: flowsvg measure --input <json> [--output <new-draft.json>]",
+    "Usage: flowsvg measure --input <json> [--lines] [--output <new-draft.json>]",
     "",
     "Input is a diagram draft, one label/content measurement object, or an array of content measurement objects.",
     "Options:",
     "  --input <json>       Measurement JSON path",
+    "  --lines              Include source-bound estimated text lines; not actual visible glyphs",
     "  --output <json>      Write a new height-filled draft; never overwrites an existing file",
-    "  -h, --help           Show this help"
+    "  -h, --help           Show this help",
+    "",
+    "Results are SDK layout estimates, not actual glyph visibility or design approval.",
+    "Draft measurement diagnostics block all results and backfill; inspect location and nextStep."
   ].join("\n")
 };
 function helpText(command) { return HELP[command] || HELP.all; }
@@ -138,10 +142,11 @@ if (requestedHelp) {
   process.exitCode = 0;
 } else try {
   const { positionals, values } = parseArgs({ allowPositionals: true, strict: true, options: {
-    "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, html: { type: "string" }, "sync-html": { type: "boolean" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" }, decisions: { type: "string" },
+    lines: { type: "boolean" }, "evidence-from": { type: "string" }, kind: { type: "string" }, template: { type: "string" }, input: { type: "string" }, html: { type: "string" }, "sync-html": { type: "boolean" }, plan: { type: "string" }, output: { type: "string" }, name: { type: "string" }, parent: { type: "string" }, from: { type: "string" }, decisions: { type: "string" },
     gif: { type: "boolean" }, "gif-options": { type: "string" }, sources: { type: "string" }, theme: { type: "string" }, svg: { type: "boolean" }, png: { type: "boolean" }, "export-manifest": { type: "string" }, "png-width": { type: "string" }, background: { type: "string" }, "artifact-preview-settings": { type: "string" }, "artifact-review": { type: "string" }, time: { type: "string" }, browser: { type: "string" }, "visual-review": { type: "string" }, "html-review": { type: "string" }, samples: { type: "string" }, workspace: { type: "string" }, "keep-work": { type: "boolean" }
   } });
   const command = positionals[0];
+  if (values.lines !== undefined && command !== "measure") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--lines requires measure.", "Run `flowsvg measure --help`.", "lines");
   if (values.html !== undefined && (command !== "author" || !values.html.trim())) throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--html requires author and a nonempty HTML path.", "Run `flowsvg author --help`.", "html");
   if (values["sync-html"] !== undefined && command !== "author") throw new ToolError("arguments", "ERR_OPTION_SCOPE", "--sync-html requires author.", "Run `flowsvg author --help`.", "sync-html");
   checkLayoutOptions(command, values);

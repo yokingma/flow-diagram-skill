@@ -88,7 +88,7 @@ Use for a source-supported process with conditional branches or a return path. S
 2. Reserve separate branch channels and keep condition labels close to their paths. Place the return outside the forward sequence, with distinct entry and exit ports where possible.
 3. Trace all paths to their arrowheads in the paused overview. Keep incoming paths distinguishable when they converge on one port; explain only merges supported by the source.
 
-Start with direct forward paths and a curved return when that creates separation. Adjust ports and channels together if a stage moves. A return does not imply a retry count, delay or guarantee of success. The static recipe can also organize key paused states in an animated explanation.
+Choose forward and return paths using [connection design](#connections-and-relationship-labels). Adjust ports and channels together if a stage moves. A return does not imply a retry count, delay or guarantee of success. The static recipe can also organize key paused states in an animated explanation.
 
 Design starting point: [recipe-process-return.json](../examples/recipe-process-return.json), an explicit teaching extension of the basic collect/review/archive sample. Its pass, revision and resubmission conditions are invented teaching facts, not inferred behavior of the original example. See [sample conditions and observations](../examples/README.md#recipe-display-checks).
 
@@ -97,7 +97,7 @@ Design starting point: [recipe-process-return.json](../examples/recipe-process-r
 After [content placement](delivery-contexts.md#content-placement) assigns necessary text to diagram objects, use for comparable objects that need titles, explanations, lists and short tags. Structure: `title / core explanation / consistent list-and-tag area`, repeated along a stable alignment grid.
 
 1. Choose card width and text roles for the target display width. Use a stable left reading edge for longer content and the same content order for comparable cards.
-2. Measure every card at its final width and typography. For comparison cards, choose a shared height that contains the largest result plus intentional whitespace. Different roles or content may retain different heights.
+2. Measure every card at its final width and typography. Choose a height that fits its content and shape safe area with deliberate padding; use a compact size for short content. For animation, account for every content version. Use a shared height when it supports comparison or composition, and retain different heights when content needs differ.
 3. Recompute the surrounding row and group after content changes. Adjust width or organization before considering content removal; follow source-fidelity decisions when meaning would change.
 
 Use numbered lists for sequences and bullets for parallel points. Keep tags short, near their content and less prominent than titles. Equal heights are a comparison choice, not a reason to shrink text, remove facts or enforce a fixed height-difference threshold.
@@ -223,8 +223,8 @@ Make relationships easy to trace and coordinate their appearance with the overal
 | Parallel relationships | Separate paths and their labels. Use distinct directed connections for requests and responses. |
 
 - **Select endpoint scope first.** Follow [relationship scope and endpoints](semantic-patterns.md#relationship-scope-and-endpoints) before choosing ports or routes. Apply that scope to forward, return and explanatory relationships alike.
-- **Choose ports and routes together.** Start with ports that face the intended direction. Choose the simplest traceable path with clear arrowheads and label space, using the table below. Grouping, layering and off-axis ports alone do not require bends. Reconsider ports or node positions when the rendered path is crowded.
 - **Reserve channels before labels and sidebars.** Treat path clearance as layout space. Keep unrelated cards and explanatory sidebars outside the channel; where a component edge crosses a group boundary, keep that crossing distinct from a group endpoint.
+- **Choose ports and routes together.** For regular process and grouped layouts, favor horizontal and vertical segments. First align nodes and facing ports for a direct `straight` path; where endpoints remain offset, start with an `orthogonal` path through the reserved channel. Use a diagonal or `curved` path when it makes the relationship clearer or better fits the composition. Compare the rendered candidates using the table below.
 - **Establish line hierarchy.** Keep default line width and color consistent. Emphasize key paths when needed and give secondary relationships less visual weight.
 - **Give line styles explicit meanings.** Map solid lines, dashed lines, and color differences to defined relationship categories. Explain those categories through labels or a legend.
 - **Place labels near their paths.** Choose an identifiable segment with clearance from arrowheads, bends, and other text. Reserve layout space for longer labels.

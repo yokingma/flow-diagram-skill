@@ -135,13 +135,41 @@ All results identify `method: "sdk-content-estimate"` and `units: "diagram"`.
 - **Batch:** `measurement.items` retains each item's `index`, optional metadata `label`, height, diagnostics and applicable per-version details.
 - **Draft:** `measurement.kind: "draft"` contains a `nodes` array. Each entry records `nodeId`, `currentHeight`, `requiredHeight`, `recommendedHeight`, positive-or-zero `heightChange` and diagnostics. Structured-content entries also retain per-version results. A recommendation can be below the authored height; height backfill preserves the larger authored value.
 
-Text-bearing results include `estimatedLineCount` and `estimatedLineCountMethod: "public-sdk-baseline-y-estimate"`. Structured-content counts use distinct public `contentLayout.lines` baseline positions; label-only counts use public SDK label baselines. Each content version retains its estimate, and the shared estimate is the maximum. Graph-internal labels are outside this count. These are deterministic structural estimates, not browser glyph pixels or formal SVG/PNG evidence.
+Text-bearing results include `estimatedLineCount` and `estimatedLineCountMethod: "public-sdk-baseline-y-estimate"`. Structured-content counts use distinct public `contentLayout.lines` baseline positions; label-only counts use public SDK label baselines. Each content version retains its estimate, and the shared estimate is the maximum. Structured-content counts retain all public baseline positions, including graph-internal label positions when supplied by the SDK. These are deterministic structural estimates, not browser glyph pixels or formal SVG/PNG evidence.
+
+### Inspect estimated text lines
+
+Add `--lines` only to `measure` when you need the SDK's estimated wrapping before image inspection:
+
+```text
+node <skill-directory>/scripts/flowsvg.mjs measure --input <draft-or-measurement.json> --lines
+```
+
+The result adds one `estimatedLines` array to each single-object result, batch item or draft-node result. Without the flag, no line arrays are added. Each record contains `text`, `sourcePath` and zero-based `versionIndex`; structured text also retains public `blockIndex`, `role` and applicable `itemIndex`/`tagIndex`. Text sources point to the original text field, including animation actions. Generated list markers instead point to the block's authored `marker` configuration, with `itemIndex` identifying the generated item marker. A list without a marker configuration produces no marker records in the pinned SDK. Label records omit block/item/role fields. Mixed independent label/content experiments distinguish those sources; batch labels remain metadata.
+
+Records retain the measured version order and public SDK record order at the selected width and typography. Ordinary draft labels remain initial-only; presets and structured content retain their existing replacement-version scope. Every measured version is included, not only the tallest. Graph-internal labels are excluded from this list. Empty text estimates return `[]`; long results are not truncated. Per-version measurement details do not duplicate the list.
+
+A record is not necessarily a separate baseline: body, auxiliary, status and tags remain distinct even on the same line. Therefore `estimatedLines.length` need not equal `estimatedLineCount`; the existing count method is unchanged. The text comes from public `contentLayout.lines` or `labelLines`, and can include unclipped records outside the safe area. It does not establish actual glyph visibility, natural terminology breaks, readability or design quality. Inspect the rendered image at the intended size to judge those questions.
+
+The flag changes neither height, diagnostics nor pass/fail behavior. With `--output`, line records stay in the report and never enter the height-filled document. If complete-draft measurement fails, it returns diagnostics only, with no partial lines or node results and no backfill file. Independent objects retain their existing results with diagnostics. Other commands reject `--lines` before creating history or artifacts.
+
+### Locate SDK measurement diagnostics
+
+SDK diagnostics retain `versionIndex`, `path`, `dimension` and `message`. The added `sourcePath` identifies the original input field, including a version-array element, content block or animated replacement. For example, `path: "content[1].blocks[0]"` can map to `sourcePath: "scenes[0].beats[1].actions[0].value.content.blocks[0]"`. Node IDs remain separate from array-index paths, so a dot in an ID does not create a path level. Independent objects use `content`/`label`; top-level batch items use `[i].content`, with `label` still metadata. Per-version diagnostics retain the SDK index from that individual measurement call; use `sourcePath` to locate their original version.
+
+Use `nextStep` to distinguish width and graph-block height checks. Width issues require checking the node width, content or label safe area, text sizing, and graph-local coordinates when applicable. Increasing the outer node height cannot correct horizontal overflow or enlarge a fixed graph block. For graph height issues, inspect both the fixed block height and local coordinates; increasing block height alone cannot correct negative extents. The CLI does not probe or invent a required graph-block height.
+
+These diagnostics describe the SDK algorithm at the chosen width and typography. They do not prove actual glyph visibility, unreadability or poor design. Keep measurement failure separate from the actual-image judgment; the operation and file-protection rules follow below.
 
 ### Write a height-filled draft
 
 Without `--output`, measurement reports suggestions only. For a complete draft, pass `--output <new-draft.json>` to publish a separate height-filled copy after all measurement checks succeed. Only node heights can change, and they only increase. Node positions and widths, IDs, content, parent membership, edges, scenes, viewport and other fields remain unchanged. The original input bytes are preserved, and an existing target is never overwritten.
 
-Complete-draft measurement rejects animated width or height changes with `MEASUREMENT_SIZE_ANIMATION`, even without `--output`. Measure affected states separately and use the authoring workflow to coordinate their geometry. Unresolved width or fixed-height graph overflow also stops draft measurement and blocks height backfill; a taller node cannot resolve those problems. Diagnostics retain the node identity or content-version index and block path where applicable.
+Complete-draft measurement rejects animated width or height changes with `MEASUREMENT_SIZE_ANIMATION`, even without `--output`. Measure affected states separately and use the authoring workflow to coordinate their geometry. Unresolved width or fixed-height graph overflow also stops draft measurement and blocks height backfill; a taller node cannot resolve those problems. Draft diagnostics retain `objectId` and use zero-based input array positions in `location`, including `scenes[i].beats[j].actions[k].value.content` or `.label` for replacements. Failed complete-draft measurement returns diagnostics only, without partial node measurements or an output copy.
+
+`status: "failed"` and a nonzero exit code mean that the requested measurement operation did not complete. Read the diagnostic code and location to distinguish invalid input, unsupported animated size changes, unresolved SDK estimates and output-publication errors. This status does not declare the diagram visually invalid. A node shorter than the computed height can still produce a successful height recommendation; an existing output target can prevent publication after measurement succeeds internally.
+
+Within complete-draft measurement, document validation precedes the animated-size check, then node measurement and any requested output publication. A failure stops later checks, so the returned diagnostics are not an exhaustive list of the draft's problems. Only a successful complete-draft operation returns the measurement results and, when requested, publishes the new copy. The source bytes and existing target remain protected on failure.
 
 After height backfill, coordinate node positions, group bounds and connection clearance through the authoring or layout workflow. Inspect diagnostics and perform actual image inspection before claiming that the diagram fits or its layout is approved.
 

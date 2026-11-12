@@ -67,3 +67,11 @@ Exercise combined `--html` and explicit image requests through the copied instal
 ## FlowSVG 0.3.1 baseline
 
 The exact registry runtime is `flowsvg@0.3.1`. Keep package, manifest and npm lock identity synchronized; support declarations do not select installations. Historical reports, managed HTML and viewing evidence keep their original SDK identity. Adopt historical export completion only after validation confirms matching source, theme and actual SDK identity; a changed baseline requires fresh exports. Verify upgrades through a copied installation and the public package.
+
+## Measurement source locations
+
+Preserve public SDK measurement diagnostic fields and add original-input `sourcePath` separately. `measurement-sources.mjs` owns initial/replacement version order and source paths; draft node IDs stay in `objectId` rather than being interpolated into JSON paths. Draft measurement keeps its all-or-nothing result and exclusive backfill boundary. Width and fixed graph-block height suggestions derive from structured dimensions and block kinds, never message matching or guessed repair sizes. SDK estimates and actual image inspection remain separate evidence.
+
+## Optional measurement text records
+
+`measurement-lines.mjs` projects public SDK content and label frames into `estimatedLines` only when `measure --lines` is explicit. Reuse `measurement-sources.mjs` for existing version scope and original-input paths. Keep public record order and role/item/tag selectors; exclude graph-block labels only from the new list, preserving all public SDK baseline positions in the existing counts. Store the list once per measurement result, outside per-version detail. Draft failures publish no partial measurement or line results; backfill JSON contains authored fields only.

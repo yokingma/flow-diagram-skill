@@ -116,7 +116,7 @@ test.each(PRESETS)("$kind keeps width diagnostics and prevents unsafe draft or l
   const output = join(root, `${kind}-narrow-output.json`);
   const backfill = await command(["measure", "--input", input, "--output", output]);
   expect(backfill.code, backfill.stdout).toBe(1);
-  expect(JSON.parse(backfill.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC", location: `nodes.${kind}.label` }));
+  expect(JSON.parse(backfill.stdout).diagnostics).toContainEqual(expect.objectContaining({ code: "MEASUREMENT_DIAGNOSTIC", objectId: kind, location: "nodes[0].label", sourcePath: "nodes[0].label" }));
   const plan = join(root, `${kind}-narrow-plan.json`);
   await writeFile(plan, JSON.stringify({ schemaVersion: 1, strategy: "layered", layers: [kind] }));
   const layout = await command(["layout", "--input", input, "--plan", plan, "--output", output]);
