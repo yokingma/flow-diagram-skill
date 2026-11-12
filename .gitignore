@@ -5,3 +5,4 @@ node_modules/
 authoring-skill-evidence.json
 .DS_Store
 /acceptance/
+/examples/.preview/

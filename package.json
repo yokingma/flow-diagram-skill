@@ -10,6 +10,7 @@
   },
   "scripts": {
     "doctor": "node skills/flow-diagram/scripts/flowsvg.mjs doctor",
+    "examples:preview": "node scripts/preview-examples.mjs",
     "test:guides": "vitest run tests/authoring-skill-guidance.test.ts tests/authoring-skill-layered-example.test.ts tests/authoring-skill-presentation-recipes.test.ts",
     "test:skill": "vitest run tests/authoring-skill",
     "test": "pnpm test:skill",

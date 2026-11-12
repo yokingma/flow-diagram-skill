@@ -1,20 +1,20 @@
 {
   "version": 1,
-  "title": "订单服务架构",
+  "title": "Order-service architecture",
   "theme": "light",
   "viewport": {
-    "width": 840,
+    "width": 900,
     "height": 360
   },
   "nodes": [
     {
       "id": "orders",
       "kind": "group",
-      "x": 260,
+      "x": 320,
       "y": 30,
       "width": 540,
       "height": 300,
-      "label": "订单服务"
+      "label": "Order service"
     },
     {
       "id": "client",
@@ -23,7 +23,7 @@
       "y": 140,
       "width": 150,
       "height": 140,
-      "label": "客户端"
+      "label": "Client"
     },
     {
       "id": "api",
@@ -37,11 +37,11 @@
         "blocks": [
           {
             "type": "title",
-            "text": "订单 API"
+            "text": "Order API"
           },
           {
             "type": "paragraph",
-            "text": "接收订单请求"
+            "text": "Receive order requests"
           }
         ]
       }
@@ -54,7 +54,7 @@
       "y": 110,
       "width": 170,
       "height": 140,
-      "label": "订单存储"
+      "label": "Order store"
     }
   ],
   "edges": [
@@ -62,24 +62,24 @@
       "id": "request",
       "from": "client",
       "to": "api",
-      "label": "提交订单",
       "fromPort": "right",
-      "toPort": "left"
+      "toPort": "left",
+      "label": "Submit order"
     },
     {
       "id": "persist",
       "from": "api",
       "to": "store",
-      "label": "保存订单",
       "route": "orthogonal",
       "fromPort": "right",
-      "toPort": "left"
+      "toPort": "left",
+      "label": "Save order"
     }
   ],
   "scenes": [],
   "typography": {
     "nodeLabel": 20,
-    "edgeLabel": 18,
+    "edgeLabel": 13,
     "flowLabel": 16
   }
 }

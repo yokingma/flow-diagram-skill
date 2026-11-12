@@ -1,50 +1,28 @@
-# Teaching examples and design starting points
+# Teaching examples
 
-All bundled examples are teaching setups, not production facts. Semantic examples demonstrate objects, relations and SDK capabilities; a runnable file alone is not a recommended visual composition. Use [semantic patterns](../references/semantic-patterns.md) for their facts and limitations. The `recipe-` examples illustrate the [composition recipes](../references/visual-design.md#composition-recipes) and retain the scope below.
+These English examples explain fictional scenarios or diagram-authoring methods. Choose by the reader's question, then read the adjacent note for source facts, composition choices, display conditions and limits. [Teaching sources](../resources/teaching-sources.json) records their assumptions; replace them with the user's evidence for a real task and use the requested output language.
 
-## Recipe display checks
-
-The following historical checks rendered SVGs at time 0 with the then-locked SDK 0.2.2 and viewed target-size artifact-evidence PNGs on macOS with prepared Chrome 156.0.8078.74, device scale factor 1 and a white backdrop on 2026-10-31. They have empty scenes and no animation. These observations remain bound to SDK 0.2.2 and the stated static conditions; they do not establish current SDK 0.3.1 acceptance, smaller widths, HTML playback or user aesthetic acceptance.
-
-| Design starting point | Canvas and checked CSS width | Viewed result and limits |
+| Reader's question | Example and source | Primary PNG display; diagram canvas |
 | --- | --- | --- |
-| [Layered architecture and sidebar](recipe-layered-architecture.json) | 1280 × 1080; 1280px | Three named layers and two shared columns remain readable. Two downward arrows occupy the inter-layer gaps; nearby borderless notes explain each arrow. The dashed sidebar remains outside the main paths. Intentional height differences reflect different card content; the sidebar has open lower space for visual alignment, not additional implied components. |
-| [Process with a return](recipe-process-return.json) | 1160 × 600; 1160px | The forward collect/review/archive row, downward revision branch and curved return are traceable. Two incoming paths share the review node's left port; this is an intentional convergence, not an extra processing stage. No retry count or delay is specified. |
-| [Long-content cards](recipe-content-cards.json) | 1100 × 384; 1100px | Three cards share title, paragraph and list/tag structure with stable left alignment. All content fits the shared 324-unit height; tags remain below title emphasis. Their horizontal placement compares concerns without adding dependencies. |
+| What happens with complete or missing materials? | [Application review](approval-review.md) · [JSON](approval-review.json) | 1280 × 440; 1280 × 440 |
+| When does an attempt retry or stop? | [Finite retry policy](retry-policy.md) · [JSON](retry-policy.json) | 1100 × 523; 1240 × 590 |
+| Where do combined arrivals exceed processing capacity? | [Fan-in capacity](fan-in-capacity.md) · [JSON](fan-in-capacity.json) | 1100 × 485; 1360 × 600 |
+| How do records change between stages? | [Record transformations](record-transformations.md) · [JSON](record-transformations.json) | 1100 × 275; 1400 × 350 |
+| How do layers, members and governance notes relate? | [Layered architecture](layered-architecture.md) · [JSON](layered-architecture.json) | 1280 × 904; 1280 × 904 |
+| Which responsibilities exist, are proposed or remain unknown? | [Capability overview](capability-overview.md) · [JSON](capability-overview.json) | 720 × 363; 960 × 484 |
+| How does a source collection map to services? | [Source/service mapping](source-services.md) · [JSON](source-services.json) | 1200 × 525; 1280 × 560 |
+| How can paragraphs, lists and short tags share cards? | [Content cards](content-cards.md) · [JSON](content-cards.json) | 1100 × 432; 1100 × 432 |
+| What is sent, what changes, and what returns? | [Query round trip](query-round-trip.md) · [JSON](query-round-trip.json) | 960 × 432; 960 × 432 |
+| How can independent transfers flow together? | [Parallel transfers](parallel-transfers.md) · [JSON](parallel-transfers.json) | 960 × 432; 960 × 432 |
 
-No clipping or text overlap was observed in these viewed final surfaces. These are observations, not a zero-defect guarantee. The checks did not cover other fonts, operating systems, narrower placements, dark backgrounds or actual offline HTML. The original semantic examples keep their separately documented limitations; these starting points do not retroactively approve them.
+## Display conditions and limits
 
-## Presentation recipe checks
+The first eight examples are static. The last two animate transfer and state changes. All use a light background and the exact SDK 0.3.1 baseline. PNG display sizes above are CSS pixels, while canvases use diagram units. Each note states its intended use.
 
-On 2026-11-03, the following historical neutral-recipe checks were generated with the then-locked SDK 0.2.2 and inspected on macOS with Google Chrome 156.0.8078.80, device scale factor 1 and a white backdrop. Each final SVG and PNG at time 0 was actually viewed through its target-size artifact evidence. Actual offline HTML screenshots were also viewed, with a recorded 1440 × 1000 browser viewport (full-page screenshots can be taller). These observations remain bound to SDK 0.2.2 and are separate from the current 0.3.1 runtime acceptance and the earlier recipe checks above.
+The current PNGs were viewed at the listed sizes. Actual HTML screenshots were viewed at a 1440 × 1000 browser viewport, including paused animation starts, selected changes and ends. Continuous visual playback and independent SVG viewing remain unperformed. Other platforms, themes, fonts, smaller placements and host embedding are outside the viewed conditions. Earlier selection of the library does not extend viewing coverage to later revisions. Successful validation, compilation or export does not establish visual quality.
 
-| Teaching recipe | Canvas; checked SVG/PNG display size | Actual observations |
-| --- | --- | --- |
-| [No-edge capability overview](recipe-capability-overview.json) | 960 × 600; 720 × 450 CSS px | Three parallel responsibility cards share title/body starts and padding. Existing responsibilities, the proposed capability and unknown authorization/launch conditions remain explicit. No edge implies an execution order. One static HTML state at 0ms was viewed. |
-| [Source mapping and service cards](recipe-source-services.json) | 1280 × 560; 1200 × 525 CSS px | The 1/2/21 number column is separate from source descriptions. Four service cards share reading edges and spacing. The inter-region arrow means a group-level needs mapping, not runtime calls or a promise to deliver 21 items. One static HTML state at 0ms was viewed. |
-| [All-visible parallel flow](recipe-parallel-flow.json) | 960 × 720; 720 × 540 CSS px | Both nodes, descriptions and relationship notes remain visible. Two independent paths transfer in the same direction; notes sit outside the marker paths. Twelve HTML states were viewed across opening, three repeated flows and the final hold. |
+## Adapt an example
 
-No clipping, text overlap or marker/text collision was observed in these final viewed surfaces. Shared card heights leave deliberate open space; this is a composition choice rather than an automatic quality score. Invented facts and limits are recorded in [recipe-sources.json](recipe-sources.json).
+Copy its JSON into the task's one editable source draft, replace fictional facts and preserve source-supported relationships. Measure changed content and typography when needed, regenerate current outputs and actually view affected surfaces at the intended size. Keep substantive findings in one temporary `issues.md`; add registered evidence only for an explicit formal request. Follow the [task workspace rules](../references/tool-contract.md#task-workspace).
 
-The animation compiles to 9000ms: an 800ms opening, three 2400ms parallel-flow beats and a 1000ms final hold. Viewed HTML sample times were `0, 0, 800, 925, 2000, 3200, 3325, 4400, 5600, 5725, 6800, 9000` ms. The bounded sample plan omitted the 8000ms beat boundary. Programmatic playback advanced and paused successfully; viewing these screenshots does not establish continuous visual playback inspection. The SVG/PNG checks cover only time 0.
-
-These observations cover the stated sizes and host. Actual PowerPoint/WPS placement and playback, other fonts/platforms/backgrounds, narrower placements and continuous visual playback were not checked. The original nine-page customer case was not independently revalidated. Neither these examples nor passing checks establish user aesthetic approval or a measured reduction in rework.
-
-## Use a recipe
-
-Copy the selected JSON into the task workspace and adapt source-supported content. [recipe-sources.json](recipe-sources.json) records the invented facts and derivations used for these examples; replace that metadata with the user's real sources for a real task. Measure with the document's actual typography after changing widths or content, then validate, generate and actually view the current outputs. Registered evidence and review are added only for an explicit formal request. Read [task workspace and retention rules](../references/tool-contract.md#task-workspace) before saving files.
-
-For the card example, measurement gives required heights below the shared authored height. Shared height is an authoring choice; the tool does not infer which objects should match. The layered example's annotation nodes are explanations of the existing group-to-group arrows, not new business entities. If changing annotation position makes ownership ambiguous, reserve a clearer channel rather than deleting the relationship.
-
-## Editable HTML page starter
-
-[html-page.html](html-page.html) is an editable page shell, not a second final delivery file. Copy it to the task workspace and adapt the heading, one-sentence introduction, optional functional reading hint and CSS. Keep sources, decisions, inspection records and process notes outside the page; see [keep the HTML page minimal](../references/delivery-contexts.md#keep-the-html-page-minimal). Preserve the single managed playback region, then submit the complete page with `author --html`; see [content placement](../references/delivery-contexts.md#content-placement) and [the page contract](../references/tool-contract.md#editable-html-pages).
-
-The starter retains a 720px minimum playback width in a focusable horizontal reading area; change `--diagram-reading-width` for the actual diagram typography. The short introduction still wraps at narrow viewport widths. Check both horizontal ends and controls, and record playback width separately from viewport width. The value itself does not establish readable labels or actual viewing. Keep resources inline/data URLs for offline sharing.
-
-
-## Mixed approval flow
-
-[mixed-approval-flow.json](mixed-approval-flow.json) demonstrates plain-label `parallelogram`, `diamond`, `predefinedProcess` and `document` nodes alongside an ordinary return node. [Source metadata](semantic-pattern-sources.json) records the fictional complete/missing-materials rules. The missing branch is visible but only the complete-materials branch plays; the example makes no claim about real approval criteria, retries or processing time.
-
-Run `measure --input` on the complete draft before authoring. It includes the review/report label replacements and preserves the authored height when it already accommodates every version. `layout` accepts a static draft only: arrange a `scenes: []` copy before adding animation, then measure all label versions and recheck positions. The four presets reject structured `content`; width diagnostics require a wider node or an authorized text change. Generated files and screenshots remain separate from actual viewing at the intended display size.
+The installed JSON is the publication source. This directory contains reusable sources and teaching notes; [execution resources](../resources/README.md) holds the HTML starter, independent measurement input and teaching-source records.

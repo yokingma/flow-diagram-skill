@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "title": "双副本部署",
+  "title": "Two-replica deployment",
   "theme": "light",
   "viewport": {
     "width": 900,
@@ -14,7 +14,7 @@
       "y": 20,
       "width": 260,
       "height": 200,
-      "label": "主机 A"
+      "label": "Host A"
     },
     {
       "id": "host-b",
@@ -23,7 +23,7 @@
       "y": 260,
       "width": 260,
       "height": 200,
-      "label": "主机 B"
+      "label": "Host B"
     },
     {
       "id": "router",
@@ -32,7 +32,7 @@
       "y": 190,
       "width": 150,
       "height": 90,
-      "label": "负载均衡"
+      "label": "Load balancer"
     },
     {
       "id": "replica-a",
@@ -42,7 +42,7 @@
       "y": 80,
       "width": 180,
       "height": 90,
-      "label": "服务副本 A"
+      "label": "Replica A"
     },
     {
       "id": "replica-b",
@@ -52,7 +52,7 @@
       "y": 80,
       "width": 180,
       "height": 90,
-      "label": "服务副本 B"
+      "label": "Replica B"
     },
     {
       "id": "database",
@@ -61,7 +61,7 @@
       "y": 190,
       "width": 160,
       "height": 100,
-      "label": "共享数据库"
+      "label": "Shared database"
     }
   ],
   "edges": [
@@ -69,7 +69,7 @@
       "id": "route-a",
       "from": "router",
       "to": "replica-a",
-      "label": "分发",
+      "label": "Dispatch",
       "route": "orthogonal",
       "fromPort": "top",
       "toPort": "left"
@@ -78,7 +78,7 @@
       "id": "route-b",
       "from": "router",
       "to": "replica-b",
-      "label": "分发",
+      "label": "Dispatch",
       "route": "orthogonal",
       "fromPort": "bottom",
       "toPort": "left"
@@ -87,7 +87,7 @@
       "id": "write-a",
       "from": "replica-a",
       "to": "database",
-      "label": "读写",
+      "label": "Read / write",
       "route": "orthogonal",
       "fromPort": "right",
       "toPort": "top"
@@ -96,11 +96,16 @@
       "id": "write-b",
       "from": "replica-b",
       "to": "database",
-      "label": "读写",
+      "label": "Read / write",
       "route": "orthogonal",
       "fromPort": "right",
       "toPort": "bottom"
     }
   ],
-  "scenes": []
+  "scenes": [],
+  "typography": {
+    "nodeLabel": 16,
+    "edgeLabel": 12,
+    "flowLabel": 12
+  }
 }

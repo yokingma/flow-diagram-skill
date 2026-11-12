@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "title": "Query round trip — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 960,
+    "height": 432
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 20,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "heading",
+      "kind": "rect",
+      "x": 48,
+      "y": 24,
+      "width": 864,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "One query · Request and return",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "client",
+      "kind": "roundedRect",
+      "x": 64,
+      "y": 160,
+      "width": 264,
+      "height": 144,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#b8cbd8",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Client",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Send a query",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "service",
+      "kind": "roundedRect",
+      "x": 632,
+      "y": 160,
+      "width": 264,
+      "height": 144,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#b8cbd8",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Query service",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Await query",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "limits",
+      "kind": "rect",
+      "x": 48,
+      "y": 366,
+      "width": 864,
+      "height": 52,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "One successful query; timeouts, failures and actual processing time are unknown.",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "request-label",
+      "kind": "rect",
+      "x": 400,
+      "y": 80,
+      "width": 160,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Query request",
+            "style": {
+              "fontSize": 20,
+              "color": "#246a86",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "response-label",
+      "kind": "rect",
+      "x": 400,
+      "y": 296,
+      "width": 160,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Return result",
+            "style": {
+              "fontSize": 20,
+              "color": "#658696",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "request",
+      "from": "client",
+      "to": "service",
+      "fromPort": "top",
+      "toPort": "top",
+      "route": "orthogonal",
+      "label": "",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      }
+    },
+    {
+      "id": "response",
+      "from": "service",
+      "to": "client",
+      "fromPort": "bottom",
+      "toPort": "bottom",
+      "route": "orthogonal",
+      "label": "",
+      "style": {
+        "stroke": "#658696",
+        "strokeWidth": 2
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "query",
+      "label": "One successful query (fictional)",
+      "beats": [
+        {
+          "durationMs": 1600,
+          "caption": "The client sends one query. Request and return directions remain visible together.",
+          "actions": []
+        },
+        {
+          "durationMs": 2000,
+          "caption": "The query request travels from client to service.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "request",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 1600,
+          "transitionMs": 0,
+          "caption": "The service obtains a result. This hold gives reading time; it does not measure processing time.",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "service",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 24,
+                    "blockGap": 18
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Query service",
+                      "style": {
+                        "fontSize": 26,
+                        "color": "#193247"
+                      }
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Result ready",
+                      "style": {
+                        "fontSize": 22,
+                        "color": "#526779"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "caption": "The result travels back to the client along its own return path.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "response",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 1600,
+          "transitionMs": 0,
+          "caption": "The query ends with the result-ready state visible. Timeout and failure behavior remain unspecified.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow Diagram · Example gallery</title>
+  <link rel="icon" href="data:,">
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #f3f5f8; color: #172033; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 1360px; margin: auto; padding: 40px 24px 64px; }
+    h1 { font-size: 30px; margin: 0 0 8px; }
+    h2 { margin: 40px 0 4px; font-size: 24px; }
+    h3 { display: inline; margin: 0 10px 0 0; font-size: 19px; }
+    p { margin: 4px 0; color: #526174; }
+    a { color: #2359a6; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 28px; }
+    nav a { padding: 6px 12px; border: 1px solid #d7dfea; border-radius: 6px; background: white; }
+    article { background: white; border: 1px solid #dce2eb; border-radius: 10px; margin: 0 0 28px; overflow: hidden; scroll-margin-top: 16px; }
+    header { padding: 18px 24px; border-bottom: 1px solid #edf0f5; }
+    .count { color: #79869a; font-size: 16px; }
+    .kind { font-size: 12px; background: #edf3fb; color: #315984; border-radius: 4px; padding: 3px 7px; }
+    .links { margin: 6px 0 0; font-size: 14px; }
+    .player { overflow-x: auto; }
+    iframe { display: block; width: 100%; min-width: 720px; border: 0; background: white; }
+    footer { margin-top: 32px; color: #6b7789; font-size: 13px; }
+    @media (max-width: 640px) {
+      main { padding: 24px 12px; }
+      header { padding: 14px; }
+      h3 { font-size: 17px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Flow Diagram · Example gallery</h1>
+    <p>Animations start paused; use the player controls to play. Open full view for a larger canvas.</p>
+    <p>Built from current repository sources. Rerun <code>pnpm examples:preview</code> and reload after edits.</p>
+    <!-- EXAMPLE_GROUPS -->
+    <footer>Local development preview. Generation is not visual approval; see teaching notes for viewing conditions and limits.</footer>
+  </main>
+  <script>
+    const CONTROL_SPACE_PX = 180;
+    const frames = Array.from(document.querySelectorAll("iframe"));
+    function resizePlayers() {
+      for (const frame of frames) {
+        frame.style.height = Math.ceil(frame.clientWidth * Number(frame.dataset.ratio) + CONTROL_SPACE_PX) + "px";
+      }
+    }
+    window.addEventListener("resize", resizePlayers);
+    resizePlayers();
+  </script>
+</body>
+</html>

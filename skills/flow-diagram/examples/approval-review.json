@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "title": "Application review \u2014 fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 1280,
+    "height": 440
+  },
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 16,
+    "flowLabel": 14
+  },
+  "nodes": [
+    {
+      "id": "application",
+      "kind": "parallelogram",
+      "x": 40,
+      "y": 84,
+      "width": 200,
+      "height": 112,
+      "label": "Application\nreceived",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "complete",
+      "kind": "diamond",
+      "x": 320,
+      "y": 56,
+      "width": 320,
+      "height": 168,
+      "label": "Materials\ncomplete?",
+      "style": {
+        "fill": "#eff6ff",
+        "stroke": "#8aafd0",
+        "strokeWidth": 1,
+        "textColor": "#16344f"
+      }
+    },
+    {
+      "id": "review",
+      "kind": "predefinedProcess",
+      "x": 740,
+      "y": 84,
+      "width": 200,
+      "height": 112,
+      "label": "Review\napplication",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "report",
+      "kind": "document",
+      "x": 1040,
+      "y": 84,
+      "width": 200,
+      "height": 112,
+      "label": "Draft report",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "revision",
+      "kind": "roundedRect",
+      "x": 360,
+      "y": 320,
+      "width": 240,
+      "height": 80,
+      "label": "Return for revision",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "submit-label",
+      "kind": "rect",
+      "x": 245,
+      "y": 110,
+      "width": 70,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "submit",
+            "style": {
+              "fontSize": 16,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "complete-label",
+      "kind": "rect",
+      "x": 645,
+      "y": 110,
+      "width": 90,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "complete",
+            "style": {
+              "fontSize": 16,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "produce-label",
+      "kind": "rect",
+      "x": 945,
+      "y": 110,
+      "width": 90,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "produce",
+            "style": {
+              "fontSize": 16,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing-label",
+      "kind": "rect",
+      "x": 495,
+      "y": 236,
+      "width": 130,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "missing",
+            "style": {
+              "fontSize": 16,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "submit",
+      "from": "application",
+      "to": "complete",
+      "label": "",
+      "route": "straight",
+      "fromPort": "right",
+      "toPort": "left",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "accepted",
+      "from": "complete",
+      "to": "review",
+      "label": "",
+      "route": "straight",
+      "fromPort": "right",
+      "toPort": "left",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "missing",
+      "from": "complete",
+      "to": "revision",
+      "label": "",
+      "route": "straight",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "produce",
+      "from": "review",
+      "to": "report",
+      "label": "",
+      "route": "straight",
+      "fromPort": "right",
+      "toPort": "left",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    }
+  ],
+  "scenes": []
+}

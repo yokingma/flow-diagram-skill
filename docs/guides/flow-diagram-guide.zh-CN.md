@@ -44,9 +44,9 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 随包的[语义模式指南](../../skills/flow-diagram/references/semantic-patterns.md)覆盖请求响应、重试与状态迁移、汇聚与瓶颈、分阶段数据处理、带边界的系统架构和分层架构教学设定。示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
 
-流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[混合审批流程](../../skills/flow-diagram/examples/mixed-approval-flow.json)使用虚构教学设定：缺失材料分支保持可见，动画只演示材料完整的路径。对完整草稿运行 `measure`，会测量这些形状的全部标签替换版本；若仍有宽度诊断，需要加宽节点。`layout` 仍只接受静态草稿：先排布几何，再加入 scenes，然后重新测量并检查间距。独立测量对象的 `label` 可为字符串（含空串）或非空版本数组；顶层批量数组中的 label 仍是描述性元数据。
+流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[申请审查范例](../../skills/flow-diagram/examples/approval-review.md)使用虚构教学设定：材料完整时进入审查并形成报告草稿，缺失材料时退回修订；静态图同时保留两种结果，不声明重提或重试。对完整草稿运行 `measure`，会测量这些形状的全部标签替换版本；若仍有宽度诊断，需要加宽节点。`layout` 仍只接受静态草稿：先排布几何，再加入 scenes，然后重新测量并检查间距。独立测量对象的 `label` 可为字符串（含空串）或非空版本数组；顶层批量数组中的 label 仍是描述性元数据。
 
-需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留多列、组内标题留白、层间带标签连线和治理侧栏。层序不等于调用时间顺序，分组不自动代表部署或信任边界，虚线治理说明也不增加未声明的运行时依赖。先将示例复制到任务工作区，需要高度回填时运行 `measure --input <draft.json> --in-place`，再从同一源草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
+需要练习分层架构时，可从[分层架构教学示例](../../skills/flow-diagram/examples/layered-architecture.json)开始。示例在每层保留两列、组内标题留白、层间整体关系及路径旁的说明，治理侧栏包含策略与可观测性记录。层序不等于调用时间顺序，分组不自动代表部署或信任边界，治理侧栏也不增加未声明的运行时依赖。先将示例复制到任务工作区，需要高度回填时运行 `measure --input <draft.json> --in-place`，再从同一源草稿创作；示例中的行高、列间距和连线标签净空是根据本示例字体验证的起点，不是通用布局参数。
 
 从完整草稿测量结构化内容和普通标签时，运行 `measure --input <draft.json>`，使用草稿中的宽度和 typography。结构化内容包含初始值与全部动画替换；普通标签只测初始值，预设标签包含替换版本。追加 `--in-place` 可直接回填任务根目录下的同一源草稿，只增加高度；生成的 current JSON、检查点、外部文件及文件别名保持写入保护。不支持的动画宽高变化仍会阻止操作。只有明确需要独立副本时才改用 `--output <new-draft.json>`，源字节不变且不覆盖已有目标。取消或保存失败保留源文件；修改后从同一路径重新 author，finalize 会拒绝已经过时的生成文件。SDK 越界估算只作辅助，不阻止回填。生成草稿仍需排布位置、检查诊断并实际查看。
 
@@ -54,11 +54,11 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 测量报告问题时，用 `sourcePath`（草稿另有 `location`）定位实际节点、内容块或动画动作。`objectId` 保留节点 ID，SDK 的 `path`、`versionIndex`、`dimension`、`message` 继续保留。`nextStep` 区分宽度/安全区检查与固定实体图块高度/局部坐标检查。增加外部节点高度不能修复横向越界，也不会放大固定图块；仅增加图块高度不能纠正负向范围越界。完整草稿测量失败时只返回诊断、不发布回填文件，表示请求的操作未完成，不表示图形视觉质量不合格。检查会在失败阶段停止，因此诊断不是全部问题清单。独立和批量输入仍返回带 SDK 诊断的测量结果。实际图片需另外查看。详见[测量诊断](../../skills/flow-diagram/references/tool-contract.md#locate-sdk-measurement-diagnostics)及[失败与文件保护](../../skills/flow-diagram/references/tool-contract.md#write-a-height-filled-draft)。
 
-如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。[布局辅助教学草稿](../../skills/flow-diagram/examples/layout-assistance.json)和[计划](../../skills/flow-diagram/examples/layout-assistance-plan.json)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时仍保留该高度；按需追加 `--geometry` 可取得对应的文字排版估算。
+如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。安装包内的[完整布局输入与计划](../../skills/flow-diagram/references/layout-plan.md#complete-teaching-input)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时仍保留该高度；按需追加 `--geometry` 可取得对应的文字排版估算。
 
 可选的 layout 命令要求静态草稿和显式布局计划。按需运行 `measure --in-place`，再运行 `layout --input <draft> --plan <layout-plan.json> --in-place`，然后校验和制作同一源草稿。测量高度作为布局下限，`overrides[id].height` 保持精确；`--geometry` 按需返回有限辅助估算。布局结果不代表设计批准。请求的 SVG/PNG 需在预期尺寸和背景下实际查看；只有明确要求正式复核时才追加[注册图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
 
-设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[配方示例检查](../../skills/flow-diagram/examples/README.md)区分这些设计起点与能力演示。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
+设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[教学范例索引](../../skills/flow-diagram/examples/README.md)列出已选成品及各自的展示条件和局限。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
 
 ## 1. 准备环境
 
@@ -111,7 +111,7 @@ git rev-parse HEAD
 
 需要固定版本时，复制前先检出 `v0.1.0` 发布标签，并记录 `git rev-parse HEAD` 输出的提交。
 
-将完整的 `skills/flow-diagram/` 文件夹复制到下列位置之一。保留 `LICENSE`，以及 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-diagram`。只复制 `SKILL.md` 无法运行工具。
+将完整的 `skills/flow-diagram/` 文件夹复制到下列位置之一。保留 `LICENSE`，以及 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/`、`resources/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-diagram`。只复制 `SKILL.md` 无法运行工具。
 
 | 宿主 | 仅当前项目可用 | 当前用户的多个项目可用 | 显式调用 |
 | --- | --- | --- | --- |
@@ -196,7 +196,7 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 
 需要导入幻灯片的图片时，请指定 SVG 或 PNG；未请求图片格式时，助手采用默认文件，并说明没有幻灯片导入图片。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
 
-[读者问题选择表](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)用于选择能力全景、来源映射或流程等结构。[教学配方](../../skills/flow-diagram/examples/README.md#presentation-recipe-checks)包含无连线能力全景、中文来源与业务卡片、全图常显的并行流动动画。复用组织方式时，替换为自己的事实和展示尺寸。
+[读者问题选择表](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)用于选择能力全景、来源映射或流程等结构。[教学范例](../../skills/flow-diagram/examples/README.md)包含条件流程、有限重试、汇聚容量、数据转换、分层架构、无连线能力全景、来源与服务映射、内容卡片、请求响应和并行流动动画。每份说明解释构图原因、主要展示条件与查看局限；动画未完成连续视觉播放的限制已明确。复用组织方式时，替换为自己的事实和展示尺寸。
 
 ## 3.2. 页面介绍与图内文字
 
@@ -204,7 +204,7 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
 
 助手围绕内嵌播放器编写页面 HTML/CSS，固定阅读顺序为标题、一句简介、可选的功能阅读提示、带字幕和控件的播放器，不设补充说明章节。交付前由助手执行[页面完成清单](../../skills/flow-diagram/references/delivery-contexts.md#page-completion-checklist)和删除测试：凡是重复图中内容、描述制作过程，或删掉后不影响读者使用页面的区块，都移出或删除。未执行的检查及其影响会明确说明，最终设计判断由你作出。最终仍交付一个可离线打开的自包含 HTML，以及可编辑图解 JSON 和报告，无需额外页面源文件。已有图解导入、纯导出和校验保留原有输入及入口。
 
-直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-diagram/examples/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域默认必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-diagram/references/tool-contract.md#editable-html-pages)。
+直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-diagram/resources/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域默认必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-diagram/references/tool-contract.md#editable-html-pages)。
 
 继续任务内已保存的版本时，`--from <版本>` 或 `--input <修改后.json> --parent <版本>` 会保留该版本登记的 Agent 页面，除非用 `--html` 另选页面。只修改页面时保留原 JSON。有意更改图解或主题时使用 `--sync-html`；工具校验旧播放区后只替换该区域，保留外围设计。任务清理后，在新工作区使用已交付的 `diagram.html` 和 `diagram.json`，无需历史父版本。先读取最终报告，保留已请求的格式。页面字节变化后需要重新检查并实际查看；旧 HTML 复核不能用于修改后的页面。命令与失败处理见[页面续编](../../skills/flow-diagram/references/tool-contract.md#continue-an-existing-page)。
 
@@ -345,11 +345,11 @@ GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请�
 
 ```text
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
-node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/architecture.json" --name architecture --output ".diagrams/.work/architecture/<task-id>/history" --browser none
-node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/architecture/<task-id>" --name architecture
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/layered-architecture.json" --name layered-architecture --output ".diagrams/.work/layered-architecture/<task-id>/history" --browser none
+node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/layered-architecture/<task-id>" --name layered-architecture
 ```
 
-第二条命令使用随包示例，生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于先验证不依赖浏览器的交付。直接运行命令不会代替助手的语义分析或实际视觉判断。随包架构教学示例保留已知的关系标签与分组重叠告警；应阅读报告并按授权范围处理，不能把这次命令验证当成无告警的设计模板。
+第二条命令使用随包示例，生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于先验证不依赖浏览器的交付。直接运行命令不会代替助手的语义分析或实际视觉判断。随包分层架构范例的说明记录了虚构事实和主要展示条件；应阅读报告与范例说明，不能把命令验证当成对新内容或新尺寸的视觉认可。
 
 完整参数、隔离缓存和报告字段见[工具合同](../../skills/flow-diagram/references/tool-contract.md)。环境准备、取消或导出失败见[故障恢复](../../skills/flow-diagram/references/troubleshooting.md)。
 

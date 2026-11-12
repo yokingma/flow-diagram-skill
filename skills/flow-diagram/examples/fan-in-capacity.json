@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "title": "Fan-in capacity — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 1360,
+    "height": 600
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 22,
+    "flowLabel": 18
+  },
+  "nodes": [
+    {
+      "id": "a",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 30,
+      "width": 230,
+      "height": 110,
+      "label": "Source A\n1 item/s (assumed)",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "b",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 210,
+      "width": 230,
+      "height": 110,
+      "label": "Source B\n1 item/s (assumed)",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "c",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 390,
+      "width": 230,
+      "height": 110,
+      "label": "Source C\n1 item/s (assumed)",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "queue",
+      "kind": "roundedRect",
+      "x": 430,
+      "y": 210,
+      "width": 210,
+      "height": 110,
+      "label": "Shared queue\nCapacity unknown",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "worker",
+      "kind": "roundedRect",
+      "x": 750,
+      "y": 210,
+      "width": 250,
+      "height": 110,
+      "label": "One worker\n2 items/s (assumed)",
+      "style": {
+        "fill": "#eff6ff",
+        "stroke": "#83aacf",
+        "strokeWidth": 1,
+        "textColor": "#16344f"
+      }
+    },
+    {
+      "id": "result",
+      "kind": "roundedRect",
+      "x": 1110,
+      "y": 210,
+      "width": 210,
+      "height": 110,
+      "label": "Completed items",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "comparison",
+      "kind": "roundedRect",
+      "x": 300,
+      "y": 520,
+      "width": 1020,
+      "height": 60,
+      "label": "Sustained arrivals: 3 items/s > processing: 2 items/s. Full-queue policy, length and delay are unknown.",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#64748b"
+      }
+    },
+    {
+      "id": "consume-label",
+      "kind": "rect",
+      "x": 670,
+      "y": 222,
+      "width": 50,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Take",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "out-label",
+      "kind": "rect",
+      "x": 1025,
+      "y": 222,
+      "width": 60,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Done",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "a-in",
+      "from": "a",
+      "to": "queue",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "top",
+      "route": "orthogonal",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "b-in",
+      "from": "b",
+      "to": "queue",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "c-in",
+      "from": "c",
+      "to": "queue",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "bottom",
+      "route": "orthogonal",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "consume",
+      "from": "queue",
+      "to": "worker",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "out",
+      "from": "worker",
+      "to": "result",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    }
+  ],
+  "scenes": []
+}

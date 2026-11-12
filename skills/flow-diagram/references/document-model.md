@@ -26,7 +26,7 @@ These four kinds accept plain `label` only and reject structured `content`, incl
 
 Complete-draft measurement includes the initial label and every `updateNode.value.label` replacement for these kinds. Empty or omitted initial text still reserves contour clearance. Width diagnostics remain actionable after increasing height: widen the node or obtain authorization for a text change. Visible overflowing text is clipped rather than shrunk. Existing ordinary-label whole-word wrapping does not describe these presets, which may split overwide words between complete graphemes.
 
-For a complete workflow, use [mixed-approval-flow.json](../examples/mixed-approval-flow.json) with its [teaching source metadata](../examples/semantic-pattern-sources.json). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all preset label versions and recheck spacing. Inspect actual playback and requested images separately from numeric measurement.
+For a complete static workflow, use [approval-review.json](../examples/approval-review.json) with its [teaching note](../examples/approval-review.md) and [source metadata](../resources/teaching-sources.json). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all preset label versions and recheck spacing. Inspect actual playback and requested images separately from numeric measurement.
 
 
 ## Node content and measurement
@@ -44,10 +44,10 @@ Title/paragraph text is a string or ordered array of `{text, style?}` spans. Tex
 
 Graph nodes have `id`, `label`, center offsets `x`/`y` relative to the block's top left, and optional `highlighted`. Graph edges use `from`/`to` local IDs and are undirected. This block has fixed height and no independent player hit targets. It is not a nested diagram or a general statistical chart.
 
-Content clips to the shape's safe area and never resizes its node. Measure text at the chosen width and typography before setting node height. Use a complete draft to measure its text-bearing nodes, or an independent input for content experiments. Read [the measurement CLI contract](tool-contract.md#content-measurement) before choosing an input, interpreting results or requesting a height-filled draft. The contract defines input forms, output fields, write conditions and measurement limits. [The multiple-version example](../examples/content-measurement.json) supplies a runnable independent input.
+Content clips to the shape's safe area and never resizes its node. Measure text at the chosen width and typography before setting node height. Use a complete draft to measure its text-bearing nodes, or an independent input for content experiments. Read [the measurement CLI contract](tool-contract.md#content-measurement) before choosing an input, interpreting results or requesting a height-filled draft. The contract defines input forms, output fields, write conditions and measurement limits. [The multiple-version example](../resources/content-measurement.json) supplies a runnable independent input.
 
 ## Scenes and beats
 
 Use `scenes: []` for a static diagram. Before adding animation actions, read [animation authoring](timeline.md) for the scene/beat schema, inherited state, content replacement and effective timing. Select export times from `compilation.beats` and `totalDurationMs` in the report.
 
-The CLI reports field/reference and derived compilation errors separately. See [diagnosis and revision decisions](diagnostics-and-revisions.md) when checks report a problem. Complete static inputs: [architecture](../examples/architecture.json), [deployment](../examples/deployment.json), [process](../examples/process.json).
+The CLI reports field/reference and derived compilation errors separately. See [diagnosis and revision decisions](diagnostics-and-revisions.md) when checks report a problem. Complete static inputs include [layered architecture](../examples/layered-architecture.md), [application review](../examples/approval-review.md) and [record transformations](../examples/record-transformations.md).

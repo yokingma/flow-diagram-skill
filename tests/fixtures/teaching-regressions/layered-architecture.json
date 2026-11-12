@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "title": "分层与侧栏配方 · 教学设定",
+  "title": "分层架构教学设定",
   "theme": "light",
   "viewport": {
     "width": 1280,
-    "height": 1080
+    "height": 980
   },
   "typography": {
     "nodeLabel": 20,
@@ -27,7 +27,7 @@
       "parentId": "layer-ingress",
       "x": 30,
       "y": 72,
-      "width": 240,
+      "width": 220,
       "height": 135,
       "content": {
         "blocks": [
@@ -46,9 +46,9 @@
       "id": "request-router",
       "kind": "roundedRect",
       "parentId": "layer-ingress",
-      "x": 390,
+      "x": 360,
       "y": 72,
-      "width": 240,
+      "width": 220,
       "height": 135,
       "content": {
         "blocks": [
@@ -67,7 +67,7 @@
       "id": "layer-domain",
       "kind": "group",
       "x": 60,
-      "y": 430,
+      "y": 390,
       "width": 760,
       "height": 280,
       "label": "领域层 · 教学设定"
@@ -128,7 +128,7 @@
       "id": "layer-data",
       "kind": "group",
       "x": 60,
-      "y": 820,
+      "y": 740,
       "width": 760,
       "height": 200,
       "label": "数据层 · 教学设定"
@@ -137,9 +137,9 @@
       "id": "primary-store",
       "kind": "cylinder",
       "parentId": "layer-data",
-      "x": 30,
+      "x": 90,
       "y": 70,
-      "width": 240,
+      "width": 220,
       "height": 100,
       "label": "订单存储"
     },
@@ -147,9 +147,9 @@
       "id": "analytics-store",
       "kind": "cylinder",
       "parentId": "layer-data",
-      "x": 390,
+      "x": 430,
       "y": 70,
-      "width": 240,
+      "width": 220,
       "height": 100,
       "label": "分析存储"
     },
@@ -159,7 +159,7 @@
       "x": 900,
       "y": 90,
       "width": 320,
-      "height": 930,
+      "height": 730,
       "label": "治理侧栏 · 教学设定",
       "style": {
         "dashed": true
@@ -216,34 +216,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "relation-note-1",
-      "kind": "rect",
-      "x": 500,
-      "y": 340,
-      "width": 280,
-      "height": 70,
-      "label": "请求方向（示例）",
-      "style": {
-        "fill": "#ffffff",
-        "stroke": "#ffffff",
-        "strokeWidth": 0
-      }
-    },
-    {
-      "id": "relation-note-2",
-      "kind": "rect",
-      "x": 500,
-      "y": 730,
-      "width": 280,
-      "height": 70,
-      "label": "数据方向（示例）",
-      "style": {
-        "fill": "#ffffff",
-        "stroke": "#ffffff",
-        "strokeWidth": 0
-      }
     }
   ],
   "edges": [
@@ -251,6 +223,7 @@
       "id": "ingress-to-domain",
       "from": "layer-ingress",
       "to": "layer-domain",
+      "label": "请求方向（示例）",
       "route": "orthogonal",
       "fromPort": "bottom",
       "toPort": "top"
@@ -259,6 +232,7 @@
       "id": "domain-to-data",
       "from": "layer-domain",
       "to": "layer-data",
+      "label": "数据方向（示例）",
       "route": "orthogonal",
       "fromPort": "bottom",
       "toPort": "top"

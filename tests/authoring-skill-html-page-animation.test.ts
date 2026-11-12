@@ -21,6 +21,7 @@ beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG editable page ")));
   skill = join(root, "installed skill");
   await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
+  await cp(resolve("tests/fixtures/teaching-regressions"), join(root, "teaching-regressions"), { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 function command(args: string[]) {
@@ -59,11 +60,11 @@ test.skipIf(!browser)("external page dependencies fail offline inspection while 
 }, 90_000);
 
 test.skipIf(!browser)("animated pages report actual captions, compiled boundaries and restoration after backward seeking", async () => {
-  const teaching = JSON.parse(await readFile(join(skill, "examples/request-response.json"), "utf8"));
+  const teaching = JSON.parse(await readFile(join(root, "teaching-regressions/request-response.json"), "utf8"));
   // Deliberately too brief for reading: this fixture protects the fractional seek boundary only.
   teaching.scenes[0].beats.splice(3, 0, { durationMs: 0.00001, transitionMs: 0,
     caption: "极短边界状态", actions: [{ type: "highlight", target: "client" }] });
-  const starter = (await readFile(join(skill, "examples/html-page.html"), "utf8")).replace("</head>", '<link rel="stylesheet" href="data:text/css,h1%7Bfont-weight%3A600%7D"></head>');
+  const starter = (await readFile(join(skill, "resources/html-page.html"), "utf8")).replace("</head>", '<link rel="stylesheet" href="data:text/css,h1%7Bfont-weight%3A600%7D"></head>');
   const { input, page } = await sources("animated", starter, teaching);
   const result = await command(["author", "--input", input, "--html", page, "--name", "animated", "--browser", browser!]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
@@ -85,8 +86,8 @@ test.skipIf(!browser)("animated pages report actual captions, compiled boundarie
 }, 90_000);
 
 for (const theme of ["light", "dark"]) test.skipIf(!browser)(`starter keeps ${theme} narrow diagram readable through an accessible horizontal reading region`, async () => {
-  const teaching = JSON.parse(await readFile(join(skill, "examples/request-response.json"), "utf8"));
-  const starter = await readFile(join(skill, "examples/html-page.html"), "utf8");
+  const teaching = JSON.parse(await readFile(join(root, "teaching-regressions/request-response.json"), "utf8"));
+  const starter = await readFile(join(skill, "resources/html-page.html"), "utf8");
   const { input, page: pageSource } = await sources(`narrow-${theme}`, starter, teaching);
   const result = await command(["author", "--input", input, "--html", pageSource, "--name", `narrow-${theme}`, "--theme", theme, "--browser", "none"]);
   expect(result.code, result.stdout + result.stderr).toBe(0);
@@ -143,7 +144,7 @@ test.skipIf(!browser)("backward seeking records visual-only state changes with u
       setInterval(watch, 1);
     })();
   </script></body>`);
-  const teaching = JSON.parse(await readFile(join(skill, "examples/request-response.json"), "utf8"));
+  const teaching = JSON.parse(await readFile(join(root, "teaching-regressions/request-response.json"), "utf8"));
   const { input, page } = await sources("visual-backseek", html, teaching);
   const result = await command(["author", "--input", input, "--html", page, "--name", "visual-backseek", "--browser", browser!]);
   const report = (await readCommandReport(result.stdout));

@@ -54,7 +54,7 @@ Use when the reader needs to compare capabilities or ownership rather than follo
 
 Choose a shared title position, body hierarchy and card rhythm. Name the basis of grouping. Use explicit text for proposed, available and unknown states, including access or authorization that remains undecided. Add an edge only when this page must explain a source-supported relationship; a row of cards supplies no execution order.
 
-Starting point: [recipe-capability-overview.json](../examples/recipe-capability-overview.json). Its parallel cards compare three responsibilities and intentionally contain no edges. See [checked conditions](../examples/README.md#presentation-recipe-checks).
+Starting point: [capability-overview.json](../examples/capability-overview.json). Its parallel cards compare three responsibilities and intentionally contain no edges. Read the [teaching note and display limits](../examples/capability-overview.md).
 
 #### Source mapping and service cards
 
@@ -66,7 +66,7 @@ Use when the page must connect a compact account of sources or transformed needs
 
 For short labels whose shape safe area prevents the intended reading edge, consider a border group with a separate borderless text rect. Measure its actual typography, account for parent-local coordinates and inspect the result. Ordinary structured cards remain suitable when their safe area fits the design; this composition is an option, not a replacement for all rounded nodes.
 
-Starting point: [recipe-source-services.json](../examples/recipe-source-services.json). The mapping is explanatory, not a runtime call. Its numbers, spacing and content are teaching choices; preserve the user's facts when adapting it. See [checked conditions](../examples/README.md#presentation-recipe-checks).
+Starting point: [source-services.json](../examples/source-services.json). The mapping is explanatory, not a runtime call. Its numbers, spacing and content are teaching choices; preserve the user's facts when adapting it. Read the [teaching note and display limits](../examples/source-services.md).
 
 #### Layered architecture and sidebar
 
@@ -78,7 +78,7 @@ Use for comparing layers with repeated columns and governance or explanatory not
 
 Choose column widths from content and display width. Apply the [spacing system](#spacing-and-spatial-hierarchy) to heading areas, padding and channels. Recompute affected layers when widths, labels or sidebar content change. Preserve layer order without inventing call timing.
 
-Design starting point: [recipe-layered-architecture.json](../examples/recipe-layered-architecture.json), derived from the existing layered teaching example. Its annotation nodes describe the two existing cross-layer relations. See [sample conditions and observations](../examples/README.md#recipe-display-checks) before reusing its geometry.
+Design starting point: [layered-architecture.json](../examples/layered-architecture.json). Its annotation nodes describe the two collective cross-layer relations. Read the [teaching note and display limits](../examples/layered-architecture.md) before reusing its geometry.
 
 #### Process with branches and returns
 
@@ -90,7 +90,7 @@ Use for a source-supported process with conditional branches or a return path. S
 
 Choose forward and return paths using [connection design](#connections-and-relationship-labels). Adjust ports and channels together if a stage moves. A return does not imply a retry count, delay or guarantee of success. The static recipe can also organize key paused states in an animated explanation.
 
-Design starting point: [recipe-process-return.json](../examples/recipe-process-return.json), an explicit teaching extension of the basic collect/review/archive sample. Its pass, revision and resubmission conditions are invented teaching facts, not inferred behavior of the original example. See [sample conditions and observations](../examples/README.md#recipe-display-checks).
+Design starting points: [retry-policy.json](../examples/retry-policy.json) explains a bounded loop with at most three total attempts and separate success/failure exits; [approval-review.json](../examples/approval-review.json) explains a conditional alternative without a resubmission loop. Read their [retry](../examples/retry-policy.md) and [application-review](../examples/approval-review.md) notes; neither supplies return behavior for a real process.
 
 #### Repeated cards and longer content
 
@@ -102,7 +102,7 @@ After [content placement](delivery-contexts.md#content-placement) assigns necess
 
 Use numbered lists for sequences and bullets for parallel points. Keep tags short, near their content and less prominent than titles. Equal heights are a comparison choice, not a reason to shrink text, remove facts or enforce a fixed height-difference threshold.
 
-Design starting point: [recipe-content-cards.json](../examples/recipe-content-cards.json), a static comparison of three authoring concerns using titles, paragraphs, bullet lists and pill tags. Its horizontal order does not establish execution dependencies. See [sample conditions and observations](../examples/README.md#recipe-display-checks).
+Design starting point: [content-cards.json](../examples/content-cards.json), a static comparison of three authoring concerns using titles, paragraphs, list blocks and decorative rounded tags. Its horizontal order does not establish execution dependencies. Read the [teaching note and display limits](../examples/content-cards.md).
 
 #### Parameter choices and scale
 

@@ -98,7 +98,7 @@ SVG、PNG 与 GIF 均为可选导出。HTML 页面只保留标题、回答读者
 
 本 **Skill** 指导助手读取资料、设计讲解方式、创作与修订图解、规划布局、检查结果，最后交付文件与报告；**FlowSVG SDK** 提供底层渲染与播放能力。需要将图解嵌入应用时，可直接使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成，见 [SDK 仓库](https://github.com/yokingma/FlowSVG)与 [npm 包](https://www.npmjs.com/package/flowsvg)。
 
-图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[混合审批流程](skills/flow-diagram/examples/mixed-approval-flow.json)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
+图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[申请审查范例](skills/flow-diagram/examples/approval-review.md)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
 
 ### 运行时依赖
 
@@ -128,6 +128,8 @@ Skill 在隔离缓存中准备以下锁定的软件包：
 pnpm install --frozen-lockfile
 pnpm test
 ```
+
+查看教学范例和 API 练习时，按[本地预览说明](examples/README.md#preview-the-example-library)操作；其中列明覆盖范围和重新生成步骤。
 
 未设置 `FLOWSVG_TEST_BROWSER` 时会跳过依赖浏览器的测试。浏览器与消费者验收步骤见[贡献说明](CONTRIBUTING.md)；维护、架构决策与发布记录从[文档导航](docs/README.md)进入。
 

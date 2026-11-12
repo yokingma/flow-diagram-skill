@@ -1,0 +1,308 @@
+{
+  "version": 1,
+  "title": "Parallel transfers — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 960,
+    "height": 432
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "heading",
+      "kind": "rect",
+      "x": 48,
+      "y": 24,
+      "width": 864,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Parallel transfers · Whole view",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source",
+      "kind": "roundedRect",
+      "x": 64,
+      "y": 160,
+      "width": 264,
+      "height": 144,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Source",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Public material",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "desk",
+      "kind": "roundedRect",
+      "x": 632,
+      "y": 160,
+      "width": 264,
+      "height": 144,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Desk",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Reference info",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "limits",
+      "kind": "rect",
+      "x": 48,
+      "y": 366,
+      "width": 864,
+      "height": 52,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Two independent transfers; three rounds illustrate motion, not business throughput.",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "guides-label",
+      "kind": "rect",
+      "x": 400,
+      "y": 80,
+      "width": 160,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Public guides",
+            "style": {
+              "fontSize": 18,
+              "color": "#246a86",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "notices-label",
+      "kind": "rect",
+      "x": 370,
+      "y": 296,
+      "width": 220,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Service notices",
+            "style": {
+              "fontSize": 18,
+              "color": "#658696",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "guides",
+      "from": "source",
+      "to": "desk",
+      "fromPort": "top",
+      "toPort": "top",
+      "route": "orthogonal",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      },
+      "label": ""
+    },
+    {
+      "id": "notices",
+      "from": "source",
+      "to": "desk",
+      "fromPort": "bottom",
+      "toPort": "bottom",
+      "route": "orthogonal",
+      "style": {
+        "stroke": "#658696",
+        "strokeWidth": 2
+      },
+      "label": ""
+    }
+  ],
+  "scenes": [
+    {
+      "id": "parallel",
+      "label": "Whole view · Three parallel rounds",
+      "beats": [
+        {
+          "durationMs": 800,
+          "caption": "Both arrows carry information from the resource station to the service desk. The whole view stays visible.",
+          "actions": []
+        },
+        {
+          "durationMs": 2400,
+          "caption": "Both kinds of material move together. Repetition illustrates motion, not request/response timing.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2400,
+          "caption": "Both kinds of material move together. Repetition illustrates motion, not request/response timing.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2400,
+          "caption": "Both kinds of material move together. Repetition illustrates motion, not request/response timing.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "guides",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "flow",
+              "target": "notices",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "The demonstration ends with both relationships visible. Pause or seek to review.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

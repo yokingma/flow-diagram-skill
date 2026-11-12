@@ -14,6 +14,7 @@ beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG pixels 独立 ")));
   skill = join(root, "installed skill");
   await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
+  await cp(resolve("tests/fixtures/teaching-regressions"), join(root, "teaching-regressions"), { recursive: true });
   await cp(resolve("tests/fixtures/artifact-evidence"), join(root, "fixtures"), { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
@@ -30,7 +31,7 @@ function command(args: string[]) {
 }
 
 test.skipIf(!executablePath)("changing SVG/PNG dimensions and backgrounds preserves original PNG content without compositor bands", async () => {
-  const input = join(skill, "examples/staged-data-processing.json");
+  const input = join(root, "teaching-regressions/staged-data-processing.json");
   const sourceResult = await command(["author", "--checkpoint", "--input", input, "--name", "resized", "--svg", "--png", "--png-width", "960", "--background", "transparent", "--browser", executablePath!]);
   expect(sourceResult.code, sourceResult.stdout + sourceResult.stderr).toBe(0);
   const source = (await readCommandReport(sourceResult.stdout));

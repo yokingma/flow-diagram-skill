@@ -65,6 +65,7 @@ flow-diagram/
   scripts/
   references/
   examples/
+  resources/
   runtime/
 ```
 
@@ -107,7 +108,7 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 
 ### 5.2 打包和提交
 
-1. 从已验收的安装单元副本生成 zip，保留 `SKILL.md`、`references/`、`scripts/`、`examples/`、`runtime/` 和平台允许的其他目录。
+1. 核对安装 `examples/` 仅含已选成品源及简短教学说明，`resources/` 仅含必需辅助资源与对应来源记录；候选、开发练习、截图、运行日志和过程版本留在安装包之外。从已验收的安装单元副本生成 zip，保留 `SKILL.md`、`references/`、`scripts/`、`examples/`、`resources/`、`runtime/` 和平台允许的其他目录。
 2. 检查 zip 内没有 `node_modules`、缓存、任务工作区、私人证据或无关仓库文件。
 3. 记录 zip 文件名、候选提交、WorkBuddy 元数据变更、文件清单和校验值。
 4. 在开放平台的技能资产入口上传 zip，按当期页面填写展示信息、能力配置和其他表单项。

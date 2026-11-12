@@ -23,6 +23,8 @@ pnpm test
 
 The root pnpm lock controls development dependencies. The Skill's `runtime/package-lock.json` controls installed runtime dependencies. Preserve the exact SDK baseline unless the contribution explicitly upgrades it. Do not install development tools inside the distributable Skill.
 
+For example previews, read the [workshop guide](examples/README.md#preview-the-example-library) for coverage, generation and failure handling.
+
 Read [AGENTS.md](AGENTS.md), [PATTERNS.md](PATTERNS.md), and the [maintenance guide](docs/development/flow-diagram-maintenance.md) before implementation changes. For domain-contract changes, also read [GLOSSARY.md](GLOSSARY.md) and relevant [ADRs](docs/adr/README.md).
 
 ## Validation

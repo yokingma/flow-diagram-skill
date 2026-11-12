@@ -1,0 +1,62 @@
+[
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: approval-review",
+    "scope": "examples/approval-review.json",
+    "description": "Fictional application: complete materials lead to review and a draft report; missing materials lead to return for revision. No resubmission, approval outcome, archive action, processing time or retry count is specified. Annotations describe existing relationships, not additional states."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: retry-policy",
+    "scope": "examples/retry-policy.json",
+    "description": "Fictional policy: at most three total attempts including the first. Success exits; a temporary error below attempt three waits and retries; a temporary error on attempt three fails. Wait duration, cancellation and other errors are unknown. This static graph does not execute a counter or simulation."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: fan-in-capacity",
+    "scope": "examples/fan-in-capacity.json",
+    "description": "Fictional rates: A, B and C each supply one item/second to one queue; one worker processes two items/second and emits completed items. Sustained aggregate arrivals are three items/second. Queue capacity, overload policy, observed queue length and latency are unknown; no simulation is asserted."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: record-transformations",
+    "scope": "examples/record-transformations.json",
+    "description": "Fictional data pipeline: raw records are cleaned of format errors; valid records are counted by date; date/count pairs form a daily report. Error-record destination, volume and duration are unknown. The static pipeline is not an execution trace or success guarantee."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: layered-architecture",
+    "scope": "examples/layered-architecture.json",
+    "description": "Fictional access, domain and data layers each contain two columns of components. Two relations connect whole layers; the dashed governance sidebar contains policy and observability records. Layer order does not establish call order. Groups do not establish deployment or trust boundaries. Business constraints, scheduling, failure behavior and unspecified component dependencies remain unknown. Relationship annotations add no business objects."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: capability-overview",
+    "scope": "examples/capability-overview.json",
+    "description": "Fictional public-information studio: source organization and content editing are existing responsibilities; publishing support is a candidate capability. Public information is used. External authorization, model integration and launch timing are unknown. Parallel cards establish no calls or execution order."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: source-services",
+    "scope": "examples/source-services.json",
+    "description": "Fictional source collection: one category of public guides, two consultation channels (counter and online), and 21 candidate questions awaiting verification. The collection maps as a whole to guide retrieval, consultation routing, question collection and content maintenance. Counts are not delivery commitments. No item-by-item mapping, runtime dependency or all-to-all routing is specified; group boundaries express information scope."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: content-cards",
+    "scope": "examples/content-cards.json",
+    "description": "Teaching topics compare source organization, visual organization and review at target size, distinguishing facts/unknowns, measurement/authored geometry and tool checks/actual viewing. These are authoring concerns, not external business facts. Group cards, list blocks and decorative tag backgrounds/text provide layout structure; the arrangement establishes no execution dependencies."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: query-round-trip",
+    "scope": "examples/query-round-trip.json",
+    "description": "Fictional successful exchange: one client sends one query, the service obtains a result and returns it. Distinct edges preserve request and response directions; the service changes from waiting to result-ready. Timeout, failure, payload details and real processing time are unknown. Transfer duration and reading holds are explanatory choices."
+  },
+  {
+    "kind": "prompt",
+    "reference": "Fictional teaching setup: parallel-transfers",
+    "scope": "examples/parallel-transfers.json",
+    "description": "Fictional resource station sends public guides and service notices to one service desk through two independent same-direction relationships. All objects remain visible. An 800ms opening, three 2400ms simultaneous transfers and a 1000ms final hold are presentation choices, not throughput, business scheduling or request/response behavior. Relationship annotations add no participants."
+  }
+]

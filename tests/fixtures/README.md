@@ -2,6 +2,8 @@
 
 These JSON files are owned by this repository and need no SDK checkout or historical working directory.
 
+- `teaching-regressions/`: original inputs from installed teaching examples at Skill commit `a1b6ad2`; retained byte-for-byte so visual-library revisions do not alter CLI, timing, measurement, pixel or identity regression contracts. Historical `scope` values record original installation paths, not current fixture locations.
+- `layout-assistance/`: original 31-node draft and plan from installed examples at the same commit; retained byte-for-byte for deterministic geometry, semantic preservation and output protection. These are developer inputs, not selected visual compositions.
 - `artifact-evidence/`: source `scripts/fixtures/artifact-evidence/`; exercises exact PNG pixels at different output widths.
 - `label-pattern/`: seven `label-*.json` files used by the label-risk regression suite, sourced from `.scratch/rendering-validator-improvements/evidence/02-walkthrough/fixtures/`. Only required JSON was migrated; source logs, screenshots and tickets stay in the original repository.
 

@@ -14,7 +14,7 @@ In the delivery explanation, disclose information choices that affect interpreta
 
 ## Worked teaching example: unknown capacity and requested aggregation
 
-The following source and user turns are invented teaching material. They do not authorize edits to a real user's diagram. The underlying unmerged diagram is [fan-in-bottleneck.json](../examples/fan-in-bottleneck.json); its [teaching source record](../examples/semantic-pattern-sources.json) remains the baseline.
+The following source and user turns are invented teaching material. They do not authorize edits to a real user's diagram. The underlying unmerged diagram is [fan-in-capacity.json](../examples/fan-in-capacity.json); its [teaching source record](../resources/teaching-sources.json) remains the baseline.
 
 **Source S1:** A, B and C each send one item/second into the same queue. One worker takes items from that queue, processes two items/second and emits completed items. Queue capacity, overload policy, observed queue length and latency are unspecified. This is a teaching setup, not monitoring data.
 

@@ -5,13 +5,14 @@
 ## Skill users
 
 - [English user guide](guides/flow-diagram-guide.md) and [中文用户指南](guides/flow-diagram-guide.zh-CN.md): installation, creation, revisions, exports, and recovery.
-- [Teaching examples](../skills/flow-diagram/examples/README.md): starting diagrams and their intended display conditions.
+- [Teaching examples](../skills/flow-diagram/examples/README.md): selected diagrams by reader question, with composition explanations, display conditions and viewing limits.
 - [FlowSVG showcase previews](images/flowsvg/README.md): source and license of the animations displayed in the root READMEs.
 
 ## Skill developers
 
 - [Contribution guide](../CONTRIBUTING.md): setup, bug reports, validation, pull requests, and source attribution.
 - [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, verification methods, and platform limits.
+- [Example workshop](../examples/README.md) and [中文说明](../examples/README.zh-CN.md): local gallery coverage and rebuild instructions; candidate selection follows [teaching-example maintenance](development/flow-diagram-maintenance.md#teaching-example-maintenance).
 - [Repository patterns](../PATTERNS.md) and [CLI patterns](development/flow-diagram-patterns.md): implementation conventions and module responsibilities.
 - [Glossary](../GLOSSARY.md) and [architecture decisions](adr/README.md): domain terms, accepted trade-offs, and contracts.
 - [Agent work rules](../AGENTS.md), [technical writing](agents/technical-writing.md), [source-comment rules](agents/code-comments.md), and [domain documentation](agents/domain.md): repository development guidance.

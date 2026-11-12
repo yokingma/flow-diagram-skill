@@ -1,0 +1,570 @@
+{
+  "version": 1,
+  "title": "Mixed-content cards — teaching example",
+  "theme": "light",
+  "viewport": {
+    "width": 1100,
+    "height": 432
+  },
+  "typography": {
+    "nodeLabel": 20,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "source",
+      "kind": "group",
+      "x": 30,
+      "y": 24,
+      "width": 320,
+      "height": 384,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2
+      }
+    },
+    {
+      "id": "source-intro",
+      "kind": "rect",
+      "parentId": "source",
+      "x": 24,
+      "y": 24,
+      "width": 272,
+      "height": 148,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 15
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Source curation"
+          },
+          {
+            "type": "paragraph",
+            "text": "Keep facts, unknowns and source locations. Start with the reader’s question."
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-tag-0",
+      "kind": "roundedRect",
+      "parentId": "source",
+      "x": 44,
+      "y": 184,
+      "width": 102,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "source-tag-text-0",
+      "kind": "rect",
+      "parentId": "source",
+      "x": 50,
+      "y": 187,
+      "width": 90,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Facts",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-item-0",
+      "kind": "rect",
+      "parentId": "source",
+      "x": 24,
+      "y": 216,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Record objects and relations"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-tag-1",
+      "kind": "roundedRect",
+      "parentId": "source",
+      "x": 44,
+      "y": 278,
+      "width": 102,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "source-tag-text-1",
+      "kind": "rect",
+      "parentId": "source",
+      "x": 50,
+      "y": 281,
+      "width": 90,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Unknown",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "source-item-1",
+      "kind": "rect",
+      "parentId": "source",
+      "x": 24,
+      "y": 310,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Flag unconfirmed conditions"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout",
+      "kind": "group",
+      "x": 390,
+      "y": 24,
+      "width": 320,
+      "height": 384,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2
+      }
+    },
+    {
+      "id": "layout-intro",
+      "kind": "rect",
+      "parentId": "layout",
+      "x": 24,
+      "y": 24,
+      "width": 272,
+      "height": 148,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 15
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Visual structure"
+          },
+          {
+            "type": "paragraph",
+            "text": "Group objects in reading order. Reserve space for long text and relation labels."
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-tag-0",
+      "kind": "roundedRect",
+      "parentId": "layout",
+      "x": 44,
+      "y": 184,
+      "width": 96,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "layout-tag-text-0",
+      "kind": "rect",
+      "parentId": "layout",
+      "x": 50,
+      "y": 187,
+      "width": 84,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "measure",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-item-0",
+      "kind": "rect",
+      "parentId": "layout",
+      "x": 24,
+      "y": 216,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Measure at the final width"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-tag-1",
+      "kind": "roundedRect",
+      "parentId": "layout",
+      "x": 44,
+      "y": 278,
+      "width": 102,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "layout-tag-text-1",
+      "kind": "rect",
+      "parentId": "layout",
+      "x": 50,
+      "y": 281,
+      "width": 90,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Layout",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout-item-1",
+      "kind": "rect",
+      "parentId": "layout",
+      "x": 24,
+      "y": 310,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Size cards for the comparison"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspect",
+      "kind": "group",
+      "x": 750,
+      "y": 24,
+      "width": 320,
+      "height": 384,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2
+      }
+    },
+    {
+      "id": "inspect-intro",
+      "kind": "rect",
+      "parentId": "inspect",
+      "x": 24,
+      "y": 24,
+      "width": 272,
+      "height": 148,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 15
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Review at size"
+          },
+          {
+            "type": "paragraph",
+            "text": "At the target width, inspect text, containers, labels and paths. Record checks still pending."
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspect-tag-0",
+      "kind": "roundedRect",
+      "parentId": "inspect",
+      "x": 44,
+      "y": 184,
+      "width": 102,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "inspect-tag-text-0",
+      "kind": "rect",
+      "parentId": "inspect",
+      "x": 50,
+      "y": 187,
+      "width": 90,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Review",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspect-item-0",
+      "kind": "rect",
+      "parentId": "inspect",
+      "x": 24,
+      "y": 216,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Separate checks from viewing"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspect-tag-1",
+      "kind": "roundedRect",
+      "parentId": "inspect",
+      "x": 44,
+      "y": 278,
+      "width": 102,
+      "height": 26,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "inspect-tag-text-1",
+      "kind": "rect",
+      "parentId": "inspect",
+      "x": 50,
+      "y": 281,
+      "width": 90,
+      "height": 22,
+      "style": {
+        "fill": "#e8efff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Notes",
+            "style": {
+              "fontSize": 15,
+              "color": "#1554c0",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspect-item-1",
+      "kind": "rect",
+      "parentId": "inspect",
+      "x": 24,
+      "y": 310,
+      "width": 272,
+      "height": 50,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "list",
+            "marker": "bullet",
+            "items": [
+              {
+                "body": "Share findings for user judgment"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [],
+  "scenes": []
+}

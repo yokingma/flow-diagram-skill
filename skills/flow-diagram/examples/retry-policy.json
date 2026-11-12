@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "title": "Finite retry policy — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 1240,
+    "height": 590
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 22,
+    "flowLabel": 18
+  },
+  "nodes": [
+    {
+      "id": "ready",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 200,
+      "width": 180,
+      "height": 90,
+      "label": "Pending",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "attempt",
+      "kind": "roundedRect",
+      "x": 450,
+      "y": 200,
+      "width": 220,
+      "height": 90,
+      "label": "Attempt",
+      "style": {
+        "fill": "#eff6ff",
+        "stroke": "#83aacf",
+        "strokeWidth": 1,
+        "textColor": "#16344f"
+      }
+    },
+    {
+      "id": "success",
+      "kind": "roundedRect",
+      "x": 450,
+      "y": 30,
+      "width": 220,
+      "height": 90,
+      "label": "Succeeded",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "retry",
+      "kind": "roundedRect",
+      "x": 450,
+      "y": 370,
+      "width": 220,
+      "height": 90,
+      "label": "Wait to retry",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "failed",
+      "kind": "roundedRect",
+      "x": 1000,
+      "y": 200,
+      "width": 200,
+      "height": 90,
+      "label": "Failed",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      }
+    },
+    {
+      "id": "conditions",
+      "kind": "roundedRect",
+      "x": 100,
+      "y": 500,
+      "width": 1040,
+      "height": 60,
+      "label": "At most 3 total attempts, including the first. Wait time and other error handling are unknown.",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#64748b"
+      }
+    },
+    {
+      "id": "retry-condition",
+      "kind": "rect",
+      "x": 610,
+      "y": 304,
+      "width": 240,
+      "height": 56,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Temporary error\nattempt < 3",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "return-condition",
+      "kind": "rect",
+      "x": 130,
+      "y": 312,
+      "width": 270,
+      "height": 36,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Retry after waiting",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "exhaustion-condition",
+      "kind": "rect",
+      "x": 720,
+      "y": 170,
+      "width": 240,
+      "height": 56,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Temporary error\nattempt = 3 · Stop",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "start-label",
+      "kind": "rect",
+      "x": 295,
+      "y": 208,
+      "width": 70,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Start",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "success-label",
+      "kind": "rect",
+      "x": 575,
+      "y": 148,
+      "width": 120,
+      "height": 28,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Success",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "start",
+      "from": "ready",
+      "to": "attempt",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "ok",
+      "from": "attempt",
+      "to": "success",
+      "label": "",
+      "fromPort": "top",
+      "toPort": "bottom",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "temporary",
+      "from": "attempt",
+      "to": "retry",
+      "label": "",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "again",
+      "from": "retry",
+      "to": "attempt",
+      "label": "",
+      "fromPort": "left",
+      "toPort": "left",
+      "route": "orthogonal",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "exhausted",
+      "from": "attempt",
+      "to": "failed",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    }
+  ],
+  "scenes": []
+}

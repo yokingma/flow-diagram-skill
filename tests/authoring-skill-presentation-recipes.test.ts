@@ -30,6 +30,7 @@ beforeAll(async () => {
   acceptanceRoot = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG presentation recipes ")));
   installedSkill = join(acceptanceRoot, "installed skill");
   await cp(resolve("skills/flow-diagram"), installedSkill, { recursive: true });
+  await cp(resolve("tests/fixtures/teaching-regressions"), join(acceptanceRoot, "teaching-regressions"), { recursive: true });
 });
 
 afterAll(async () => {
@@ -37,7 +38,7 @@ afterAll(async () => {
 });
 
 test.each(RECIPE_CASES)("copied $name fits its content and exports the complete teaching explanation", async ({ name, duration, labels }) => {
-  const input = join(installedSkill, "examples", `${name}.json`);
+  const input = join(acceptanceRoot, "teaching-regressions", `${name}.json`);
   const original = await readFile(input);
   const run = async (args: string[]) => {
     const result = await runFile(process.execPath, [join(installedSkill, "scripts/flowsvg.mjs"), ...args], {
@@ -54,7 +55,7 @@ test.each(RECIPE_CASES)("copied $name fits its content and exports the complete 
   }
   const report = (await readCommandReport(await run([
     "author", "--input", input, "--name", name, "--browser", "none", "--svg",
-    "--sources", join(installedSkill, "examples", "recipe-sources.json")
+    "--sources", join(acceptanceRoot, "teaching-regressions", "recipe-sources.json")
   ]))) as RecipeReport;
   expect(report.checks).toMatchObject({ validation: "passed", compilation: "passed", layout: "not-run" });
   expect(report.diagnostics.filter((item) => item.severity !== "info")).toEqual([]);

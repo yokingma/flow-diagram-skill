@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "title": "Record transformations — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 1400,
+    "height": 350
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 22,
+    "flowLabel": 18
+  },
+  "nodes": [
+    {
+      "id": "raw",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 40,
+      "width": 200,
+      "height": 180,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Raw records",
+            "style": {
+              "fontSize": 25,
+              "fontWeight": 600
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Input",
+            "style": {
+              "fontSize": 22,
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "clean",
+      "kind": "roundedRect",
+      "x": 370,
+      "y": 40,
+      "width": 240,
+      "height": 180,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Clean",
+            "style": {
+              "fontSize": 25,
+              "fontWeight": 600
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Remove format errors",
+            "style": {
+              "fontSize": 22,
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "aggregate",
+      "kind": "roundedRect",
+      "x": 740,
+      "y": 40,
+      "width": 240,
+      "height": 180,
+      "style": {
+        "fill": "#eff6ff",
+        "stroke": "#83aacf",
+        "strokeWidth": 1,
+        "textColor": "#16344f"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Group by date",
+            "style": {
+              "fontSize": 25,
+              "fontWeight": 600
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Count records",
+            "style": {
+              "fontSize": 22,
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "report",
+      "kind": "roundedRect",
+      "x": 1110,
+      "y": 40,
+      "width": 250,
+      "height": 180,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#b8c5d6",
+        "strokeWidth": 1,
+        "textColor": "#1e293b"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Daily report",
+            "style": {
+              "fontSize": 25,
+              "fontWeight": 600
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Dates and counts",
+            "style": {
+              "fontSize": 22,
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "unknowns",
+      "kind": "roundedRect",
+      "x": 260,
+      "y": 260,
+      "width": 880,
+      "height": 60,
+      "label": "Fictional setup · Error destinations, data volume and duration are unknown.",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#64748b"
+      }
+    },
+    {
+      "id": "raw-clean-label",
+      "kind": "rect",
+      "x": 255,
+      "y": 68,
+      "width": 100,
+      "height": 48,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Raw records",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "clean-aggregate-label",
+      "kind": "rect",
+      "x": 625,
+      "y": 68,
+      "width": 100,
+      "height": 48,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Valid records",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "aggregate-report-label",
+      "kind": "rect",
+      "x": 995,
+      "y": 68,
+      "width": 100,
+      "height": 48,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "textColor": "#475569"
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Date counts",
+            "style": {
+              "fontSize": 18,
+              "align": "center",
+              "color": "#475569"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "raw-clean",
+      "from": "raw",
+      "to": "clean",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "clean-aggregate",
+      "from": "clean",
+      "to": "aggregate",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    },
+    {
+      "id": "aggregate-report",
+      "from": "aggregate",
+      "to": "report",
+      "label": "",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "style": {
+        "stroke": "#64748b",
+        "strokeWidth": 1.5
+      }
+    }
+  ],
+  "scenes": []
+}

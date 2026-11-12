@@ -18,6 +18,7 @@ beforeAll(async () => {
   root = await realpath(await mkdtemp(join(tmpdir(), "FlowSVG preset labels ")));
   skill = join(root, "installed skill");
   await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
+  await cp(resolve("tests/fixtures/teaching-regressions"), join(root, "teaching-regressions"), { recursive: true });
 });
 afterAll(async () => { await rm(root, { recursive: true, force: true }); });
 
@@ -157,14 +158,14 @@ test("preset standalone versions use the largest label and reject an empty colle
 }, 60_000);
 
 test("bundled mixed flow retains measured presets through page and image delivery", async () => {
-  const input = join(skill, "examples/mixed-approval-flow.json");
+  const input = join(root, "teaching-regressions/mixed-approval-flow.json");
   const output = join(root, "mixed-measured.json");
   const source = await readFile(input, "utf8");
   const measured = await command(["measure", "--input", input, "--output", output]);
   expect(measured.code, measured.stdout).toBe(0);
   const browser = process.env.FLOWSVG_TEST_BROWSER;
   const args = ["author", "--input", output, "--name", "mixed-presets", "--output", join(root, "history"),
-    "--html", join(skill, "examples/html-page.html"), "--sources", join(skill, "examples/semantic-pattern-sources.json"),
+    "--html", join(skill, "resources/html-page.html"), "--sources", join(root, "teaching-regressions/semantic-pattern-sources.json"),
     "--svg", "--browser", browser ?? "none"];
   if (browser) args.push("--png", "--gif");
   const delivered = await command(args);

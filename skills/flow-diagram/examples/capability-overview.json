@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "title": "Capability overview — fictional teaching scenario",
+  "theme": "light",
+  "viewport": {
+    "width": 960,
+    "height": 484
+  },
+  "typography": {
+    "nodeLabel": 24,
+    "edgeLabel": 18,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "heading",
+      "kind": "rect",
+      "x": 48,
+      "y": 32,
+      "width": 864,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Public-information studio · Capabilities",
+            "style": {
+              "fontSize": 32,
+              "color": "#193247"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "subtitle",
+      "kind": "rect",
+      "x": 48,
+      "y": 92,
+      "width": 864,
+      "height": 36,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Parallel roles; no calls or execution order implied.",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "collect",
+      "kind": "roundedRect",
+      "x": 48,
+      "y": 148,
+      "width": 272,
+      "height": 242,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Curation",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Collect guides\nIndex sources",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Input: public data\nStatus: existing",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            },
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "edit",
+      "kind": "roundedRect",
+      "x": 344,
+      "y": 148,
+      "width": 272,
+      "height": 242,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Editing",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Check wording\nIndex content",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Status: existing\nRights: unknown",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            },
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "publish",
+      "kind": "roundedRect",
+      "x": 640,
+      "y": 148,
+      "width": 272,
+      "height": 242,
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 18
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Publishing",
+            "style": {
+              "fontSize": 26,
+              "color": "#193247"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Release lists\nTrack questions",
+            "style": {
+              "fontSize": 22,
+              "color": "#526779"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "Status: proposed\nLaunch: unknown",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            },
+            "role": "auxiliary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "limits",
+      "kind": "rect",
+      "x": 48,
+      "y": 424,
+      "width": 864,
+      "height": 52,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0,
+        "textColor": "#193247"
+      },
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 8
+        },
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Public data does not grant model-use rights. Integration and authorization are unknown.",
+            "style": {
+              "fontSize": 18,
+              "color": "#526779"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [],
+  "scenes": []
+}

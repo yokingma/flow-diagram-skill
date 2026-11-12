@@ -11,8 +11,8 @@ const readJson = async (path: string): Promise<Record<string, unknown>> =>
 
 test("bundled layered architecture example declares the teaching semantics at the public files", async () => {
   const [example, sources, patterns, english, chinese, maintenance] = await Promise.all([
-    readJson("skills/flow-diagram/examples/layered-architecture.json"),
-    readJson("skills/flow-diagram/examples/semantic-pattern-sources.json"),
+    readJson("tests/fixtures/teaching-regressions/layered-architecture.json"),
+    readJson("tests/fixtures/teaching-regressions/semantic-pattern-sources.json"),
     readFile(resolve("skills/flow-diagram/references/semantic-patterns.md"), "utf8"),
     readFile(resolve("docs/guides/flow-diagram-guide.md"), "utf8"),
     readFile(resolve("docs/guides/flow-diagram-guide.zh-CN.md"), "utf8"),
@@ -51,7 +51,7 @@ test("copied skill measures the layered draft, preserves IDs and finalizes the b
     const workspace = join(root, ".diagrams", ".work", "layered-architecture", "task-01");
     await mkdir(workspace, { recursive: true });
     const source = join(root, "layered-source.json");
-    const sourceBytes = await readFile(resolve("skills/flow-diagram/examples/layered-architecture.json"));
+    const sourceBytes = await readFile(resolve("tests/fixtures/teaching-regressions/layered-architecture.json"));
     await writeFile(source, sourceBytes);
     const run = (args: string[]) => new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
       const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
@@ -111,7 +111,7 @@ test.skipIf(!browser)("copied layered example can complete PNG delivery when a p
     const skill = join(root, "installed skill");
     await cp(resolve("skills/flow-diagram"), skill, { recursive: true });
     const source = join(root, "layered.json");
-    await cp(resolve("skills/flow-diagram/examples/layered-architecture.json"), source);
+    await cp(resolve("tests/fixtures/teaching-regressions/layered-architecture.json"), source);
     const run = (args: string[]) => new Promise<{ code: number | null; stdout: string; stderr: string }>((done) => {
       const child = spawn(process.execPath, [join(skill, "scripts/flowsvg.mjs"), ...args], {
         cwd: root,

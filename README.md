@@ -100,7 +100,7 @@ Direct CLI users receive a concise saved-authoring result; follow its `detailsPa
 
 This **Skill** guides the assistant through reading sources, designing the explanation, authoring and revising the diagram, planning layout, inspecting results, and delivering files and reports. **FlowSVG SDK** supplies its rendering and playback foundation. To embed diagrams in an application, the SDK offers native browser, React, Vue, and Web Component integrations; see the [SDK repository](https://github.com/yokingma/FlowSVG) and [npm package](https://www.npmjs.com/package/flowsvg).
 
-Diagrams support plain-label decision, input/output, report and predefined-process shapes. Start with the [mixed approval flow](skills/flow-diagram/examples/mixed-approval-flow.json) and its [measurement guidance](skills/flow-diagram/references/document-model.md#preset-labels).
+Diagrams support plain-label decision, input/output, report and predefined-process shapes. Start with the [application review](skills/flow-diagram/examples/approval-review.md) and its [measurement guidance](skills/flow-diagram/references/document-model.md#preset-labels).
 
 ### Runtime dependencies
 
@@ -130,6 +130,8 @@ Use Node 20+ and pnpm `10.12.1`:
 pnpm install --frozen-lockfile
 pnpm test
 ```
+
+To browse teaching examples and API exercises, follow the [local preview instructions](examples/README.md#preview-the-example-library), including their coverage and rebuild steps.
 
 Browser-dependent tests skip when `FLOWSVG_TEST_BROWSER` is absent. See [CONTRIBUTING](CONTRIBUTING.md) for browser and consumer acceptance, and the [documentation map](docs/README.md) for maintenance, architecture decisions, and release records.
 

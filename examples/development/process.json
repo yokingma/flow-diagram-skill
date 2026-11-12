@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "title": "资料处理流程",
+  "title": "Material-processing workflow",
   "theme": "light",
   "viewport": {
     "width": 820,
@@ -14,7 +14,7 @@
       "y": 80,
       "width": 180,
       "height": 90,
-      "label": "收集资料"
+      "label": "Collect material"
     },
     {
       "id": "review",
@@ -23,7 +23,7 @@
       "y": 80,
       "width": 180,
       "height": 90,
-      "label": "审查资料"
+      "label": "Review material"
     },
     {
       "id": "archive",
@@ -32,7 +32,7 @@
       "y": 80,
       "width": 180,
       "height": 90,
-      "label": "归档资料"
+      "label": "Archive material"
     }
   ],
   "edges": [
@@ -40,18 +40,23 @@
       "id": "submit",
       "from": "collect",
       "to": "review",
-      "label": "提交审查",
       "fromPort": "right",
-      "toPort": "left"
+      "toPort": "left",
+      "label": "Submit for review"
     },
     {
       "id": "archive-reviewed",
       "from": "review",
       "to": "archive",
-      "label": "完成审查后归档",
       "fromPort": "right",
-      "toPort": "left"
+      "toPort": "left",
+      "label": "After review"
     }
   ],
-  "scenes": []
+  "scenes": [],
+  "typography": {
+    "nodeLabel": 16,
+    "edgeLabel": 12,
+    "flowLabel": 12
+  }
 }

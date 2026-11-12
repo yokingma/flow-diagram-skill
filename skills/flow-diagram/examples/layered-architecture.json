@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "title": "分层架构教学设定",
+  "title": "Layered architecture — fictional teaching scenario",
   "theme": "light",
   "viewport": {
     "width": 1280,
-    "height": 980
+    "height": 904
   },
   "typography": {
     "nodeLabel": 20,
@@ -18,8 +18,14 @@
       "x": 60,
       "y": 90,
       "width": 760,
-      "height": 230,
-      "label": "接入层 · 教学设定"
+      "height": 218,
+      "label": "Access layer",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
     },
     {
       "id": "ingress-gateway",
@@ -27,75 +33,99 @@
       "parentId": "layer-ingress",
       "x": 30,
       "y": 72,
-      "width": 220,
+      "width": 320,
       "height": 135,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "入口网关"
+            "text": "Gateway"
           },
           {
             "type": "paragraph",
-            "text": "接收外部请求并转交给示例服务"
+            "text": "Forward external\nrequests to the service"
           }
         ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
       "id": "request-router",
       "kind": "roundedRect",
       "parentId": "layer-ingress",
-      "x": 360,
+      "x": 390,
       "y": 72,
-      "width": 220,
+      "width": 320,
       "height": 135,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "请求路由"
+            "text": "Router"
           },
           {
             "type": "paragraph",
-            "text": "按示例规则选择下一层的处理入口"
+            "text": "Choose next-layer entry\nusing example rules"
           }
         ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
       "id": "layer-domain",
       "kind": "group",
       "x": 60,
-      "y": 390,
+      "y": 364,
       "width": 760,
-      "height": 280,
-      "label": "领域层 · 教学设定"
+      "height": 272,
+      "label": "Domain layer",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
     },
     {
       "id": "domain-api",
       "kind": "roundedRect",
       "parentId": "layer-domain",
       "x": 30,
-      "y": 78,
-      "width": 240,
-      "height": 165.875,
+      "y": 58,
+      "width": 320,
+      "height": 190,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "订单服务"
+            "text": "Order service"
           },
           {
             "type": "paragraph",
-            "text": "编排示例用例与领域规则"
+            "text": "Coordinate use cases\nand domain rules"
           },
           {
             "type": "paragraph",
-            "text": "具体业务约束仍需外部资料确认",
+            "text": "Business constraints need\nexternal source evidence",
             "role": "auxiliary"
           }
         ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
@@ -103,55 +133,79 @@
       "kind": "roundedRect",
       "parentId": "layer-domain",
       "x": 390,
-      "y": 78,
-      "width": 240,
-      "height": 145.625,
+      "y": 58,
+      "width": 320,
+      "height": 190,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "任务协调器"
+            "text": "Coordinator"
           },
           {
             "type": "paragraph",
-            "text": "展示另一列领域处理能力"
+            "text": "Second domain capability"
           },
           {
             "type": "paragraph",
-            "text": "调度顺序与失败策略未知",
+            "text": "Scheduling and failure\npolicy remain unknown",
             "role": "auxiliary"
           }
         ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
       "id": "layer-data",
       "kind": "group",
       "x": 60,
-      "y": 740,
+      "y": 692,
       "width": 760,
-      "height": 200,
-      "label": "数据层 · 教学设定"
+      "height": 180,
+      "label": "Data layer",
+      "style": {
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
     },
     {
       "id": "primary-store",
       "kind": "cylinder",
       "parentId": "layer-data",
-      "x": 90,
-      "y": 70,
-      "width": 220,
-      "height": 100,
-      "label": "订单存储"
+      "x": 30,
+      "y": 60,
+      "width": 240,
+      "height": 90,
+      "label": "Order store",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
     },
     {
       "id": "analytics-store",
       "kind": "cylinder",
       "parentId": "layer-data",
-      "x": 430,
-      "y": 70,
-      "width": 220,
-      "height": 100,
-      "label": "分析存储"
+      "x": 390,
+      "y": 60,
+      "width": 240,
+      "height": 90,
+      "label": "Analytics store",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
     },
     {
       "id": "governance",
@@ -159,60 +213,131 @@
       "x": 900,
       "y": 90,
       "width": 320,
-      "height": 730,
-      "label": "治理侧栏 · 教学设定",
+      "height": 494,
+      "label": "Governance notes",
       "style": {
-        "dashed": true
+        "dashed": true,
+        "fill": "#f7fafc",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
       "id": "policy",
       "kind": "roundedRect",
       "parentId": "governance",
-      "x": 35,
-      "y": 90,
-      "width": 250,
-      "height": 169.25,
+      "x": 25,
+      "y": 66,
+      "width": 270,
+      "height": 190,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "策略记录"
+            "text": "Policy notes"
           },
           {
             "type": "paragraph",
-            "text": "示例：记录审核、访问和变更约束"
+            "text": "Review, access and\nchange constraints"
           },
           {
             "type": "paragraph",
-            "text": "不表示运行时调用依赖",
+            "text": "No runtime calls implied",
             "role": "auxiliary"
           }
         ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
       }
     },
     {
       "id": "observability",
       "kind": "roundedRect",
       "parentId": "governance",
-      "x": 35,
-      "y": 350,
-      "width": 250,
-      "height": 160,
+      "x": 25,
+      "y": 280,
+      "width": 270,
+      "height": 190,
       "content": {
         "blocks": [
           {
             "type": "title",
-            "text": "可观测性记录"
+            "text": "Observability"
           },
           {
             "type": "paragraph",
-            "text": "示例：说明审查和记录范围"
+            "text": "Define review and\nrecording scope"
           },
           {
             "type": "paragraph",
-            "text": "未声明的依赖保持未知",
+            "text": "Unspecified dependencies\nremain unknown",
             "role": "auxiliary"
+          }
+        ]
+      },
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#cbd9e2",
+        "strokeWidth": 1.2,
+        "textColor": "#193247"
+      }
+    },
+    {
+      "id": "relation-note-1",
+      "kind": "rect",
+      "x": 500,
+      "y": 310,
+      "width": 280,
+      "height": 52,
+      "label": "Request direction",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "relation-note-2",
+      "kind": "rect",
+      "x": 500,
+      "y": 638,
+      "width": 280,
+      "height": 52,
+      "label": "Data direction",
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#ffffff",
+        "strokeWidth": 0
+      }
+    },
+    {
+      "id": "heading",
+      "kind": "rect",
+      "x": 60,
+      "y": 20,
+      "width": 1160,
+      "height": 44,
+      "style": {
+        "fill": "#ffffff",
+        "strokeWidth": 0
+      },
+      "content": {
+        "style": {
+          "padding": 0
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Layers and governance · Teaching example",
+            "style": {
+              "fontSize": 28,
+              "color": "#193247"
+            }
           }
         ]
       }
@@ -223,19 +348,25 @@
       "id": "ingress-to-domain",
       "from": "layer-ingress",
       "to": "layer-domain",
-      "label": "请求方向（示例）",
       "route": "orthogonal",
       "fromPort": "bottom",
-      "toPort": "top"
+      "toPort": "top",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      }
     },
     {
       "id": "domain-to-data",
       "from": "layer-domain",
       "to": "layer-data",
-      "label": "数据方向（示例）",
       "route": "orthogonal",
       "fromPort": "bottom",
-      "toPort": "top"
+      "toPort": "top",
+      "style": {
+        "stroke": "#246a86",
+        "strokeWidth": 2
+      }
     }
   ],
   "scenes": []

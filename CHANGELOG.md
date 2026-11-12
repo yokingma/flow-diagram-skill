@@ -4,6 +4,22 @@
 
 ## Unreleased
 
+- Translate teaching diagrams and development exercises to English, adjusting text containers for complete wording. Clarify gallery scan boundaries, consolidate preview instructions and replace obsolete review-gate wording in maintenance guidance.
+
+- Add `pnpm examples:preview` to rebuild a local gallery from selected teaching sources and separately labeled development exercises. Track the generator and page template; replace ignored preview outputs on each run without changing the installed Skill or SDK baseline.
+
+- Publish ten user-selected teaching examples with adjacent design explanations and scoped fictional sources. Remove superseded installed examples and candidate copies; keep API exercises and immutable regression inputs in repository-owned locations. Align all starting-point links, bilingual guides and maintenance rules while preserving design guidance and the exact SDK 0.3.1 baseline.
+
+- Refine teaching candidates with separated relationship annotations, centered decorative tag text and more compact containers while preserving the locked SDK and teaching facts.
+
+- Prepare process, architecture and transfer-animation candidates with current local previews and concise teaching notes for user selection.
+
+- Separate the installed HTML starter and measurement input into `resources/`; move the high-density layout exercise and stable legacy teaching regression inputs into repository fixtures, preserving source bytes and behavior assertions. Installed layout guidance retains a complete runnable input and plan.
+
+- Publish the user-selected static application-review teaching example with its exact selected source and self-contained note; remove the repository candidate copy.
+
+- Add a repository teaching-example workshop with a static conditional-flow candidate and concise maintenance rules for actual viewing, user selection and a single publication source. The candidate does not replace an installed example before selection.
+
 - Sample distinct actual HTML timeline states within the requested budget, prioritizing initial and final states. Keep the SDK focus-free overview in its explicit preview path.
 
 - Serialize stale operation-lock recovery before reading its owner, preserving live reservations during concurrent retries. Keep editable-source path and byte identity across current recaptures so finalization rejects newer source edits before workspace cleanup.

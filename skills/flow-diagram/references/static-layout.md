@@ -8,7 +8,7 @@ For a new or revised draft, read [delivery contexts](delivery-contexts.md) befor
 
 ## Layout plan workflow
 
-Use a layout plan when repeated geometry should be recalculated after content changes. The Agent chooses semantic mode, object ownership, reading order and the plan; the layout strategy computes geometry for existing IDs. Use direct coordinates when the scene is irregular or the plan would obscure the intended meaning. A plan changes geometry only. It does not infer semantics, reorder objects or alter relationships. Explicit overrides preserve exceptional geometry; optional calculations assist actual viewing. See the [layout-plan contract](layout-plan.md) and the bundled teaching pair [layout-assistance.json](../examples/layout-assistance.json) / [layout-assistance-plan.json](../examples/layout-assistance-plan.json).
+Use a layout plan when repeated geometry should be recalculated after content changes. The Agent chooses semantic mode, object ownership, reading order and the plan; the layout strategy computes geometry for existing IDs. Use direct coordinates when the scene is irregular or the plan would obscure the intended meaning. A plan changes geometry only. It does not infer semantics, reorder objects or alter relationships. Explicit overrides preserve exceptional geometry; optional calculations assist actual viewing. See the [layout-plan contract](layout-plan.md) and its [complete runnable teaching input and plan](layout-plan.md#complete-teaching-input).
 
 Keep one editable source at `<task-workspace>/draft.json` and reuse it through these operations:
 
@@ -28,9 +28,9 @@ The example gaps are teaching settings for its content and viewport. They do not
 
 Choose a structure that explains the material. The following are examples, and can be mixed:
 
-- Architecture: group components by the stated system boundary, keep children in local coordinates, and label dependency arrows. Use a static overview so the whole structure is readable. Start from [architecture.json](../examples/architecture.json).
-- Deployment: show named hosts, replicas and data stores only when the input states them. Put replicas on parallel rows and retain the actual routing relationships. Start from [deployment.json](../examples/deployment.json).
-- Process: arrange source-supported stages left to right or top to bottom. Label branches and return paths when present; include no implied retry, timeout or success condition. Empty scenes are sufficient when the user needs a static process. Start from [process.json](../examples/process.json).
+- Architecture: group components by the stated system boundary, keep children in local coordinates, and label dependency arrows. Use a static overview so the whole structure is readable. For a layer overview, start from [layered architecture](../examples/layered-architecture.md); its groups are explanatory layers rather than system or deployment boundaries.
+- Deployment: show named hosts, replicas and data stores only when the input states them. Put replicas on parallel rows and retain the actual routing relationships. Name each boundary as a host, location or trust zone according to the source; a generic group establishes none of those meanings.
+- Process: arrange source-supported stages left to right or top to bottom. Label branches and return paths when present; include no implied retry, timeout or success condition. Empty scenes are sufficient when the user needs a static process. Start from [application review](../examples/approval-review.md) for conditions, or [retry policy](../examples/retry-policy.md) when a bounded return is established.
 
 Apply the selected [design recipes](visual-design.md#design-methods-and-recipes) for spacing, containers, ports, and connection routes. Author explicit node dimensions. The SDK routes edges, but does not guarantee complete collision avoidance or global automatic layout.
 
@@ -51,8 +51,8 @@ Before invoking the tool, compare every object, edge direction and parent relati
 To try a complete static example after installing the skill, first create a canonical [task workspace](tool-contract.md#task-workspace). Replace `<task-workspace>` with that path and run:
 
 ```text
-node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/architecture.json --name architecture --svg --time 0 --output "<task-workspace>/history"
-node <skill-directory>/scripts/flowsvg.mjs measure --input <skill-directory>/examples/content-measurement.json
+node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/layered-architecture.json --name layered-architecture --svg --time 0 --output "<task-workspace>/history"
+node <skill-directory>/scripts/flowsvg.mjs measure --input <skill-directory>/resources/content-measurement.json
 ```
 
 These commands use only the installed skill and its isolated SDK. They do not require a source checkout, showcase build, browser or online handbook after the runtime cache is complete.
