@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Sample the GIF color contract away from label glyphs and report the observed pixel when the external consumer check fails.
+
 - Compare resized artifact evidence with an independent canvas render using the same browser scaling and background-compositing path. Keep strict pixel comparison while avoiding platform-specific interpolation assumptions.
 
 - Scope Vitest discovery to `tests/`; consolidate pixel evidence, remove SDK GIF pixel/limit assertions and fixed preset-size expectations, and drop the GIF decoder dependency while retaining Skill delivery, failure, source-protection and layout contracts. Run the full suite and installed-consumer gate on Ubuntu/Node 20; keep Node 22 covered by an installed-CLI smoke test.

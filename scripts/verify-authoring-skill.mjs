@@ -496,12 +496,13 @@ const browserArtifacts = [
         canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
         const context = canvas.getContext('2d');
         context.drawImage(image, 0, 0);
-        return { width: image.naturalWidth, height: image.naturalHeight, pixel: Array.from(context.getImageData(280, 60, 1, 1).data) };
+        return { width: image.naturalWidth, height: image.naturalHeight, pixel: Array.from(context.getImageData(285, 80, 1, 1).data) };
       });
       assert.equal(decoded.width, 400);
       assert.equal(decoded.height, 260);
       // GIF palette quantization may shift channels; verify the requested blue state, not exact pixels.
-      assert.ok(decoded.pixel[2] > MIN_BLUE_CHANNEL && decoded.pixel[0] < MAX_OTHER_CHANNEL && decoded.pixel[1] < MAX_OTHER_CHANNEL && decoded.pixel[3] === OPAQUE_ALPHA);
+      assert.ok(decoded.pixel[2] > MIN_BLUE_CHANNEL && decoded.pixel[0] < MAX_OTHER_CHANNEL && decoded.pixel[1] < MAX_OTHER_CHANNEL && decoded.pixel[3] === OPAQUE_ALPHA,
+        `Expected blue fill at (285, 80), received RGBA ${JSON.stringify(decoded.pixel)}.`);
       assert.deepEqual(errors, []);
       assert.deepEqual(requests, []);
     } finally { await browser.close(); }
