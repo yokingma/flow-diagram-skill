@@ -1,6 +1,6 @@
 ---
 name: flow-diagram
-description: Create and revise executable FlowSVG diagrams that explain systems, processes and state changes, with static views or animation. Validate or diagnose diagrams; export JSON, offline HTML, SVG, PNG or GIF; manage project diagram preferences.
+description: Use when the user asks to create or revise a flowchart, architecture diagram, sequence diagram, or animated process explanation（流程图、架构图、时序图、流程动画演示）. Create executable FlowSVG diagrams with static views or animation; validate or diagnose existing diagrams; export JSON, offline HTML, SVG, PNG or GIF; manage project diagram preferences.
 ---
 
 # Flow Diagram
