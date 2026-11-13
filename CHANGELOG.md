@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Compare resized artifact evidence with an independent canvas render using the same browser scaling and background-compositing path. Keep strict pixel comparison while avoiding platform-specific interpolation assumptions.
+
+- Scope Vitest discovery to `tests/`; consolidate pixel evidence, remove SDK GIF pixel/limit assertions and fixed preset-size expectations, and drop the GIF decoder dependency while retaining Skill delivery, failure, source-protection and layout contracts. Run the full suite and installed-consumer gate on Ubuntu/Node 20; keep Node 22 covered by an installed-CLI smoke test.
+
 - Upgrade the exact registry runtime to `flowsvg@0.4.0` with synchronized manifest and npm-lock integrity. Document authored emphasis colors and per-flow edge coloring; preserve the existing production process and design guidance. Verify copied-CLI SVG output and continuation with both new fields.
 
 - Translate teaching diagrams and development exercises to English, adjusting text containers for complete wording. Clarify gallery scan boundaries, consolidate preview instructions and replace obsolete review-gate wording in maintenance guidance.

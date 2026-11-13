@@ -77,7 +77,7 @@ pnpm test
 
 The installed `resources/` contains the editable HTML starter and independent content-measurement input; the layout-plan reference includes a complete runnable input and plan.
 
-GIF tests import the repository's direct `gifuct-js@2.1.2` development dependency. Neither path uses SDK source or historical working directories. A guide-only pass does not establish complete coverage. Tests copy the installation unit outside the workspace and inspect the real CLI, reports, files and observable side effects. Set `FLOWSVG_TEST_BROWSER` to a prepared Chrome/Chromium executable to include browser-dependent checks; without it, those tests are skipped. Tests do not download a browser.
+Tests do not use SDK source or historical working directories. A guide-only pass does not establish complete coverage. Tests copy the installation unit outside the workspace and inspect the real CLI, reports, files and observable side effects. SDK rendering details remain owned by the SDK project's tests; Skill browser regressions cover CLI delivery, evidence and resource lifecycle. Set `FLOWSVG_TEST_BROWSER` to a prepared Chrome/Chromium executable to include browser-dependent checks; without it, those tests are skipped. Tests do not download a browser.
 
 Run the independent consumer gate from the repository root with a prepared browser and a real Node 18 executable. The harness exercises mutable current drafts by default and explicitly requests checkpoints, SDK previews or formal review only for the contracts that need them:
 
@@ -91,11 +91,11 @@ For documentation changes, check local paths and Markdown anchors from both root
 
 ## CI and platform evidence
 
-[The workflow](../../.github/workflows/authoring-skill.yml) configures Ubuntu, macOS, and Windows with Node 20/22, retains an actual Node 18 executable for rejection checks, and prepares Chrome at the runner level. Each job installs the frozen development lock, runs every regression with that browser, then runs the external installed-CLI consumer gate. Changes to installation resources, tests/fixtures, guides, scripts, root configurations/locks, maintenance records, and workflows trigger these checks. JSON regression and consumer evidence is uploaded even when a gate fails.
+[The workflow](../../.github/workflows/authoring-skill.yml) runs on Ubuntu with Node 20 and 22. Node 20 retains a real Node 18 executable for rejection checks, prepares Chrome at the runner level, runs every regression discovered under `tests/`, and exercises the external installed-CLI consumer gate. Node 22 runs a focused installed-CLI smoke. Changes to installation resources, tests/fixtures, guides, scripts, root configurations/locks, maintenance records, and workflows trigger these checks. JSON evidence is uploaded even when a gate fails. Other operating systems are not covered by this CI workflow.
 
 Use CI results for the exact candidate when claiming verified platforms. A configured matrix or a local pass does not establish results for other platforms, runtimes, or later commits. Record failures, skips, and incomplete gates in the pull request and release notes.
 
-The consumer harness reports graceful cancellation as `not-run` on Windows because `child.kill(SIGINT)` force-terminates Windows children. A real console Ctrl+C runner is still required. The Windows consumer gate therefore remains incomplete/nonzero, and regression cancellation cases may also fail on that platform. Keep that limitation explicit until verified. Claude Code diagram-task execution also remains unverified; installation instructions alone do not establish host acceptance.
+When run on Windows, the consumer harness reports graceful cancellation as `not-run` because `child.kill(SIGINT)` force-terminates Windows children. A real console Ctrl+C runner is still required. Windows behavior has not been validated by the current Linux-only CI workflow; keep that limitation explicit until separately verified. Claude Code diagram-task execution also remains unverified; installation instructions alone do not establish host acceptance.
 
 ## Host verification
 

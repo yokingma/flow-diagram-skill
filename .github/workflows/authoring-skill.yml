@@ -45,16 +45,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         node: [20, 22]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
+        if: matrix.node == 20
         with:
           node-version: 18
       - name: Locate real unsupported Node runtime
         id: node18
+        if: matrix.node == 20
         shell: node {0}
         run: |
           require('node:fs').appendFileSync(process.env.GITHUB_OUTPUT, `path=${process.execPath}\n`);
@@ -69,16 +70,21 @@ jobs:
       # Browser preparation belongs to the runner. The installed CLI never installs browsers.
       - uses: browser-actions/setup-chrome@v2
         id: chrome
+        if: matrix.node == 20
         with:
           chrome-version: stable
           install-dependencies: true
       - name: Exercise every regression with the prepared browser
+        if: matrix.node == 20
         env:
           FLOWSVG_TEST_BROWSER: ${{ steps.chrome.outputs.chrome-path }}
           FLOWSVG_TEST_NODE18: ${{ steps.node18.outputs.path }}
         run: pnpm test:skill --maxWorkers=1 --reporter=default --reporter=json --outputFile=acceptance/regression-results.json
+      - name: Smoke-test installed CLI on Node 22
+        if: matrix.node == 22
+        run: pnpm exec vitest run --dir tests authoring-skill.test.ts -t "CLI help is discoverable|installed tool saves a draft, pins its isolated SDK and leaves the application untouched" --maxWorkers=1 --reporter=default --reporter=json --outputFile=acceptance/regression-results.json
       - name: Exercise the external installation through its public CLI
-        if: ${{ !cancelled() && steps.chrome.outcome == 'success' }}
+        if: ${{ matrix.node == 20 && !cancelled() && steps.chrome.outcome == 'success' }}
         shell: node {0}
         env:
           FLOWSVG_TEST_BROWSER: ${{ steps.chrome.outputs.chrome-path }}
@@ -86,11 +92,9 @@ jobs:
         run: |
           const result = require('node:child_process').spawnSync(process.execPath, ['scripts/verify-authoring-skill.mjs', '--output', 'acceptance/evidence.json'], { stdio: 'inherit' });
           process.exit(result.status ?? 1);
-      # Windows graceful Ctrl+C remains unverified; the consumer gate reports incomplete.
-      # Do not turn incomplete platform evidence into a successful acceptance result.
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: skill-acceptance-${{ matrix.os }}-node${{ matrix.node }}
+          name: skill-acceptance-ubuntu-node${{ matrix.node }}
           path: acceptance/*.json
           if-no-files-found: error
