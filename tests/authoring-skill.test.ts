@@ -58,7 +58,7 @@ test("installed tool saves a draft, pins its isolated SDK and leaves the applica
   expect(report.status).toBe("delivered");
   expect(report.checks.validation).toBe("passed");
   expect(report.checks.compilation).toBe("passed");
-  expect(report.sdk.version).toBe("0.3.1");
+  expect(report.sdk.version).toBe("0.4.0");
   expect(report.sdk.path.startsWith(join(root, "缓存 cache"))).toBe(true);
   expect(JSON.parse(await readFile(join(report.revision.directory, "diagram.json"), "utf8"))).toEqual(document);
   expect(JSON.parse(await readFile(join(report.revision.directory, "report.json"), "utf8"))).toEqual(report);
@@ -70,6 +70,36 @@ test("doctor reports missing SDK state without preparing dependencies", async ()
   expect(result.code).toBe(0);
   expect((await readCommandReport(result.stdout)).runtime.state).toBe("missing");
 });
+
+test("installed CLI preserves authored emphasis and relation colors through export and continuation", async () => {
+  const source = { version: 1, viewport: { width: 600, height: 260 },
+    emphasis: { fill: "#fff4db", stroke: "#0f766e", markerText: "#ffffff" },
+    nodes: [
+      { id: "a", kind: "rect", x: 40, y: 90, width: 160, height: 80, label: "Sender" },
+      { id: "b", kind: "rect", x: 400, y: 90, width: 160, height: 80, label: "Receiver" }
+    ],
+    edges: [{ id: "request", from: "a", to: "b", label: "Contract", style: { stroke: "#c2410a", dashed: true } }],
+    scenes: [{ id: "send", label: "Send", beats: [{ durationMs: 1000, transitionMs: 0, actions: [
+      { type: "highlight", target: "a" },
+      { type: "flow", target: "request", direction: "forward", text: "Payload", highlightEdge: false, highlightParticipants: false }
+    ] }] }] };
+  const input = join(root, "emphasis.json");
+  await writeFile(input, JSON.stringify(source));
+  const result = await command(["author", "--input", input, "--name", "emphasis", "--svg", "--time", "500", "--browser", "none"]);
+  expect(result.code, result.stdout + result.stderr).toBe(0);
+  const report = await readCommandReport(result.stdout);
+  expect(report.sdk.version).toBe("0.4.0");
+  const svg = await readFile(join(report.revision.directory, "diagram.svg"), "utf8");
+  expect(svg).toMatch(/<text[^>]*fill="#c2410a"[^>]*><tspan[^>]*>Contract<\/tspan><\/text>/);
+  expect(svg).toContain('fill="#fff4db" stroke="#0f766e"');
+  expect(svg.match(/<g[^>]*data-flow-id="request"[^>]*>/)?.[0]).toContain('fill="#0f766e"');
+  expect(svg).toMatch(/fill="#ffffff"[^>]*>Payload<\/text>/);
+  const continued = await command(["author", "--from", "current", "--name", "emphasis", "--browser", "none"]);
+  expect(continued.code, continued.stdout + continued.stderr).toBe(0);
+  const updated = await readCommandReport(continued.stdout);
+  expect(JSON.parse(await readFile(join(updated.revision.directory, "diagram.json"), "utf8"))).toEqual(source);
+  expect(await readFile(join(updated.revision.directory, "diagram.svg"), "utf8")).toBe(svg);
+}, 60_000);
 
 test("a changed SDK cannot mark historical exports complete without rendering new files", async () => {
   const input = join(root, "sdk-boundary.json");
@@ -86,13 +116,13 @@ test("a changed SDK cannot mark historical exports complete without rendering ne
   await writeFile(record, bytes);
   const continued = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary"]);
   const report = (await readCommandReport(continued.stdout));
-  expect(report.sdk.version).toBe("0.3.1");
+  expect(report.sdk.version).toBe("0.4.0");
   expect(report.completion.requested).toContain("svg");
   expect(report.completion.completed).toContain("svg");
   expect(report.completion.delivery).toBe("complete");
   expect(report.inheritedArtifacts ?? []).toEqual([]);
   const regenerated = report.artifacts.find((item: { kind: string }) => item.kind === "svg");
-  expect(regenerated.sdk.version).toBe("0.3.1");
+  expect(regenerated.sdk.version).toBe("0.4.0");
   expect(regenerated.path).not.toBe(source.artifacts.find((item: { kind: string }) => item.kind === "svg").path);
   expect(regenerated.sourceSha256).toBe(source.input.sha256);
   const rendered = await command(["author", "--browser", "none", "--from", source.revision.id, "--name", "sdk-boundary", "--svg", "--checkpoint"]);
@@ -169,7 +199,7 @@ test("complete cache works offline, corruption rebuilds, and no-cache offline fa
   const metadata = JSON.parse(await readFile(metadataPath, "utf8"));
   await writeFile(metadataPath, JSON.stringify({ ...metadata, version: "999.0.0" }));
   const repaired = (await readCommandReport((await command(["prepare"])).stdout));
-  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.3.1" } });
+  expect(repaired).toMatchObject({ status: "ready", reused: false, sdk: { version: "0.4.0" } });
   const input = join(root, "offline.json");
   await writeFile(input, JSON.stringify(document));
   const result = await command(["author", "--browser", "none", "--input", input, "--name", "offline"], { ...offline, FLOWSVG_CACHE_DIR: join(root, "never prepared") });

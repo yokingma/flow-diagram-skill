@@ -40,7 +40,7 @@ test("repeated validation reports exact source identity and creates no history o
       input: { sha256: createHash("sha256").update(bytes).digest("hex"), bytes: Buffer.byteLength(bytes) },
       validation: { snapshotCreated: false, sourceRevision: null },
       checks: { validation: "passed", compilation: "passed", layout: "not-run", visual: "not-run", html: "not-run" }, artifacts: [] });
-    expect(report.sdk).toMatchObject({ version: "0.3.1" });
+    expect(report.sdk).toMatchObject({ version: "0.4.0" });
     expect(report.layout).toBeUndefined();
     expect(await readFile(input, "utf8"), `source after run ${round}`).toBe(bytes);
     expect(await readdir(root)).not.toContain("history");

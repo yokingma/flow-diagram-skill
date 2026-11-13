@@ -41,7 +41,7 @@ test("saved authoring returns concise identity and a readable details path", asy
   expect(summary.detailsPath).toEqual(expect.any(String));
   const report = JSON.parse(await readFile(summary.detailsPath, "utf8"));
   expect(summary).toMatchObject({ status: "delivered", input: { sha256: report.input.sha256 },
-    sdk: { version: "0.3.1", integrity: report.sdk.integrity }, checks: report.checks, completion: report.completion });
+    sdk: { version: "0.4.0", integrity: report.sdk.integrity }, checks: report.checks, completion: report.completion });
   expect(summary).not.toHaveProperty("htmlInspection");
   expect(summary).not.toHaveProperty("samples");
   expect(summary).not.toHaveProperty("visual");

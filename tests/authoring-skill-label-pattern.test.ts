@@ -44,7 +44,7 @@ test.each([
     expect(report.diagnostics.some((issue: { code: string }) => issue.code === "LABEL_VERTICAL_RUN")).toBe(false);
     expect(report.diagnostics.every((issue: { severity: string }) => issue.severity === "info")).toBe(true);
     expect(report).toMatchObject({ revision: null, validation: { snapshotCreated: false } });
-    expect(report.sdk.version).toBe("0.3.1");
+    expect(report.sdk.version).toBe("0.4.0");
     expect(await readFile(input, "utf8")).toBe(bytes);
   }
   expect(await readdir(root)).not.toContain(".diagrams");

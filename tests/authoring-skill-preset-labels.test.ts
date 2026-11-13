@@ -171,7 +171,7 @@ test("bundled mixed flow retains measured presets through page and image deliver
   const delivered = await command(args);
   expect(delivered.code, delivered.stdout + delivered.stderr).toBe(0);
   const report = (await readCommandReport(delivered.stdout));
-  expect(report.sdk.version).toBe("0.3.1");
+  expect(report.sdk.version).toBe("0.4.0");
   expect(report.completion.delivery).toBe("complete");
   const svg = await readFile(join(report.revision.directory, "diagram.svg"), "utf8");
   for (const label of ["Application", "Materials", "Review", "Draft report"]) expect(svg).toContain(label);

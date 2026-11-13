@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Upgrade the exact registry runtime to `flowsvg@0.4.0` with synchronized manifest and npm-lock integrity. Document authored emphasis colors and per-flow edge coloring; preserve the existing production process and design guidance. Verify copied-CLI SVG output and continuation with both new fields.
+
 - Translate teaching diagrams and development exercises to English, adjusting text containers for complete wording. Clarify gallery scan boundaries, consolidate preview instructions and replace obsolete review-gate wording in maintenance guidance.
 
 - Add `pnpm examples:preview` to rebuild a local gallery from selected teaching sources and separately labeled development exercises. Track the generator and page template; replace ignored preview outputs on each run without changing the installed Skill or SDK baseline.

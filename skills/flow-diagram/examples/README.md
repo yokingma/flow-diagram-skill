@@ -17,7 +17,7 @@ These English examples explain fictional scenarios or diagram-authoring methods.
 
 ## Display conditions and limits
 
-The first eight examples are static. The last two animate transfer and state changes. All use a light background and the exact SDK 0.3.1 baseline. PNG display sizes above are CSS pixels, while canvases use diagram units. Each note states its intended use.
+The first eight examples are static. The last two animate transfer and state changes. All use a light background and the exact SDK 0.4.0 baseline. PNG display sizes above are CSS pixels, while canvases use diagram units. Each note states its intended use.
 
 The current PNGs were viewed at the listed sizes. Actual HTML screenshots were viewed at a 1440 × 1000 browser viewport, including paused animation starts, selected changes and ends. Continuous visual playback and independent SVG viewing remain unperformed. Other platforms, themes, fonts, smaller placements and host embedding are outside the viewed conditions. Earlier selection of the library does not extend viewing coverage to later revisions. Successful validation, compilation or export does not establish visual quality.
 

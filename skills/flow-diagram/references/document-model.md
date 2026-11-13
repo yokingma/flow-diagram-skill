@@ -4,6 +4,14 @@ The tool consumes plain JSON through public `flowsvg` SDK exports. Unknown field
 
 Optional `typography` contains positive finite `nodeLabel`, `edgeLabel` and `flowLabel` values. Omitted roles use 16/14/12. Ordinary labels and omitted structured-content font sizes use this context; explicit structured font sizes remain unchanged. See [purpose presets](delivery-contexts.md#purpose-presets) when authoring a new draft. No typography option changes node dimensions automatically.
 
+## Emphasis colors
+
+Optional top-level `emphasis` sets the diagram's highlight and flow-marker colors. For example, `"emphasis": { "fill": "#fff4db", "stroke": "#0f766e", "markerText": "#ffffff" }` uses a pale node highlight fill, teal highlight strokes and marker backgrounds, and white marker text. `markerText` changes only moving-marker text; node and edge text retain their existing color rules. Choose a highlight fill that works with the node text in the intended theme and inspect the actual result.
+
+Each field is optional and falls back to the selected theme. Colors accept case-insensitive `#RGB`, `#RGBA`, `#RRGGBB` or `#RRGGBBAA`; `null`, invalid colors and unknown fields are errors. Ordinary node/edge styles stay beneath the highlight layer; `unhighlight` restores their latest values. Browser hover uses the same emphasis colors, with border-only feedback by default, and stays outside exports.
+
+Save author choices in the JSON so playback and exports share them. The Skill CLI consumes document `emphasis`; it adds no runtime palette override flag. The SDK also accepts per-field runtime overrides, but editing the document is the Skill's authoring path. See [transfer and emphasis](timeline.md#transfer-and-emphasis) for preserving relation colors during a flow.
+
 ## Geometry and relationships
 
 Every node has a globally unique `id`, `kind`, finite `x`/`y` and positive finite `width`/`height`. Kinds are `rect`, `roundedRect`, `ellipse`, `cylinder`, `group`, `diamond`, `parallelogram`, `document` and `predefinedProcess`. A group supplies a local origin for children and rounded borders by default. Use `parentId` only for an existing group, without cycles. Child x/y are offsets from the parent's current origin, including nested groups. Groups do not clip children: explicitly allow room for child bounds and a heading. `visible` defaults true; hidden ancestors also hide descendants.

@@ -202,7 +202,7 @@ test.skipIf(!browser)("later clean formal observations preserve issues and porta
   expect(summary.completion.quality).toBe("unresolved-issues");
   expect(summary.visual.surfaces[0]).toMatchObject({ artifactId: expect.any(String), evidenceId: expect.any(String),
     artifactSourceRevision: "v001", evidenceRevision: "v002", evidenceSource: { kind: "revision", id: "v002" },
-    sourceSha256: expect.any(String), sdk: { version: "0.3.1", integrity: expect.any(String) }, timeMs: 0, theme: "light", reducedMotion: false,
+    sourceSha256: expect.any(String), sdk: { version: "0.4.0", integrity: expect.any(String) }, timeMs: 0, theme: "light", reducedMotion: false,
     background: "transparent", camera: expect.any(Object), reviewer: expect.any(String), reviewRecord: expect.any(String), attestations: expect.any(Array) });
   expect(summary.visual.surfaces.some((item: { issues: { reason: string }[] }) => item.issues.some((issue) => issue.reason === "Synthetic density issue."))).toBe(true);
   await expect(readFile(join(history, name, "v002/report.json"))).rejects.toMatchObject({ code: "ENOENT" });

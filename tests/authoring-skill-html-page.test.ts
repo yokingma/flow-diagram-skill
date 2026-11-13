@@ -58,7 +58,7 @@ test("accepts an Agent page, preserves outer content and publishes one self-cont
   expect(report.htmlInspection.file.sha256).toBe(sha256(html));
   expect(await readFile(join(root, ".diagrams", "static-page", "diagram.html"), "utf8")).toBe(html);
   expect(JSON.parse(await readFile(join(report.revision.directory, "diagram.json"), "utf8"))).toEqual(diagram);
-  expect(report.sdk.version).toBe("0.3.1");
+  expect(report.sdk.version).toBe("0.4.0");
   expect(await readFile(join(report.revision.directory, "report.md"), "utf8")).toContain("## HTML page");
 }, 60_000);
 

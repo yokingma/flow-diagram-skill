@@ -2,9 +2,9 @@
   "toolVersion": "0.1.0",
   "baseline": "registry-exact",
   "sdk": {
-    "version": "0.3.1",
-    "source": "npm registry exact package: flowsvg@0.3.1",
-    "integrity": "sha512-EkdXzkkayRaXCU+/qnI23WeEHNfci+oRPhkiCW/YTVegjZPq4y42DzLFnXHKzZ8VDCWidDRCGbmq9YVGIIpt1A==",
+    "version": "0.4.0",
+    "source": "npm registry exact package: flowsvg@0.4.0",
+    "integrity": "sha512-SyEgHijmXU/xCGRXO2dhELLPE5T5BBq4mrBtU4QEkp3439RjfVNIorLSdXbQfSdkzbv8c4/ZxQdwC/xyvJ9rCw==",
     "registry": "https://registry.npmjs.org/"
   }
 }
