@@ -118,7 +118,7 @@ The [runtime manifest](skills/flow-diagram/runtime/manifest.json) records the ex
 
 ## Status
 
-`0.1.0` is the initial independent release. The current checkout uses the exact `flowsvg@0.4.0` runtime baseline. The `v0.1.0` tag preserves its original release snapshot and runtime.
+`0.1.0` is the initial independent distribution version and pins the exact `flowsvg@0.4.0` runtime baseline. Its release tag is `v0.1.0`. See the [changelog](CHANGELOG.md#010--2026-11-13) for the release scope.
 
 Platform and assistant-host verification remains limited. See the [known platform limits and verification requirements](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence) for the current scope.
 

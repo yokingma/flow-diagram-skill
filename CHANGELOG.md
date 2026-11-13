@@ -1,8 +1,28 @@
 # Changelog
 
-- Align independent consumer acceptance with mutable drafts, explicit checkpoints and formal review, optional geometry facts and actual HTML capture; retain artifact decoding, source protection, cancellation and isolated-runtime checks.
-
 ## Unreleased
+
+## 0.1.0 — 2026-11-13
+
+Initial independent Flow Diagram Skill distribution, with release tag `v0.1.0`. The release pins `flowsvg@0.4.0`, requires Node.js 20+ and npm, and installs runtime dependencies in an isolated cache.
+
+### Release highlights
+
+- Add English and Chinese description triggers for flowcharts, architecture diagrams, sequence diagrams and animated process explanations.
+- Guide creation and revision through understanding, authoring, validation, actual viewing and delivery, using one editable draft and current outputs.
+- Deliver editable JSON, paused offline HTML and portable reports; export SVG, PNG or GIF on request. Browser inspection, PNG and GIF require a separately prepared Chrome/Chromium executable.
+- Support content measurement, static layout assistance, explicit checkpoints and source-bound formal review and image evidence. Keep machine checks, actual viewing and user design judgment separate.
+- Preserve requested exports through continuation, protect source and unrelated files, and retain recoverable work after failure or cancellation.
+- Include ten selected teaching diagrams, self-contained installed references, bilingual user guides and project diagram preferences.
+- Provide copied-install regression coverage and an independent consumer gate. Configure the full suite and consumer gate on Ubuntu/Node 20, with an installed-CLI smoke on Node 22; candidate-specific execution and viewing results remain separate release evidence.
+
+## Preparation before 0.1.0
+
+The following records describe unreleased development snapshots. Superseded SDK versions, workflows and CI configurations document preparation history; the release highlights and current guides describe the 0.1.0 distribution.
+
+### Final candidate refinements
+
+- Align independent consumer acceptance with mutable drafts, explicit checkpoints and formal review, optional geometry facts and actual HTML capture; retain artifact decoding, source protection, cancellation and isolated-runtime checks.
 
 - Sample the GIF color contract away from label glyphs and report the observed pixel when the external consumer check fails.
 
@@ -55,14 +75,14 @@
 - Consult relevant rendering failures during design in step 2, then revisit technical details during authoring. Treat remedies as candidates and record material judgments instead of per-entry or per-edge logs. Document the observed shared-path failure and align maintenance guidance and bilingual guides. Guidance only; no CLI, report or runtime behavior changed.
 - Choose connection endpoints by relationship meaning and routes by rendered clarity. Allow clear diagonal paths, describe group/component/mixed endpoints, and inspect ambiguous shared paths without prescribing a universal line style.
 
-## Animated HTML inspection
+### Animated HTML inspection
 
 - Fail offline HTML inspection when the delivered page attempts external network or local-file resources; preserve complete files and captured failure evidence without claiming quality coverage.
 - Record actual captions and diagram text at compiled HTML samples, verify backward seeking restores the initial state and keep outer page text stable. Seek fractional boundaries upward by less than one microsecond to avoid selecting the preceding beat through range serialization.
 - Give the editable HTML starter an author-adjustable minimum playback width and a keyboard-focusable horizontal reading area for narrow viewports.
 - Compare a canonical public SVG visual-state signature during end-to-start backseek, including stable element attributes and computed visibility/style state.
 
-## 0.1.0 — initial independent release
+### Earlier candidate preparation
 
 - Align the complete rendering-gotcha checklist across the Skill, installed references and `PATTERNS.md`; structure preset-label risks as a matchable entry and remove the remaining broad HTML-prose wording from export guidance. Complete the bilingual guide summaries so they name the managed player. Documentation guidance only; no CLI, check or report behavior changed.
 - Add a human page completion checklist, align outer-page and narrow-screen inspection with it, and define semantic wrappers, accessibility attributes and inline/data-URL assets as allowed implementation structure while keeping external resources out. Record the page content contract in the glossary. Guidance and terminology only; no CLI or report behavior changed.
@@ -91,7 +111,7 @@
 - Add capability-inventory and source/service composition guidance, presentation content-area sizing, mixed-script alignment observations and persistent relationship-flow animation guidance.
 - Add three neutral teaching recipes and copied-install regression coverage for content fit, finite layout checks and export completeness. Preserve the exact SDK baseline and keep automatic visual lint outside this change.
 
-## Preparation before 0.1.0
+### Repository extraction
 
 - Copy the complete Flow Diagram installation unit into `skills/flow-diagram` from the recorded FlowSVG source snapshot.
 - At the 0.1.0 preparation snapshot, add independent development dependencies and a pnpm lockfile while keeping that snapshot's installed runtime npm lockfile and `flowsvg@0.2.2` baseline unchanged.
@@ -100,4 +120,4 @@
 - Migrate all 27 Skill regression files and their maintained fixtures into `tests/`; declare `gifuct-js@2.1.2` directly for GIF decoding. Preserve existing behavior assertions and browser preconditions. Move the consumer harness as a required regression-test resource, with its default installation path updated.
 - Configure independent CI for Ubuntu/macOS/Windows and Node 20/22, including complete browser regressions and the fail-closed external consumer gate with real Node 18 rejection. Expand triggers to tests, fixtures, guides, tools, configurations, locks, and workflows. Record local browser/consumer execution and limited actual visual inspection separately from unexecuted remote CI and the Windows graceful-cancellation limitation.
 
-This preparation snapshot records the independent repository setup that preceded the 0.1.0 release. Local browser and consumer acceptance remain separate from configured CI and unexecuted platforms.
+These preparation records precede the 0.1.0 distribution. Local browser and consumer acceptance remain separate from configured CI and unexecuted platforms.

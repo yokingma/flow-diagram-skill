@@ -8,9 +8,9 @@ Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播�
 
 这份指南说明如何在支持 Skill 的编程助手中安装和使用 Flow Diagram。你说明读者问题和来源事实，助手依次理解、制作、校验、看图修改并交付最终选定图解。任务持续编辑一份源草稿、替换当前产物，并用一份临时 `issues.md` 汇集实质问题。默认交付 JSON、初始暂停的离线 HTML 和报告；成功收尾清理本任务工作区，失败时保留恢复材料。只有明确要求时才增加不可变检查点或注册正式复核。
 
-当前 skill 为实验版本，使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.4.0`，实际安装仍使用 runtime manifest 和 lockfile 记录的精确版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
+Skill 使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.4.0`，实际安装使用 runtime manifest 和 lockfile 记录的版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
 
-首个独立 Skill 正式版本为 `0.1.0`。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。当前源码的精确 SDK 基线为 `flowsvg@0.4.0`；升级需要维护者显式更新 manifest、lockfile 并重新独立验收。`v0.1.0` 标签保留首个版本的原始源码与运行时。
+首个独立 Skill 分发版本为 `0.1.0`，发布标签为 `v0.1.0`。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。SDK 升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
 
 SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
 
