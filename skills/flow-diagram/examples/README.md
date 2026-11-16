@@ -1,28 +1,35 @@
-# Teaching examples
+# Diagram examples
 
-These English examples explain fictional scenarios or diagram-authoring methods. Use [diagram selection](../references/semantic-patterns.md#choose-by-the-readers-question) before adapting an example; this gallery offers starting points for the selected explanation. Read the adjacent note for source facts, composition choices, display conditions and limits. [Teaching sources](../resources/teaching-sources.json) records their assumptions; replace them with the user's evidence for a real task and use the requested output language.
+Use [complete examples](complete/README.md) to study composition and animation, or [SDK capabilities](capabilities/README.md) to find a focused document-model example. These are pinned FlowSVG showcase snapshots shared by the upstream Native, React and Vue demos. Start with the reader's question in [diagram selection](../references/semantic-patterns.md#choose-by-the-readers-question); no example supplies facts about the user's system.
 
-| Reader's question | Example and source | Primary PNG display; diagram canvas |
-| --- | --- | --- |
-| What happens with complete or missing materials? | [Application review](approval-review.md) · [JSON](approval-review.json) | 1280 × 440; 1280 × 440 |
-| When does an attempt retry or stop? | [Finite retry policy](retry-policy.md) · [JSON](retry-policy.json) | 1100 × 523; 1240 × 590 |
-| Where do combined arrivals exceed processing capacity? | [Fan-in capacity](fan-in-capacity.md) · [JSON](fan-in-capacity.json) | 1100 × 485; 1360 × 600 |
-| How do records change between stages? | [Record transformations](record-transformations.md) · [JSON](record-transformations.json) | 1100 × 275; 1400 × 350 |
-| How do layers, members and governance notes relate? | [Layered architecture](layered-architecture.md) · [JSON](layered-architecture.json) | 1280 × 904; 1280 × 904 |
-| Which responsibilities exist, are proposed or remain unknown? | [Capability overview](capability-overview.md) · [JSON](capability-overview.json) | 720 × 363; 960 × 484 |
-| How does a source collection map to services? | [Source/service mapping](source-services.md) · [JSON](source-services.json) | 1200 × 525; 1280 × 560 |
-| How can paragraphs, lists and short tags share cards? | [Content cards](content-cards.md) · [JSON](content-cards.json) | 1100 × 432; 1100 × 432 |
-| What is sent, what changes, and what returns? | [Query round trip](query-round-trip.md) · [JSON](query-round-trip.json) | 960 × 432; 960 × 432 |
-| How can independent transfers flow together? | [Parallel transfers](parallel-transfers.md) · [JSON](parallel-transfers.json) | 960 × 432; 960 × 432 |
+Each JSON has an adjacent note with its question, source, composition, animation stages, static reading state, display conditions and limits. [Source records](../resources/teaching-sources.json) distinguish the real SDK architecture from fictional teaching scenarios. Replace assumptions with the user's evidence when adapting a diagram.
+
+## Run and inspect
+
+Use Node 20+ and npm. Replace `<skill-directory>` with the absolute installed path and `<task-workspace>` with a canonical task workspace under `.diagrams/.work/<name>/<task-id>/`. Run from the user's working directory. The example JSON stays unchanged:
+
+```sh
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --name project-architecture --theme dark --svg --time 0 --output "<task-workspace>/history" --browser none
+```
+
+This generates JSON, paused offline HTML, SVG and reports without a browser. For a later static export, read the returned `detailsPath`, find the note's named scene in `compilation.beats` by `sceneId`, and choose a compiled time that shows the intended state. Use `compilation.totalDurationMs` for the completed final state. Static exports contain the diagram without playback captions or controls. Supply a prepared Chrome/Chromium executable instead of `none` for HTML capture and request PNG with `--png`. Missing browsers leave those checks unavailable; successful validation, compilation and export do not establish visual quality. See [exports](../references/export.md) and [actual viewing](../references/visual-checks.md).
+
+The upstream host supplies dark theme, speed 1 and reduced motion off. `--theme dark` preserves that presentation without editing snapshot bytes. Full examples support static reading through a selected overview or key state and animation through the same JSON; do not maintain a separate static copy merely to remove scenes.
 
 ## Display conditions and limits
 
-The first eight examples are static. The last two animate transfer and state changes. All use a light background and the exact SDK 0.4.0 baseline. PNG display sizes above are CSS pixels, while canvases use diagram units. Each note states its intended use.
+Inspect HTML at 1440 × 1000 CSS pixels and exported images at their reported intrinsic dimensions. Each note states the document's canvas size; fitted and focused states can change the rendered dimensions. Tall HTML diagrams can require vertical page scrolling. Other themes, platforms, smaller placements and host embedding require their own inspection.
 
-The current PNGs were viewed at the listed sizes. Actual HTML screenshots were viewed at a 1440 × 1000 browser viewport, including paused animation starts, selected changes and ends. Continuous visual playback and independent SVG viewing remain unperformed. Other platforms, themes, fonts, smaller placements and host embedding are outside the viewed conditions. Earlier selection of the library does not extend viewing coverage to later revisions. Successful validation, compilation or export does not establish visual quality.
+View the saved HTML, requested exports and relevant animation stages under the task's actual display conditions. Judge animation pacing and captions through continuous playback. Report programmatic checks, actual viewing and remaining gaps separately; source attribution and earlier viewing do not establish acceptance for the current output.
 
 ## Adapt an example
 
-Copy its JSON into the task's one editable source draft, replace fictional facts and preserve source-supported relationships. Measure changed content and typography when needed, regenerate current outputs and actually view affected surfaces at the intended size. Keep substantive findings in one temporary `issues.md`; add registered evidence only for an explicit formal request. Follow the [task workspace rules](../references/tool-contract.md#task-workspace).
+Copy a selected JSON into the task's one editable draft, replace source facts, measure changed content and inspect affected states and exports. Keep material findings in one temporary `issues.md`; formal records are only for explicit traceability requests. Follow [task workspace rules](../references/tool-contract.md#task-workspace).
 
-The installed JSON is the publication source. This directory contains reusable sources and teaching notes; [execution resources](../resources/README.md) holds the HTML starter, independent measurement input and teaching-source records.
+Keep the installed JSON unchanged while adapting the task draft. [Execution resources](../resources/README.md) retain the independent measurement input and HTML starter.
+
+## Snapshot provenance
+
+To trace a snapshot, read its adjacent attribution and [source record](../resources/teaching-sources.json). The note identifies the upstream TypeScript definition, fixed commit, generated JSON path and SHA-256. Native, React and Vue demos share these definitions. Upstream exports are generated with `pnpm --filter @flowsvg/showcase build` after preparing the SDK in that checkout; TypeScript remains the author source.
+
+Skill execution consumes the installed JSON through its exact public SDK runtime. It needs neither the upstream workspace nor private showcase packages. Keep generated previews and run-specific verification records outside the installation unit.

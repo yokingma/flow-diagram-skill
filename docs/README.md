@@ -5,8 +5,8 @@
 ## Skill users
 
 - [English user guide](guides/flow-diagram-guide.md) and [中文用户指南](guides/flow-diagram-guide.zh-CN.md): installation, creation, revisions, exports, and recovery.
-- [Teaching examples](../skills/flow-diagram/examples/README.md): selected diagrams by reader question, with composition explanations, display conditions and viewing limits.
-- [FlowSVG showcase previews](images/flowsvg/README.md): source and license of the animations displayed in the root READMEs.
+- [Teaching examples](../skills/flow-diagram/examples/README.md): complete upstream showcases and focused SDK examples, with composition explanations, source identities, display conditions and viewing limits.
+- [FlowSVG showcase previews](images/flowsvg/README.md): historical source and license records for earlier README animations.
 
 ## Skill developers
 

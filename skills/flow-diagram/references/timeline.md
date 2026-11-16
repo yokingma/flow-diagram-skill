@@ -1,6 +1,6 @@
 # Animation authoring
 
-Use animation when order, transfer or state change explains the user's material. Keep architecture and deployment relationships static when the whole structure is the main message. Animation does not supply missing business facts. [The query round-trip teaching example](../examples/query-round-trip.md) can run without this repository or a showcase build; its note identifies the fictional exchange and viewing limits.
+Use animation when order, transfer or state change explains the user's material. Keep architecture and deployment static when the whole structure is the main message. Animation does not supply missing business facts. [Cache-aside sequence](../examples/complete/cache-aside-sequence.md) demonstrates ordered communication; [task lifecycle](../examples/complete/job-lifecycle.md) demonstrates distinct outcomes and persistent state.
 
 This reference carries the SDK timeline rules needed by the installed skill, plus authoring and report checks. Keep these rules aligned with the pinned SDK baseline in `runtime/manifest.json`; the installed skill must remain usable without this repository.
 
@@ -12,7 +12,7 @@ This reference carries the SDK timeline rules needed by the installed skill, plu
 | Guide the speaker's attention | Keep context visible; use local emphasis | Emphasis identifies a topic without asserting a transfer or business state |
 | Explain order or changing state | Reveal or update objects when the source supports that sequence | Conditions, identity, continuity and reading time |
 
-For “flowing lines,” select persistent visibility unless the user asks for staged disclosure or the explanation requires it. [parallel-transfers.json](../examples/parallel-transfers.json) keeps all text and objects visible and sends markers along two distinct relations together, three times. Its pacing and repetition are illustrative, not business throughput. It starts and ends with an all-visible hold. Read the compiled timing and inspect the beat boundaries, repeated-flow seams and paused state; the marker resets between beats rather than making the entire player loop. See [teaching facts](../resources/teaching-sources.json) and [display and timing limits](../examples/parallel-transfers.md).
+For “flowing lines,” keep context visible unless staged disclosure serves the explanation. [emphasis-flow.json](../examples/capabilities/emphasis-flow.json) compares three highlighting policies and plays distinct transfers together. Read its [note](../examples/capabilities/emphasis-flow.md) for source and display conditions. Inspect compiled boundaries, simultaneous motion and paused states; flow repetition does not establish throughput or a player loop.
 
 ## Scenes and inherited state
 

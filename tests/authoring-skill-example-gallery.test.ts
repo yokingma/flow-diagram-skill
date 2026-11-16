@@ -8,7 +8,7 @@ import { pathToFileURL } from "node:url";
 import { chromium } from "playwright-core";
 
 let root: string;
-const document = {
+const DOCUMENT_DRAFT = {
   version: 1,
   title: "A < B & C",
   viewport: { width: 400, height: 240 },
@@ -27,17 +27,16 @@ beforeEach(async () => {
     })
   ]);
   await Promise.all([
-    rm(join(root, "skills/flow-diagram/examples"), { recursive: true }),
-    rm(join(root, "examples/development"), { recursive: true })
+    rm(join(root, "skills/flow-diagram/examples"), { recursive: true })
   ]);
   await Promise.all([
-    mkdir(join(root, "skills/flow-diagram/examples")),
-    mkdir(join(root, "examples/development"))
+    mkdir(join(root, "skills/flow-diagram/examples/complete"), { recursive: true }),
+    mkdir(join(root, "skills/flow-diagram/examples/capabilities"), { recursive: true })
   ]);
   await Promise.all([
-    writeFile(join(root, "skills/flow-diagram/examples/selected.json"), JSON.stringify(document)),
-    writeFile(join(root, "skills/flow-diagram/examples/selected.md"), "# Selected note\n"),
-    writeFile(join(root, "examples/development/exercise.json"), JSON.stringify({ ...document, title: "API exercise" }))
+    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.json"), JSON.stringify(DOCUMENT_DRAFT)),
+    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.md"), "# Selected note\n"),
+    writeFile(join(root, "skills/flow-diagram/examples/capabilities/exercise.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Capability exercise" }))
   ]);
 });
 
@@ -55,22 +54,22 @@ function preview() {
   });
 }
 
-test("builds a portable gallery with separate selected and development sources without changing inputs", async () => {
-  const source = join(root, "skills/flow-diagram/examples/selected.json");
+test("builds a portable gallery with separate complete and capability sources without changing inputs", async () => {
+  const source = join(root, "skills/flow-diagram/examples/complete/selected.json");
   const original = await readFile(source, "utf8");
   const result = await preview();
   expect(result.code, result.stderr + result.stdout).toBe(0);
   const html = await readFile(join(root, "examples/.preview/index.html"), "utf8");
-  expect(html).toContain("Teaching examples");
-  expect(html).toContain("Development exercises");
+  expect(html).toContain("Complete examples");
+  expect(html).toContain("SDK capabilities");
   expect(html).toContain("A &lt; B &amp; C");
-  expect(html).toContain('src="teaching/selected/current/diagram.html"');
-  expect(html).toContain('src="development/exercise/current/diagram.html"');
-  expect(html).toContain("../../skills/flow-diagram/examples/selected.md");
-  const player = await readFile(join(root, "examples/.preview/teaching/selected/current/diagram.html"), "utf8");
+  expect(html).toContain('src="complete/selected/current/diagram.html"');
+  expect(html).toContain('src="capabilities/exercise/current/diagram.html"');
+  expect(html).toContain("../../skills/flow-diagram/examples/complete/selected.md");
+  const player = await readFile(join(root, "examples/.preview/complete/selected/current/diagram.html"), "utf8");
   expect(player).toContain("flowsvg-data");
   expect(await readFile(source, "utf8")).toBe(original);
-  expect((await readdir(join(root, "skills/flow-diagram/examples"))).sort()).toEqual(["selected.json", "selected.md"]);
+  expect((await readdir(join(root, "skills/flow-diagram/examples/complete"))).sort()).toEqual(["selected.json", "selected.md"]);
 }, 60_000);
 
 test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps the embedded diagram and playback controls visible without vertical player scrolling", async () => {
@@ -99,27 +98,46 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps the embedded diagram and p
 test("rebuilds current bytes and removes deleted examples instead of accumulating previews", async () => {
   expect((await preview()).code).toBe(0);
   await Promise.all([
-    writeFile(join(root, "skills/flow-diagram/examples/selected.json"), JSON.stringify({ ...document, title: "Changed title" })),
-    rm(join(root, "examples/development/exercise.json"))
+    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Changed title" })),
+    rm(join(root, "skills/flow-diagram/examples/capabilities/exercise.json"))
   ]);
   const result = await preview();
   expect(result.code, result.stderr + result.stdout).toBe(0);
   const html = await readFile(join(root, "examples/.preview/index.html"), "utf8");
   expect(html).toContain("Changed title");
-  expect(html).not.toContain('id="development-exercise"');
-  const generated = await readFile(join(root, "examples/.preview/teaching/selected/current/diagram.json"), "utf8");
+  expect(html).not.toContain('id="capabilities-exercise"');
+  const generated = await readFile(join(root, "examples/.preview/complete/selected/current/diagram.json"), "utf8");
   expect(JSON.parse(generated).title).toBe("Changed title");
-  expect(await readdir(join(root, "examples/.preview/teaching/selected"))).toEqual(["current"]);
-  expect(await readdir(join(root, "examples/.preview"))).not.toContain("development");
+  expect(await readdir(join(root, "examples/.preview/complete/selected"))).toEqual(["current"]);
+  expect(await readdir(join(root, "examples/.preview"))).not.toContain("capabilities");
 }, 60_000);
 
 test("reports invalid input and leaves no stale successful index after a failed rebuild", async () => {
   expect((await preview()).code).toBe(0);
-  const source = join(root, "skills/flow-diagram/examples/selected.json");
+  const source = join(root, "skills/flow-diagram/examples/complete/selected.json");
   await writeFile(source, "{");
   const result = await preview();
   expect(result.code).not.toBe(0);
   expect(result.stderr).toContain("selected.json");
   await expect(readFile(join(root, "examples/.preview/index.html"))).rejects.toMatchObject({ code: "ENOENT" });
   expect(await readFile(source, "utf8")).toBe("{");
+}, 60_000);
+
+test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps a real sequence caption and controls inside the narrow gallery player", async () => {
+  await cp(resolve("skills/flow-diagram/examples/complete/cache-aside-sequence.json"),
+    join(root, "skills/flow-diagram/examples/complete/selected.json"));
+  const result = await preview();
+  expect(result.code, result.stderr + result.stdout).toBe(0);
+  const browser = await chromium.launch({ executablePath: process.env.FLOWSVG_TEST_BROWSER, headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 390, height: 1000 } });
+    await page.goto(pathToFileURL(join(root, "examples/.preview/index.html")).href);
+    const frame = page.frameLocator('iframe').first();
+    await frame.locator('svg').waitFor();
+    const dimensions = await frame.locator('body').evaluate((body) => ({
+      contentHeight: body.ownerDocument.documentElement.scrollHeight,
+      frameHeight: body.ownerDocument.defaultView?.innerHeight ?? 0
+    }));
+    expect(dimensions.contentHeight).toBeLessThanOrEqual(dimensions.frameHeight);
+  } finally { await browser.close(); }
 }, 60_000);

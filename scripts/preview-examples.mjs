@@ -9,18 +9,19 @@ const runFile = promisify(execFile);
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const OUTPUT = join(ROOT, "examples/.preview");
 const CLI = join(ROOT, "skills/flow-diagram/scripts/flowsvg.mjs");
-const CONTROL_SPACE_PX = 180;
+// Reserve room for wrapped controls and multi-line captions at the minimum iframe width.
+const CONTROL_SPACE_PX = 240;
 const MAX_COMMAND_OUTPUT_BYTES = 4 * 1024 * 1024;
 const GROUPS = [
   {
-    id: "teaching", title: "Teaching examples",
-    description: "Selected compositions. Read each teaching note for its purpose, conditions and viewing limits.",
-    directory: join(ROOT, "skills/flow-diagram/examples")
+    id: "complete", title: "Complete examples",
+    description: "Pinned SDK showcase documents. Read each note for its question, static reading stage and animation.",
+    directory: join(ROOT, "skills/flow-diagram/examples/complete")
   },
   {
-    id: "development", title: "Development exercises",
-    description: "API exercises, not selected visual teaching examples.",
-    directory: join(ROOT, "examples/development")
+    id: "capabilities", title: "SDK capabilities",
+    description: "Focused public-SDK examples. Use complete examples for full compositions.",
+    directory: join(ROOT, "skills/flow-diagram/examples/capabilities")
   }
 ];
 
@@ -40,7 +41,7 @@ async function renderExample(group, entry) {
   const destination = join(OUTPUT, group.id);
   try {
     const { stdout } = await runFile(process.execPath, [
-      CLI, "author", "--input", source, "--name", name, "--output", destination, "--browser", "none"
+      CLI, "author", "--input", source, "--name", name, "--output", destination, "--browser", "none", "--theme", "dark"
     ], { cwd: ROOT, maxBuffer: MAX_COMMAND_OUTPUT_BYTES });
     const result = JSON.parse(stdout);
     if (result.completion?.delivery !== "complete") throw new Error(stdout);

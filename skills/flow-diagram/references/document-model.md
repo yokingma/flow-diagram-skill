@@ -34,7 +34,7 @@ These four kinds accept plain `label` only and reject structured `content`, incl
 
 Complete-draft measurement includes the initial label and every `updateNode.value.label` replacement for these kinds. Empty or omitted initial text still reserves contour clearance. Width diagnostics remain actionable after increasing height: widen the node or obtain authorization for a text change. Visible overflowing text is clipped rather than shrunk. Existing ordinary-label whole-word wrapping does not describe these presets, which may split overwide words between complete graphemes.
 
-For a complete static workflow, use [approval-review.json](../examples/approval-review.json) with its [teaching note](../examples/approval-review.md) and [source metadata](../resources/teaching-sources.json). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all preset label versions and recheck spacing. Inspect actual playback and requested images separately from numeric measurement.
+For runnable preset shapes, use [basic-shapes.json](../examples/capabilities/basic-shapes.json) and its [note](../examples/capabilities/basic-shapes.md). For a full workflow, study [RAG](../examples/complete/rag-workflow.md). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all label/content versions and inspect playback and requested images separately.
 
 
 ## Node content and measurement
@@ -58,4 +58,4 @@ Content clips to the shape's safe area and never resizes its node. Measure text 
 
 Use `scenes: []` for a static diagram. Before adding animation actions, read [animation authoring](timeline.md) for the scene/beat schema, inherited state, content replacement and effective timing. Select export times from `compilation.beats` and `totalDurationMs` in the report.
 
-The CLI reports field/reference and derived compilation errors separately. See [diagnosis and revision decisions](diagnostics-and-revisions.md) when checks report a problem. Complete static inputs include [layered architecture](../examples/layered-architecture.md), [application review](../examples/approval-review.md) and [record transformations](../examples/record-transformations.md).
+The CLI reports field/reference and derived compilation errors separately. See [diagnosis](diagnostics-and-revisions.md). Complete documents in [the library](../examples/complete/README.md) supply both animation and static reading states from one source; choose the intended stage from the current compilation report.

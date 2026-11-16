@@ -6,19 +6,18 @@
 
 ## 典型示例
 
-以下为 FlowSVG SDK 上游 showcase 的演示动图，分别展示请求流程、部署架构和模型推理。可访问[在线演示](https://yokingma.github.io/FlowSVG/)交互播放；[图片来源与版本](docs/images/flowsvg/README.md)记录素材出处。
+完整示例复用 Native、React、Vue demo 共用的 FlowSVG SDK showcases。可访问[在线演示](https://yokingma.github.io/FlowSVG/)，或从固定版本安装源重新生成[本地画廊](examples/README.zh-CN.md#预览示例库)。
 
-### 请求与响应
+| 完整示例 | 解释重点 |
+| --- | --- |
+| [SDK 架构](skills/flow-diagram/examples/complete/project-architecture.md) | 职责分层与依赖 |
+| [RAG 工作流](skills/flow-diagram/examples/complete/rag-workflow.md) | 来源、检索与引用回答 |
+| [任务生命周期](skills/flow-diagram/examples/complete/job-lifecycle.md) | 重试、终态与取消 |
+| [订单事件流水线](skills/flow-diagram/examples/complete/order-event-pipeline.md) | 校验、去重与指标 |
+| [Web 服务部署](skills/flow-diagram/examples/complete/web-service-deployment.md) | 运行边界、副本与路由 |
+| [缓存读取时序](skills/flow-diagram/examples/complete/cache-aside-sequence.md) | 请求与返回消息顺序 |
 
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="客户端与服务之间的请求和响应动画" width="700"></p>
-
-### Web 服务部署
-
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/web-service-deployment.gif" alt="包含两个应用副本的 Web 服务部署" width="700"></p>
-
-### LLM 推理
-
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="包含 Transformer 层与 KV Cache 复用的 LLM 推理过程" width="700"></p>
+同一文档通过选定阶段支持完整动画和静态阅读。[SDK 能力示例](skills/flow-diagram/examples/capabilities/README.md)说明形状语法与流动强调。每项说明记录来源提交、默认值与查看限制；在线演示可能使用不同版本。
 
 ## 安装
 
@@ -100,7 +99,7 @@ SVG、PNG 与 GIF 均为可选导出。HTML 页面只保留标题、回答读者
 
 本 **Skill** 指导助手读取资料、设计讲解方式、创作与修订图解、规划布局、检查结果，最后交付文件与报告；**FlowSVG SDK** 提供底层渲染与播放能力。需要将图解嵌入应用时，可直接使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成，见 [SDK 仓库](https://github.com/yokingma/FlowSVG)与 [npm 包](https://www.npmjs.com/package/flowsvg)。
 
-图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[申请审查范例](skills/flow-diagram/examples/approval-review.md)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
+图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[基础形状示例](skills/flow-diagram/examples/capabilities/basic-shapes.md)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
 
 ### 运行时依赖
 

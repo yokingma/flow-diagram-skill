@@ -1,0 +1,647 @@
+{
+  "version": 1,
+  "title": "Basic shapes: complete catalog",
+  "viewport": {
+    "width": 1240,
+    "height": 508
+  },
+  "nodes": [
+    {
+      "id": "shape-catalog",
+      "kind": "group",
+      "x": 24,
+      "y": 24,
+      "width": 1192,
+      "height": 460,
+      "label": "Basic shape catalog"
+    },
+    {
+      "id": "start",
+      "kind": "ellipse",
+      "parentId": "shape-catalog",
+      "x": 42,
+      "y": 104,
+      "width": 140,
+      "height": 64,
+      "label": "Start"
+    },
+    {
+      "id": "input",
+      "kind": "parallelogram",
+      "parentId": "shape-catalog",
+      "x": 232,
+      "y": 104,
+      "width": 190,
+      "height": 64,
+      "label": "Input"
+    },
+    {
+      "id": "decision",
+      "kind": "diamond",
+      "parentId": "shape-catalog",
+      "x": 482,
+      "y": 52,
+      "width": 220,
+      "height": 168,
+      "label": "Decision?"
+    },
+    {
+      "id": "process",
+      "kind": "roundedRect",
+      "parentId": "shape-catalog",
+      "x": 762,
+      "y": 100,
+      "width": 184,
+      "height": 72,
+      "label": "Process"
+    },
+    {
+      "id": "subprocess",
+      "kind": "predefinedProcess",
+      "parentId": "shape-catalog",
+      "x": 1002,
+      "y": 104,
+      "width": 164,
+      "height": 64,
+      "label": "Subprocess"
+    },
+    {
+      "id": "record",
+      "kind": "rect",
+      "parentId": "shape-catalog",
+      "x": 252,
+      "y": 356,
+      "width": 194,
+      "height": 72,
+      "label": "Record result"
+    },
+    {
+      "id": "document",
+      "kind": "document",
+      "parentId": "shape-catalog",
+      "x": 520,
+      "y": 362.6666666666667,
+      "width": 226,
+      "height": 58.666666666666664,
+      "label": "Document"
+    },
+    {
+      "id": "store",
+      "kind": "cylinder",
+      "parentId": "shape-catalog",
+      "x": 834,
+      "y": 348,
+      "width": 210,
+      "height": 88,
+      "label": "Data store"
+    }
+  ],
+  "edges": [
+    {
+      "id": "start-input",
+      "from": "start",
+      "to": "input",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "input-decision",
+      "from": "input",
+      "to": "decision",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "decision-process",
+      "from": "decision",
+      "to": "process",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Yes"
+    },
+    {
+      "id": "process-subprocess",
+      "from": "process",
+      "to": "subprocess",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "decision-record",
+      "from": "decision",
+      "to": "record",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "label": "No"
+    },
+    {
+      "id": "record-document",
+      "from": "record",
+      "to": "document",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "document-store",
+      "from": "document",
+      "to": "store",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "store-subprocess",
+      "from": "store",
+      "to": "subprocess",
+      "route": "orthogonal",
+      "fromPort": "top",
+      "toPort": "bottom",
+      "label": "Read back"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "catalog",
+      "label": "Follow every shape",
+      "beats": [
+        {
+          "durationMs": 1400,
+          "caption": "This first showcase example contains every public node shape: ellipse, parallelogram, diamond, rounded rectangle, predefined process, rectangle, document and cylinder.",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "start"
+            },
+            {
+              "type": "highlight",
+              "target": "input"
+            },
+            {
+              "type": "highlight",
+              "target": "decision"
+            },
+            {
+              "type": "highlight",
+              "target": "process"
+            },
+            {
+              "type": "highlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "highlight",
+              "target": "record"
+            },
+            {
+              "type": "highlight",
+              "target": "document"
+            },
+            {
+              "type": "highlight",
+              "target": "store"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The ellipse starts the flow and the parallelogram accepts input.",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "start"
+            },
+            {
+              "type": "highlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "start-input",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The input reaches the diamond decision node.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "highlight",
+              "target": "input"
+            },
+            {
+              "type": "highlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "input-decision",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The approved branch continues into a rounded process node.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "highlight",
+              "target": "decision"
+            },
+            {
+              "type": "highlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "decision-process",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The process calls a predefined subprocess.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "highlight",
+              "target": "process"
+            },
+            {
+              "type": "highlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "process-subprocess",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The alternate branch records a result in a rectangle.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "highlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "highlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "decision-record",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The recorded result becomes a document artifact.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "highlight",
+              "target": "record"
+            },
+            {
+              "type": "highlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "record-document",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The document is written to a cylinder data store.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "highlight",
+              "target": "document"
+            },
+            {
+              "type": "highlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "document-store",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "caption": "The subprocess reads the stored result before completion.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "highlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "highlight",
+              "target": "store"
+            },
+            {
+              "type": "flow",
+              "target": "store-subprocess",
+              "direction": "forward"
+            }
+          ]
+        },
+        {
+          "durationMs": 1800,
+          "transitionMs": 500,
+          "caption": "The same measured preset labels can change without changing their authored node heights.",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "input",
+              "value": {
+                "label": "Validated input"
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "decision",
+              "value": {
+                "label": "Continue processing?"
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "subprocess",
+              "value": {
+                "label": "Call verification"
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "document",
+              "value": {
+                "label": "Generated report"
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "input"
+            },
+            {
+              "type": "highlight",
+              "target": "decision"
+            },
+            {
+              "type": "highlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "highlight",
+              "target": "document"
+            }
+          ]
+        },
+        {
+          "durationMs": 1200,
+          "caption": "Shape catalog complete. Pause, seek, change theme or enable reduced motion to inspect the shared SDK behavior.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "unhighlight",
+              "target": "input"
+            },
+            {
+              "type": "unhighlight",
+              "target": "decision"
+            },
+            {
+              "type": "unhighlight",
+              "target": "process"
+            },
+            {
+              "type": "unhighlight",
+              "target": "subprocess"
+            },
+            {
+              "type": "unhighlight",
+              "target": "record"
+            },
+            {
+              "type": "unhighlight",
+              "target": "document"
+            },
+            {
+              "type": "unhighlight",
+              "target": "store"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

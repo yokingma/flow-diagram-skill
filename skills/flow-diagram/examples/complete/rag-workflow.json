@@ -1,0 +1,1199 @@
+{
+  "version": 1,
+  "title": "RAG: From sources to answers",
+  "viewport": {
+    "width": 1120,
+    "height": 789,
+    "fitHeight": {
+      "padding": 24
+    }
+  },
+  "nodes": [
+    {
+      "id": "handbook",
+      "kind": "roundedRect",
+      "x": 24,
+      "width": 200,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Handbook"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Ingestion",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Leave and approval"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Fictional demo"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 40
+    },
+    {
+      "id": "splitter",
+      "kind": "roundedRect",
+      "x": 274,
+      "width": 190,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Split text"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Keep sources",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Document → chunks"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Keep IDs and sections"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 40
+    },
+    {
+      "id": "embedding",
+      "kind": "roundedRect",
+      "x": 514,
+      "width": 220,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Embedder"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Shared model",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Text → vectors"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "One model for both paths"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 40
+    },
+    {
+      "id": "knowledge-index",
+      "kind": "cylinder",
+      "x": 784,
+      "width": 200,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Index"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Ingest once",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Text · vectors"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Reuse stored data"
+          }
+        ]
+      },
+      "height": 189,
+      "y": 16
+    },
+    {
+      "id": "question",
+      "kind": "roundedRect",
+      "x": 24,
+      "width": 200,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "User question"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Online queries",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "How to apply?"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Demo question"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 255
+    },
+    {
+      "id": "retriever",
+      "kind": "roundedRect",
+      "x": 604,
+      "width": 220,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Retriever"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Question vector",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Search by vector"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Await candidates"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 255
+    },
+    {
+      "id": "reranker",
+      "kind": "roundedRect",
+      "x": 284,
+      "width": 220,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Reranker"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "After retrieval",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Question + candidates"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Rank by relevance"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 255
+    },
+    {
+      "id": "context",
+      "kind": "roundedRect",
+      "x": 4,
+      "width": 240,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Build context"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Question + sources",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Question + sources"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Answer with sources"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 446
+    },
+    {
+      "id": "language-model",
+      "kind": "roundedRect",
+      "x": 324,
+      "width": 220,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Language model"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "From context",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Generate an answer"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Demo · no model call"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 446
+    },
+    {
+      "id": "answer",
+      "kind": "roundedRect",
+      "x": 604,
+      "width": 220,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Example answer"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Await generation",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Steps + citations"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Await generated answer"
+          }
+        ]
+      },
+      "height": 141,
+      "y": 446
+    }
+  ],
+  "edges": [
+    {
+      "id": "parse-handbook",
+      "from": "handbook",
+      "to": "splitter",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "embed-chunks",
+      "from": "splitter",
+      "to": "embedding",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "store-chunks",
+      "from": "embedding",
+      "to": "knowledge-index",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "embed-question",
+      "from": "question",
+      "to": "embedding",
+      "route": "orthogonal",
+      "fromPort": "top",
+      "toPort": "bottom"
+    },
+    {
+      "id": "query-vector",
+      "from": "embedding",
+      "to": "retriever",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "search-index",
+      "from": "retriever",
+      "to": "knowledge-index",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "right"
+    },
+    {
+      "id": "candidate-texts",
+      "from": "retriever",
+      "to": "reranker",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "rerank-question",
+      "from": "question",
+      "to": "reranker",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "context-question",
+      "from": "question",
+      "to": "context",
+      "route": "straight",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "selected-chunks",
+      "from": "reranker",
+      "to": "context",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "model-context",
+      "from": "context",
+      "to": "language-model",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "cited-answer",
+      "from": "language-model",
+      "to": "answer",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "parse",
+      "label": "Parse and split",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "Ingestion, shown once: split a fictional employee handbook into chunks and retain section sources. C1 describes applications; C2 describes approval.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "parse-handbook",
+              "direction": "forward",
+              "text": "Handbook §4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ingest",
+      "label": "Embed and index",
+      "beats": [
+        {
+          "durationMs": 1500,
+          "caption": "Ingestion: the shared embedding model converts chunk text to vectors. C1 refers to handbook §4.1; C2 refers to §4.2.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "embed-chunks",
+              "direction": "forward",
+              "text": "C1–C5"
+            }
+          ]
+        },
+        {
+          "durationMs": 1500,
+          "caption": "Ingestion complete: the index stores chunk text, vectors and sources. Later questions reuse it without processing the entire handbook again.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "store-chunks",
+              "direction": "forward",
+              "text": "Chunks + sources"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ask",
+      "label": "Submit a question",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "The user asks the demo question, How do I request leave? The same embedding model used for ingestion produces the question vector. This is not model training.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "embed-question",
+              "direction": "forward",
+              "text": "Question"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "retrieve",
+      "label": "Retrieve candidate chunks",
+      "beats": [
+        {
+          "durationMs": 1000,
+          "caption": "Online query: the retriever receives the question vector.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "query-vector",
+              "direction": "forward",
+              "text": "Question vector"
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "caption": "Online query: the retriever searches the existing knowledge index with the question vector.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "search-index",
+              "direction": "forward",
+              "text": "Search"
+            }
+          ]
+        },
+        {
+          "durationMs": 1000,
+          "transitionMs": 0,
+          "caption": "Retrieve C3/C1/C5/C2/C4: leave balance, application, location, approval and expenses. Each candidate retains its handbook source.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "search-index",
+              "direction": "reverse",
+              "text": "5 chunks + sources"
+            },
+            {
+              "type": "updateNode",
+              "target": "question",
+              "value": {
+                "y": 287,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "retriever",
+              "value": {
+                "y": 255,
+                "height": 205,
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "5 candidates"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Candidates",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "C3 Balance",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "C1 Apply",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "C5 Office",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "C2 Approve",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "C4 Expenses",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "C1 §4.1 · C2 §4.2"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "reranker",
+              "value": {
+                "y": 287,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "context",
+              "value": {
+                "y": 510,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "language-model",
+              "value": {
+                "y": 510,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "answer",
+              "value": {
+                "y": 510,
+                "height": 141
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rerank",
+      "label": "Rerank and filter",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 0,
+          "caption": "Reranking reads the original question and candidates. Keep C1/C2 for application and approval; exclude weaker matches C3/C4/C5. Reranking is an optional optimization in this example.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "candidate-texts",
+              "direction": "forward",
+              "text": "Candidate text"
+            },
+            {
+              "type": "updateNode",
+              "target": "question",
+              "value": {
+                "y": 294,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "retriever",
+              "value": {
+                "y": 262,
+                "height": 205
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "reranker",
+              "value": {
+                "y": 255,
+                "height": 219,
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Reranker"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "5 chunks → 2 chunks",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list",
+                      "style": {
+                        "itemGap": 6
+                      },
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "C1",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "Keep",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ],
+                          "body": "Application · §4.1"
+                        },
+                        {
+                          "tags": [
+                            {
+                              "text": "C2",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "Keep",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ],
+                          "body": "Approval · §4.2"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Exclude C3 C4 C5",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "context",
+              "value": {
+                "y": 524,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "language-model",
+              "value": {
+                "y": 524,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "answer",
+              "value": {
+                "y": 524,
+                "height": 141
+              }
+            },
+            {
+              "type": "flow",
+              "target": "rerank-question",
+              "direction": "forward",
+              "text": "Original question"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "context",
+      "label": "Assemble context",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 0,
+          "caption": "Combine the question, C1 Apply in the HR portal (§4.1), and C2 Manager approval (§4.2). Require a grounded answer with citations. Only these two chunks enter the context.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "selected-chunks",
+              "direction": "forward",
+              "text": "C1 + C2"
+            },
+            {
+              "type": "updateNode",
+              "target": "context",
+              "value": {
+                "y": 524,
+                "height": 241,
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Build context"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Keep 2 chunks",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "How to apply?"
+                    },
+                    {
+                      "type": "list",
+                      "style": {
+                        "itemGap": 6
+                      },
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "C1 §4.1",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ],
+                          "body": "Use HR portal"
+                        },
+                        {
+                          "tags": [
+                            {
+                              "text": "C2 §4.2",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ],
+                          "body": "Manager approval"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Use sources · cite them"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "language-model",
+              "value": {
+                "y": 574,
+                "height": 141
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "answer",
+              "value": {
+                "y": 574,
+                "height": 141
+              }
+            },
+            {
+              "type": "flow",
+              "target": "context-question",
+              "direction": "forward",
+              "text": "Original question"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "generate",
+      "label": "Generate a cited answer",
+      "beats": [
+        {
+          "durationMs": 1500,
+          "caption": "Send the question, selected sources and answer instructions to the language model. Source references travel with the context.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "model-context",
+              "direction": "forward",
+              "text": "Context"
+            }
+          ]
+        },
+        {
+          "durationMs": 1500,
+          "transitionMs": 0,
+          "caption": "Example answer: request leave in the HR portal for direct manager approval. [C1: Employee handbook §4.1; C2: §4.2]",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "cited-answer",
+              "direction": "forward",
+              "text": "Answer + citations"
+            },
+            {
+              "type": "updateNode",
+              "target": "answer",
+              "value": {
+                "y": 546,
+                "height": 197,
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Example answer"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Cited answer",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list",
+                      "marker": "number",
+                      "style": {
+                        "itemGap": 6
+                      },
+                      "items": [
+                        {
+                          "body": "Apply in HR portal"
+                        },
+                        {
+                          "body": "Manager approval"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "C1 §4.1",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "text": "C2 §4.2",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Fictional example"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "complete",
+      "label": "Complete",
+      "beats": [
+        {
+          "durationMs": 1000,
+          "caption": "Complete: request leave in the HR portal for direct manager approval. [C1: Employee handbook §4.1; C2: §4.2] Ingest once; reuse the index for later questions.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

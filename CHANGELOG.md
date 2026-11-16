@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Replace the teaching library with six complete upstream showcase snapshots and two focused SDK capability examples, with pinned source attribution and independent installed-CLI coverage.
+- Split the preview gallery into complete examples and SDK capabilities, preserve upstream dark presentation defaults, remove duplicate development exercises, and reserve space for sequence captions and controls in narrow players.
+
 ## 0.1.0 — 2026-11-13
 
 Initial independent Flow Diagram Skill distribution, with release tag `v0.1.0`. The release pins `flowsvg@0.4.0`, requires Node.js 20+ and npm, and installs runtime dependencies in an isolated cache.

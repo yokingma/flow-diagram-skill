@@ -1,0 +1,317 @@
+{
+  "version": 1,
+  "title": "Emphasis colors and flow highlighting",
+  "viewport": {
+    "width": 920,
+    "height": 420
+  },
+  "emphasis": {
+    "fill": "#ccfbf1",
+    "stroke": "#0f766e",
+    "markerText": "#ffffff"
+  },
+  "nodes": [
+    {
+      "id": "automatic-sender",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 24,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Sender"
+          },
+          {
+            "type": "paragraph",
+            "text": "Automatic highlights"
+          }
+        ]
+      }
+    },
+    {
+      "id": "automatic-receiver",
+      "kind": "roundedRect",
+      "x": 668,
+      "y": 24,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Receiver"
+          },
+          {
+            "type": "paragraph",
+            "text": "Endpoint highlights"
+          }
+        ]
+      }
+    },
+    {
+      "id": "preserve-edge-sender",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 164,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Sender"
+          },
+          {
+            "type": "paragraph",
+            "text": "Keep edge color"
+          }
+        ]
+      }
+    },
+    {
+      "id": "preserve-edge-receiver",
+      "kind": "roundedRect",
+      "x": 668,
+      "y": 164,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Receiver"
+          },
+          {
+            "type": "paragraph",
+            "text": "Endpoint highlights"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marker-only-sender",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 304,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Sender"
+          },
+          {
+            "type": "paragraph",
+            "text": "Marker only"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marker-only-receiver",
+      "kind": "roundedRect",
+      "x": 668,
+      "y": 304,
+      "width": 228,
+      "height": 92,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Receiver"
+          },
+          {
+            "type": "paragraph",
+            "text": "No endpoint highlight"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "automatic",
+      "from": "automatic-sender",
+      "to": "automatic-receiver",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Data link",
+      "style": {
+        "stroke": "#a855f7"
+      }
+    },
+    {
+      "id": "preserve-edge",
+      "from": "preserve-edge-sender",
+      "to": "preserve-edge-receiver",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Data link",
+      "style": {
+        "stroke": "#a855f7"
+      }
+    },
+    {
+      "id": "marker-only",
+      "from": "marker-only-sender",
+      "to": "marker-only-receiver",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Data link",
+      "style": {
+        "stroke": "#a855f7"
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "palette",
+      "label": "Document palette",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "This document stores mint node fills, teal highlights and white marker text. Purple links show their ordinary relationship color. Play to compare three highlight policies.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "automatic",
+      "label": "Automatic highlights",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "Automatic highlights: the link and participating nodes use the document's teal and mint emphasis colors. The teal Payload marker has white text.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "automatic",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": true,
+              "highlightParticipants": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "preserve-edge",
+      "label": "Keep edge color",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "Keep edge color: the link and its label stay purple while the Payload marker moves. Participating nodes still receive teal and mint highlights.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "preserve-edge",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": false,
+              "highlightParticipants": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marker-only",
+      "label": "Marker only",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "Marker only: the link stays purple and both nodes keep their ordinary appearance. Only the teal Payload marker moves. Reduced motion hides that marker.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "marker-only",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": false,
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "label": "Compare all three",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "Compare all three: identical Payload transfers use different paint policies. Teal marks emphasis; purple preserves the relationship color. Change theme or reduce motion to inspect the result.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "automatic",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": true,
+              "highlightParticipants": true
+            },
+            {
+              "type": "flow",
+              "target": "preserve-edge",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": false,
+              "highlightParticipants": true
+            },
+            {
+              "type": "flow",
+              "target": "marker-only",
+              "direction": "forward",
+              "text": "Payload",
+              "highlightEdge": false,
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "complete",
+      "label": "Palette travels with JSON",
+      "beats": [
+        {
+          "durationMs": 4000,
+          "caption": "The palette travels with downloaded JSON and exports. Edge and endpoint highlights are independent. With reduced motion, the marker-only row has no automatic visible cue.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

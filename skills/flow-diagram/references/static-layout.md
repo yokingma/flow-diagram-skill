@@ -28,9 +28,9 @@ The example gaps are teaching settings for its content and viewport. They do not
 
 Organize geometry around the selected diagram type or the defined main relationship of a free composition. Adapt the following examples within that semantic choice:
 
-- Architecture: group components by the stated system boundary, keep children in local coordinates, and label dependency arrows. Use a static overview so the whole structure is readable. For a layer overview, start from [layered architecture](../examples/layered-architecture.md); its groups are explanatory layers rather than system or deployment boundaries.
+- Architecture: group components by stated responsibility boundaries, keep children in local coordinates and label dependency arrows. Read [SDK architecture](../examples/complete/project-architecture.md) for a complete overview. Static reading and animated topic emphasis share one source; layer position alone establishes no call order.
 - Deployment: show named hosts, replicas and data stores only when the input states them. Put replicas on parallel rows and retain the actual routing relationships. Name each boundary as a host, location or trust zone according to the source; a generic group establishes none of those meanings.
-- Process: arrange source-supported stages left to right or top to bottom. Label branches and return paths when present; include no implied retry, timeout or success condition. Empty scenes are sufficient when the user needs a static process. Start from [application review](../examples/approval-review.md) for conditions, or [retry policy](../examples/retry-policy.md) when a bounded return is established.
+- Process: arrange source-supported stages left to right or top to bottom. Label branches and returns; invent no retry, timeout or success condition. Empty scenes suffice for a static process. [Basic shapes](../examples/capabilities/basic-shapes.md) supplies shape syntax; [task lifecycle](../examples/complete/job-lifecycle.md) supplies a separate complete state story.
 
 Apply the selected [design recipes](visual-design.md#design-methods-and-recipes) for spacing, containers, ports, and connection routes. Author explicit node dimensions. The SDK routes edges, but does not guarantee complete collision avoidance or global automatic layout.
 
@@ -48,10 +48,10 @@ Draft measurement covers node content and node labels. It does not measure edge-
 
 Before invoking the tool, compare every object, edge direction and parent relationship against the evidence. After the tool runs, read [diagnostics and revisions](diagnostics-and-revisions.md) for warning coverage and user decisions. For browser screenshots, read [visual inspection](visual-checks.md). Structural validation and finite layout checks are separate from actual visual inspection.
 
-To try a complete static example after installing the skill, first create a canonical [task workspace](tool-contract.md#task-workspace). Replace `<task-workspace>` with that path and run:
+To export a static overview of a complete architecture after installing the skill, first create a canonical [task workspace](tool-contract.md#task-workspace). Replace `<task-workspace>` with that path and run:
 
 ```text
-node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/layered-architecture.json --name layered-architecture --svg --time 0 --output "<task-workspace>/history"
+node <skill-directory>/scripts/flowsvg.mjs author --input <skill-directory>/examples/complete/project-architecture.json --name project-architecture --theme dark --svg --time 0 --output "<task-workspace>/history"
 node <skill-directory>/scripts/flowsvg.mjs measure --input <skill-directory>/resources/content-measurement.json
 ```
 

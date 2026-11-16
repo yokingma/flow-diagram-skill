@@ -1,0 +1,698 @@
+{
+  "version": 1,
+  "title": "FlowSVG: SDK architecture",
+  "viewport": {
+    "width": 1080,
+    "height": 736
+  },
+  "nodes": [
+    {
+      "id": "showcase",
+      "kind": "group",
+      "x": 24,
+      "y": 24,
+      "width": 1032,
+      "height": 172,
+      "label": "Showcase apps · private consumers · @flowsvg/showcase catalog + sessions"
+    },
+    {
+      "id": "native-app",
+      "kind": "roundedRect",
+      "parentId": "showcase",
+      "x": 16,
+      "y": 40,
+      "width": 316,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Native browser"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "flowsvg/browser",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Direct player integration"
+          }
+        ]
+      }
+    },
+    {
+      "id": "react-app",
+      "kind": "roundedRect",
+      "parentId": "showcase",
+      "x": 358,
+      "y": 40,
+      "width": 316,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "React app"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "flowsvg/react",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "React adapter lifecycle"
+          }
+        ]
+      }
+    },
+    {
+      "id": "vue-app",
+      "kind": "roundedRect",
+      "parentId": "showcase",
+      "x": 700,
+      "y": 40,
+      "width": 316,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Vue app"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "flowsvg/vue",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Vue adapter lifecycle"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sdk",
+      "kind": "group",
+      "x": 24,
+      "y": 236,
+      "width": 1032,
+      "height": 476,
+      "label": "FlowSVG SDK · public entries"
+    },
+    {
+      "id": "browser-layer",
+      "kind": "group",
+      "parentId": "sdk",
+      "x": 20,
+      "y": 44,
+      "width": 608,
+      "height": 190,
+      "label": "Browser integration · DOM + clock"
+    },
+    {
+      "id": "adapters",
+      "kind": "roundedRect",
+      "parentId": "browser-layer",
+      "x": 16,
+      "y": 40,
+      "width": 232,
+      "height": 135,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Host adapters"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Lifecycle",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "React · Vue\nWeb Component"
+          }
+        ]
+      }
+    },
+    {
+      "id": "browser",
+      "kind": "roundedRect",
+      "parentId": "browser-layer",
+      "x": 324,
+      "y": 40,
+      "width": 268,
+      "height": 135,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Browser player"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "DOM + clock",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Playback · controls\nGIF: optional Worker"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node-layer",
+      "kind": "group",
+      "parentId": "sdk",
+      "x": 716,
+      "y": 44,
+      "width": 296,
+      "height": 190,
+      "label": "Node tools · Node 20+"
+    },
+    {
+      "id": "node-tools",
+      "kind": "roundedRect",
+      "parentId": "node-layer",
+      "x": 16,
+      "y": 40,
+      "width": 264,
+      "height": 135,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Node tools"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "flowsvg/node",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "HTML: embedded player\nPNG/GIF: Chromium"
+          }
+        ]
+      }
+    },
+    {
+      "id": "core-layer",
+      "kind": "group",
+      "parentId": "sdk",
+      "x": 20,
+      "y": 284,
+      "width": 992,
+      "height": 172,
+      "label": "Platform-independent core · no DOM / network / browser clock"
+    },
+    {
+      "id": "core-validation",
+      "kind": "roundedRect",
+      "parentId": "core-layer",
+      "x": 16,
+      "y": 40,
+      "width": 224,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Validation"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "DiagramDocument",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Schema + references"
+          }
+        ]
+      }
+    },
+    {
+      "id": "core-timeline",
+      "kind": "roundedRect",
+      "parentId": "core-layer",
+      "x": 260,
+      "y": 40,
+      "width": 224,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Timeline"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Beats + actions",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Scenes → frame state"
+          }
+        ]
+      }
+    },
+    {
+      "id": "core-geometry",
+      "kind": "roundedRect",
+      "parentId": "core-layer",
+      "x": 504,
+      "y": 40,
+      "width": 224,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Geometry"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Positions + routes",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Layout · routes · hits"
+          }
+        ]
+      }
+    },
+    {
+      "id": "core-svg",
+      "kind": "roundedRect",
+      "parentId": "core-layer",
+      "x": 748,
+      "y": 40,
+      "width": 224,
+      "height": 115,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "SVG rendering"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Static output",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "SVG at any time"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "showcase-sdk",
+      "from": "showcase",
+      "to": "sdk",
+      "label": "Public SDK",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "adapters-browser",
+      "from": "adapters",
+      "to": "browser",
+      "label": "Wraps",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "browser-core",
+      "from": "browser",
+      "to": "core-layer",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "node-core",
+      "from": "node-tools",
+      "to": "core-layer",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "node-browser",
+      "from": "node-layer",
+      "to": "browser-layer",
+      "label": "PNG/GIF",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "overview",
+      "label": "SDK overview",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "FlowSVG separates a platform-independent core from browser integration and Node tools. The showcase sits outside the SDK. Arrows point from consumers to providers; groups describe responsibilities.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "label": "Platform-independent core",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "The core validates DiagramDocument, evaluates timeline and geometry, and renders static SVG. It has no DOM, network or browser clock. Browser and Node entries reuse this core.",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "core-layer"
+            },
+            {
+              "type": "highlight",
+              "target": "core-validation"
+            },
+            {
+              "type": "highlight",
+              "target": "core-timeline"
+            },
+            {
+              "type": "highlight",
+              "target": "core-geometry"
+            },
+            {
+              "type": "highlight",
+              "target": "core-svg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "browser",
+      "label": "Browser integration",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "Adapters wrap the browser player and own their host lifecycle. The player owns playback, controls and SVG DOM updates. Ordinary playback does not load the GIF encoder; optional GIF export samples SVG and encodes in a Worker.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "core-layer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "core-validation"
+            },
+            {
+              "type": "unhighlight",
+              "target": "core-timeline"
+            },
+            {
+              "type": "unhighlight",
+              "target": "core-geometry"
+            },
+            {
+              "type": "unhighlight",
+              "target": "core-svg"
+            },
+            {
+              "type": "highlight",
+              "target": "browser-layer"
+            },
+            {
+              "type": "highlight",
+              "target": "adapters"
+            },
+            {
+              "type": "highlight",
+              "target": "browser"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "node",
+      "label": "Node tools",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "Node assembles offline HTML from the document, built player and CSS without launching Chromium. PNG/GIF tools use preinstalled Chromium to run the same browser exporter in an isolated page; the PNG/GIF dependency applies only to image export.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "browser-layer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "adapters"
+            },
+            {
+              "type": "unhighlight",
+              "target": "browser"
+            },
+            {
+              "type": "highlight",
+              "target": "node-layer"
+            },
+            {
+              "type": "highlight",
+              "target": "node-tools"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boundary",
+      "label": "Public SDK consumers",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "Native, React and Vue showcase apps consume public SDK entries. The private @flowsvg/showcase package owns author data and presentation sessions; the SDK does not depend on them.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "node-layer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "node-tools"
+            },
+            {
+              "type": "highlight",
+              "target": "showcase"
+            },
+            {
+              "type": "highlight",
+              "target": "native-app"
+            },
+            {
+              "type": "highlight",
+              "target": "react-app"
+            },
+            {
+              "type": "highlight",
+              "target": "vue-app"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "label": "Architecture overview",
+      "beats": [
+        {
+          "durationMs": 6000,
+          "caption": "The core owns diagram meaning and rendering. Browser integration owns interactive playback; Node tools own offline packaging and automated image export. These are responsibility boundaries, with dependencies always visible.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "showcase"
+            },
+            {
+              "type": "unhighlight",
+              "target": "native-app"
+            },
+            {
+              "type": "unhighlight",
+              "target": "react-app"
+            },
+            {
+              "type": "unhighlight",
+              "target": "vue-app"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3221 @@
+{
+  "version": 1,
+  "title": "Background task lifecycle",
+  "viewport": {
+    "width": 868,
+    "height": 416
+  },
+  "nodes": [
+    {
+      "id": "queued",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 60,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Queued"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Queued · cancellable"
+          }
+        ]
+      }
+    },
+    {
+      "id": "running",
+      "kind": "roundedRect",
+      "x": 324,
+      "y": 60,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Running"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Run task · await result"
+          }
+        ]
+      }
+    },
+    {
+      "id": "retry",
+      "kind": "roundedRect",
+      "x": 624,
+      "y": 60,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Awaiting retry"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Temp error · retry timer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "completed",
+      "kind": "roundedRect",
+      "x": 324,
+      "y": 251,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Completed"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Terminal · no transitions"
+          }
+        ]
+      }
+    },
+    {
+      "id": "failed",
+      "kind": "roundedRect",
+      "x": 624,
+      "y": 251,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Failed"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Terminal · no transitions"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancelled",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 251,
+      "width": 220,
+      "height": 141,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Cancelled"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Possible state",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Event-driven changes"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Terminal · no transitions"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "schedule",
+      "from": "queued",
+      "to": "running",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Schedule"
+    },
+    {
+      "id": "temporary-error",
+      "from": "running",
+      "to": "retry",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left",
+      "label": "Temp error"
+    },
+    {
+      "id": "retry-timer",
+      "from": "retry",
+      "to": "running",
+      "route": "orthogonal",
+      "fromPort": "top",
+      "toPort": "top",
+      "label": "Retry timer"
+    },
+    {
+      "id": "success",
+      "from": "running",
+      "to": "completed",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "label": "Success"
+    },
+    {
+      "id": "exhausted",
+      "from": "running",
+      "to": "failed",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "label": "Retry limit"
+    },
+    {
+      "id": "cancel",
+      "from": "queued",
+      "to": "cancelled",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "label": "Cancel"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "submit",
+      "label": "Submit task A",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task A is queued. The blue node and Current tag identify the only active state. Arrow labels identify transition events.",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task A",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 0 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "execute",
+      "label": "Execution and temporary error",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task A is scheduled and starts running. This example allows two retries; that limit is a teaching choice, not a recommendation.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task A",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 0 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "schedule",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task A encounters a temporary error and waits for retry. It is no longer in the Running state.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task A",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 0 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "highlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "temporary-error",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recover",
+      "label": "Complete after retry",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task A starts its first retry when the retry timer fires, returning to Running.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task A",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 1 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "highlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "retry-timer",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task A succeeds and enters the Completed terminal state. Terminal states have no outgoing edges, so this task cannot later become failed or cancelled.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task A",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 1 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "highlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "success",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exhaust",
+      "label": "Independent task B hits its limit",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task B is independent, already running its second retry. This is a separate case, not a continuation of task A.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task B",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 2 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task B fails again at the example retry limit and enters the Failed terminal state.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task B",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 2 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "highlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "exhausted",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cancel",
+      "label": "Independent task C is cancelled",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task C is independent, currently queued and still cancellable. This case does not demonstrate cancellation during execution.",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task C",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 0 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "unhighlight",
+              "target": "cancel"
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "transitionMs": 0,
+          "caption": "Task C is cancelled by the user and enters the Cancelled terminal state. This diagram illustrates allowed transitions without calling a live task system.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "queued"
+            },
+            {
+              "type": "updateNode",
+              "target": "queued",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Queued"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Queued · cancellable"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "running"
+            },
+            {
+              "type": "updateNode",
+              "target": "running",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Running"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Run task · await result"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry"
+            },
+            {
+              "type": "updateNode",
+              "target": "retry",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Awaiting retry"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Temp error · retry timer"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "completed"
+            },
+            {
+              "type": "updateNode",
+              "target": "completed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Completed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "failed",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Failed"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Possible state",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Event-driven changes"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "cancelled"
+            },
+            {
+              "type": "updateNode",
+              "target": "cancelled",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Cancelled"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Current · Task C",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Retries 0 / 2"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Terminal · no transitions"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "unhighlight",
+              "target": "schedule"
+            },
+            {
+              "type": "unhighlight",
+              "target": "temporary-error"
+            },
+            {
+              "type": "unhighlight",
+              "target": "retry-timer"
+            },
+            {
+              "type": "unhighlight",
+              "target": "success"
+            },
+            {
+              "type": "unhighlight",
+              "target": "exhausted"
+            },
+            {
+              "type": "highlight",
+              "target": "cancel"
+            },
+            {
+              "type": "flow",
+              "target": "cancel",
+              "direction": "forward",
+              "highlightParticipants": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

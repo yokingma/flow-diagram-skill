@@ -1,62 +1,50 @@
 [
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: approval-review",
-    "scope": "examples/approval-review.json",
-    "description": "Fictional application: complete materials lead to review and a draft report; missing materials lead to return for revision. No resubmission, approval outcome, archive action, processing time or retry count is specified. Annotations describe existing relationships, not additional states."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/capabilities/basic-shapes.json",
+    "description": "Definition basic-shapes; packages/showcase/src/examples/basic-shapes.ts; MIT (c) 2026 zac_ma. JSON SHA-256 52ff12abe431830edd4a618b5dc314674f52e22cedf0d0738c8cf72030096f55. Host defaults: dark, speed 1, reducedMotion false. Start here to see every public node shape in one executable flow. The story also demonstrates measured preset labels, a group, orthogonal connections, highlights, label replacement and playback controls."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: retry-policy",
-    "scope": "examples/retry-policy.json",
-    "description": "Fictional policy: at most three total attempts including the first. Success exits; a temporary error below attempt three waits and retries; a temporary error on attempt three fails. Wait duration, cancellation and other errors are unknown. This static graph does not execute a counter or simulation."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/capabilities/emphasis-flow.json",
+    "description": "Definition emphasis-flow; packages/showcase/src/examples/emphasis-flow.ts; MIT (c) 2026 zac_ma. JSON SHA-256 bd674a10b361782e7882cd624086965431bdda0eae05cd1df8b901a85c88b013. Host defaults: dark, speed 1, reducedMotion false. Compare three sender-to-receiver transfers: automatic highlights, preserved relationship colors, and marker-only motion. A document palette supplies mint fills, teal highlights and white marker text across themes and exports."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: fan-in-capacity",
-    "scope": "examples/fan-in-capacity.json",
-    "description": "Fictional rates: A, B and C each supply one item/second to one queue; one worker processes two items/second and emits completed items. Sustained aggregate arrivals are three items/second. Queue capacity, overload policy, observed queue length and latency are unknown; no simulation is asserted."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/project-architecture.json",
+    "description": "Definition project-architecture; packages/showcase/src/examples/project-architecture.ts; MIT (c) 2026 zac_ma. JSON SHA-256 98ac6a04b100bb24cc1e79c3e28c0c16a4046652d3b24fe74e4eb1e700ea1630. Host defaults: dark, speed 1, reducedMotion false. Explore FlowSVG's responsibility layers: a platform-independent core, browser integration and Node tools inside the public SDK, with showcase apps outside it. Arrows point from consumers to providers. Playback highlights each layer while keeping the complete architecture visible."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: record-transformations",
-    "scope": "examples/record-transformations.json",
-    "description": "Fictional data pipeline: raw records are cleaned of format errors; valid records are counted by date; date/count pairs form a daily report. Error-record destination, volume and duration are unknown. The static pipeline is not an execution trace or success guarantee."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/rag-workflow.json",
+    "description": "Definition rag-workflow; packages/showcase/src/examples/rag-workflow.ts; MIT (c) 2026 zac_ma. JSON SHA-256 bc996b1d2867e4405d40ea7b61f16f0b22c41d7202a8960e749e4e8e291a764b. Host defaults: dark, speed 1, reducedMotion false. Explore RAG ingestion and online queries: share an embedding model, retrieve five candidates, optionally rerank to keep two, and generate a cited answer. The handbook, question and answer are fictional. No live model or database is used; chunk counts are teaching choices."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: layered-architecture",
-    "scope": "examples/layered-architecture.json",
-    "description": "Fictional access, domain and data layers each contain two columns of components. Two relations connect whole layers; the dashed governance sidebar contains policy and observability records. Layer order does not establish call order. Groups do not establish deployment or trust boundaries. Business constraints, scheduling, failure behavior and unspecified component dependencies remain unknown. Relationship annotations add no business objects."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/job-lifecycle.json",
+    "description": "Definition job-lifecycle; packages/showcase/src/examples/job-lifecycle.ts; MIT (c) 2026 zac_ma. JSON SHA-256 4416f551ce24c1ee716bb8b2a1b3e76c64f83a773f9ebe824685af74ae4897ab. Host defaults: dark, speed 1, reducedMotion false. Watch task events and state transitions: A completes after retry, independent B reaches its retry limit, and C is cancelled while queued. Exactly one state is current. Retry counts are teaching choices; no live tasks run."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: capability-overview",
-    "scope": "examples/capability-overview.json",
-    "description": "Fictional public-information studio: source organization and content editing are existing responsibilities; publishing support is a candidate capability. Public information is used. External authorization, model integration and launch timing are unknown. Parallel cards establish no calls or execution order."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/order-event-pipeline.json",
+    "description": "Definition order-event-pipeline; packages/showcase/src/examples/order-event-pipeline.ts; MIT (c) 2026 zac_ma. JSON SHA-256 ed4b33985074f1c57ea976477e7980c7cf631446a2d83d202054706057c7a287. Host defaults: dark, speed 1, reducedMotion false. Follow four fictional order events through a queue, validation, deduplication, valid/invalid routing and window aggregation. Two valid orders total CNY 200. IDs, counts and amounts remain traceable; no live message or data service is used."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: source-services",
-    "scope": "examples/source-services.json",
-    "description": "Fictional source collection: one category of public guides, two consultation channels (counter and online), and 21 candidate questions awaiting verification. The collection maps as a whole to guide retrieval, consultation routing, question collection and content maintenance. Counts are not delivery commitments. No item-by-item mapping, runtime dependency or all-to-all routing is specified; group boundaries express information scope."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/web-service-deployment.json",
+    "description": "Definition web-service-deployment; packages/showcase/src/examples/web-service-deployment.ts; MIT (c) 2026 zac_ma. JSON SHA-256 c48826616fa852de1b9ac26d00b5a583eb1d23f2d81198fad1f6c64a4038ce77. Host defaults: dark, speed 1, reducedMotion false. Explore the public entry, two private app replicas and the data tier. Queries use the load balancer, cache and primary; replication and health checks are separate. After A becomes unhealthy, later requests go to B. No live infrastructure is used."
   },
   {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: content-cards",
-    "scope": "examples/content-cards.json",
-    "description": "Teaching topics compare source organization, visual organization and review at target size, distinguishing facts/unknowns, measurement/authored geometry and tool checks/actual viewing. These are authoring concerns, not external business facts. Group cards, list blocks and decorative tag backgrounds/text provide layout structure; the arrangement establishes no execution dependencies."
-  },
-  {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: query-round-trip",
-    "scope": "examples/query-round-trip.json",
-    "description": "Fictional successful exchange: one client sends one query, the service obtains a result and returns it. Distinct edges preserve request and response directions; the service changes from waiting to result-ready. Timeout, failure, payload details and real processing time are unknown. Transfer duration and reading holds are explanatory choices."
-  },
-  {
-    "kind": "prompt",
-    "reference": "Fictional teaching setup: parallel-transfers",
-    "scope": "examples/parallel-transfers.json",
-    "description": "Fictional resource station sends public guides and service notices to one service desk through two independent same-direction relationships. All objects remain visible. An 800ms opening, three 2400ms simultaneous transfers and a 1000ms final hold are presentation choices, not throughput, business scheduling or request/response behavior. Relationship annotations add no participants."
+    "kind": "repository",
+    "reference": "https://github.com/yokingma/FlowSVG/tree/02eda6e4172ad8c3c1383290e107b53bf0ea0c985",
+    "scope": "examples/complete/cache-aside-sequence.json",
+    "description": "Definition cache-aside-sequence; packages/showcase/src/examples/cache-aside-sequence.ts; MIT (c) 2026 zac_ma. JSON SHA-256 74a7b0aec1f49cc8a2dac208aa4b749964020fab049825673b6562d66c9be81c. Host defaults: dark, speed 1, reducedMotion false. Follow seven message rows between the client, API, cache and database: request, miss, record and cache fill. Lanes identify participants; vertical position indicates message order. Straight arrows and default styling keep this teaching sequence simple."
   }
 ]

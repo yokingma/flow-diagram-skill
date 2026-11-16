@@ -1,6 +1,6 @@
 # FlowSVG showcase previews
 
-The three example animations in the project READMEs are referenced directly from the [upstream repository](https://github.com/yokingma/FlowSVG/blob/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/README.zh-CN.md) instead of being stored here. They are documentation assets, outside the installed Skill directory.
+The three animations previously displayed in the project READMEs were referenced directly from the [upstream repository](https://github.com/yokingma/FlowSVG/blob/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/README.zh-CN.md) instead of being stored here. The current READMEs link to the installed complete showcase snapshots; this page retains historical attribution, not current acceptance evidence.
 
 - Source repository: [yokingma/FlowSVG](https://github.com/yokingma/FlowSVG).
 - Source commit: [`952826129edb0a8e0ff9704e7bbd10df6fc1bec3`](https://github.com/yokingma/FlowSVG/tree/952826129edb0a8e0ff9704e7bbd10df6fc1bec3).

@@ -1,8 +1,8 @@
-# Teaching example workshop
+# Example workshop
 
 [简体中文](README.zh-CN.md)
 
-Use this directory to make and revise candidates for the [installed teaching library](../skills/flow-diagram/examples/README.md). [Development exercises](development/README.md) are API inputs rather than selected visual examples.
+Maintain pinned upstream showcase snapshots for the [installed library](../skills/flow-diagram/examples/README.md). The complete stories are shared by the SDK Native, React and Vue demos. Focused capability examples reuse that same catalog; duplicate development exercises are not maintained here.
 
 ## Preview the example library
 
@@ -12,23 +12,21 @@ From the repository root, use Node 20+, npm and pnpm `10.12.1`:
 pnpm examples:preview
 ```
 
-Open `examples/.preview/index.html` in a browser. The command scans these two locations without recursion:
+Open `examples/.preview/index.html` in a browser. The command scans two explicit directories without recursion:
 
 | Gallery section | Source files |
 | --- | --- |
-| Selected teaching examples | `skills/flow-diagram/examples/*.json` |
-| Development exercises | `examples/development/*.json` |
+| Complete examples | `skills/flow-diagram/examples/complete/*.json` |
+| SDK capabilities | `skills/flow-diagram/examples/capabilities/*.json` |
 
-Candidates under `examples/<name>/diagram.json` have their own current preview and are outside this gallery. The development-exercise section contains API exercises, not all diagrams under development.
+Each card links to its source, adjacent note when present and full offline player. The complete documents also supply static reading states; consult the note and current compilation before exporting a later frame. Players start paused with the upstream dark theme, speed 1 and reduced motion off. Narrow windows can scroll each diagram horizontally.
 
-Each card links to its source, adjacent teaching note when present, and full offline player. Animations start paused; use their playback controls. Narrow windows can scroll each diagram horizontally.
+Rerun the command and reload after source additions, changes or removals. It replaces `examples/.preview/`, without a watcher or server. Rendering failure returns nonzero with the source path and leaves no successful index. Correct the reported input and rebuild. Generation does not establish visual quality.
 
-After changing, adding or removing a source, rerun the command and reload the page. The command replaces the same `examples/.preview/` directory; it does not watch files or run a server. A failed render returns a nonzero status with the source path and leaves no successful gallery index. Fix the reported input and rerun. Generating previews does not establish visual quality or select an exercise for installation.
+The generator uses the installed CLI's exact isolated SDK baseline; the first run can prepare it from npm, then a complete cache supports offline reuse. No browser executable is needed to generate the gallery. Source bytes stay unchanged. Git tracks the [template](gallery.html), [generator](../scripts/preview-examples.mjs), JSON snapshots and notes; generated HTML, JSON copies and reports are ignored outside the installation unit.
 
-Git tracks the [page template](gallery.html), [generator](../scripts/preview-examples.mjs) and original sources. Generated HTML, copied JSON and CLI reports are ignored, reproducible outputs outside the installation unit. The generator uses the installed CLI's exact isolated SDK baseline; the first run may prepare its runtime from npm, then a complete cache supports offline reuse. No browser executable is needed to generate the gallery. Source files remain unchanged, with no second maintained source list or copy.
+## Import or revise a candidate
 
-## Make or revise a candidate
+Pin an upstream commit and generate standalone JSON from its TypeScript author definitions. Record source identity, license, JSON hash and any presentation overrides in the adjacent note; link the [shared execution and viewing conditions](../skills/flow-diagram/examples/README.md#run-and-inspect). Check default theme explicitly: upstream host settings are outside the JSON. Preserve complete document semantics and validate it with the Skill's locked public runtime; upstream acceptance is not current Skill acceptance.
 
-Use English for reusable example titles, diagram text, animation captions and teaching notes. For a new candidate, keep one current source, an openable current preview and a short note stating the reader's question, source facts, composition or animation choices, primary display conditions and limits. Consolidate substantive findings in one temporary `issues.md`. Generated previews and process records stay local and ignored by Git.
-
-Follow [teaching-example maintenance](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance) to actually view outputs and present candidates for batch user selection. Once selected, move the source and concise note into the installed library and remove candidate copies and duplicate outputs. The installed source is the only publication source. Begin later substantive revisions with a temporary working copy from that source.
+Keep one temporary candidate source, current preview and concise English note under `examples/<name>/`, outside the published gallery. Record material findings in one temporary `issues.md`; generated previews and process records stay ignored. Follow [example maintenance](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance) for verification, selection, publication and later snapshot updates, applying any existing user authorization. For a user's diagram, use [task-local adaptation](../skills/flow-diagram/examples/README.md#adapt-an-example).

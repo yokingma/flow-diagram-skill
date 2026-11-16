@@ -1,8 +1,8 @@
-# 教学示例工作区
+# 示例工作区
 
 [English](README.md)
 
-在此目录制作和修订候选，供[已安装的教学示例库](../skills/flow-diagram/examples/README.md)选用。[开发练习](development/README.md)是 API 输入，不是已选入的视觉示例。
+在此维护供[安装示例库](../skills/flow-diagram/examples/README.md)使用的上游 showcase 固定快照。完整案例由 SDK Native、React、Vue demo 共用；必要能力示例也复用同一目录，此处不再维护重复开发练习。
 
 ## 预览示例库
 
@@ -12,23 +12,21 @@
 pnpm examples:preview
 ```
 
-在浏览器中打开 `examples/.preview/index.html`。命令会扫描以下两个位置，不递归扫描：
+在浏览器打开 `examples/.preview/index.html`。命令仅扫描两个明确目录，不递归：
 
-| 预览分区 | 源文件 |
+| 画廊分区 | 源文件 |
 | --- | --- |
-| 已选入的教学示例 | `skills/flow-diagram/examples/*.json` |
-| 开发练习 | `examples/development/*.json` |
+| 完整案例 | `skills/flow-diagram/examples/complete/*.json` |
+| SDK 必要能力 | `skills/flow-diagram/examples/capabilities/*.json` |
 
-`examples/<name>/diagram.json` 下的候选使用各自当前的预览，不纳入此总览。开发练习分区只包含 API 练习，不代表全部开发中的图表。
+每张卡片链接源文件、相邻说明（如有）和完整离线播放器。完整文档也提供静态阅读阶段；导出后续画面前先阅读说明与当前编译结果。播放器按上游默认深色、速度 1、减少动效关闭启动，初始暂停；窄窗口可横向滚动图解。
 
-每张卡片都链接到源文件、相邻的教学说明（如有）和完整离线播放器。动画默认暂停，可使用播放器控件。窗口较窄时，可横向滚动图表。
+添加、修改或删除源后重跑并刷新。命令替换 `examples/.preview/`，不监听文件也不启动服务器。渲染失败返回非零状态、报告源路径，不留下成功索引；修正输入后重建。生成成功不代表视觉质量。
 
-添加、修改或删除源文件后，重新运行命令并刷新页面。命令会替换同一个 `examples/.preview/` 目录；它不会监听文件变化，也不会启动服务器。如果渲染失败，命令会返回非零状态并报告源文件路径，且不会留下可用的总览页。修复报告中的输入后重试。生成预览不能证明视觉质量，也不会自动选入示例。
+生成器使用安装 CLI 锁定的隔离 SDK 基线，首次可从 npm 准备环境，缓存完整后支持离线复用。生成画廊不需要浏览器可执行文件，源字节保持不变。Git 跟踪[模板](gallery.html)、[生成器](../scripts/preview-examples.mjs)、JSON 快照与说明；生成 HTML、JSON 副本和报告在安装单元外忽略。
 
-Git 跟踪[页面模板](gallery.html)、[生成器](../scripts/preview-examples.mjs)和原始源文件。生成的 HTML、JSON 副本和 CLI 报告会被忽略；这些输出可重复生成，并且位于 Skill 安装单元之外。生成器使用已安装 CLI 锁定的 SDK 基线。首次运行可能会从 npm 准备运行环境；缓存完整后，可离线复用。生成总览不需要浏览器可执行文件。源文件不会被修改，也不需要维护第二份源列表或副本。
+## 导入或修订候选
 
-## 制作或修订候选
+固定上游提交，从其 TypeScript 创作定义生成独立 JSON。相邻说明记录来源身份、许可、JSON 哈希及个别展示覆盖值，并链接[共用执行与查看条件](../skills/flow-diagram/examples/README.md#run-and-inspect)。上游宿主设置在 JSON 外，需显式核对主题。保留完整语义，用 Skill 锁定的公开运行时验证；上游验收不代表本次 Skill 验收。
 
-可复用示例的标题、图中文字、动画字幕和教学说明使用英文。每个新候选保留一份当前源文件、可打开的当前预览，以及简短说明；说明应交代读者的问题、源事实、构图或动画选择、主要展示条件和限制。将实质性发现集中记录在一个临时 `issues.md` 中。生成的预览和过程记录仅保留在本地，并由 Git 忽略。
-
-按照[教学示例维护流程](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance)实际查看输出，并将候选提交给用户批量选择。候选获选后，将源文件和精简说明移入已安装的示例库，并删除候选副本及重复输出。已安装目录中的源文件是唯一发布源。之后进行实质性修订时，从该源文件创建临时工作副本。
+在 `examples/<name>/` 保留一份临时候选源、当前预览和精简英文说明，不混入已发布画廊。实质性发现集中记入一个临时 `issues.md`，生成预览和过程记录保持忽略。验证、选入、发布及后续快照更新遵循[示例维护流程](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance)，并应用已有用户授权。为用户图解改编时，使用[任务内草稿](../skills/flow-diagram/examples/README.md#adapt-an-example)。

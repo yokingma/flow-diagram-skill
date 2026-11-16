@@ -1,0 +1,703 @@
+{
+  "version": 1,
+  "title": "Web service: Two-replica deployment",
+  "viewport": {
+    "width": 922,
+    "height": 756
+  },
+  "nodes": [
+    {
+      "id": "public-network",
+      "kind": "group",
+      "x": 64,
+      "y": 24,
+      "width": 834,
+      "height": 200,
+      "label": "Public entry · HTTPS"
+    },
+    {
+      "id": "browser",
+      "kind": "roundedRect",
+      "parentId": "public-network",
+      "x": 556,
+      "y": 44,
+      "width": 220,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Browser"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Client",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Request an order"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "GET /orders/O101"
+          }
+        ]
+      }
+    },
+    {
+      "id": "entry",
+      "kind": "roundedRect",
+      "parentId": "public-network",
+      "x": 286,
+      "y": 44,
+      "width": 220,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Public entry"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "HTTPS endpoint",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "One public address"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Entry layer · not an app"
+          }
+        ]
+      }
+    },
+    {
+      "id": "load-balancer",
+      "kind": "roundedRect",
+      "parentId": "public-network",
+      "x": 16,
+      "y": 44,
+      "width": 220,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Load balancer"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Choose healthy instances",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Route to a replica"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Run ongoing health checks"
+          }
+        ]
+      }
+    },
+    {
+      "id": "private-network",
+      "kind": "group",
+      "x": 64,
+      "y": 274,
+      "width": 834,
+      "height": 458,
+      "label": "Private network · app and data services"
+    },
+    {
+      "id": "applications",
+      "kind": "group",
+      "parentId": "private-network",
+      "x": 16,
+      "y": 44,
+      "width": 250,
+      "height": 398,
+      "label": "Application tier · two replicas"
+    },
+    {
+      "id": "app-a",
+      "kind": "roundedRect",
+      "parentId": "applications",
+      "x": 16,
+      "y": 44,
+      "width": 218,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "App replica A"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Healthy",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Handle order queries"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "A · same application"
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-b",
+      "kind": "roundedRect",
+      "parentId": "applications",
+      "x": 16,
+      "y": 238,
+      "width": 218,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "App replica B"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Healthy",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Same app, second copy"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "B · no zone guarantee"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data",
+      "kind": "group",
+      "parentId": "private-network",
+      "x": 316,
+      "y": 44,
+      "width": 502,
+      "height": 398,
+      "label": "Data tier · cache and database"
+    },
+    {
+      "id": "cache",
+      "kind": "roundedRect",
+      "parentId": "data",
+      "x": 16,
+      "y": 238,
+      "width": 200,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Cache"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "May be empty",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Cache order results"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Assume a cache miss"
+          }
+        ]
+      }
+    },
+    {
+      "id": "primary",
+      "kind": "roundedRect",
+      "parentId": "data",
+      "x": 266,
+      "y": 44,
+      "width": 220,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "DB primary"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Read and write",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Store order records"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Read O101 for this query"
+          }
+        ]
+      }
+    },
+    {
+      "id": "replica",
+      "kind": "roundedRect",
+      "parentId": "data",
+      "x": 266,
+      "y": 238,
+      "width": 220,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "DB read replica"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Read only",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Copy primary data"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Reject application writes"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "https",
+      "from": "browser",
+      "to": "entry",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "entry-route",
+      "from": "entry",
+      "to": "load-balancer",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "route-a",
+      "from": "load-balancer",
+      "to": "app-a",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "left"
+    },
+    {
+      "id": "route-b",
+      "from": "load-balancer",
+      "to": "app-b",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "left"
+    },
+    {
+      "id": "health-a",
+      "from": "load-balancer",
+      "to": "app-a",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "left",
+      "label": "Health check"
+    },
+    {
+      "id": "cache-read",
+      "from": "app-a",
+      "to": "cache",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "top"
+    },
+    {
+      "id": "database-read",
+      "from": "app-a",
+      "to": "primary",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "replication",
+      "from": "primary",
+      "to": "replica",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "label": "Replication"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "entry",
+      "label": "Public request entry",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "The browser requests O101 over HTTPS through one public entry. Groups represent runtime locations and network boundaries, not task steps.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "https",
+              "direction": "forward",
+              "text": "HTTPS"
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "caption": "The public entry forwards to the load balancer. Both app replicas run the same application; they are not distinct business services. No availability-zone placement is promised.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "entry-route",
+              "direction": "forward",
+              "text": "Request"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "application",
+      "label": "Request reaches replica A",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "The load balancer selects healthy app replica A for this request. The private network contains application and data tiers; the browser cannot access the database directly.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "route-a",
+              "direction": "forward",
+              "text": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "query",
+      "label": "Cache and database reads",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "App replica A checks the cache first. This teaching sample assumes a miss, so the app then reads the database primary.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "cache-read",
+              "direction": "forward",
+              "text": "Cache read"
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "caption": "App replica A queries O101 from the primary. This read does not use the read replica, and the application does not write to that replica.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "database-read",
+              "direction": "forward",
+              "text": "Read O101"
+            }
+          ]
+        },
+        {
+          "durationMs": 2000,
+          "caption": "The primary returns O101. Arrows distinguish query and response directions. Connections indicate reachability, not actual latency.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "database-read",
+              "direction": "reverse",
+              "text": "Order record"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response",
+      "label": "Return through the entry",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "Replica A finishes the query. The response travels through the load balancer and public entry to the browser. Three simultaneous return transfers illustrate the path.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "route-a",
+              "direction": "reverse",
+              "text": "Response"
+            },
+            {
+              "type": "flow",
+              "target": "entry-route",
+              "direction": "reverse",
+              "text": "Response"
+            },
+            {
+              "type": "flow",
+              "target": "https",
+              "direction": "reverse",
+              "text": "Response"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "replication",
+      "label": "Independent database replication",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "An independent background relationship copies existing writes from the primary to its read replica. The preceding read did not trigger these writes. This does not promise synchronous acknowledgement or automatic database failover.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "replication",
+              "direction": "forward",
+              "text": "Existing writes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "health",
+      "label": "Health status changes",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "A scripted health check marks replica A unhealthy. This is a fixed teaching action, not live monitoring; the completed query is unaffected by this later event.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "health-a",
+              "direction": "forward",
+              "text": "Failed"
+            },
+            {
+              "type": "updateNode",
+              "target": "app-a",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "App replica A"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Unhealthy",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "Stop new requests"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Scripted · not live"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reroute",
+      "label": "Route later requests to B",
+      "beats": [
+        {
+          "durationMs": 2000,
+          "caption": "Later requests go to healthy replica B instead of unhealthy A. This illustrates app traffic routing, not database failover, autoscaling or cross-region disaster recovery.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "route-b",
+              "direction": "forward",
+              "text": "B"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

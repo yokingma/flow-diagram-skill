@@ -6,19 +6,18 @@ An Agent Skill built on [FlowSVG](https://github.com/yokingma/FlowSVG) for creat
 
 ## Examples
 
-Upstream FlowSVG SDK showcase animations illustrate request flows, deployment architecture, and model inference. Browse the [interactive demo](https://yokingma.github.io/FlowSVG/) or see the [asset sources and versions](docs/images/flowsvg/README.md).
+Complete examples reuse the shared FlowSVG SDK showcases used by the Native, React and Vue demos. Browse the [interactive demo](https://yokingma.github.io/FlowSVG/) or regenerate the [local gallery](examples/README.md#preview-the-example-library) from pinned installed sources.
 
-### Request and response
+| Complete example | What it explains |
+| --- | --- |
+| [SDK architecture](skills/flow-diagram/examples/complete/project-architecture.md) | Responsibility layers and dependencies |
+| [RAG workflow](skills/flow-diagram/examples/complete/rag-workflow.md) | Sources, retrieval and cited answers |
+| [Task lifecycle](skills/flow-diagram/examples/complete/job-lifecycle.md) | Retry, terminal states and cancellation |
+| [Order-event pipeline](skills/flow-diagram/examples/complete/order-event-pipeline.md) | Validation, deduplication and metrics |
+| [Web deployment](skills/flow-diagram/examples/complete/web-service-deployment.md) | Runtime boundaries, replicas and routing |
+| [Cache-aside sequence](skills/flow-diagram/examples/complete/cache-aside-sequence.md) | Ordered request and return messages |
 
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="Animated request and response between a client and service" width="700"></p>
-
-### Web service deployment
-
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/web-service-deployment.gif" alt="Web service deployment with two application replicas" width="700"></p>
-
-### LLM inference
-
-<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="LLM inference with Transformer layers and KV Cache reuse" width="700"></p>
+Each document supports animation and static reading through selected states. [SDK capability examples](skills/flow-diagram/examples/capabilities/README.md) cover shape syntax and flow highlighting. Source commits, defaults and viewing limits are recorded with each example; the online demo can be a different revision.
 
 ## Install
 
@@ -102,7 +101,7 @@ Direct CLI users receive a concise saved-authoring result; follow its `detailsPa
 
 This **Skill** guides the assistant through reading sources, designing the explanation, authoring and revising the diagram, planning layout, inspecting results, and delivering files and reports. **FlowSVG SDK** supplies its rendering and playback foundation. To embed diagrams in an application, the SDK offers native browser, React, Vue, and Web Component integrations; see the [SDK repository](https://github.com/yokingma/FlowSVG) and [npm package](https://www.npmjs.com/package/flowsvg).
 
-Diagrams support plain-label decision, input/output, report and predefined-process shapes. Start with the [application review](skills/flow-diagram/examples/approval-review.md) and its [measurement guidance](skills/flow-diagram/references/document-model.md#preset-labels).
+Diagrams support plain-label decision, input/output, report and predefined-process shapes. Start with [basic shapes](skills/flow-diagram/examples/capabilities/basic-shapes.md) and its [measurement guidance](skills/flow-diagram/references/document-model.md#preset-labels).
 
 ### Runtime dependencies
 

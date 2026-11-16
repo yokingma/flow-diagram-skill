@@ -1,0 +1,719 @@
+{
+  "version": 1,
+  "title": "Order events: From ingestion to metrics",
+  "viewport": {
+    "width": 964,
+    "height": 580
+  },
+  "nodes": [
+    {
+      "id": "events",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 24,
+      "width": 240,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Order events"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "4 raw events",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "E1 / E2 / E1 / E3"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Duplicates · missing fields"
+          }
+        ]
+      }
+    },
+    {
+      "id": "queue",
+      "kind": "roundedRect",
+      "x": 314,
+      "y": 24,
+      "width": 240,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Event queue"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Buffer and decouple",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "eventId + order data"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Demo · no message service"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation",
+      "kind": "roundedRect",
+      "x": 604,
+      "y": 24,
+      "width": 300,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Validate + dedup"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Deduplicate by eventId",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Check order ID and amount"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Keep duplicate events out of records"
+          }
+        ]
+      }
+    },
+    {
+      "id": "details",
+      "kind": "roundedRect",
+      "x": 604,
+      "y": 218,
+      "width": 300,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Order records"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Valid records",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Await validated orders"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Accept valid, unique records only"
+          }
+        ]
+      }
+    },
+    {
+      "id": "aggregate",
+      "kind": "roundedRect",
+      "x": 314,
+      "y": 218,
+      "width": 240,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Aggregate"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Demo window: 1 minute",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Order count + total"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Currency: CNY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dashboard",
+      "kind": "roundedRect",
+      "x": 24,
+      "y": 218,
+      "width": 240,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Dashboard"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Window result",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Await aggregate metrics"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Teaching data only"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quarantine",
+      "kind": "roundedRect",
+      "x": 604,
+      "y": 412,
+      "width": 300,
+      "height": 144,
+      "content": {
+        "style": {
+          "padding": 12,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Quarantined records"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "tags": [
+                  {
+                    "text": "Invalid records",
+                    "style": {
+                      "shape": "pill",
+                      "fontSize": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Await validation errors"
+          },
+          {
+            "type": "paragraph",
+            "role": "auxiliary",
+            "text": "Store separately from valid records"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "collect",
+      "from": "events",
+      "to": "queue",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "consume",
+      "from": "queue",
+      "to": "validation",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "valid-orders",
+      "from": "validation",
+      "to": "details",
+      "route": "orthogonal",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "invalid-record",
+      "from": "validation",
+      "to": "quarantine",
+      "route": "orthogonal",
+      "fromPort": "right",
+      "toPort": "right"
+    },
+    {
+      "id": "aggregate-orders",
+      "from": "details",
+      "to": "aggregate",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "publish-metrics",
+      "from": "aggregate",
+      "to": "dashboard",
+      "route": "orthogonal",
+      "fromPort": "left",
+      "toPort": "right"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "collect",
+      "label": "Ingest four events",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "The fixed sample E1/E2/E1/E3 has four events: E1 is order O101 for CNY 120; E2 is O102 for CNY 80. The second E1 is a duplicate; E3 has no amount.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "collect",
+              "direction": "forward",
+              "text": "4 events"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "consume",
+      "label": "Buffer and consume",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "The queue buffers events for processing, preserving eventId, order ID and amount. The queue itself does not validate business fields or deduplicate by eventId.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "consume",
+              "direction": "forward",
+              "text": "E1 E2 E1 E3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "validate",
+      "label": "Validate + dedup",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "Deduplicate by eventId and check fields: 2 valid, 1 duplicate and 1 invalid still account for all 4 inputs. Drop duplicate E1; do not write it to order records or quarantine.",
+          "actions": [
+            {
+              "type": "updateNode",
+              "target": "validation",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Validate + dedup"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "4 = 2 + 1 + 1",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "2 valid · 1 dup · 1 invalid"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Drop E1 copy · E3 lacks amount"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "highlight",
+              "target": "validation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "label": "Split valid and invalid",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "Two valid records enter order storage: O101 for CNY 120 and O102 for CNY 80. Quarantine E3 because its amount is missing. Exclude both invalid and duplicate inputs from aggregation.",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "validation"
+            },
+            {
+              "type": "flow",
+              "target": "valid-orders",
+              "direction": "forward",
+              "text": "E1 + E2"
+            },
+            {
+              "type": "flow",
+              "target": "invalid-record",
+              "direction": "forward",
+              "text": "E3"
+            },
+            {
+              "type": "updateNode",
+              "target": "details",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Order records"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "2 valid records",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "O101 CNY 120 · O102 CNY 80"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Sources: E1 and E2 · no duplicates"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "updateNode",
+              "target": "quarantine",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Quarantined records"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "1 invalid record",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "E3 has no amount"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "Keep reason · exclude from metrics"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aggregate",
+      "label": "Aggregate a window",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "Aggregate the two valid records in the same demo one-minute window: 2 orders, with amounts 120 + 80 = CNY 200. The window is a teaching choice.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "aggregate-orders",
+              "direction": "forward",
+              "text": "2 records"
+            },
+            {
+              "type": "updateNode",
+              "target": "aggregate",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Aggregate"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Demo window: 1 minute",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "2 orders · CNY 200"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "E1 + E2 · 120 + 80"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "publish",
+      "label": "Publish window metrics",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "The dashboard receives the window summary, not the four raw events: CNY 200 across 2 orders. Duplicate and invalid inputs are excluded.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "publish-metrics",
+              "direction": "forward",
+              "text": "2 orders / CNY 200"
+            },
+            {
+              "type": "updateNode",
+              "target": "dashboard",
+              "value": {
+                "content": {
+                  "style": {
+                    "padding": 12,
+                    "blockGap": 6
+                  },
+                  "blocks": [
+                    {
+                      "type": "title",
+                      "text": "Dashboard"
+                    },
+                    {
+                      "type": "list",
+                      "items": [
+                        {
+                          "tags": [
+                            {
+                              "text": "Valid order metrics",
+                              "style": {
+                                "shape": "pill",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "paragraph",
+                      "text": "2 orders · CNY 200"
+                    },
+                    {
+                      "type": "paragraph",
+                      "role": "auxiliary",
+                      "text": "CNY · demo window result"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overview",
+      "label": "Data shapes and destinations",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "caption": "Overview: 4 raw events become 2 valid records, totaling 2 orders and CNY 200. Drop 1 duplicate and quarantine 1 invalid record. No live data service is accessed.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

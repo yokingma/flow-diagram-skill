@@ -1,0 +1,369 @@
+{
+  "version": 1,
+  "title": "Cache miss: Read and populate",
+  "viewport": {
+    "width": 948,
+    "height": 572
+  },
+  "nodes": [
+    {
+      "id": "client",
+      "kind": "group",
+      "label": "Client · requester",
+      "x": 24,
+      "y": 24,
+      "width": 180,
+      "height": 524
+    },
+    {
+      "id": "api",
+      "kind": "group",
+      "label": "API · order service",
+      "x": 264,
+      "y": 24,
+      "width": 180,
+      "height": 524
+    },
+    {
+      "id": "cache",
+      "kind": "group",
+      "label": "Cache · optional value",
+      "x": 504,
+      "y": 24,
+      "width": 180,
+      "height": 524
+    },
+    {
+      "id": "database",
+      "kind": "group",
+      "label": "Database · source",
+      "x": 744,
+      "y": 24,
+      "width": 180,
+      "height": 524
+    },
+    {
+      "id": "request-0",
+      "kind": "ellipse",
+      "parentId": "client",
+      "x": 86,
+      "y": 80,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "request-1",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 80,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-get-0",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 150,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-get-1",
+      "kind": "ellipse",
+      "parentId": "cache",
+      "x": 86,
+      "y": 150,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-miss-0",
+      "kind": "ellipse",
+      "parentId": "cache",
+      "x": 86,
+      "y": 220,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-miss-1",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 220,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "database-get-0",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 290,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "database-get-1",
+      "kind": "ellipse",
+      "parentId": "database",
+      "x": 86,
+      "y": 290,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "database-result-0",
+      "kind": "ellipse",
+      "parentId": "database",
+      "x": 86,
+      "y": 360,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "database-result-1",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 360,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-set-0",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 430,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "cache-set-1",
+      "kind": "ellipse",
+      "parentId": "cache",
+      "x": 86,
+      "y": 430,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "response-0",
+      "kind": "ellipse",
+      "parentId": "api",
+      "x": 86,
+      "y": 500,
+      "width": 8,
+      "height": 8
+    },
+    {
+      "id": "response-1",
+      "kind": "ellipse",
+      "parentId": "client",
+      "x": 86,
+      "y": 500,
+      "width": 8,
+      "height": 8
+    }
+  ],
+  "edges": [
+    {
+      "id": "request",
+      "from": "request-0",
+      "to": "request-1",
+      "route": "straight",
+      "label": "① GET O101",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "cache-get",
+      "from": "cache-get-0",
+      "to": "cache-get-1",
+      "route": "straight",
+      "label": "② GET order:O101",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "cache-miss",
+      "from": "cache-miss-0",
+      "to": "cache-miss-1",
+      "route": "straight",
+      "label": "③ MISS",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "database-get",
+      "from": "database-get-0",
+      "to": "database-get-1",
+      "route": "straight",
+      "label": "④ SELECT O101",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "database-result",
+      "from": "database-result-0",
+      "to": "database-result-1",
+      "route": "straight",
+      "label": "⑤ O101 / CNY 120",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "cache-set",
+      "from": "cache-set-0",
+      "to": "cache-set-1",
+      "route": "straight",
+      "label": "⑥ SET O101 / CNY 120",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "response",
+      "from": "response-0",
+      "to": "response-1",
+      "route": "straight",
+      "label": "⑦ 200 / O101",
+      "fromPort": "left",
+      "toPort": "right"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "request",
+      "label": "Request reaches the API",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "Read from top to bottom. The client requests order O101; the API uses cache-aside reads. This is one fixed teaching request.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "request",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cache-get",
+      "label": "Read the cache",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "The API sends GET order:O101 to the cache. The request points right; the next row shows the cache response separately.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "cache-get",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cache-miss",
+      "label": "Cache returns MISS",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "The cache returns MISS to the API. A missing cache value does not mean the database record is absent, so the API queries the database next.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "cache-miss",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "database-get",
+      "label": "Read the database",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "The API queries order O101 in the database. The arrow crosses the cache lane; the cache does not forward this request.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "database-get",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "database-result",
+      "label": "Database returns the record",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "Assume the database contains the record. It returns O101 for CNY 120 to the API, pointing left, opposite to the SELECT request.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "database-result",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cache-set",
+      "label": "Populate the cache",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "The API writes the retrieved record to the cache. Assume SET succeeds; its acknowledgement is omitted for brevity. Timeouts, consistency and concurrent misses are outside this example.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "cache-set",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response",
+      "label": "Return the result",
+      "beats": [
+        {
+          "durationMs": 2500,
+          "caption": "The API returns O101 for CNY 120 to the client. Seven message rows show a cache miss, database read and cache fill. No live cache or database is called.",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "response",
+              "direction": "forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overview",
+      "label": "Complete sequence",
+      "beats": [
+        {
+          "durationMs": 1500,
+          "caption": "Sequence: request, cache read, MISS, database read, record, cache fill, client response. Participants stay fixed. Vertical spacing indicates order, not elapsed time.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}
