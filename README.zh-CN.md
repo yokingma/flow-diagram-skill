@@ -17,7 +17,7 @@
 | [Web 服务部署](skills/flow-diagram/examples/complete/web-service-deployment.md) | 运行边界、副本与路由 |
 | [缓存读取时序](skills/flow-diagram/examples/complete/cache-aside-sequence.md) | 请求与返回消息顺序 |
 
-同一文档通过选定阶段支持完整动画和静态阅读。[SDK 能力示例](skills/flow-diagram/examples/capabilities/README.md)说明形状语法与流动强调。每项说明记录来源提交、默认值与查看限制；在线演示可能使用不同版本。
+同一文档通过选定阶段支持完整动画和静态阅读。[SDK 能力示例](skills/flow-diagram/examples/capabilities/README.md)说明形状、结构化内容、流动强调、显隐与镜头变化。每项说明记录来源提交、默认值与查看限制；在线演示可能使用不同版本。
 
 ## 安装
 

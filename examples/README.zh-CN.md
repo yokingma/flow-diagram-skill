@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-在此维护供[安装示例库](../skills/flow-diagram/examples/README.md)使用的上游 showcase 固定快照。完整案例由 SDK Native、React、Vue demo 共用；必要能力示例也复用同一目录，此处不再维护重复开发练习。
+在此维护供[安装示例库](../skills/flow-diagram/examples/README.md)使用的上游 showcase 固定快照。完整案例由 SDK Native、React、Vue demo 共用；必要能力优先复用该目录；没有合适上游示例的机制使用小型 Skill 自有练习，此处不再维护重复开发练习。
 
 ## 预览示例库
 
@@ -27,6 +27,8 @@ pnpm examples:preview
 
 ## 导入或修订候选
 
-固定上游提交，从其 TypeScript 创作定义生成独立 JSON。相邻说明记录来源身份、许可、JSON 哈希及个别展示覆盖值，并链接[共用执行与查看条件](../skills/flow-diagram/examples/README.md#run-and-inspect)。上游宿主设置在 JSON 外，需显式核对主题。保留完整语义，用 Skill 锁定的公开运行时验证；上游验收不代表本次 Skill 验收。
+先区分来源：完整案例保持为上游快照；缺少合适上游素材的必要能力可采用小型 Skill 自有练习。自有练习以 JSON 为创作源，记录教学假设与参考资料，不声明上游字节一致性。
+
+导入上游快照时，固定提交并从其 TypeScript 创作定义生成独立 JSON。相邻说明记录来源身份、许可、JSON 哈希及个别展示覆盖值，并链接[共用执行与查看条件](../skills/flow-diagram/examples/README.md#run-and-inspect)。上游宿主设置在 JSON 外，需显式核对主题。保留完整语义，用 Skill 锁定的公开运行时验证；上游验收不代表本次 Skill 验收。
 
 在 `examples/<name>/` 保留一份临时候选源、当前预览和精简英文说明，不混入已发布画廊。实质性发现集中记入一个临时 `issues.md`，生成预览和过程记录保持忽略。验证、选入、发布及后续快照更新遵循[示例维护流程](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance)，并应用已有用户授权。为用户图解改编时，使用[任务内草稿](../skills/flow-diagram/examples/README.md#adapt-an-example)。

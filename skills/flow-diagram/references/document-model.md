@@ -50,6 +50,8 @@ Structured content is supported by `rect`, `roundedRect` and `cylinder`. It repl
 
 Title/paragraph text is a string or ordered array of `{text, style?}` spans. Text style supports positive `fontSize`, integer `fontWeight` from 100–900 and hexadecimal `color`; block styles also support `align: "left"|"center"|"right"`. A list item can contain `body`, `auxiliary`, `status`, `tags: [{text, style?}]`. Items can override `style`, `auxiliaryStyle`, `statusStyle`; tag style supports typography, hexadecimal `fill` and `shape: "rounded"|"pill"`. List style also accepts nonnegative `itemGap` and `tagGap`. Content style supports nonnegative `padding` and `blockGap`.
 
+For a runnable static example of styled spans, list fields and local graphs, read [content and layout](../examples/capabilities/content-layout.md).
+
 Graph nodes have `id`, `label`, center offsets `x`/`y` relative to the block's top left, and optional `highlighted`. Graph edges use `from`/`to` local IDs and are undirected. This block has fixed height and no independent player hit targets. It is not a nested diagram or a general statistical chart.
 
 Content clips to the shape's safe area and never resizes its node. Measure text at the chosen width and typography before setting node height. Use a complete draft to measure its text-bearing nodes, or an independent input for content experiments. Read [the measurement CLI contract](tool-contract.md#content-measurement) before choosing an input, interpreting results or requesting a height-filled draft. The contract defines input forms, output fields, write conditions and measurement limits. [The multiple-version example](../resources/content-measurement.json) supplies a runnable independent input.

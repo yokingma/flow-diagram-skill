@@ -32,6 +32,8 @@ Actions use the following objects:
 
 `updateNode.value.content` replaces the complete structured content at beat start. Text does not interpolate. `value.label` switches to simple-label mode; `value.content` switches to structured content. `content: null` clears content. Choose one label/content mode per node in a beat and avoid competing assignments to that node's fields. Size the node for every content version with the measurement command before layout; replacement does not resize the node. See [the content model](document-model.md#node-content-and-measurement).
 
+For a runnable hide/show, camera and edge-update sequence, read [visibility and camera](../examples/capabilities/visibility-camera.md). Its final state explicitly restores the baseline; backward seeking reconstructs earlier states.
+
 ## Transfer and emphasis
 
 Use `flow` for a directed transfer along an existing edge. Set required `direction` to `forward` or `reverse`; the edge arrow itself does not change. Optional `text` labels the moving marker. `highlightEdge` and `highlightParticipants` both default to `true` and independently control automatic edge/label coloring and endpoint highlighting. A marker is local to its beat and disappears at the end.

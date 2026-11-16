@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Refine content-layout with a centered standalone badge, aligned list markers, shorter text, compact cards and a horizontal straight connection. Verify the badge's visible text position in the real browser and keep native list-tag examples separately identified.
+
+- Tighten the visibility-camera exercise's group and canvas around its two cards while retaining horizontal routing and the six animation scenes.
+
+- Align the visibility-camera exercise's card centers and use a horizontal straight connection. Check its rendered path after showing, focusing, updating and restoring.
+
+- Align the content-layout exercise's local entities so its two links are horizontal and vertical. Add a regression check against the exported SVG line segments.
+
+- Add focused content/layout and visibility/camera exercises to complete four capability groups while retaining six upstream complete stories. Distinguish Skill-authored JSON from pinned showcase snapshots, correct showcase attribution commit IDs, and verify real offline player state restoration.
+
 - Replace the teaching library with six complete upstream showcase snapshots and two focused SDK capability examples, with pinned source attribution and independent installed-CLI coverage.
 - Split the preview gallery into complete examples and SDK capabilities, preserve upstream dark presentation defaults, remove duplicate development exercises, and reserve space for sequence captions and controls in narrow players.
 

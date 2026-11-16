@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 1120 × 789 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `rag-workflow`, category `workflow`, from [packages/showcase/src/examples/rag-workflow.ts](https://github.com/yokingma/FlowSVG/blob/02eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/rag-workflow.ts) at commit `02eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/rag-workflow.json`. Source JSON SHA-256: `bc996b1d2867e4405d40ea7b61f16f0b22c41d7202a8960e749e4e8e291a764b`.
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `rag-workflow`, category `workflow`, from [packages/showcase/src/examples/rag-workflow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/rag-workflow.ts) at commit `2eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/rag-workflow.json`. Source JSON SHA-256: `bc996b1d2867e4405d40ea7b61f16f0b22c41d7202a8960e749e4e8e291a764b`.

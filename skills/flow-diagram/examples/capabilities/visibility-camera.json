@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "title": "Visibility, focus and restoration",
+  "theme": "dark",
+  "viewport": {
+    "width": 800,
+    "height": 260
+  },
+  "nodes": [
+    {
+      "id": "overview-card",
+      "kind": "roundedRect",
+      "x": 40,
+      "y": 90,
+      "width": 220,
+      "height": 100,
+      "label": "Overview"
+    },
+    {
+      "id": "detail-group",
+      "kind": "group",
+      "x": 420,
+      "y": 40,
+      "width": 340,
+      "height": 180,
+      "label": "Detail region"
+    },
+    {
+      "id": "detail",
+      "kind": "roundedRect",
+      "parentId": "detail-group",
+      "x": 40,
+      "y": 50,
+      "width": 260,
+      "height": 100,
+      "label": "Detail"
+    }
+  ],
+  "edges": [
+    {
+      "id": "detail-link",
+      "from": "overview-card",
+      "to": "detail",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "Original link",
+      "style": {
+        "stroke": "#94a3b8",
+        "strokeWidth": 2
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "overview",
+      "label": "Full view",
+      "beats": [
+        {
+          "durationMs": 2400,
+          "transitionMs": 300,
+          "caption": "All objects are visible. This is a visual exercise.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "hidden",
+      "label": "Hide the group",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 300,
+          "caption": "Hide the group: its child and connected edge disappear.",
+          "actions": [
+            {
+              "type": "hide",
+              "target": "detail-group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shown",
+      "label": "Show the group",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 300,
+          "caption": "Show the group: saved child and edge visibility return.",
+          "actions": [
+            {
+              "type": "show",
+              "target": "detail-group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "focused",
+      "label": "Focus the region",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 300,
+          "caption": "Focus changes the camera. It does not delete other objects.",
+          "actions": [
+            {
+              "type": "focus",
+              "target": "detail-group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "updated",
+      "label": "Return and update",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 300,
+          "caption": "Restore the full view. Update the edge label and color.",
+          "actions": [
+            {
+              "type": "focus",
+              "target": null
+            },
+            {
+              "type": "updateEdge",
+              "target": "detail-link",
+              "value": {
+                "label": "Updated link",
+                "stroke": "#5eead4",
+                "strokeWidth": 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restored",
+      "label": "Restore the baseline",
+      "beats": [
+        {
+          "durationMs": 3000,
+          "transitionMs": 300,
+          "caption": "Restore the original edge. Seek backward to compare states.",
+          "actions": [
+            {
+              "type": "updateEdge",
+              "target": "detail-link",
+              "value": {
+                "label": "Original link",
+                "stroke": "#94a3b8",
+                "strokeWidth": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

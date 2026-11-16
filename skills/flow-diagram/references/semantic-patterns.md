@@ -1,6 +1,6 @@
 # Semantic patterns
 
-Select a diagram type by the relationship the reader must understand, then use its semantic pattern to organize the content. A semantic pattern defines required objects, relationships, conditions and outcomes; layout choices follow that meaning. The installed library uses pinned upstream showcase documents. [Source metadata](../resources/teaching-sources.json) distinguishes the SDK architecture at its source revision from fictional scenarios. Replace teaching assumptions with the user's evidence before describing a real system.
+Select a diagram type by the relationship the reader must understand, then use its semantic pattern to organize the content. A semantic pattern defines required objects, relationships, conditions and outcomes; layout choices follow that meaning. The installed library combines pinned upstream showcase documents with focused Skill-authored exercises. [Source metadata](../resources/teaching-sources.json) distinguishes the SDK architecture at its source revision from fictional scenarios. Replace teaching assumptions with the user's evidence before describing a real system.
 
 ## Choose by the reader's question
 
@@ -128,7 +128,7 @@ Use this teaching pattern when a reader needs to compare layers, several columns
 
 ## Run the installed examples
 
-Read the [example index](../examples/README.md#run-and-inspect) for absolute installed paths, task workspaces, dark presentation defaults, static-stage selection and viewing limits. The library has six complete upstream stories and two capability examples; content and scene-state methods reuse those complete sources.
+Read the [example index](../examples/README.md#run-and-inspect) for absolute installed paths, task workspaces, dark presentation defaults, static-stage selection and viewing limits. The library has six complete upstream stories and four focused capability examples; additional content and scene-state methods reuse the complete sources.
 
 ```text
 node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --theme dark --sources "<skill-directory>/resources/teaching-sources.json" --name project-architecture --svg --time 0 --output "<task-workspace>/history"

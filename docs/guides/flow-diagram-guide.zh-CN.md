@@ -60,6 +60,8 @@ SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新�
 
 可选的 layout 命令要求静态草稿和显式布局计划。按需运行 `measure --in-place`，再运行 `layout --input <draft> --plan <layout-plan.json> --in-place`，然后校验和制作同一源草稿。测量高度作为布局下限，`overrides[id].height` 保持精确；`--geometry` 按需返回有限辅助估算。布局结果不代表设计批准。请求的 SVG/PNG 需在预期尺寸和背景下实际查看；只有明确要求正式复核时才追加[注册图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
 
+需要集中查看基础机制时，可用[内容与布局](../../skills/flow-diagram/examples/capabilities/content-layout.md)学习文字样式、编号列表、文字居中的标签和局部实体图块，或用[显隐与镜头](../../skills/flow-diagram/examples/capabilities/visibility-camera.md)学习显隐、聚焦和边状态恢复。这两项是 Skill 自有视觉练习，与上游完整案例分开标注。
+
 设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[教学范例索引](../../skills/flow-diagram/examples/README.md)列出已选成品及各自的展示条件和局限。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
 
 ## 1. 准备环境

@@ -1,16 +1,16 @@
 # SDK capabilities
 
-Use these focused upstream examples for document syntax and public SDK behavior. For a full explanation to imitate, choose a [complete example](../complete/README.md).
+Choose one focused input for the mechanism you need. Basic shapes and emphasis-flow are pinned upstream showcases; content-layout and visibility-camera are Skill-authored visual exercises. Use [complete examples](../complete/README.md) for full explanations.
 
-| Need | Source |
+| Need | Runnable source |
 | --- | --- |
-| Shapes, preset labels, group-relative geometry, ports, orthogonal routes, label replacement and explicit highlighting | [Basic shapes](basic-shapes.md) · [JSON](basic-shapes.json) |
-| Document emphasis, automatic edge/participant highlighting and parallel flow comparison | [Emphasis and flow](emphasis-flow.md) · [JSON](emphasis-flow.json) |
-| Titles, paragraphs, lists, native tags and multi-version content | [RAG workflow](../complete/rag-workflow.md), nodes and scenes for retrieval, reranking, context and answer; [content model](../../references/document-model.md#node-content-and-measurement) |
-| Cross-scene state and content changes, independent outcomes and restoration | [Task lifecycle](../complete/job-lifecycle.md), especially the independent B/C scenes; [timeline](../../references/timeline.md#scenes-and-inherited-state) |
-| Nested groups and collective dependency endpoints | [SDK architecture](../complete/project-architecture.md) |
-| Curved routes, explicit focus, hide/show, straight routes or forward/reverse flow | Read the relevant [document](../../references/document-model.md) and [action](../../references/timeline.md#scenes-and-inherited-state) contracts; selected examples demonstrate only the actions they actually contain. |
+| All public shapes, preset labels, group-relative geometry, ports, orthogonal routes and label replacement | [Basic shapes](basic-shapes.md) · [JSON](basic-shapes.json) |
+| Palette, automatic edge/participant highlighting and parallel transfers | [Emphasis and flow](emphasis-flow.md) · [JSON](emphasis-flow.json) |
+| Static styled text, numbered lists, a centered badge and local entity graphs | [Content and layout](content-layout.md) · [JSON](content-layout.json) |
+| Group hide/show, connected-edge visibility, focus/full-view restoration and edge updates | [Visibility and camera](visibility-camera.md) · [JSON](visibility-camera.json) |
 
-Two runnable capability sources serve four teaching groups without duplicating full stories. [Measurement input](../../resources/content-measurement.json) and the [layout input/plan](../../references/layout-plan.md#complete-teaching-input) remain independent execution resources. Framework embedding and the complete API test matrix belong to the SDK project.
+For content replacement and geometry changes, study [RAG workflow](../complete/rag-workflow.md), especially nodes `retriever`, `reranker`, `context` and `answer`. [Task lifecycle](../complete/job-lifecycle.md) demonstrates independent state cases; [SDK architecture](../complete/project-architecture.md) demonstrates nested groups and collective dependency endpoints. [Web deployment](../complete/web-service-deployment.md) and RAG contain reverse flows; [cache-aside sequence](../complete/cache-aside-sequence.md) uses straight routes.
 
-For the shared dark presentation defaults, commands and viewing limits, read [the example index](../README.md#run-and-inspect).
+The four inputs cover the main document-authoring mechanisms, rather than every field combination. [Measurement input](../../resources/content-measurement.json) and the [layout input/plan](../../references/layout-plan.md#complete-teaching-input) remain independent execution resources. Framework embedding and the complete API test matrix belong to the SDK project.
+
+Before running or exporting, read [shared execution and viewing conditions](../README.md#run-and-inspect).

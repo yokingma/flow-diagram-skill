@@ -1,8 +1,8 @@
 # Diagram examples
 
-Use [complete examples](complete/README.md) to study composition and animation, or [SDK capabilities](capabilities/README.md) to find a focused document-model example. These are pinned FlowSVG showcase snapshots shared by the upstream Native, React and Vue demos. Start with the reader's question in [diagram selection](../references/semantic-patterns.md#choose-by-the-readers-question); no example supplies facts about the user's system.
+Use [complete examples](complete/README.md) to study composition and animation, or [SDK capabilities](capabilities/README.md) to find a focused document-model example. Complete stories, basic-shapes and emphasis-flow are pinned FlowSVG showcase snapshots shared by upstream demos. Content-layout and visibility-camera are Skill-authored visual exercises. Start with the reader's question in [diagram selection](../references/semantic-patterns.md#choose-by-the-readers-question); no example supplies facts about the user's system.
 
-Each JSON has an adjacent note with its question, source, composition, animation stages, static reading state, display conditions and limits. [Source records](../resources/teaching-sources.json) distinguish the real SDK architecture from fictional teaching scenarios. Replace assumptions with the user's evidence when adapting a diagram.
+Each JSON has an adjacent note with its question, source, composition, animation stages, static reading state, display conditions and limits. [Source records](../resources/teaching-sources.json) distinguish upstream snapshots, the SDK architecture and invented capability exercises. Replace assumptions with the user's evidence when adapting a diagram.
 
 ## Run and inspect
 
@@ -14,7 +14,7 @@ node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/e
 
 This generates JSON, paused offline HTML, SVG and reports without a browser. For a later static export, read the returned `detailsPath`, find the note's named scene in `compilation.beats` by `sceneId`, and choose a compiled time that shows the intended state. Use `compilation.totalDurationMs` for the completed final state. Static exports contain the diagram without playback captions or controls. Supply a prepared Chrome/Chromium executable instead of `none` for HTML capture and request PNG with `--png`. Missing browsers leave those checks unavailable; successful validation, compilation and export do not establish visual quality. See [exports](../references/export.md) and [actual viewing](../references/visual-checks.md).
 
-The upstream host supplies dark theme, speed 1 and reduced motion off. `--theme dark` preserves that presentation without editing snapshot bytes. Full examples support static reading through a selected overview or key state and animation through the same JSON; do not maintain a separate static copy merely to remove scenes.
+The examples use dark theme, speed 1 and reduced motion off, matching the upstream showcase host defaults. `--theme dark` preserves that presentation without editing snapshot bytes. Full examples support static reading through a selected overview or key state and animation through the same JSON; do not maintain a separate static copy merely to remove scenes.
 
 ## Display conditions and limits
 
@@ -28,8 +28,10 @@ Copy a selected JSON into the task's one editable draft, replace source facts, m
 
 Keep the installed JSON unchanged while adapting the task draft. [Execution resources](../resources/README.md) retain the independent measurement input and HTML starter.
 
-## Snapshot provenance
+## Source provenance
 
-To trace a snapshot, read its adjacent attribution and [source record](../resources/teaching-sources.json). The note identifies the upstream TypeScript definition, fixed commit, generated JSON path and SHA-256. Native, React and Vue demos share these definitions. Upstream exports are generated with `pnpm --filter @flowsvg/showcase build` after preparing the SDK in that checkout; TypeScript remains the author source.
+For an upstream snapshot, read its adjacent attribution and [source record](../resources/teaching-sources.json). The note identifies the upstream TypeScript definition, fixed commit, generated JSON path and SHA-256. Native, React and Vue demos share these definitions. Upstream exports are generated with `pnpm --filter @flowsvg/showcase build` after preparing the SDK in that checkout; TypeScript remains the author source.
 
-Skill execution consumes the installed JSON through its exact public SDK runtime. It needs neither the upstream workspace nor private showcase packages. Keep generated previews and run-specific verification records outside the installation unit.
+Skill-authored capability JSON is maintained directly as its author source. Its note identifies the invented scenario and any SDK reference; upstream commit/digest claims apply only to imported snapshots.
+
+Skill execution consumes installed JSON through its exact public SDK runtime. It needs neither the upstream workspace nor private showcase packages. Keep generated previews and run-specific verification records outside the installation unit.

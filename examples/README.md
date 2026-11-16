@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-Maintain pinned upstream showcase snapshots for the [installed library](../skills/flow-diagram/examples/README.md). The complete stories are shared by the SDK Native, React and Vue demos. Focused capability examples reuse that same catalog; duplicate development exercises are not maintained here.
+Maintain pinned upstream showcase snapshots for the [installed library](../skills/flow-diagram/examples/README.md). The complete stories are shared by the SDK Native, React and Vue demos. Focused capability examples reuse that catalog or use small Skill-authored exercises for mechanisms without a suitable showcase. Duplicate development exercises are not maintained here.
 
 ## Preview the example library
 
@@ -27,6 +27,8 @@ The generator uses the installed CLI's exact isolated SDK baseline; the first ru
 
 ## Import or revise a candidate
 
-Pin an upstream commit and generate standalone JSON from its TypeScript author definitions. Record source identity, license, JSON hash and any presentation overrides in the adjacent note; link the [shared execution and viewing conditions](../skills/flow-diagram/examples/README.md#run-and-inspect). Check default theme explicitly: upstream host settings are outside the JSON. Preserve complete document semantics and validate it with the Skill's locked public runtime; upstream acceptance is not current Skill acceptance.
+Choose the source kind first: preserve complete stories as upstream snapshots; use a small Skill-authored capability exercise only when no suitable focused upstream example exists. For a local exercise, keep the JSON as the author source and record its teaching assumptions and reference material without claiming upstream byte identity.
+
+For an upstream snapshot, pin a commit and generate standalone JSON from its TypeScript author definitions. Record source identity, license, JSON hash and any presentation overrides in the adjacent note; link the [shared execution and viewing conditions](../skills/flow-diagram/examples/README.md#run-and-inspect). Check default theme explicitly: upstream host settings are outside the JSON. Preserve complete document semantics and validate it with the Skill's locked public runtime; upstream acceptance is not current Skill acceptance.
 
 Keep one temporary candidate source, current preview and concise English note under `examples/<name>/`, outside the published gallery. Record material findings in one temporary `issues.md`; generated previews and process records stay ignored. Follow [example maintenance](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance) for verification, selection, publication and later snapshot updates, applying any existing user authorization. For a user's diagram, use [task-local adaptation](../skills/flow-diagram/examples/README.md#adapt-an-example).

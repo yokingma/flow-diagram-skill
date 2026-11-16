@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "title": "Content and local relationships",
+  "theme": "dark",
+  "viewport": {
+    "width": 1024,
+    "height": 360
+  },
+  "typography": {
+    "nodeLabel": 18,
+    "edgeLabel": 14,
+    "flowLabel": 12
+  },
+  "nodes": [
+    {
+      "id": "rich-content",
+      "kind": "roundedRect",
+      "x": 32,
+      "y": 40,
+      "width": 390,
+      "height": 280,
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": [
+              {
+                "text": "Rich content",
+                "style": {
+                  "fontWeight": 700,
+                  "color": "#5eead4"
+                }
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": [
+              {
+                "text": "Measured text keeps its size.",
+                "style": {
+                  "fontWeight": 600
+                }
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "marker": "number",
+            "style": {
+              "itemGap": 20,
+              "tagGap": 8
+            },
+            "items": [
+              {
+                "body": "Choose a readable width",
+                "auxiliary": "Measure before fixing height"
+              },
+              {
+                "body": "Keep relationships local",
+                "auxiliary": "Coordinates stay inside the block"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "entity-content",
+      "kind": "roundedRect",
+      "x": 602,
+      "y": 40,
+      "width": 390,
+      "height": 280,
+      "content": {
+        "style": {
+          "padding": 24,
+          "blockGap": 16
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "Local entity graph"
+          },
+          {
+            "type": "paragraph",
+            "text": "Three entities, two local links."
+          },
+          {
+            "type": "graph",
+            "height": 120,
+            "nodes": [
+              {
+                "id": "ada",
+                "label": "Ada",
+                "x": 52,
+                "y": 34,
+                "highlighted": true
+              },
+              {
+                "id": "team",
+                "label": "Team",
+                "x": 264,
+                "y": 34,
+                "highlighted": true
+              },
+              {
+                "id": "topic",
+                "label": "Topic",
+                "x": 52,
+                "y": 98
+              }
+            ],
+            "edges": [
+              {
+                "from": "ada",
+                "to": "team"
+              },
+              {
+                "from": "ada",
+                "to": "topic"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ready-tag",
+      "kind": "roundedRect",
+      "x": 330,
+      "y": 68,
+      "width": 64,
+      "height": 28,
+      "label": "READY",
+      "style": {
+        "fill": "#134e4a",
+        "strokeWidth": 0,
+        "textColor": "#ccfbf1"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "related-views",
+      "from": "rich-content",
+      "to": "entity-content",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "Related views"
+    }
+  ],
+  "scenes": []
+}

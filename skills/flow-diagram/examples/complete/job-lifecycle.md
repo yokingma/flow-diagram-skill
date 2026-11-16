@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 868 × 416 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `job-lifecycle`, category `state`, from [packages/showcase/src/examples/job-lifecycle.ts](https://github.com/yokingma/FlowSVG/blob/02eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/job-lifecycle.ts) at commit `02eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/job-lifecycle.json`. Source JSON SHA-256: `4416f551ce24c1ee716bb8b2a1b3e76c64f83a773f9ebe824685af74ae4897ab`.
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `job-lifecycle`, category `state`, from [packages/showcase/src/examples/job-lifecycle.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/job-lifecycle.ts) at commit `2eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/job-lifecycle.json`. Source JSON SHA-256: `4416f551ce24c1ee716bb8b2a1b3e76c64f83a773f9ebe824685af74ae4897ab`.

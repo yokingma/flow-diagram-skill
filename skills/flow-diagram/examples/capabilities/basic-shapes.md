@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 1240 × 508 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `basic-shapes`, category `workflow`, from [packages/showcase/src/examples/basic-shapes.ts](https://github.com/yokingma/FlowSVG/blob/02eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/basic-shapes.ts) at commit `02eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/basic-shapes.json`. Source JSON SHA-256: `52ff12abe431830edd4a618b5dc314674f52e22cedf0d0738c8cf72030096f55`.
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `basic-shapes`, category `workflow`, from [packages/showcase/src/examples/basic-shapes.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/basic-shapes.ts) at commit `2eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/basic-shapes.json`. Source JSON SHA-256: `52ff12abe431830edd4a618b5dc314674f52e22cedf0d0738c8cf72030096f55`.

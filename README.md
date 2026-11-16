@@ -17,7 +17,7 @@ Complete examples reuse the shared FlowSVG SDK showcases used by the Native, Rea
 | [Web deployment](skills/flow-diagram/examples/complete/web-service-deployment.md) | Runtime boundaries, replicas and routing |
 | [Cache-aside sequence](skills/flow-diagram/examples/complete/cache-aside-sequence.md) | Ordered request and return messages |
 
-Each document supports animation and static reading through selected states. [SDK capability examples](skills/flow-diagram/examples/capabilities/README.md) cover shape syntax and flow highlighting. Source commits, defaults and viewing limits are recorded with each example; the online demo can be a different revision.
+Each document supports animation and static reading through selected states. [SDK capability examples](skills/flow-diagram/examples/capabilities/README.md) cover shapes, structured content, flow highlighting, visibility and camera changes. Source commits, defaults and viewing limits are recorded with each example; the online demo can be a different revision.
 
 ## Install
 

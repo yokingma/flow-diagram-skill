@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 920 × 420 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `emphasis-flow`, category `data-flow`, from [packages/showcase/src/examples/emphasis-flow.ts](https://github.com/yokingma/FlowSVG/blob/02eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/emphasis-flow.ts) at commit `02eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/emphasis-flow.json`. Source JSON SHA-256: `bd674a10b361782e7882cd624086965431bdda0eae05cd1df8b901a85c88b013`.
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `emphasis-flow`, category `data-flow`, from [packages/showcase/src/examples/emphasis-flow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/emphasis-flow.ts) at commit `2eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/emphasis-flow.json`. Source JSON SHA-256: `bd674a10b361782e7882cd624086965431bdda0eae05cd1df8b901a85c88b013`.
