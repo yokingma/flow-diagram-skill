@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Upgrade the exact registry runtime to `flowsvg@0.4.1`, synchronizing the package, manifest integrity, npm lockfile, report identity assertions and current guides. Consume the SDK tag-positioning and mixed-size metadata alignment fixes through the existing public SDK paths.
+
 - Add the repository-only, manually invoked `test-flow-diagram` Skill for user-specified tasks through the globally installed production Skill in a fresh-context subagent. Retain the actual handoff, key decisions, problems and visual-problem screenshots; compare installed-resource identities before and after execution. Account for auxiliary tool outputs and keep execution status separate from user acceptance. No production CLI or SDK baseline changes.
 
 - Refine content-layout with a centered standalone badge, aligned list markers, shorter text, compact cards and a horizontal straight connection. Verify the badge's visible text position in the real browser and keep native list-tag examples separately identified.

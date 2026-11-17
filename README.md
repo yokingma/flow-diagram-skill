@@ -109,7 +109,7 @@ The Skill prepares these locked packages in its isolated cache:
 
 | Package | Version | Role |
 | --- | --- | --- |
-| `flowsvg` | `0.4.0` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
+| `flowsvg` | `0.4.1` | Diagram validation, content measurement, geometry diagnostics, rendering, playback, and exports |
 | `playwright-core` | `1.58.2` | Controls the prepared browser for inspection, PNG, and GIF generation; includes no browser executable |
 | `gifenc` | `1.0.3` | GIF encoding, installed transitively through `flowsvg` |
 
@@ -117,7 +117,7 @@ The [runtime manifest](skills/flow-diagram/runtime/manifest.json) records the ex
 
 ## Status
 
-`0.1.0` is the initial independent distribution version and pins the exact `flowsvg@0.4.0` runtime baseline. Its release tag is `v0.1.0`. See the [changelog](CHANGELOG.md#010--2026-11-13) for the release scope.
+The initial independent distribution, `0.1.0` (`v0.1.0`), shipped with the exact `flowsvg@0.4.0` runtime baseline. See the [changelog](CHANGELOG.md#010--2026-11-13) for the release scope.
 
 Platform and assistant-host verification remains limited. See the [known platform limits and verification requirements](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence) for the current scope.
 

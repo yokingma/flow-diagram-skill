@@ -36,7 +36,7 @@ Keep reusable usage instructions, current development rules, architecture decisi
 
 ## SDK authority
 
-FlowSVG SDK owns the document model, rendering, playback, export APIs, and application embedding. The Skill's bundled references apply to its locked `flowsvg@0.4.0` runtime and support offline execution. For SDK APIs, consult the versioned manuals:
+FlowSVG SDK owns the document model, rendering, playback, export APIs, and application embedding. The Skill's bundled references apply to the SDK baseline recorded in the [runtime manifest](../skills/flow-diagram/runtime/manifest.json) and support offline execution. For SDK APIs, consult the versioned manuals:
 
 - [English SDK manual at source commit b07f9dd](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.md).
 - [中文 SDK 手册，来源提交 b07f9dd](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.zh-CN.md).

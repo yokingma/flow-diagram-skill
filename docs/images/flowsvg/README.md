@@ -6,7 +6,7 @@ The three animations previously displayed in the project READMEs were referenced
 - Source commit: [`952826129edb0a8e0ff9704e7bbd10df6fc1bec3`](https://github.com/yokingma/FlowSVG/tree/952826129edb0a8e0ff9704e7bbd10df6fc1bec3).
 - Source directory: `packages/flowsvg/docs/images/`.
 - Referenced as external URLs since: 2026-11-06. The earlier byte-for-byte copies were removed so the repository carries no large binaries; the previews themselves are unchanged.
-- Source SDK package version: `0.2.3`. The Skill runtime is locked to `flowsvg@0.4.0`; these previews are upstream showcase material, not new acceptance evidence for that baseline.
+- Source SDK package version: `0.2.3`. These historical upstream showcase previews do not establish acceptance of the current Skill runtime.
 - License: MIT, Copyright (c) 2026 zac_ma. The source package license is identical to the repository [LICENSE](../../../LICENSE), which retains its notice and terms.
 
 | File | Bytes | SHA-256 | Reference |

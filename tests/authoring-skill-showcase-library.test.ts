@@ -48,7 +48,7 @@ test.each(CASES)("copied $id delivers its real source and reconstructs its initi
   const first = await author(0);
   expect(first.checks).toMatchObject({ validation: "passed", compilation: "passed" });
   expect(first.completion).toMatchObject({ delivery: "complete", completed: ["json", "html", "svg"] });
-  expect(first.sdk.version).toBe("0.4.0");
+  expect(first.sdk.version).toBe("0.4.1");
   expect(first.compilation.totalDurationMs).toBeGreaterThan(0);
   const initialSvg = await readFile(join(first.revision.directory, "diagram.svg"), "utf8");
   expect(initialSvg).toContain(text);
