@@ -11,7 +11,7 @@
 ## Skill developers
 
 - [Contribution guide](../CONTRIBUTING.md): setup, bug reports, validation, pull requests, and source attribution.
-- [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, verification methods, and platform limits.
+- [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, [SDK upgrades](development/flow-diagram-maintenance.md#sdk-baseline-upgrade), verification methods, and platform limits.
 - [Manual generation test Skill](../.agents/skills/test-flow-diagram/SKILL.md): user-specified tasks through the globally installed Skill, with a fresh-context subagent and local decision/problem records.
 - [Example workshop](../examples/README.md) and [中文说明](../examples/README.zh-CN.md): local gallery coverage and rebuild instructions; candidate selection follows [teaching-example maintenance](development/flow-diagram-maintenance.md#teaching-example-maintenance).
 - [Repository patterns](../PATTERNS.md) and [CLI patterns](development/flow-diagram-patterns.md): implementation conventions and module responsibilities.

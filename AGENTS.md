@@ -4,6 +4,7 @@ This repository owns Flow Diagram Skill authoring, layout plans, checks, reviews
 
 - Before changing a domain contract, read [GLOSSARY.md](GLOSSARY.md) and the relevant [ADRs](docs/adr/README.md).
 - Before changing CLI behavior or modules, read [PATTERNS.md](PATTERNS.md), [CLI patterns](docs/development/flow-diagram-patterns.md), and [source-comment rules](docs/agents/code-comments.md). Preserve the exact SDK baseline unless the task explicitly changes it.
+- For an SDK baseline upgrade, follow the [SDK upgrade workflow](docs/development/flow-diagram-maintenance.md#sdk-baseline-upgrade).
 - For implementation or structure changes, update the root changelog and affected patterns, then synchronize affected READMEs and guides. Verify observable CLI behavior. New or changed behavior tests must fail before implementation; pure test relocation retains assertions and records its scope.
 - Before adding or reorganizing documentation, read the [documentation scope](docs/README.md#documentation-scope).
 - Before writing technical documentation or source comments, read [technical writing](docs/agents/technical-writing.md). Apply its completion checks to every changed passage.

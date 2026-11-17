@@ -49,6 +49,46 @@ The Skill repository owns authoring, layout plans, checks, review records, deliv
 
 The first independent distribution release is `v0.1.0`. Runtime report tool versions and diagram document versions are separate identities. Keep the installed runtime npm lock separate from repository development pnpm dependencies. Explicit SDK baseline updates require synchronized manifest/lock integrity and repeated isolated acceptance before release; the compatibility range never selects a runtime version. Repository release records live in the root [CHANGELOG](../../CHANGELOG.md).
 
+## SDK baseline upgrade
+
+Use this workflow when the user requests an SDK upgrade. Select one exact published registry version and follow the five steps below. Keep candidate-specific commands, results and viewing evidence under `.scratch/sdk-<target-version>/`; read the current SDK identity from the [runtime manifest](../../skills/flow-diagram/runtime/manifest.json). Skill distribution and tool release versions remain separate from the SDK baseline; follow the [release procedure](../releasing.md) when preparing a Skill release.
+
+### 1. Check the published candidate
+
+Check the working tree and preserve unrelated edits. Verify the target version, tarball integrity, Node requirements, dependencies and change record against the public npm package. Inspect the published package for changes to the SDK APIs used by the Skill, rendering, measurement, playback or exports. Record the old and target identities, affected integration paths and available Node/npm, browser and real Node 18 executable.
+
+Finish when the published target is identified and its integration impact is recorded. If the package is unavailable or its identity cannot be verified, keep the existing baseline and record the blocker. Resolve uncertain code design with the user before implementing an adaptation.
+
+### 2. Synchronize the runtime and behavior assertions
+
+Update existing report-version assertions to the target and run a focused copied-install test against the old runtime. Retain the expected version-mismatch failure. If the upgrade changes Skill behavior, first add a failing test at the public CLI integration boundary; SDK rendering internals remain covered by the SDK project.
+
+Set the exact `flowsvg` dependency in `skills/flow-diagram/runtime/package.json`. Regenerate `runtime/package-lock.json` with npm from that runtime directory, retaining other dependency pins unless the published candidate requires a change. Set `runtime/manifest.json` SDK version, source and integrity from the published package and regenerated lockfile. Keep the repository development `pnpm-lock.yaml` separate. Adapt only affected public SDK calls, then rerun the focused tests.
+
+Finish when the runtime package, lockfile and manifest agree on the target version and integrity, and the focused tests pass with the actual installed target SDK. Historical reports, export bindings and viewing evidence retain their original identities; baseline changes require fresh exports and viewing.
+
+### 3. Update current guidance
+
+Update the root changelog, affected patterns, current dependency tables, bilingual user guides, installed tool contract and any usage affected by the SDK change. Verify that pinned SDK manual links still describe the APIs used. Search for the old version and classify each occurrence: update current support statements, retain historical releases and source attribution. Maintenance guidance reads the baseline from the manifest rather than repeating its version.
+
+Finish when current guidance agrees with the candidate, affected English and Chinese instructions match, and installed references resolve within the installation unit. Keep release-specific fixes in the changelog and reusable integration rules in patterns.
+
+### 4. Verify an independent installation and view new output
+
+Copy the candidate repository outside the source workspace, including all candidate edits and new required files, with its own development dependencies installed from the frozen pnpm lockfile. Run the complete regression suite and independent consumer gate using the [maintainer verification](#maintainer-verification) commands, with the prepared browser and real Node 18 executable. Record candidate file hashes, environment versions, commands, exit results, failures and skips. The consumer gate must consume the copied installation and public registry SDK.
+
+Regenerate all installed examples through `pnpm examples:preview` and actually view their output under the [teaching-example maintenance](#teaching-example-maintenance) rules. Keep source snapshots unchanged during comparison. Record the viewed files, dimensions, background, animation stages and any continuous-playback gaps separately from programmatic results. Source or SDK identity changes invalidate earlier viewing coverage.
+
+Finish when the full suite and consumer gate pass with required cases executed, and the viewing record identifies inspected surfaces and remaining gaps. A missing browser, missing Node 18 executable, failing check or unperformed required viewing leaves the corresponding acceptance incomplete; preserve evidence and resolve the missing work before claiming full acceptance.
+
+### 5. Review and deliver
+
+Review the candidate diff under the repository review rules. Check local links, Markdown anchors and `git diff --check`. Confirm that tested runtime, script and fixture bytes match the final candidate; rerun affected checks after corrections. Commit when requested and record the resulting commit with its verification evidence. Publishing a tag, package or platform release follows the separate release procedure.
+
+Finish by reporting the dependency and documentation changes, programmatic results, actual viewing and unperformed checks separately. Candidate records stay in `.scratch/`; summarize relevant results in the commit handoff, pull request or release notes.
+
+For quicker iteration, reuse prepared executables, run focused checks before the full suite, and run independent regression and consumer jobs concurrently with separate outputs and temporary workspaces. After they pass, repeat checks only for new changes or unresolved concerns. `test:guides` supplies focused feedback; it does not replace full SDK-upgrade acceptance.
+
 ## Installation boundary
 
 The standalone installation unit is `skills/flow-diagram/`. Preserve `LICENSE`, `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/`, `resources/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` supplies optional Codex UI metadata; it does not add runtime or tool dependencies. Automatic skill selection remains enabled by default. See [official skill metadata](https://developers.openai.com/codex/skills/#optional-metadata) for the host configuration. The tools run through Node 20+ and npm without source-workspace dependencies. See [ADR 0006](../adr/0006-authoring-skill-uses-public-sdk.md) for the integration decision.
