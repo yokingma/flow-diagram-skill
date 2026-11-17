@@ -4,6 +4,12 @@
 
 `skills/flow-diagram/` is the complete distributable Skill. Installed instructions, references, examples, metadata, scripts, and runtime resources resolve within that directory. Repository-level development tests, acceptance tools, and human guides belong outside the installation unit.
 
+Repository-only Agent workflows live under `.agents/skills/`. The manually invoked `test-flow-diagram` uses a fresh-context subagent to exercise the globally installed production Skill with a user-supplied task. Each run keeps its request, decisions, problems and results under `.scratch/skill-generation-test/runs/`, outside the production Skill's temporary authoring workspace. It does not install or repair global skills. These workflow files ship with repository source, not the production Skill archive; Agent visual observations remain separate from user acceptance.
+
+The parent task records installed-resource identities before and after execution, including relative file paths and SHA-256 values. It reports changed content or incomplete identity checks separately; version strings and symlink paths alone do not identify an uncommitted development copy. The test Skill owns the collection rules.
+
+Each run retains the actual subagent handoff and key visual-problem screenshots outside the disposable authoring workspace. Auxiliary tool outputs belong in that run; only confirmed new outputs may be moved from external locations. The run record maintains one current execution status separately from user acceptance. The test Skill owns the retention and cleanup procedure.
+
 The public repository is `yokingma/flow-diagram-skill`; the installed Skill name and directory are `flow-diagram`, displayed as Flow Diagram. FlowSVG remains the SDK dependency. The `scripts/flowsvg.mjs` helper and existing runtime/cache identities retain their names independently of the Skill's public identity.
 
 The detailed [CLI patterns](docs/development/flow-diagram-patterns.md) remain the implementation reference for runtime preparation, deterministic layout, diagnostics, review identity, and quality projection. The [maintenance guide](docs/development/flow-diagram-maintenance.md) defines verification and documentation ownership. New release entries belong in root `CHANGELOG.md`.

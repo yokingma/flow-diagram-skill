@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the repository-only, manually invoked `test-flow-diagram` Skill for user-specified tasks through the globally installed production Skill in a fresh-context subagent. Retain the actual handoff, key decisions, problems and visual-problem screenshots; compare installed-resource identities before and after execution. Account for auxiliary tool outputs and keep execution status separate from user acceptance. No production CLI or SDK baseline changes.
+
 - Refine content-layout with a centered standalone badge, aligned list markers, shorter text, compact cards and a horizontal straight connection. Verify the badge's visible text position in the real browser and keep native list-tag examples separately identified.
 
 - Tighten the visibility-camera exercise's group and canvas around its two cards while retaining horizontal routing and the six animation scenes.

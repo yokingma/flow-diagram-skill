@@ -101,7 +101,19 @@ When run on Windows, the consumer harness reports graceful cancellation as `not-
 
 ## Host verification
 
-CLI tests verify tools rather than the assistant's task selection, interpretation, or viewing. To verify an assistant host:
+CLI tests verify tools rather than the assistant's task selection, interpretation, or viewing.
+
+For routine manual generation tests in this checkout, invoke the repository-only [test-flow-diagram Skill](../../.agents/skills/test-flow-diagram/SKILL.md) with a concrete user task, for example `/test-flow-diagram Create an animated RAG workflow`. Codex also accepts explicit invocation as `$test-flow-diagram`.
+
+A user or developer must first install the production Skill globally; a symlink such as `~/.agents/skills/flow-diagram` can point to the local development copy. The workflow checks that entry and delegates to a fresh-context subagent. Missing installation or fresh-context subagent capability stops the run with a recorded reason.
+
+Each run records decisions, problems, outputs and viewing limits under `.scratch/skill-generation-test/runs/`; the user checks the artifacts and decides acceptance. A symlinked run covers the installed authoring workflow; independent-install claims still require the copied-install checks.
+
+Runs retain the actual subagent task in `handoff.md`, screenshots for material visual problems in `evidence/`, and auxiliary tool outputs in `tool-output/` when produced. Missing visual evidence remains an explicit gap. The workflow accounts for tool files outside the run directory without removing pre-existing or unrelated files. The top of `run.md` states the current execution and user acceptance status; historical steps retain their times.
+
+The parent task also saves installed-resource identity manifests before and after execution. Changed resources or an incomplete ending check remain explicit limitations in the run record; a version number alone cannot identify local edits behind a symlink. The test Skill defines the collection and comparison rules.
+
+For independent assistant-host acceptance:
 
 1. Install the complete Skill outside this repository and record the candidate commit, host, OS, Node/npm, browser, and exact SDK identity.
 2. Use synthetic sources to exercise creation, authorized source scope, ambiguous meaning, long content, animation, revisions, and exports. Compare objects, relationship directions, boundaries, and recorded decisions with the sources.
