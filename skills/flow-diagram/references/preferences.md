@@ -4,7 +4,7 @@ Project preferences are user-chosen defaults for later diagram tasks in the same
 
 ## Locate and read
 
-Use the current working directory as the project root unless the user explicitly names another root. The sole record is `<project-root>/.diagrams/preferences.md`, outside task workspaces and delivery directories. Do not search parent directories, source locations or the installed Skill. Leave legacy `.diagrams/.preferences.json` untouched; it is inactive and is not read or migrated.
+Use the current working directory as the project root unless the user explicitly names another root. The sole record is `<project-root>/.diagrams/preferences.md`, outside task workspaces and delivery directories. Do not search parent directories, source locations or the installed Skill.
 
 Read the record before authoring new or revised drafts, for an export-only task with a material choice still open, or for an authorized preference operation. An export with its material choices settled, validation, and diagnosis skip the record. An omitted optional flag with a normal default is not by itself an open choice. On resumption, reuse recorded task decisions and revisit only affected choices.
 

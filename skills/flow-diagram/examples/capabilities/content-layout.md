@@ -14,4 +14,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 1024 × 360 diagram units. Equal card heights leave room for the graph labels and numbered text. Uses the shared dark presentation.
 
-**Source:** Original Skill capability exercise, MIT, Copyright (c) 2026 zac_ma. This JSON is the author source, not an upstream showcase snapshot. The public graph/content contract is illustrated in [FlowSVG node-content-graph.test.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/flowsvg/src/core/node-content-graph.test.ts); the exercise composes its own geometry and teaching text. See the scoped [teaching record](../../resources/teaching-sources.json).
+**Source:** Original Skill capability exercise, MIT, Copyright (c) 2026 zac_ma. The public graph/content contract is illustrated in [FlowSVG node-content-graph.test.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/flowsvg/src/core/node-content-graph.test.ts). See the scoped [teaching record](../../resources/teaching-sources.json).

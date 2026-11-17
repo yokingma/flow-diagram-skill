@@ -13,7 +13,7 @@ During design, consult these failure conditions to identify risks relevant to th
 
 - **Condition and symptom:** cross-region edges are added after a sidebar is positioned; routes can pass through an unrelated group or appear to make the sidebar an endpoint.
 - **Start with:** reserve the main relationship channels before positioning the sidebar. Coordinate ports and sidebar placement using the [connection recipe](visual-design.md#connections-and-relationship-labels). Use an in-card explanation only when it preserves the required relationship and its ownership.
-- **Current checks:** the SDK routes edges and detects some node-related risks, but does not guarantee container avoidance. Container-crossing diagnosis is under evaluation, not a default check.
+- **Current checks:** the SDK routes edges and detects some node-related risks, but does not guarantee container avoidance. Inspect container crossings in the rendered diagram.
 - **Still view:** follow each cross-region path through bends and crossings to the destination arrowhead. Distinguish membership boundaries from paths and explanatory side notes.
 
 ## Endpoint scope and obstructed paths
@@ -25,7 +25,7 @@ During design, consult these failure conditions to identify risks relevant to th
 
 ## Independent edges share a routing channel
 
-- **Condition and symptom:** independent edges use the same side or layer gap. In an observed layered draft, changing several fan-in edges to `orthogonal` left long coincident segments; their individual sources and destinations remained hard to follow. Other routes can also coincide or become hard to distinguish. Solid and dashed relationships can appear merged, and several arrowheads can look like one bus. This observation establishes that switching route mode alone can leave ambiguity; it does not establish a general preference against bends.
+- **Condition and symptom:** independent edges use the same side or layer gap, leaving coincident segments that are hard to trace. Solid and dashed relationships can appear merged, and several arrowheads can look like one bus. Changing routing mode alone can leave the same ambiguity.
 - **Start with:** resolve endpoint scope first, then arrange the remaining endpoints, group gaps and ports together. Inspect the rendered routes before adding labels. If paths still coincide, revise the geometry or route choice in the working draft and re-view the affected relationships. Preserve independently supported edges; a bus or junction requires source meaning or an explicitly authorized meaning change.
 - **Current checks:** finite diagnostics do not provide an edge-to-edge ambiguity check. `orthogonal` selects a routing mode; it does not assign an exclusive lane or guarantee distinct paths. Supported ports name a side, not an authored offset or waypoint; use only the [document model](document-model.md#geometry-and-relationships) fields.
 - **Still view:** inspect a crop of each busy channel at the target display size. Trace every affected edge independently, including its source, shared segment, exit and arrowhead. Record ambiguous overlaps in review `issues`, even if `validate` reports none. Claims about lane separation or distance must describe the rendered result rather than the planned spacing.

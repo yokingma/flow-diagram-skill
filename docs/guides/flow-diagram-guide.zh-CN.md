@@ -2,87 +2,54 @@
 
 [English](flow-diagram-guide.md) · [文档地图](../README.md)
 
-**Flow Diagram：面向系统和流程解释的可执行图表 Skill。一次编写，支持播放、嵌入、检查和导出。**
+Flow Diagram 帮助编程助手根据描述、文档或代码创作可编辑的系统与流程图解。说明希望读者理解什么，助手会制作、检查并交付最终选定图解。
 
-Skill 负责创作图解文档并指导检查；FlowSVG SDK 负责渲染和播放，应用内嵌使用 SDK 集成方式。“可执行”指播放作者定义的视觉状态与变化，不代表执行图中描述的系统或业务流程。
-
-这份指南说明如何在支持 Skill 的编程助手中安装和使用 Flow Diagram。你说明读者问题和来源事实，助手依次理解、制作、校验、看图修改并交付最终选定图解。任务持续编辑一份源草稿、替换当前产物，并用一份临时 `issues.md` 汇集实质问题。默认交付 JSON、初始暂停的离线 HTML 和报告；成功收尾清理本任务工作区，失败时保留恢复材料。只有明确要求时才增加不可变检查点或注册正式复核。
-
-Skill 使用精确锁定的 registry SDK 基线。当前仅支持 SDK `0.4.1`，实际安装使用 runtime manifest 和 lockfile 记录的版本与完整性。平台与助手宿主的验证范围有限，见[已知平台限制](../development/flow-diagram-maintenance.md#ci-and-platform-evidence)和[宿主验证方法](../development/flow-diagram-maintenance.md#host-verification)。提供安装步骤不表示每个宿主和平台均已通过验收。
-
-首个独立 Skill 分发版本为 `0.1.0`，发布标签为 `v0.1.0`。通过 Skills CLI 或完整手动复制安装，见[安装到宿主](#2-安装到宿主)。SDK 升级需要维护者显式更新 manifest、lockfile 并重新独立验收。
-
-SDK API 的权威来源是[来源快照中的 SDK 手册](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.zh-CN.md)；Skill 执行所需 references 随安装单元提供，不依赖在线手册。
-
-SDK 升级后，历史报告和查看证据保留原 SDK 身份。需要在新基线下重新导出请求的图片并重新查看。其他 SDK 生成的已填充 Agent HTML 页面即使使用 `--sync-html` 也会被拒绝；保留原文件，按[SDK 升级恢复步骤](../../skills/flow-diagram/references/troubleshooting.md#continuing-after-an-sdk-upgrade)准备新的 managed region。
+默认交付可编辑 JSON、离线 HTML 页面和报告。需要图片时，可要求导出 SVG、PNG 或 GIF。HTML 播放器演示图中定义的状态和变化，不执行所描述的业务流程。
 
 ## 文档入口和任务分流
 
-本指南面向用户，覆盖安装、创作、修订、校验和导出。[SKILL.md](../../skills/flow-diagram/SKILL.md) 面向执行任务的 Agent；测试、安装单元边界和验收范围见[维护指南](../development/flow-diagram-maintenance.md)。用户指南留在项目 `docs/` 中，安装和执行 skill 时无需复制本指南。按任务选择下一步：
-
-| 任务 | 下一步 | 完成标准 |
-| --- | --- | --- |
-| 新建图解 | 阅读[创建第一张图解](#3-创建第一张图解)，按需查阅语义模式和展示用途 | 报告链接最终选定图解的 JSON、HTML、检查结果和未解决事项 |
-| 根据资料创作 | 阅读[根据指定资料创作](#4-根据指定资料创作)和[来源保真与信息取舍](../../skills/flow-diagram/references/source-fidelity.md) | `sources.json` 与报告记录允许读取的来源和取舍 |
-| 管理项目偏好 | 见[项目偏好、用途与展示尺寸](#31-项目偏好用途与展示尺寸) | 助手说明保存、忘记或重置了哪些偏好 |
-| 修订图解 | 阅读[修订已有图解](#6-修订已有图解) | 结果注明选定输入，记录修改和决定 |
-| 只诊断，不修改 | 按[仅检查的准备流程](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation)操作 | 助手报告发现、证据和检查缺口，不发布替换文件 |
-| 导出静态图或 GIF | 阅读[按需导出 SVG、PNG 或 GIF](#7-按需导出-svgpng-或-gif)和[导出说明](../../skills/flow-diagram/references/export.md) | 报告逐项说明请求格式是否完成；缺浏览器时明确未完成 |
-| 只校验 | 阅读[只校验，或直接使用命令行](#8-只校验或直接使用命令行) | 结果列出检查和诊断信息，不保存图解版本 |
-| 恢复中断或失败的任务 | 见[故障恢复](../../skills/flow-diagram/references/troubleshooting.md) | 助手说明保留的文件和未完成的工作 |
+| 任务 | 阅读入口 |
+| --- | --- |
+| 安装 Skill | [安装到宿主](#2-安装到宿主) |
+| 创建图解 | [创建第一张图解](#3-创建第一张图解) |
+| 设置项目默认值 | [项目偏好、用途与展示尺寸](#31-项目偏好用途与展示尺寸) |
+| 根据文档或代码创作 | [根据指定资料创作](#4-根据指定资料创作) |
+| 查找交付文件 | [查看产物和检查结果](#5-查看产物和检查结果) |
+| 修改图解 | [修订已有图解](#6-修订已有图解) |
+| 导出图片 | [按需导出 SVG、PNG 或 GIF](#7-按需导出-svgpng-或-gif) |
+| 检查已有 JSON | [只校验，或直接使用命令行](#8-只校验或直接使用命令行) |
+| 恢复失败任务 | [故障恢复](../../skills/flow-diagram/references/troubleshooting.md) |
 
 ## 适合哪些任务
 
-- **演示文稿素材：**制作架构、流程和状态变化图解，按需导出 SVG、PNG 或 GIF，供 PPT 等演示软件使用。
-- **网页讲解：**为技术文档或产品说明制作可暂停、回看的图解，交付离线 HTML；应用内嵌播放器使用 SDK 集成方式。
+- **演示文稿素材：**制作架构、流程和状态图，导出为 SVG、PNG 或 GIF。
+- **网页讲解：**制作可暂停、回看的离线 HTML 图解。
 - **教学与培训：**分步解释请求过程、数据流和任务生命周期。
-- **评审与复盘：**结合结构全貌，解释方案中的交互或有资料依据的故障过程。
+- **评审与复盘：**根据资料展示结构全貌和交互过程。
 
-说明目标读者、展示尺寸和需要的输出格式，有助于助手安排信息密度和演示节奏。默认交付 JSON 和离线 HTML；需要 SVG、PNG 或 GIF 时，可以在本次提出，也可以设为项目偏好供以后复用。skill 生成图解素材，不生成 PPTX 或 PowerPoint 原生形状；导入和播放效果取决于演示软件。
+你可以指定分层架构图、逻辑流程图等类型，也可以让助手根据讲解目标选择。需要起稿参考时，可浏览[示例库](../../skills/flow-diagram/examples/README.md)。
 
-助手借助[视觉设计方法](../../skills/flow-diagram/references/visual-design.md)协调文字、间距、色彩、容器、连线和动画。规范指导制作和看图修改，不作为验收门禁。设计判断来自结合读者问题与展示条件的实际查看；机器执行成功或正式覆盖完成均不代表设计获认可。
-
-排列节点和连线前，助手先阅读随包的[图形选型指引](../../skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)。索引按架构图、流程图、数据流图、交互图、状态图、概览与对比图、汇聚与容量图组织具体类型。你可以直接指定分层架构图、逻辑流程图等类型，也可以描述读者问题。助手根据问题和来源关系匹配类型，再读取对应指引。多个类型命中时，选择主类型，并为独立的次要问题补充相应模式；不同解释会改变讲解重点时，先询问你。没有已列类型覆盖主要问题时，才采用自由组合。缺失事实按来源保真规则澄清或保留为未知。
-
-指南中的示例是明确标记的教学设定，可用于起稿；真实业务关系仍须依据你的资料。[展示用途指南](../../skills/flow-diagram/references/delivery-contexts.md)说明 PPT 静态素材、Web 正文插图和离线交互 HTML 的尺寸与检查范围。图形选型属于创作判断，静态或动画呈现及展示尺寸分别选择。工具没有正式用途 preset 字段或命令行 preset；文档中的尺寸只是起始建议。SVG、PNG 和 GIF 都可按需导出，PNG 与 GIF 需要可启动的 Chrome/Chromium。
-
-流程中的判断、输入输出、报告和既定子流程可使用四种[预设形状](../../skills/flow-diagram/references/document-model.md#preset-labels)。它们只支持普通标签，不接受结构化 content。[基础形状示例](../../skills/flow-diagram/examples/capabilities/basic-shapes.md)在一份可运行文档中展示这些预设。调整几何前先测量所有标签版本。
-
-需要练习分层架构时，可查看 [SDK 架构](../../skills/flow-diagram/examples/complete/project-architecture.md)。嵌套职责组与消费者指向提供者的依赖在分主题强调时保持可见。六个[上游完整案例](../../skills/flow-diagram/examples/complete/README.md)覆盖架构、工作流、状态、数据流、部署和时序。先阅读相邻说明中的来源事实与静态阶段选择，再复制 JSON 到一份可编辑任务草稿；测量改变后的初始和替换内容并实际查看产物。分组本身不建立部署或信任边界。
-
-从完整草稿测量结构化内容和普通标签时，运行 `measure --input <draft.json>`，使用草稿中的宽度和 typography。结构化内容包含初始值与全部动画替换；普通标签只测初始值，预设标签包含替换版本。追加 `--in-place` 可直接回填任务根目录下的同一源草稿，只增加高度；生成的 current JSON、检查点、外部文件及文件别名保持写入保护。不支持的动画宽高变化仍会阻止操作。只有明确需要独立副本时才改用 `--output <new-draft.json>`，源字节不变且不覆盖已有目标。取消或保存失败保留源文件；修改后从同一路径重新 author，finalize 会拒绝已经过时的生成文件。SDK 越界估算只作辅助，不阻止回填。生成草稿仍需排布位置、检查诊断并实际查看。
-
-需要在渲染前查看有来源的逐行文本时，在 `measure --input <json>` 后追加 `--lines`。每个结果或草稿节点只增加一份 `estimatedLines`，保留既有测量范围内的全部版本和不同文本角色；默认输出、高度、诊断与回填行为不变。批量 label 仍是元数据，普通草稿标签仍只测初始值。记录可能超出安全区，其数量不保证等于基线行数。它们是供查看的估算，不代表实际可见字形，也不自动判断可读性。完整草稿测量失败时仍只返回诊断；`--output` 不把这些记录写入文档。其他命令拒绝此参数。详见[逐行排版估算](../../skills/flow-diagram/references/tool-contract.md#inspect-estimated-text-lines)。
-
-测量报告问题时，用 `sourcePath`（草稿另有 `location`）定位实际节点、内容块或动画动作。`objectId` 保留节点 ID，SDK 的 `path`、`versionIndex`、`dimension`、`message` 继续保留。`nextStep` 区分宽度/安全区检查与固定实体图块高度/局部坐标检查。增加外部节点高度不能修复横向越界，也不会放大固定图块；仅增加图块高度不能纠正负向范围越界。完整草稿测量失败时只返回诊断、不发布回填文件，表示请求的操作未完成，不表示图形视觉质量不合格。检查会在失败阶段停止，因此诊断不是全部问题清单。独立和批量输入仍返回带 SDK 诊断的测量结果。实际图片需另外查看。详见[测量诊断](../../skills/flow-diagram/references/tool-contract.md#locate-sdk-measurement-diagnostics)及[失败与文件保护](../../skills/flow-diagram/references/tool-contract.md#write-a-height-filled-draft)。
-
-如果静态图在文案变化后需要重复计算几何，请使用[布局计划工作流](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。Agent 负责语义结构、对象归属、顺序和覆盖；布局策略只为已有 ID 计算坐标。不规则场景可以继续直接维护坐标。布局计划只改变几何，不推断含义，也不会消除 warning。安装包内的[完整布局输入与计划](../../skills/flow-diagram/references/layout-plan.md#complete-teaching-input)使用虚构教学数据，其中的间距不是通用承诺。测量得到的高度是自动布局下限；`overrides[id].height` 始终精确，低于估算值时仍保留该高度；按需追加 `--geometry` 可取得对应的文字排版估算。
-
-可选的 layout 命令要求静态草稿和显式布局计划。按需运行 `measure --in-place`，再运行 `layout --input <draft> --plan <layout-plan.json> --in-place`，然后校验和制作同一源草稿。测量高度作为布局下限，`overrides[id].height` 保持精确；`--geometry` 按需返回有限辅助估算。布局结果不代表设计批准。请求的 SVG/PNG 需在预期尺寸和背景下实际查看；只有明确要求正式复核时才追加[注册图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
-
-需要集中查看基础机制时，可用[内容与布局](../../skills/flow-diagram/examples/capabilities/content-layout.md)学习文字样式、编号列表、文字居中的标签和局部实体图块，或用[显隐与镜头](../../skills/flow-diagram/examples/capabilities/visibility-camera.md)学习显隐、聚焦和边状态恢复。这两项是 Skill 自有视觉练习，与上游完整案例分开标注。
-
-设计时查阅[渲染踩坑记录](../../skills/flow-diagram/references/rendering-gotchas.md)，识别相关失败条件，结合读者问题与展示场景调整候选处理方法；随着草稿推进，再回查相关技术细节。分层结构与侧栏、带返回路径的分支流程、重复长内容卡片，可参考[组合设计配方](../../skills/flow-diagram/references/visual-design.md#composition-recipes)；[教学范例索引](../../skills/flow-diagram/examples/README.md)列出已选成品及各自的展示条件和局限。改用其他展示宽度后需要重新查看。在[创建任务文件](../../skills/flow-diagram/references/tool-contract.md#task-workspace)时确定日志等材料是否需要在收尾后保留。
+Skill 生成图解素材，不生成 PPTX 文件或 PowerPoint 原生形状。需要在应用中嵌入播放器时，使用 [FlowSVG SDK](https://github.com/yokingma/FlowSVG)。
 
 ## 1. 准备环境
 
-- 安装 Node.js 20 或更高版本及 npm。运行助手的环境需要能找到 `node` 和 `npm`。
-- 首次准备运行依赖时需要联网获取锁定的 npm 包；完整缓存准备好后可离线复用，npm 仍需保留。
-- 截图检查、PNG 导出和 GIF 导出需要本机可启动的 Chrome/Chromium。JSON、HTML 和 SVG 生成不要求浏览器。
+- 安装 Node.js 20+ 和 npm，运行助手的环境需要能找到这两个命令。
+- 首次制作图解需要联网下载运行依赖，完整缓存可离线复用。
+- PNG、GIF 和截图检查需要单独安装的 Chrome/Chromium 可执行文件；JSON、HTML 和 SVG 生成无需浏览器。
 
-skill 包含浏览器控制库，不包含浏览器程序，也不会自动下载浏览器。宿主自带浏览器工具，不一定代表 skill 能找到对应的可执行文件；必要时向助手提供 Chrome/Chromium 路径。
-
-直接使用命令行时，可运行 `node <skill-directory>/scripts/flowsvg.mjs --help`，或在 `author`、`validate`、`measure` 后追加 `--help` 查看当前选项。若只需要集中检查少数关键状态，可用 `author --samples <count>` 选择较小的确定性采样计划；报告会列出省略的候选点。
+Skill 不会下载浏览器，也不会修改应用依赖。助手找不到 Chrome/Chromium 时，可提供其可执行文件路径。宿主的浏览器工具所用的浏览器，不一定能被本地 Node 命令调用。
 
 ## 2. 安装到宿主
 
-普通安装推荐从任意项目使用 Skills CLI：
+在需要使用 Skill 的项目中执行：
 
 ```sh
 npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
 ```
 
-命令已选定 `flow-diagram`，CLI 根据环境识别或询问目标助手。若要无交互地为当前用户安装并跨项目使用，选择对应宿主的命令：
+Skills CLI 根据环境识别或询问目标助手，默认安装到当前项目。通过 GitHub 安装需要 Git。
+
+要为当前用户安装并跨项目使用，选择对应宿主：
 
 ```sh
 # Codex
@@ -92,16 +59,14 @@ npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagr
 npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --global --agent claude-code --yes
 ```
 
-不加 `--global` 时安装到当前项目。通过 GitHub 安装需要可用的 Git。用户需要 Node 与 npm，无需安装仓库的 pnpm 开发依赖。
-
-项目级安装使用 `npx skills list` 查看，用 `npx skills update flow-diagram` 更新本 Skill。全局安装请明确指定范围：
+项目级安装使用 `npx skills list` 查看，用 `npx skills update flow-diagram` 更新。全局安装请明确指定范围：
 
 ```sh
 npx skills list --global
 npx skills update flow-diagram --global
 ```
 
-更新命令会改变安装文件。仓库 URL 跟随默认分支，更新可能改变 Skill 行为。需要可复现时，按下文手动检出经过审查的标签或提交。Skill 分发版本、工具报告版本与 SDK 版本分别管理。
+更新跟随仓库默认分支。需要固定版本时，使用下方的手动安装方式。
 
 ### 手动安装与固定源码
 
@@ -113,18 +78,16 @@ cd flow-diagram-skill
 git rev-parse HEAD
 ```
 
-需要固定版本时，复制前先检出 `v0.1.0` 发布标签，并记录 `git rev-parse HEAD` 输出的提交。
+需要固定发布版本时，先检出对应标签，例如 `v0.1.0`，再复制完整的 `skills/flow-diagram/` 目录，包括许可证和全部子目录：
 
-将完整的 `skills/flow-diagram/` 文件夹复制到下列位置之一。保留 `LICENSE`，以及 `SKILL.md`、`agents/`、`scripts/`、`references/`、`examples/`、`resources/` 和 `runtime/` 的相对位置，包括 runtime manifest 和 lockfile。`agents/openai.yaml` 配置 Codex 中的显示名称和简介，调用名为 `$flow-diagram`。只复制 `SKILL.md` 无法运行工具。
-
-| 宿主 | 仅当前项目可用 | 当前用户的多个项目可用 | 显式调用 |
+| 宿主 | 当前项目 | 当前用户 | 调用方式 |
 | --- | --- | --- | --- |
-| Codex CLI / IDE 扩展 | `<项目>/.agents/skills/flow-diagram/` | `~/.agents/skills/flow-diagram/` | `$flow-diagram`；也可通过 `/skills` 查找 |
-| Claude Code | `<项目>/.claude/skills/flow-diagram/` | `~/.claude/skills/flow-diagram/` | `/flow-diagram` |
+| Codex | `<project>/.agents/skills/flow-diagram/` | `~/.agents/skills/flow-diagram/` | `$flow-diagram` |
+| Claude Code | `<project>/.claude/skills/flow-diagram/` | `~/.claude/skills/flow-diagram/` | `/flow-diagram` |
 
-首次为当前用户安装时，在克隆目录执行。以下命令要求目标 `flow-diagram` 目录尚不存在。
+首次为当前用户安装 Codex Skill 时，在克隆的仓库中执行以下命令。目标 `flow-diagram` 目录必须尚不存在。
 
-macOS/Linux（Codex）：
+macOS/Linux：
 
 ```sh
 mkdir -p "$HOME/.agents/skills"
@@ -133,7 +96,7 @@ node "$HOME/.agents/skills/flow-diagram/scripts/flowsvg.mjs" doctor
 node "$HOME/.agents/skills/flow-diagram/scripts/flowsvg.mjs" prepare
 ```
 
-Windows PowerShell（Codex；仅为安装示例，不作为 Windows 验收证据）：
+Windows PowerShell：
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$HOME/.agents/skills" | Out-Null
@@ -142,97 +105,77 @@ node "$HOME/.agents/skills/flow-diagram/scripts/flowsvg.mjs" doctor
 node "$HOME/.agents/skills/flow-diagram/scripts/flowsvg.mjs" prepare
 ```
 
-Claude Code 将 `.agents/skills` 换为 `.claude/skills`。仅为某项目安装时，使用表格中的目标项目路径。更新时先备份安装目录，再用所选版本的完整目录替换；合并复制可能残留已删除的脚本或参考资料。
+Claude Code 将 `.agents/skills` 换成 `.claude/skills`。项目级安装使用表中的项目路径。更新手动安装的 Skill 时，先备份安装目录，再用所选版本的完整副本替换。
 
-`~` 表示用户主目录，Windows 上通常是 `C:\Users\<用户名>`。其他宿主使用其已有的 skill 安装方式，并确保助手能读取该目录和执行 Node 命令。上述路径来自宿主官方文档，不表示已在所有宿主实测。
+在目标项目中打开助手并调用 Skill。Codex 未发现新 Skill 时，重启后检查；其他宿主可能需要重新加载，见[官方说明](#宿主官方说明)。
 
-安装后，在目标项目或工作目录中打开宿主，显式选择 `flow-diagram`。Codex 未显示新安装的 skill 时，重启 Codex 后再查找。其他宿主按其技能发现或重新加载说明处理。
-
-先让助手检查环境：
+制作图解前，可以先要求检查环境：
 
 ```text
-使用 flow-diagram skill，检查当前环境能否运行。说明 Node、npm 和浏览器的状态。
+使用 flow-diagram skill 检查 Node、npm 和浏览器是否可用。
 ```
 
-`doctor` 检查 Node、npm 和缓存，不检查浏览器；浏览器可用性需另外核对，并在实际截图或 GIF 任务中确认。首次创作时工具会自动准备隔离依赖，无需给当前项目安装 FlowSVG 或修改项目依赖清单。
+`doctor` 检查 Node、npm 和运行时缓存，浏览器另行检查。首次制作图解会自动准备运行依赖；使用 Skill 无需执行 `pnpm install` 或检出 SDK 源码。
 
 ## 3. 创建第一张图解
 
-在 Codex 中可发送：
+在 Codex 中发送：
 
 ```text
 $flow-diagram
-创建一张静态架构图：客户端请求 API 服务，API 服务查询数据库。
-API 服务和数据库属于“订单平台”，客户端位于平台外。
-保留中文标签，使用浅色主题。图解命名为 order-platform，输出到当前工作目录。
+创建静态架构图：客户端调用 API 服务，API 服务查询数据库。
+API 与数据库属于“订单平台”，客户端位于该边界之外。
+使用中文标签和浅色主题，命名为 order-platform。
+交付 JSON、离线 HTML，另外导出 SVG。
 ```
 
-在 Claude Code 中，将第一行改为 `/flow-diagram`，其他要求保持一致。也可直接说明“使用 flow-diagram skill”，由支持自动选择的宿主识别。
+Claude Code 将第一行换为 `/flow-diagram`。支持自动选择的宿主中，也可以直接说“使用 flow-diagram skill”。
 
-请求中最好包含对象、关系方向、分组边界和读者问题。需求明确时可直接制作；助手可以在保留含义的前提下重排、分组、合并重复说明和选择抽象层级。改变事实、关键关系、边界或范围前才需要询问；SDK 无法忠实表达时，说明限制并请你选择替代方案。独立计划或设计合规证明不是前提。
+说明对象、关系方向、分组边界和讲解目标。助手会询问影响含义的缺失信息；请求的效果不受支持时，会说明限制并请你选择替代方式。
 
-如果图解用于演示文稿，可追加具体约束：
-
-```text
-这张图用于 16:9 的技术评审 PPT，请使用简短中文标签，确保投影时易读。
-额外导出静态 SVG。我会将 SVG 导入演示软件，不需要生成 PPTX。
-```
-
-对于流程或状态变化，可以明确要求动画：
+需要动画时，说明先后顺序与状态变化：
 
 ```text
-使用 flow-diagram skill，演示客户端向 API 服务发送请求，API 服务返回响应。
-先展示全图，再依次演示请求和响应，最后回到全图。
-图解命名为 request-response，默认交付 JSON 和离线 HTML。
+使用 flow-diagram skill 解释一次请求与响应。
+客户端、API 与数据库全程可见。先展示全图，再依次演示请求、
+数据库查询和响应，最后回到全图。命名为 request-response。
 ```
 
 ## 3.1. 项目偏好、用途与展示尺寸
 
-助手从当前工作目录或你明确指定的项目根读取 [项目偏好](../../skills/flow-diagram/references/preferences.md)，文件为 `.diagrams/preferences.md`。新建、修订时会读取；单独导出时，只在有可由偏好补齐的选项时读取。校验和诊断跳过。本次明确要求和项目硬性约定优先；修订保留范围之外的设计和交付选择。
+已知受众、实际展示尺寸、背景和导出格式时，一并说明。用于演示文稿时，提供可用宽度和高度，以及标题、图例是否由幻灯片承载。导入幻灯片需请求 SVG 或 PNG，动画可用 GIF；默认 HTML 页面用于浏览器播放。
 
-可以说「这个项目以后架构图默认用中文标签」或「交付评审图时默认附 SVG」。助手每行用一个 Markdown 列表项记录一条可复用偏好。一次调整和反复出现的普通反馈都只用于本次；只有你已表达长期意图、但范围或具体选择不清楚时，助手才追问。来源事实、关系、具体坐标和实际展示条件仍留在任务里。
+未说明用途时，助手从静态 Web 图解开始：未指定的选项默认采用 960 × 600 画布、720 CSS 像素展示宽度和浅色背景，明确要求和适用项目偏好优先。已知用于演示文稿时，即使缺少精确尺寸，也会保留幻灯片场景。助手会说明假定的尺寸和背景，便于你调整。
 
-可以修改偏好、忘掉一条，或重置全部。同一范围的新值替换旧值，明确的例外可以另记一行。条目冲突且影响本次任务时，助手会指出冲突，跳过有问题的默认值。写入或删除失败会明确报告。重置只删除 `.diagrams/preferences.md`；旧的 `.diagrams/.preferences.json` 保留原样，但不再生效。要保留某个旧选择，可以手动写入 Markdown，或请助手重新保存。
+要保存项目默认值，可以说“以后本项目的架构图都用中文标签”或“评审交付默认包含 SVG”。偏好保存在工作目录或你指定项目根目录下的 `.diagrams/preferences.md`。当前请求优先；修订时保留修改范围以外的选择。
 
-用途未知时，助手采用 Web 静态构图：960 × 600 画布、假定 720 CSS px 展示宽度和浅色背景，适用项目偏好可覆盖外观。助手说明这些假设，无需另行确认“使用默认值”；已知 PPT 用途保持对应上下文。默认交付 JSON、暂停离线 HTML 和报告；额外格式来自本次要求或适用偏好。保存项目偏好仍需明确的今后复用意图。
-
-PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景，以及标题和页脚由幻灯片还是素材承载。已知 PPT 用途继续使用该上下文，缺少精确尺寸时记录假设。目标尺寸查看只覆盖相应条件，真实 PowerPoint/WPS 集成单独记录。动画请明确浏览器 HTML 播放还是 GIF；MP4、PPTX 和原生 PowerPoint 动画不在本技能导出能力内。
-
-需要导入幻灯片的图片时，请指定 SVG 或 PNG；未请求图片格式时，助手采用默认文件，并说明没有幻灯片导入图片。选择默认文件只产生 HTML、JSON 和报告，不隐含可导入幻灯片的图片。
-
-完成图形选型后，可从[教学范例](../../skills/flow-diagram/examples/README.md)中的条件流程、有限重试、汇聚容量、数据转换、分层架构、无连线能力全景、来源与服务映射、内容卡片、请求响应和并行流动动画起稿。每份说明解释构图原因、主要展示条件与查看局限；动画未完成连续视觉播放的限制已明确。复用组织方式时，替换为自己的事实和展示尺寸。
+你可以要求修改、忘记某项偏好，或重置全部项目偏好。重置只删除偏好记录。一次性调整不会保存为以后默认值；已保存偏好发生冲突时，助手会说明冲突并继续处理，不套用该默认值。
 
 ## 3.2. 页面介绍与图内文字
 
-新建或修订 HTML 讲解时，助手先分配页面内容，再确定图形几何。页面包含一个标题、一句回答读者问题的简介、仅在需要操作说明时加入的功能阅读提示，以及受管播放器。对象名称、关系条件、关键状态和比较卡片中必要的对象说明保留在图内。来源、决策、检查和制作记录放进交付说明或报告，不把来源提纲或任务计划改写成页面章节。完整规则见安装包内的[页面内容契约](../../skills/flow-diagram/references/delivery-contexts.md#keep-the-html-page-minimal)。
+离线 HTML 页面包含标题、简短介绍和图解播放器，字幕说明动画阶段。对象名称、关系和必要条件保留在图中，来源与检查结果放在报告中。
 
-助手围绕内嵌播放器编写页面 HTML/CSS，固定阅读顺序为标题、一句简介、可选的功能阅读提示、带字幕和控件的播放器，不设补充说明章节。交付前由助手执行[页面完成清单](../../skills/flow-diagram/references/delivery-contexts.md#page-completion-checklist)和删除测试：凡是重复图中内容、描述制作过程，或删掉后不影响读者使用页面的区块，都移出或删除。未执行的检查及其影响会明确说明，最终设计判断由你作出。最终仍交付一个可离线打开的自包含 HTML，以及可编辑图解 JSON 和报告，无需额外页面源文件。已有图解导入、纯导出和校验保留原有输入及入口。
+同时请求 HTML 和图片时，说明图片是独立使用，还是放进文章或幻灯片。页面标题和简介不包含在 SVG、PNG 或 GIF 导出中，因此独立图片可能需要自己的标题或图例。
 
-直接使用工具时，将安装包内的 [HTML 页面起始文件](../../skills/flow-diagram/resources/html-page.html)复制到任务工作区，编辑外围内容与 CSS，再在常规图解输入及输出参数之外传入 `author --html <page.html>`。保留其中的受管播放区域。已经填充的播放区域默认必须匹配图解 JSON 的确切字节、主题和 SDK；页面无效或不匹配时明确报错。报告记录页面来源与最终文件的哈希，检查覆盖实际外层页面和内嵌控件。浏览器截图不等于实际视觉批准。完整规则见安装包内的[页面输入契约](../../skills/flow-diagram/references/tool-contract.md#editable-html-pages)。
-
-继续任务内已保存的版本时，`--from <版本>` 或 `--input <修改后.json> --parent <版本>` 会保留该版本登记的 Agent 页面，除非用 `--html` 另选页面。只修改页面时保留原 JSON。有意更改图解或主题时使用 `--sync-html`；工具校验旧播放区后只替换该区域，保留外围设计。任务清理后，在新工作区使用已交付的 `diagram.html` 和 `diagram.json`，无需历史父版本。先读取最终报告，保留已请求的格式。页面字节变化后需要重新检查并实际查看；旧 HTML 复核不能用于修改后的页面。命令与失败处理见[页面续编](../../skills/flow-diagram/references/tool-contract.md#continue-an-existing-page)。
-
-同时请求 HTML 与 SVG/PNG 时，请说明图片是独立使用，还是放入文章或幻灯片。助手记录必要标题、图例和限定由图片还是目标宿主承载；页面文字不会包含在静态导出中。需要不同内容安排时，使用明确命名的图解草稿，不静默删除条件。实际页面与每张图片分别在预期宽度和背景下检查并记录查看。
-
-直接使用工具时，在 `--html <page.html>` 之外加入明确的 `--svg --png`。若要在新工作区纯导出未改动的最终页面，使用其确切 JSON 作为 `--input`、HTML 作为 `--html`，保留来源字节和页面设计。不传图片参数就不产生 SVG/PNG。PNG 失败时保留成功的 HTML/SVG，但请求的整体交付仍不完整。见[混合导出](../../skills/flow-diagram/references/export.md#include-an-agent-authored-page)。缺少浏览器时，默认文件可以已交付，但页面检查仍未执行。
+保留配套的 HTML 和 JSON，以便后续修改时延续页面设计。自定义 HTML/CSS 或直接使用 CLI 时，见[可编辑 HTML 页面](../../skills/flow-diagram/references/tool-contract.md#editable-html-pages)和[继续编辑页面](../../skills/flow-diagram/references/tool-contract.md#continue-an-existing-page)。
 
 ## 4. 根据指定资料创作
 
-指定资料路径和允许读取的范围，能让助手保留来源并避免补造业务事实：
+指定允许读取的资料，以及必须保留的事实：
 
 ```text
-使用 flow-diagram skill，仅根据 docs/order-system.md 创建系统架构图。
-允许读取范围只有这个文件。保留资料中的中文名称，不补充资料未说明的依赖或部署数量。
-记录来源，图解命名为 order-system。
+使用 flow-diagram skill，只根据 docs/order-system.md 创建系统架构图。
+保留原文中文名称，不添加文档未说明的依赖或部署数量。
+记录资料来源，命名为 order-system。
 ```
 
-内容过密时，助手会提出拆图或聚合方案。合并对象、删除关系或改动含义前，需要你决定；节点数量本身不构成删减授权。交付说明会分别列出保留、合并、省略和未知内容，并关联来源与实际决定。完整教学案例见[来源保真与信息取舍](../../skills/flow-diagram/references/source-fidelity.md)。
+分析代码仓库时，指定允许读取的目录或文件。助手保留来源事实，在改变关键关系、边界或含义前询问你。内容过密时，可以提出拆图或归并建议；缺失事实在澄清前保留为未知。
 
-分析代码仓库时，同样给出目录或文件范围。来源记录用于说明图解依据；工具保存来源元数据，但不会根据元数据自行抓取文件或 URL。
+保留、归并和省略信息的例子见[来源保真](../../skills/flow-diagram/references/source-fidelity.md)。
 
 ## 5. 查看产物和检查结果
 
-默认输出位于执行任务时的工作目录。新图解首次成功运行通常得到：
+用浏览器打开交付的 HTML。成功制作名为 `order-platform` 的图解后，会得到：
 
 ```text
 .diagrams/
@@ -243,149 +186,109 @@ PPT 素材请说明整页还是局部占位、可用宽度**和高度**、背景
     report.md
 ```
 
-请求并成功导出后增加 `diagram.svg`、`diagram.png` 或 `diagram.gif`；命名批量图片位于 `exports/`。简短报告记录来源元数据、检查、警告、视觉观察和最终文件哈希。失败任务保留工作目录，只登记实际保存的文件，不保证有 HTML 或全部产物。
-
-助手创建的草稿、临时辅助脚本、测量及复核输入统一保存在 `.diagrams/.work/<diagram-name>/<task-id>/`，迭代时优先使用无需浏览器的校验，避免反复截图。全部请求文件就绪后，`finalize` 发布最终选定图解到 `.diagrams/<diagram-name>/`，并只清理本次任务目录。失败或取消的任务保留工作文件；如需保留完整历史或调试证据，请明确提出。已有来源文件、其他任务和旧历史不在清理范围内。
-
-| 文件 | 使用方式 |
+| 文件 | 用途 |
 | --- | --- |
-| `diagram.html` | 用浏览器打开；默认暂停，可通过控件播放、拖动时间线和调整速度。单文件可离线分享。 |
-| `diagram.json` | 后续修订或重新导出的可编辑图解文档。 |
-| `report.md` | 阅读实际检查、警告、交付文件和未完成事项。 |
-| `report.json` | 同一创作报告的结构化事实记录，供工具或后续任务读取。 |
+| `diagram.html` | 离线页面，支持播放、跳转和调速，初始暂停。 |
+| `diagram.json` | 可编辑图解，用于修订和导出。 |
+| `report.md` | 来源、已完成检查、警告和未完成事项。 |
+| `report.json` | 同一份报告的结构化形式。 |
 
-任务期间，编辑、校验、测量、布局、截图和重试复用同一源草稿与当前产物。一份 `issues.md` 汇集实质疑问、错误和看图发现，同一问题持续更新位置、状态与处理结果，无需抄录正常命令和完整 stdout。发布前助手整理未解决问题及影响，按需通过 `finalize --notes <markdown>` 带入报告。CLI 原样复制 Agent 整理的说明，不解析或评分。成功发布后只清理本任务；明确要求的检查点或工作记录可保留。
+请求导出后，还会得到 `diagram.svg`、`diagram.png` 或 `diagram.gif`；命名批量图片保存在 `exports/` 中。
 
-文件完成、程序检查和实际查看分别报告。有可用浏览器时，工具打开已保存的 `diagram.html`，记录哈希、初始暂停、离线行为、播放和捕获状态。截图生成不代表助手已查看。助手实际查看文件、修改问题，并在交付时说明查看尺寸、动画阶段和缺口。默认查看无需复核表单或 CLI 提交。缺少浏览器或图片查看能力时，查看结论限于已检查范围；文件齐备仍可带明确缺口交付。
+助手会检查生成文件，在浏览器和图片查看工具可用时按预期尺寸查看结果。交付说明会列出缺少的导出或检查。某项导出失败时，已完成文件仍可使用，并保留恢复材料。
 
-动画任务中，助手根据读者问题与阶段计划选择关键阶段，再对应实际编译时间、计划采样点、省略候选、已捕获图片与实际查看记录。同拍并发 flow 的每条路径和标记都可辨识时，一张合适的图片可以共同检查这些传递。实际 HTML 截图保留原有 focus，并按不同时间点采样。静态图只有一张；动画 `--samples 2` 覆盖初态和终态，提高预算可纳入中间阶段。独立 SDK `--preview` 计划会为移除 focus 的全景保留一个名额。
-
-关键阶段缺失时，助手可对 current 提高 `author --samples`、检查该时刻的实际 HTML/播放，或查看定时导出。新截图需要实际查看，旧观察不能代表已看过重新生成的文件。交付说明指出查看的表面、时刻与剩余影响；节奏判断需要实际播放，采样查看只覆盖对应状态。详见[关键阶段核对](../../skills/flow-diagram/references/visual-checks.md#check-the-selected-key-stages)。
+成功交付后会清理临时草稿和截图。需要排查细节时，在交付前要求保留这些材料，包括任务的 `issues.md`；需要对比或回退时，在交付前要求保存版本检查点。
 
 ## 6. 修订已有图解
 
-给出最终 JSON 路径、图解名，并说明允许的改动：
+提供 JSON 路径和允许修改的范围：
 
 ```text
-使用 flow-diagram skill，修订 ./.diagrams/order-platform/diagram.json。
-将数据库标签改为“订单数据库”，其他关系和分组保持不变。
-完整修订结果就绪后，再发布到最终目录。
+使用 flow-diagram skill 修订 ./.diagrams/order-platform/diagram.json。
+将数据库标签改为“订单数据库”。
+保留其余关系和分组，并延续 HTML 页面设计。
 ```
 
-最终 JSON 在新的任务中读取。任务内持续编辑一份工作草稿，制作调用替换当前产物，不按调用创建版本。恢复未完成的已保存草稿可使用 `--from current`；需要历史比较或回退时才选择明确保留的检查点。发布前，Agent 从一份临时问题记录整理未解决项，可通过 `finalize --notes <markdown>` 将这份 Markdown 摘要原样带入最终报告，并标明由 Agent 整理。
+助手会更新图解并重新生成所需格式。替换结果无法完成时，会保留上一份完整交付。将配套 HTML、报告与 JSON 放在一起；需要增加或移除某种格式时明确说明。
 
-助手发现重叠、裁切、缺字或语义问题后，会解释影响与候选方案，在选择会改变含义时请你决定；已经授权的机械修正直接执行。例如：
+调整视觉问题时，指出对象或区域。助手可以在保留含义的前提下修正间距、裁切和连线歧义；涉及事实或关键关系的修改会先询问你。
 
-```text
-这处重叠是有意设计，请保留，并在交付说明中解释影响。
-```
-
-```text
-采用你提出的右移方案，仅移动节点 cache，其他内容保持不变。
-修改同一源草稿并重新生成当前产物。
-```
-
-需要辅助计算时，在 `validate`、`author` 或 `layout` 后追加 `--geometry`。结果说明计算方法、对象、来源和有限时间范围；文字与曲线估算保留其限制，矩形相交不等于实际视觉遮挡。CLI 已移除短行、竖排等设计启发式和警告审批提交。用户或 LLM 借助设计指导查看实际图形，几何计算不要求例外登记。详见[诊断与修订决定](../../skills/flow-diagram/references/diagnostics-and-revisions.md)。
+SDK 更新后，如果已有页面因不兼容而被拒绝，保留原文件，按 [SDK 升级恢复](../../skills/flow-diagram/references/troubleshooting.md#continuing-after-an-sdk-upgrade)处理。
 
 ## 7. 按需导出 SVG、PNG 或 GIF
 
-任务内重复导出会替换当前文件。`author --from current` 保留未重新指定的导出格式、时刻、背景、图片宽度、显式主题覆盖、已保存清单字节、GIF 参数和已请求的截图范围，再重新生成请求产物；浏览器按本次调用选择。源字节或 SDK 身份改变后，已保存批量清单的绑定失效，需选定预期阶段并提供新绑定的清单。缺少请求文件时交付仍未完成，并保留此前完整发布结果。动画或图片格式本身不创建检查点，也不要求正式复核。
-
-静态 SVG 是指定时点的画面：
+指定格式；静态图片还需说明要展示的状态或时间点：
 
 ```text
-使用 flow-diagram skill，读取 ./.diagrams/order-platform/diagram.json。
-额外导出 0 毫秒的 SVG，发布完整的最终文件集。
+使用 flow-diagram skill 读取 ./.diagrams/order-platform/diagram.json。
+另外导出 0 毫秒时的 SVG。
 ```
 
-PNG 可明确指定宽度和透明背景，需要可用浏览器。默认不生成 PNG。缺少浏览器时会保留成功的 JSON、HTML 和 SVG，PNG 请求保持未完成：
+PNG 需要浏览器，可以指定宽度和背景：
 
 ```text
-使用 flow-diagram skill，读取 ./.diagrams/order-platform/diagram.json，导出透明 SVG 和 PNG。
-时间点使用报告中的 0 毫秒，PNG 宽度为 1440 像素。
-按正文 720 CSS 像素宽度，分别在白色和深色背景上实际查看导出的文件。
+导出这张图解在 0 毫秒时的透明背景 SVG 和 PNG。
+PNG 宽度为 1440 像素，按 720 CSS 像素展示宽度，
+分别在白色和深色背景上查看。
 ```
 
-导出和实际查看无需正式复核记录。明确需要可追溯复核时，按[正式复核](#明确请求时的正式复核)和[正式图片证据合同](../../skills/flow-diagram/references/artifact-evidence.md)操作。
+需要多张图片时，说明要展示的阶段。助手会选择对应时间点并导出命名文件。直接调用 CLI 的方法见[命名批量导出](../../skills/flow-diagram/references/export.md#named-batch-exports)。
 
-批量静态图片使用独立导出清单，绑定源字节哈希与实际 SDK 版本、完整性。助手根据编译节拍选择所请求的解释状态并说明选择；只有改变关键含义时才询问。源字节或 SDK 变化后需重新绑定清单，不能静默替换身份。每项独立指定名称、时刻和 SVG/PNG 格式。
+添加 GIF 动画：
 
 ```text
-使用 flow-diagram skill，读取 ./.diagrams/article/diagram.json，按实际编译节拍确认两张静态画面。
-在当前任务中用导出清单生成命名的 SVG 和 PNG，共用透明背景和 1440 像素 PNG 宽度。
-清单保存在任务目录中；分别报告每项结果，失败项在收尾前重试。
+使用 flow-diagram skill 读取 ./.diagrams/request-response/diagram.json。
+另外导出 GIF，使用浅色主题并保留讲解字幕。
 ```
 
-详见[命名批量导出](../../skills/flow-diagram/references/export.md#named-batch-exports)。只查看其中一张图片，不表示已查看其他时点、格式或展示尺寸。
-
-交付计划包含 GIF 时，需要可用浏览器。GIF 可以来自本次请求、沿用的既有交付格式或适用的项目偏好；本次请求可以取消 GIF 交付。例如，要追加 GIF：
-
-```text
-使用 flow-diagram skill，读取 ./.diagrams/request-response/diagram.json。
-额外导出 GIF。使用浅色主题，保留说明文字。
-浏览器使用当前环境可用的 Chrome/Chromium；找不到时先说明情况。
-```
-
-需要指定浏览器时，在请求中提供可执行文件的绝对路径。工具会以无头模式启动独立进程；浏览器选择详见[浏览器准备](../../skills/flow-diagram/references/visual-checks.md#prepared-browser)。
-
-GIF 失败或取消后，已完成的 JSON/HTML/SVG 仍可使用，但 GIF 请求保持未完成。调整时段、尺寸、帧率或说明文字等取舍，由你决定后再重试。参数和限制详见[导出说明](../../skills/flow-diagram/references/export.md)。
+GIF 需要 Chrome/Chromium。可以指定尺寸、帧率和时间区间，限制见[导出选项](../../skills/flow-diagram/references/export.md)。请求的导出失败或取消时，已完成的 JSON、HTML 和图片仍可使用，助手会说明需要重试的部分。
 
 ## 8. 只校验，或直接使用命令行
 
-保存创作结果的命令返回简明 JSON 摘要。需要完整报告、HTML 检查状态或采样详情时，读取返回的 `detailsPath`。只读校验与测量仍直接返回操作结果。报告创建前失败时直接说明原因，不返回不存在的报告路径。
-
-只检查已有 JSON，可向助手提出：
+检查 JSON，但不修改或导出：
 
 ```text
-使用 flow-diagram skill，仅校验 ./draft.json，报告结构、编译和布局诊断。
-保留输入，不导出 HTML、SVG、PNG 或 GIF，也不自动修复。
+使用 flow-diagram skill，只校验 ./draft.json。
+报告结构和编译诊断，保留输入文件，不导出文件，也不要自动修复。
 ```
 
-`validate --input <draft.json>` 返回结构化诊断、输入字节身份和实际 SDK 基线，不创建历史目录、快照或交付文件。`revision` 为 null，`validation.snapshotCreated` 为 false。保留工作草稿；需要留存诊断时，将 stdout 重定向到任务目录。只有检查明确已保存版本时，才使用 `validate --from <revision> --name <name> --output <task-workspace>/history`。几何估算无需审批或例外登记。
+只需视觉诊断时，可要求助手查看图解并报告问题。助手可能生成临时截图，但不会替换交付文件或修改来源。
 
-仅做视觉诊断时，助手优先复用已登记且有效的截图。只有 JSON 或最终交付文件时，保持输入字节不变，在隔离任务目录中生成临时检查材料；提供了匹配页面时保留该页面。有可用浏览器才能截图，实际查看图片仍是独立检查。助手报告发现、证据位置和未执行检查后，保留工作目录，不发布替换结果；修正图解需要相应授权。详见[仅检查任务的准备流程](../../skills/flow-diagram/references/visual-checks.md#inspection-only-preparation)。
+也可以直接使用 CLI。将 `<skill-directory>` 换成绝对安装路径，`<task-id>` 换成新的任务标识，在希望保存输出的工作目录中执行：
 
-也可在终端调用安装单元的唯一命令入口。下面的 `<skill-directory>` 必须替换为安装目录的绝对路径；先切换到希望保存输出的工作目录，并将 `<task-id>` 替换为本次运行的新任务 ID。
-
-```text
+```sh
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
 node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --name project-architecture --theme dark --output ".diagrams/.work/project-architecture/<task-id>/history" --browser none
 node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/project-architecture/<task-id>" --name project-architecture
 ```
 
-第二条命令使用固定版本的上游 SDK 架构示例，按深色展示生成临时 JSON、HTML 和报告；第三条发布最终文件并清理本次任务目录。`--browser none` 显式跳过截图，便于验证无浏览器交付。应阅读来源说明与报告；该命令验证不代表新内容或另一展示尺寸的视觉质量。
+这些命令生成架构示例，并将最终文件保存到 `.diagrams/project-architecture/`。`--browser none` 跳过截图检查。保存创作结果的命令返回摘要，通过其中的 `detailsPath` 读取完整报告；校验和测量直接返回结果。
 
-完整参数、隔离缓存和报告字段见[工具合同](../../skills/flow-diagram/references/tool-contract.md)。环境准备、取消或导出失败见[故障恢复](../../skills/flow-diagram/references/troubleshooting.md)。
+使用 `--help` 查看选项。命令与报告见[工具参考](../../skills/flow-diagram/references/tool-contract.md)，文字尺寸见[内容测量](../../skills/flow-diagram/references/tool-contract.md#content-measurement)，重复静态布局见[布局计划](../../skills/flow-diagram/references/static-layout.md#layout-plan-workflow)。
 
 ## 9. 查看结果与按需正式复核
 
-默认制作只捕获实际交付 HTML，`--samples` 选择捕获预算；需要 SDK 预览时显式传入 `--preview`。捕获不代表实际查看。默认报告说明文件完成和机器检查，正式复核为 `not-requested`，省略统一质量结论及正式查看计数。助手在目标展示条件下查看实际 HTML 与请求的 SVG/PNG，按需要修改，并说明实际查看范围与缺口。
+按实际使用尺寸检查标签、关系方向、分组边界和可读性。播放动画，检查顺序、字幕和节奏；需要修改时，向助手指出具体问题。
 
 ### 明确请求时的正式复核
 
-需要可追溯复核时，`author --from current --formal-review` 固定一个不可变 `v###`；后续 evidence、模板、review 和 finalize 使用返回的 ID。仅 `--checkpoint` 保存历史，不请求复核。之后普通编辑继续替换 `current`，不继承查看结论。创建复核模板或请求产物证据会单独保存正式意图，不改写来源报告。
+需要可追溯复核时，可以要求助手针对交付文件和展示条件记录观察。普通创作和图片导出无需正式复核请求。
 
-只有明确请求正式复核，才增加 `completion.quality` 和 `qualityCoverage`。这些字段记录结构检查、实际 HTML 和请求图片的注册查看覆盖；几何估算不要求审批。`formalReview.status: complete` 只表示声明范围的覆盖完整；查看者问题保留为 `unresolved-issues`，并保留查看者的行动建议。记录完整不代表用户认可设计。文件齐备时仍可带明确查看缺口交付。
-
-提交预览、HTML 或正式 SVG/PNG 证据复核前，使用 `review-template` 从指定证据生成含真实 ID 和哈希的未查看模板。实际查看后再填写观察。详见[三类复核完整入参契约](../../skills/flow-diagram/references/review-inputs.md)；无效提交会在分配版本或渲染之前失败。
-
-HTML 与预览复核追加独立记录，不重制或复制图解文件。相同提交复用原记录；不同观察追加保存。最终交付重新核对证据，并保留部分覆盖和所有未解决问题；后续无问题观察不能抹除早先问题。详见[记录身份与完整入参](../../skills/flow-diagram/references/review-inputs.md)。
-
-正式图片复核记录保留产物与证据的独立来源、SDK、时点、镜头、导出背景、展示尺寸和承载背景。查看一个条件不覆盖其他条件。finalize 保留所有请求的 SVG/PNG 与命名批量文件，并再次核实来源；完全相同的复核不新增文件，后续观察仍保留历史问题。
+正式复核记录包含文件、已查看状态、展示尺寸和未解决问题。直接使用 CLI 复核时，见[复核输入](../../skills/flow-diagram/references/review-inputs.md)。
 
 ## 按需采集正式图片证据
 
-已有 SVG/PNG 使用 `evidence --from <revision> --name <name> --output <task-workspace>/history [--artifact-preview-settings <json>] --browser <prepared-executable>`。默认覆盖全部选定文件，后续请求累积展示条件。有效截图保留原身份复用，不准备运行时、不启动浏览器、不写文件；新截图初始未查看。将返回的 `evidence-<uuid>` 通过 `--evidence-from` 传给 `review-template` 和 `review`。缺图或截图损坏可以补采，源文件、原产物或身份元数据损坏必须先处理。详见[证据契约](../../skills/flow-diagram/references/artifact-evidence.md)。
+复核需要保存 SVG 或 PNG 在特定宽度和背景下的截图时，可要求采集图片证据。助手可以对现有导出截图，并在查看后记录观察。命令和设置见[图片证据](../../skills/flow-diagram/references/artifact-evidence.md)。
 
 ## 宿主官方说明
 
-安装路径与显式调用方式核对于 2026-10-27。宿主版本或组织策略可能影响本地 skill 的可用性，按当前宿主文档处理。
+宿主版本和组织策略可能影响 Skill 发现与本地命令访问。安装或调用方式不同时，参考宿主文档：
 
 - [Codex：Agent Skills](https://developers.openai.com/codex/skills/)
 - [Claude Code：Extend Claude with skills](https://code.claude.com/docs/en/skills)
 
 ## 窄屏中的动画讲解页面
 
-新建讲解 HTML 时，助手将标题与一句简介排在播放器外，只在需要操作说明时加入功能阅读提示；变化中的讲解继续使用现有时间线字幕，不设补充说明章节。可编辑起始页在可聚焦的横向滚动区域中保留 720px 最小播放宽度；助手根据图中文字调整，并检查左右两端、字幕和控件。这句简介独立换行。报告分别记录视口与播放区宽度；横向阅读不会同时展示整张图。
+较宽的图解可以横向滚动，标题和简介独立换行。使用播放控件暂停或回看阶段。需要移动端布局时，说明目标视口，以及是否接受横向滚动。
 
-准备好浏览器后，实际文件检查记录编译采样点的可见字幕与图中文字，操作播放、暂停及向后定位，并检查页面静态文字保持稳定。外部网络或本地文件资源会使离线检查失败，已完成文件仍保留；资源应内联或使用 data URL。`--browser none` 会保留这些检查未执行的事实。程序播放与采样截图不能证明连续视觉查看或字幕阅读时间充分；报告分别说明实际检查范围。
+离线页面需要将脚本、样式、字体和图片保存在文件内。自定义页面使用内联资源或 data URL，不依赖外部资源。

@@ -6,18 +6,19 @@
 
 ## 典型示例
 
-完整示例复用 Native、React、Vue demo 共用的 FlowSVG SDK showcases。可访问[在线演示](https://yokingma.github.io/FlowSVG/)，或从固定版本安装源重新生成[本地画廊](examples/README.zh-CN.md#预览示例库)。
+用 FlowSVG 动画展示请求流程、部署架构与模型推理。[图片来源](docs/images/flowsvg/README.md)。
 
-| 完整示例 | 解释重点 |
-| --- | --- |
-| [SDK 架构](skills/flow-diagram/examples/complete/project-architecture.md) | 职责分层与依赖 |
-| [RAG 工作流](skills/flow-diagram/examples/complete/rag-workflow.md) | 来源、检索与引用回答 |
-| [任务生命周期](skills/flow-diagram/examples/complete/job-lifecycle.md) | 重试、终态与取消 |
-| [订单事件流水线](skills/flow-diagram/examples/complete/order-event-pipeline.md) | 校验、去重与指标 |
-| [Web 服务部署](skills/flow-diagram/examples/complete/web-service-deployment.md) | 运行边界、副本与路由 |
-| [缓存读取时序](skills/flow-diagram/examples/complete/cache-aside-sequence.md) | 请求与返回消息顺序 |
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="客户端与服务之间的请求和响应动画" width="700"></p>
 
-同一文档通过选定阶段支持完整动画和静态阅读。[SDK 能力示例](skills/flow-diagram/examples/capabilities/README.md)说明形状、结构化内容、流动强调、显隐与镜头变化。每项说明记录来源提交、默认值与查看限制；在线演示可能使用不同版本。
+<p align="center"><em>请求与响应：客户端与服务之间的调用过程。</em></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/web-service-deployment.gif" alt="包含两个应用副本的 Web 服务部署" width="700"></p>
+
+<p align="center"><em>Web 服务部署：展示两个应用副本及其运行边界。</em></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="包含 Transformer 层与 KV Cache 复用的 LLM 推理过程" width="700"></p>
+
+<p align="center"><em>LLM 推理：展示 Transformer 层与 KV Cache 复用。</em></p>
 
 ## 安装
 
@@ -45,9 +46,7 @@ Codex 未发现新 Skill 时，重启后检查。手动安装、Windows、更新
 
 ## 开始使用
 
-默认流程为理解 → 制作 → 校验 → 看图修改 → 交付，复用一份源草稿、当前产物和一份记录实质问题的临时 `issues.md`。实际查看交付 HTML 和请求图片。SDK 预览及注册正式复核分别按需请求；机器检查与截图生成不代表视觉质量。设计规范指导制作与修改，不作为验收门禁。
-
-排列节点和连线前，助手通过[图形选型](skills/flow-diagram/references/semantic-patterns.md#choose-by-the-readers-question)将讲解目标匹配到图形类型，并遵循对应指引；没有已列类型覆盖主要问题时，采用自由组合。你可以直接指定分层架构图、逻辑流程图等类型，也可以描述希望读者理解什么。
+描述希望读者理解什么，助手会选择图形类型、制作图解、检查结果并交付文件。你也可以直接指定分层架构图、逻辑流程图等类型。
 
 在 Codex 中发送：
 
@@ -73,7 +72,7 @@ Claude Code 将第一行换为 `/flow-diagram`。
 
 ## 交付内容
 
-成功收尾后，用浏览器打开 `.diagrams/order-platform/diagram.html`。页面可离线使用，包含播放控件，初始状态为暂停。
+图解完成后，用浏览器打开 `.diagrams/order-platform/diagram.html`。页面可离线使用，包含播放控件，初始状态为暂停。
 
 | 文件 | 用途 |
 | --- | --- |
@@ -82,44 +81,18 @@ Claude Code 将第一行换为 `/flow-diagram`。
 | `report.json`、`report.md` | 来源、已完成检查、警告与未完成事项 |
 | `diagram.svg` | 本例明确请求的静态导出 |
 
-SVG、PNG 与 GIF 均为可选导出。HTML 页面只保留标题、回答读者问题的一句简介、必要时的功能阅读提示和播放器；来源、决策与检查记录放在交付说明和报告中。页面文字不包含在图片导出中。保留 HTML、JSON 与报告，以便后续编辑时保留页面设计。制作过程复用一份工作草稿和当前产物，仅明确要求时保存不可变检查点。成功收尾默认清理本次任务的草稿和截图；需要保留时提前提出。失败任务保留注明来源的恢复文件。
-
-直接调用 CLI 时，保存创作结果的命令返回简明摘要，通过 `detailsPath` 读取完整报告；只读校验与测量直接返回必要结果。
+SVG、PNG 与 GIF 均为可选导出，页面标题和简介不包含在图片中。保留 HTML、JSON 与报告，以便后续修订。导出选项与故障恢复见[用户指南](docs/guides/flow-diagram-guide.zh-CN.md)。
 
 ## 适用范围
 
 - 系统架构与边界、请求响应、重试、状态变化和分阶段处理。
 - 根据指定资料制作图解，记录来源与内容取舍。
-- 工作草稿、只读校验、按需几何计算与交付文件检查。
+- 静态图与逐步动画，以及已有图解的修订和校验。
 - 离线讲解、网页插图和演示文稿图片素材；不生成 PPTX 或 PowerPoint 原生形状。
 
 ## 基于 FlowSVG
 
-[FlowSVG（流形）](https://github.com/yokingma/FlowSVG) 是面向系统和流程解释的开源 TypeScript 图解 SDK。用同一份可编辑 JSON 或 TypeScript 文档描述节点、连线、分组、场景和节拍，由 SDK 校验、渲染、播放状态变化，并导出离线 HTML、SVG、PNG 或 GIF。“可执行”指作者定义的视觉状态与过渡，不执行所解释的业务流程。
-
-本 **Skill** 指导助手读取资料、设计讲解方式、创作与修订图解、规划布局、检查结果，最后交付文件与报告；**FlowSVG SDK** 提供底层渲染与播放能力。需要将图解嵌入应用时，可直接使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成，见 [SDK 仓库](https://github.com/yokingma/FlowSVG)与 [npm 包](https://www.npmjs.com/package/flowsvg)。
-
-图解支持带普通标签的判断、输入输出、报告和既定子流程形状，可从[基础形状示例](skills/flow-diagram/examples/capabilities/basic-shapes.md)及其[测量说明](skills/flow-diagram/references/document-model.md#preset-labels)开始。
-
-### 运行时依赖
-
-Skill 在隔离缓存中准备以下锁定的软件包：
-
-| 软件包 | 版本 | 用途 |
-| --- | --- | --- |
-| `flowsvg` | `0.4.1` | 图解校验、内容测量、几何诊断、渲染、播放与导出 |
-| `playwright-core` | `1.58.2` | 控制已准备的浏览器，执行检查及 PNG、GIF 生成；不包含浏览器程序 |
-| `gifenc` | `1.0.3` | GIF 编码，通过 `flowsvg` 间接安装 |
-
-[运行时 manifest](skills/flow-diagram/runtime/manifest.json)记录精确 SDK 基线；[运行时依赖清单](skills/flow-diagram/runtime/package.json)与[锁文件](skills/flow-diagram/runtime/package-lock.json)定义依赖版本和完整性。上游 SDK 发布新版本不会自动升级 Skill。React、Vue 属于 SDK 的可选集成，使用本 Skill 无需安装它们。用户需要的 Node/npm 与浏览器环境见[安装](#安装)。
-
-## 当前状态
-
-首个独立分发版本 `0.1.0`（发布标签 `v0.1.0`）发布时精确锁定 `flowsvg@0.4.0` 运行时基线。本次发布范围见[变更记录](CHANGELOG.md#010--2026-11-13)。
-
-平台与助手宿主的验证范围仍有限，当前范围见[已知平台限制与验证要求](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence)。
-
-文件生成、程序检查与实际视觉复核分别记录。缺少浏览器或图片查看能力时，依赖这些能力的检查保持未完成。
+[FlowSVG（流形）](https://github.com/yokingma/FlowSVG) 提供渲染、播放与导出能力，本 Skill 帮助助手将资料转化为清晰的图解。需要将图解嵌入应用时，可使用 SDK 的原生浏览器、React、Vue 或 Web Component 集成。
 
 ## 开发
 
@@ -130,9 +103,7 @@ pnpm install --frozen-lockfile
 pnpm test
 ```
 
-查看教学范例和 API 练习时，按[本地预览说明](examples/README.md#preview-the-example-library)操作；其中列明覆盖范围和重新生成步骤。
-
-未设置 `FLOWSVG_TEST_BROWSER` 时会跳过依赖浏览器的测试。浏览器与消费者验收步骤见[贡献说明](CONTRIBUTING.md)；维护、架构决策与发布记录从[文档导航](docs/README.md)进入。
+测试和贡献方式见[贡献说明](CONTRIBUTING.md)，本地预览见[示例工作区](examples/README.zh-CN.md#预览示例库)，版本历史见[变更记录](CHANGELOG.md)。
 
 ## 许可
 

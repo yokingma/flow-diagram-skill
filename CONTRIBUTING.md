@@ -6,11 +6,11 @@ Thanks for helping improve Flow Diagram. Documentation corrections, reproducible
 
 This repository owns the Skill's authoring, layout plans, diagnostics orchestration, review records, delivery, and isolated runtime. Document-model, rendering, playback, and export API changes belong in [FlowSVG SDK](https://github.com/yokingma/FlowSVG). A Skill contribution must work with the published SDK and without a sibling SDK checkout.
 
-Use the repository’s GitHub Issues for public bug reports and Pull Requests for proposed changes. Maintainers may use the local tracker described below for implementation work; contributors do not need those private work records.
+Use GitHub Issues for bug reports and Pull Requests for proposed changes.
 
 For a bug report, include the checkout commit or release, operating system, Node/npm versions, assistant host if relevant, exact command or prompt, expected and actual behavior, and a minimal diagram that reproduces the problem. For browser-dependent failures, include the browser version and executable selection. Share sanitized excerpts from `report.json` or stdout; replace private source content, credentials, and personal paths with a minimal synthetic example.
 
-For changes to diagram meaning, CLI contracts, or runtime dependencies, explain the proposed behavior before implementing a broad change. Maintainers keep implementation specs and tickets under `.scratch/` using the [local tracker conventions](docs/agents/issue-tracker.md); those work records are separate from user documentation and release evidence.
+For changes to diagram meaning, CLI contracts, or runtime dependencies, explain the proposed behavior in an issue before implementing a broad change.
 
 ## Development setup
 
@@ -34,7 +34,7 @@ Read [AGENTS.md](AGENTS.md), [PATTERNS.md](PATTERNS.md), and the [maintenance gu
 - Browser coverage: set `FLOWSVG_TEST_BROWSER` to a separately prepared Chrome/Chromium executable. Tests skip dependent cases when it is absent; report those skips. Tests never download a browser.
 - Consumer acceptance: follow the [maintainer verification procedure](docs/development/flow-diagram-maintenance.md#maintainer-verification), using a prepared browser and real Node 18 executable for unsupported-runtime rejection.
 
-Record the exact commands, passed/failed/skipped counts, and unperformed checks in your pull request. Treat generated files, browser automation, and actual image viewing as separate evidence. The [known Windows cancellation gap](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence) remains incomplete until verified through a real console Ctrl+C runner.
+Record the exact commands, passed/failed/skipped counts, and unperformed checks in your pull request. Treat generated files, browser automation, and actual image viewing as separate evidence. For platform-specific checks, follow [CI and platform verification](docs/development/flow-diagram-maintenance.md#ci-and-platform-evidence).
 
 ## Pull requests
 
@@ -48,4 +48,4 @@ Flow Diagram originated from `skills/flowsvg/` in [FlowSVG commit `86bb7ad`](htt
 
 Contributions are distributed under this project's [MIT license](LICENSE), retaining `Copyright (c) 2026 zac_ma`. The installed [Skill license](skills/flow-diagram/LICENSE) must match the root license. Preserve existing copyright notices, and identify the source and license of any third-party material you add. Third-party runtime packages retain their own licenses.
 
-The [regression fixture inventory](tests/fixtures/README.md) records migrated test data. The [showcase asset inventory](docs/images/flowsvg/README.md) records the separately copied README images, their source version and hashes.
+See the [regression fixture inventory](tests/fixtures/README.md) and [image credits](docs/images/flowsvg/README.md) for test-data and README-image attribution.

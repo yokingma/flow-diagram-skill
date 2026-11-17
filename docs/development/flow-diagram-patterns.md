@@ -90,9 +90,9 @@ Selected layered teaching sources and historical regression fixtures have separa
 
 - `diagnostics.mjs` combines the four existing public-frame checks with public `diagnoseAt` at finite samples. SDK geometry and text estimates stay in the SDK. `issue-identity.mjs` hashes the complete source/SDK/visual/time/key context; informational records preserve the calculation scope without authorizing a design.
 
-- Historical pre-registry evidence: the multiline-edge-label correction used a newly built, independently installed SDK development archive. This is not the current registry runtime baseline. Keep archive bytes, manifest integrity and npm lock integrity synchronized, and record the new identity in separate evidence without rewriting prior diagnostic/decision contexts. Archive SRI for that earlier correction: `sha512-7Lv5gvU3sn8sdsZXOuJhcQbxWz78ud5Hc3AfoFN1Uim5CnHCvL3eqKVZKFSK3WXsHq8cqhaMb/8Uvbtbg/sJZg==`. Same-original-edge-label halo-only self-contact is handled in the SDK; the skill keeps consuming public warnings without local filtering.
+- The SDK handles edge-label geometry, including halo-only self-contact for labels on the same original edge. Consume public diagnostics without local filtering.
 
-- The current registry baseline follows the structured-content finite-geometry correction. Keep the exact package version and integrity synchronized across the manifest and npm lockfile; verify a fresh copied CLI and its installed public SDK before recording a new identity. Preserve earlier evidence and issue contexts under their original SDK integrity.
+- Keep the exact package version and integrity synchronized across the manifest and npm lockfile. Verify a fresh copied CLI and its installed public SDK before updating the baseline. Retain saved reports under their original SDK identity.
 - The locked SDK runtime consumes document `emphasis` and per-flow `highlightEdge` through existing public SDK paths. Keep these fields in authored JSON across continuation and delivery. The Skill adds no palette resolver, color diagnostics or override flags; verify authored colors through copied-CLI output and actual offline playback.
 
 ## Required delivery coverage

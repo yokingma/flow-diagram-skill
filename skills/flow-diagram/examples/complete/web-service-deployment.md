@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 922 × 756 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Definition `web-service-deployment`, category `deployment`, from [packages/showcase/src/examples/web-service-deployment.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/web-service-deployment.ts) at commit `2eda6e4172ad8c3c1383290e107b53bf0ea0c985`. Generated JSON: `packages/showcase/dist/site/json/web-service-deployment.json`. Source JSON SHA-256: `c48826616fa852de1b9ac26d00b5a583eb1d23f2d81198fad1f6c64a4038ce77`.
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/web-service-deployment.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/web-service-deployment.ts). See [source metadata](../../resources/teaching-sources.json).

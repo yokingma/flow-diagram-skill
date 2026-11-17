@@ -5,8 +5,8 @@
 ## Skill users
 
 - [English user guide](guides/flow-diagram-guide.md) and [中文用户指南](guides/flow-diagram-guide.zh-CN.md): installation, creation, revisions, exports, and recovery.
-- [Teaching examples](../skills/flow-diagram/examples/README.md): complete upstream showcases and focused SDK examples, with composition explanations, source identities, display conditions and viewing limits.
-- [FlowSVG showcase previews](images/flowsvg/README.md): historical source and license records for earlier README animations.
+- [Teaching examples](../skills/flow-diagram/examples/README.md): runnable diagrams with composition notes and export tips.
+- [FlowSVG showcase previews](images/flowsvg/README.md): sources and licenses for the README animations.
 
 ## Skill developers
 
@@ -38,7 +38,7 @@ Keep reusable usage instructions, current development rules, architecture decisi
 
 FlowSVG SDK owns the document model, rendering, playback, export APIs, and application embedding. The Skill's bundled references apply to the SDK baseline recorded in the [runtime manifest](../skills/flow-diagram/runtime/manifest.json) and support offline execution. For SDK APIs, consult the versioned manuals:
 
-- [English SDK manual at source commit b07f9dd](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.md).
-- [中文 SDK 手册，来源提交 b07f9dd](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.zh-CN.md).
+- [English SDK manual](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.md).
+- [中文 SDK 手册](https://github.com/yokingma/FlowSVG/blob/b07f9ddc004f015f147d785af307e2456b86ee5b/docs/guides/sdk-guide.zh-CN.md).
 
 Installed execution uses bundled references and the public npm SDK; it does not require online manuals or a sibling SDK checkout.

@@ -1,6 +1,6 @@
 # SDK capabilities
 
-Choose one focused input for the mechanism you need. Basic shapes and emphasis-flow are pinned upstream showcases; content-layout and visibility-camera are Skill-authored visual exercises. Use [complete examples](../complete/README.md) for full explanations.
+Choose an example for the authoring feature you need. Use [complete examples](../complete/README.md) for full explanations.
 
 | Need | Runnable source |
 | --- | --- |
@@ -11,6 +11,6 @@ Choose one focused input for the mechanism you need. Basic shapes and emphasis-f
 
 For content replacement and geometry changes, study [RAG workflow](../complete/rag-workflow.md), especially nodes `retriever`, `reranker`, `context` and `answer`. [Task lifecycle](../complete/job-lifecycle.md) demonstrates independent state cases; [SDK architecture](../complete/project-architecture.md) demonstrates nested groups and collective dependency endpoints. [Web deployment](../complete/web-service-deployment.md) and RAG contain reverse flows; [cache-aside sequence](../complete/cache-aside-sequence.md) uses straight routes.
 
-The four inputs cover the main document-authoring mechanisms, rather than every field combination. [Measurement input](../../resources/content-measurement.json) and the [layout input/plan](../../references/layout-plan.md#complete-teaching-input) remain independent execution resources. Framework embedding and the complete API test matrix belong to the SDK project.
+For text sizing and repeated geometry, use the [measurement input](../../resources/content-measurement.json) and [layout input/plan](../../references/layout-plan.md#complete-teaching-input).
 
 Before running or exporting, read [shared execution and viewing conditions](../README.md#run-and-inspect).
