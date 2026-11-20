@@ -1,0 +1,1194 @@
+{
+  "version": 1,
+  "title": "电商订单：从提交到履约",
+  "viewport": {
+    "width": 1040,
+    "height": 1672
+  },
+  "typography": {
+    "nodeLabel": 22,
+    "edgeLabel": 17,
+    "flowLabel": 16
+  },
+  "nodes": [
+    {
+      "id": "phase-1",
+      "kind": "rect",
+      "x": 40,
+      "y": 330,
+      "width": 160,
+      "height": 72,
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "环节一",
+            "style": {
+              "fontSize": 16,
+              "fontWeight": 600,
+              "color": "#8296a8",
+              "align": "right"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "下单与支付",
+            "style": {
+              "fontSize": 19,
+              "fontWeight": 500,
+              "color": "#3d5a70",
+              "align": "right"
+            }
+          }
+        ]
+      },
+      "style": {
+        "fill": "#ffffff00",
+        "stroke": "#ffffff00",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "id": "phase-2",
+      "kind": "rect",
+      "x": 40,
+      "y": 888,
+      "width": 160,
+      "height": 72,
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "环节二",
+            "style": {
+              "fontSize": 16,
+              "fontWeight": 600,
+              "color": "#8296a8",
+              "align": "right"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "风控与履约单",
+            "style": {
+              "fontSize": 19,
+              "fontWeight": 500,
+              "color": "#3d5a70",
+              "align": "right"
+            }
+          }
+        ]
+      },
+      "style": {
+        "fill": "#ffffff00",
+        "stroke": "#ffffff00",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "id": "phase-3",
+      "kind": "rect",
+      "x": 40,
+      "y": 1356,
+      "width": 160,
+      "height": 72,
+      "content": {
+        "style": {
+          "padding": 0,
+          "blockGap": 6
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "环节三",
+            "style": {
+              "fontSize": 16,
+              "fontWeight": 600,
+              "color": "#8296a8",
+              "align": "right"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "仓配交付",
+            "style": {
+              "fontSize": 19,
+              "fontWeight": 500,
+              "color": "#3d5a70",
+              "align": "right"
+            }
+          }
+        ]
+      },
+      "style": {
+        "fill": "#ffffff00",
+        "stroke": "#ffffff00",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "id": "start",
+      "kind": "ellipse",
+      "x": 240,
+      "y": 36,
+      "width": 280,
+      "height": 84,
+      "label": "开始 · 用户提交订单",
+      "style": {
+        "fill": "#eef4fa",
+        "stroke": "#8ba7bd",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      }
+    },
+    {
+      "id": "check",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 156,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单校验",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "商品、价格、库存、地址",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "d-check",
+      "kind": "diamond",
+      "x": 220,
+      "y": 288,
+      "width": 320,
+      "height": 120,
+      "label": "校验通过？",
+      "style": {
+        "fill": "#e8f4ff",
+        "stroke": "#3890f7",
+        "strokeWidth": 1.8,
+        "textColor": "#15334b"
+      }
+    },
+    {
+      "id": "pay",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 444,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "发起支付",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "收银台唤起支付",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "d-pay",
+      "kind": "diamond",
+      "x": 220,
+      "y": 576,
+      "width": 320,
+      "height": 120,
+      "label": "支付成功？",
+      "style": {
+        "fill": "#e8f4ff",
+        "stroke": "#3890f7",
+        "strokeWidth": 1.8,
+        "textColor": "#15334b"
+      }
+    },
+    {
+      "id": "risk",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 732,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单风控审核",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "识别交易与账户风险",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "d-risk",
+      "kind": "diamond",
+      "x": 220,
+      "y": 864,
+      "width": 320,
+      "height": 120,
+      "label": "命中风控？",
+      "style": {
+        "fill": "#e8f4ff",
+        "stroke": "#3890f7",
+        "strokeWidth": 1.8,
+        "textColor": "#15334b"
+      }
+    },
+    {
+      "id": "fulfill",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 1020,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "锁定库存",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "生成履约单与发货计划",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "wms",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 1152,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "仓库作业",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "分配仓库、拣货、打包",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ship",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 1284,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "出库",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "交接承运商揽收",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "transit",
+      "kind": "roundedRect",
+      "x": 220,
+      "y": 1416,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#ffffff",
+        "stroke": "#c3d4e2",
+        "textColor": "#15334b",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "运输与派送",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#15334b",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "干线运输、末端配送",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#5c7a8c",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "end",
+      "kind": "ellipse",
+      "x": 240,
+      "y": 1548,
+      "width": 280,
+      "height": 84,
+      "label": "签收完成\n履约结束",
+      "style": {
+        "fill": "#eafae4",
+        "stroke": "#4fbf3a",
+        "textColor": "#1c4a14",
+        "strokeWidth": 1.8
+      }
+    },
+    {
+      "id": "reject",
+      "kind": "roundedRect",
+      "x": 660,
+      "y": 300,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#fff2ea",
+        "stroke": "#ff8a4d",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "拒单",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#7d3410",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "提示用户修改",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#a4582a",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "close-unpaid",
+      "kind": "roundedRect",
+      "x": 660,
+      "y": 588,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#fff2ea",
+        "stroke": "#ff8a4d",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单关闭",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#7d3410",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "超时未支付或被取消",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#a4582a",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "close-risk",
+      "kind": "roundedRect",
+      "x": 660,
+      "y": 876,
+      "width": 320,
+      "height": 96,
+      "style": {
+        "fill": "#fff2ea",
+        "stroke": "#ff8a4d",
+        "strokeWidth": 1.6
+      },
+      "content": {
+        "style": {
+          "padding": 14,
+          "blockGap": 4
+        },
+        "blocks": [
+          {
+            "type": "title",
+            "text": "订单关闭",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 600,
+              "color": "#7d3410",
+              "align": "center"
+            }
+          },
+          {
+            "type": "paragraph",
+            "text": "风控拦截",
+            "role": "auxiliary",
+            "style": {
+              "fontSize": 17,
+              "color": "#a4582a",
+              "align": "center"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-start-check",
+      "from": "start",
+      "to": "check",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-check-d",
+      "from": "check",
+      "to": "d-check",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-d-pay",
+      "from": "d-check",
+      "to": "pay",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight",
+      "label": "是"
+    },
+    {
+      "id": "e-d-reject",
+      "from": "d-check",
+      "to": "reject",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "否"
+    },
+    {
+      "id": "e-pay-d",
+      "from": "pay",
+      "to": "d-pay",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-d2-risk",
+      "from": "d-pay",
+      "to": "risk",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight",
+      "label": "是"
+    },
+    {
+      "id": "e-d2-close",
+      "from": "d-pay",
+      "to": "close-unpaid",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "否"
+    },
+    {
+      "id": "e-risk-d",
+      "from": "risk",
+      "to": "d-risk",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-d3-fulfill",
+      "from": "d-risk",
+      "to": "fulfill",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight",
+      "label": "否"
+    },
+    {
+      "id": "e-d3-close",
+      "from": "d-risk",
+      "to": "close-risk",
+      "fromPort": "right",
+      "toPort": "left",
+      "route": "straight",
+      "label": "是"
+    },
+    {
+      "id": "e-fulfill-wms",
+      "from": "fulfill",
+      "to": "wms",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-wms-ship",
+      "from": "wms",
+      "to": "ship",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-ship-transit",
+      "from": "ship",
+      "to": "transit",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-transit-end",
+      "from": "transit",
+      "to": "end",
+      "fromPort": "bottom",
+      "toPort": "top",
+      "route": "straight"
+    },
+    {
+      "id": "e-reject-retry",
+      "from": "reject",
+      "to": "start",
+      "fromPort": "top",
+      "toPort": "right",
+      "route": "orthogonal",
+      "label": "修改后重新提交",
+      "style": {
+        "stroke": "#98a9b8",
+        "strokeWidth": 1.4,
+        "dashed": true
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "main-path",
+      "label": "主线",
+      "beats": [
+        {
+          "durationMs": 2400,
+          "caption": "先沿主线走一遍，再看三个异常出口。",
+          "actions": [
+            {
+              "type": "highlight",
+              "target": "start"
+            }
+          ]
+        },
+        {
+          "durationMs": 1100,
+          "caption": "系统逐项校验商品、价格、库存与地址。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-start-check",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "highlight",
+              "target": "check"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "系统逐项校验商品、价格、库存与地址。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "四项都通过才继续，否则走拒单出口。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-check-d",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "check"
+            },
+            {
+              "type": "highlight",
+              "target": "d-check"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "四项都通过才继续，否则走拒单出口。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "校验通过，唤起收银台发起支付。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d-pay",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "d-check"
+            },
+            {
+              "type": "highlight",
+              "target": "pay"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "校验通过，唤起收银台发起支付。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "等待用户完成支付。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-pay-d",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "pay"
+            },
+            {
+              "type": "highlight",
+              "target": "d-pay"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "等待用户完成支付。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "支付成功后进入风控审核。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d2-risk",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "d-pay"
+            },
+            {
+              "type": "highlight",
+              "target": "risk"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "支付成功后进入风控审核。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "未命中风控规则，订单放行。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-risk-d",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "risk"
+            },
+            {
+              "type": "highlight",
+              "target": "d-risk"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "未命中风控规则，订单放行。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "锁定库存，生成履约单与发货计划。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d3-fulfill",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "d-risk"
+            },
+            {
+              "type": "highlight",
+              "target": "fulfill"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "锁定库存，生成履约单与发货计划。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "仓库分配、拣货、打包。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-fulfill-wms",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "fulfill"
+            },
+            {
+              "type": "highlight",
+              "target": "wms"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "仓库分配、拣货、打包。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "出库，交接承运商揽收。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-wms-ship",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "wms"
+            },
+            {
+              "type": "highlight",
+              "target": "ship"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "出库，交接承运商揽收。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "干线运输，再到末端配送。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-ship-transit",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "ship"
+            },
+            {
+              "type": "highlight",
+              "target": "transit"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "干线运输，再到末端配送。",
+          "actions": []
+        },
+        {
+          "durationMs": 1100,
+          "caption": "用户签收，履约完成。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-transit-end",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "transit"
+            },
+            {
+              "type": "highlight",
+              "target": "end"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "用户签收，履约完成。",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "exits",
+      "label": "异常出口",
+      "beats": [
+        {
+          "durationMs": 1200,
+          "caption": "出口一：校验不通过就拒单。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d-reject",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "end"
+            },
+            {
+              "type": "highlight",
+              "target": "d-check"
+            },
+            {
+              "type": "highlight",
+              "target": "reject"
+            }
+          ]
+        },
+        {
+          "durationMs": 1400,
+          "caption": "出口一：校验不通过就拒单。",
+          "actions": []
+        },
+        {
+          "durationMs": 1600,
+          "caption": "用户修改订单后重新提交，回到起点。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-reject-retry",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "reject"
+            },
+            {
+              "type": "unhighlight",
+              "target": "d-check"
+            },
+            {
+              "type": "highlight",
+              "target": "start"
+            }
+          ]
+        },
+        {
+          "durationMs": 1500,
+          "caption": "用户修改订单后重新提交，回到起点。",
+          "actions": []
+        },
+        {
+          "durationMs": 1200,
+          "caption": "出口二：支付超时或被取消，订单关闭。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d2-close",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "start"
+            },
+            {
+              "type": "highlight",
+              "target": "close-unpaid"
+            }
+          ]
+        },
+        {
+          "durationMs": 1500,
+          "caption": "出口二：支付超时或被取消，订单关闭。",
+          "actions": []
+        },
+        {
+          "durationMs": 1200,
+          "caption": "出口三：命中风控，订单在履约前被拦截。",
+          "actions": [
+            {
+              "type": "flow",
+              "target": "e-d3-close",
+              "direction": "forward",
+              "highlightParticipants": false
+            },
+            {
+              "type": "unhighlight",
+              "target": "close-unpaid"
+            },
+            {
+              "type": "highlight",
+              "target": "d-risk"
+            },
+            {
+              "type": "highlight",
+              "target": "close-risk"
+            }
+          ]
+        },
+        {
+          "durationMs": 1500,
+          "caption": "出口三：命中风控，订单在履约前被拦截。",
+          "actions": []
+        },
+        {
+          "durationMs": 2600,
+          "caption": "三个异常都没触发，订单才会一路走到签收。",
+          "actions": [
+            {
+              "type": "unhighlight",
+              "target": "close-risk"
+            },
+            {
+              "type": "unhighlight",
+              "target": "d-risk"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "emphasis": {
+    "fill": "#ffe9c2",
+    "stroke": "#c97c05",
+    "markerText": "#ffffff"
+  }
+}
