@@ -1,6 +1,6 @@
 {
   "name": "flow-diagram-skill",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -11,6 +11,7 @@
   "scripts": {
     "doctor": "node skills/flow-diagram/scripts/flowsvg.mjs doctor",
     "examples:preview": "node scripts/preview-examples.mjs",
+    "release:workbuddy": "node scripts/package-workbuddy-skill.mjs",
     "test:guides": "vitest run --dir tests authoring-skill-guidance.test.ts authoring-skill-layered-example.test.ts authoring-skill-presentation-recipes.test.ts",
     "test:skill": "vitest run --dir tests authoring-skill",
     "test": "pnpm test:skill",

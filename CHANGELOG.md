@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add the repository-only `scripts/package-workbuddy-skill.mjs` release packager for the WorkBuddy platform, invoked manually through `pnpm release:workbuddy`. Read platform metadata from `scripts/workbuddy-release.json`, inject the required frontmatter into a copied `SKILL.md` without changing the source install unit, enumerate versioned files through git, validate packaged link targets, and emit a zip rooted at `flow-diagram/` plus a rewritten `SKILL.md` copy and `release-manifest.json` with candidate commit, file list, size and sha256. Ignore the generated `outputs/` directory.
+- Record a dated WorkBuddy spec audit table in `docs/releasing.md` §5.1.1, mapping each official requirement to the generated package state with open platform-parse items and re-review triggers, so every release can re-check compliance against the live documentation.
+
 - Upgrade the exact registry runtime to `flowsvg@0.4.1`, synchronizing the package, manifest integrity, npm lockfile, report identity assertions and current guides. Consume the SDK tag-positioning and mixed-size metadata alignment fixes through the existing public SDK paths.
 
 - Add the repository-only, manually invoked `test-flow-diagram` Skill for user-specified tasks through the globally installed production Skill in a fresh-context subagent. Retain the actual handoff, key decisions, problems and visual-problem screenshots; compare installed-resource identities before and after execution. Account for auxiliary tool outputs and keep execution status separate from user acceptance. No production CLI or SDK baseline changes.

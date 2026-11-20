@@ -1,0 +1,20 @@
+{
+  "$comment": "WorkBuddy 开放平台发布元数据。由 scripts/package-workbuddy-skill.mjs 读取并注入发布副本的 SKILL.md frontmatter；name/description/version 默认取自源文件与根 package.json，此处字段覆盖或补齐平台必填项。发布前逐项确认。字段定义见 docs/releasing.md §5.1 与 https://open.workbuddy.cn/docs/skill。示例 3 需要一份电商订单流程图（示例 1 可直接承接），单独点击时会追问或先建图。",
+  "display_name": "流程图解",
+  "display_name_en": "Flow Diagram",
+  "description_zh": "创建流程图、架构图、时序图和流程动画演示；可验证、诊断已有图解，导出 JSON、离线 HTML、SVG、PNG 或 GIF，并管理项目图解偏好。",
+  "description_en": "Create flowcharts, architecture diagrams, sequence diagrams and animated process explanations; validate or diagnose existing diagrams; export JSON, offline HTML, SVG, PNG or GIF; and manage project diagram preferences.",
+  "author": "zac_ma",
+  "examples_zh": [
+    "画一个电商订单从提交到履约的流程图，用动画演示订单流转过程",
+    "画一个电商系统的分层架构图，标出接入层、服务层和数据层的职责与依赖方向",
+    "把电商订单流程图导出为 GIF 动图",
+    "画一个带异常分支的电商退款流程图，画完后验证草稿，报告发现的问题"
+  ],
+  "examples_en": [
+    "Draw an animated flowchart of an e-commerce order from submission to fulfillment",
+    "Draw a layered architecture diagram of an e-commerce system, showing the responsibilities and dependency direction of its presentation, service, and data layers",
+    "Export the e-commerce order flowchart as an animated GIF",
+    "Draw an e-commerce refund flowchart with exception branches, then validate the draft and report the findings"
+  ]
+}
