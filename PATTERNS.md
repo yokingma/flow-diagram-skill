@@ -94,7 +94,7 @@ Exercise combined `--html` and explicit image requests through the copied instal
 
 The [runtime manifest](skills/flow-diagram/runtime/manifest.json) records the exact registry SDK baseline. Keep package, manifest and npm lock identity synchronized; support declarations do not select installations. Historical reports, managed HTML and viewing evidence keep their original SDK identity. Adopt historical export completion only after validation confirms matching source, theme and actual SDK identity; a changed baseline requires fresh exports. Verify upgrades through a copied installation and the public package.
 
-The SDK owns tag positioning and metadata alignment across measurement, playback and exports.
+The SDK owns tag positioning and metadata alignment across measurement, playback and exports. In the `0.4.2` baseline, it also treats subpixel horizontal-edge noise consistently for label anchors and derives label/content clip IDs from formatted geometry, so unchanged frames keep stable visual placement and DOM identities. Do not add Skill-side post-processing for those SDK-owned concerns.
 
 Author emphasis colors in document `emphasis` and preserve semantic edge colors with per-flow `highlightEdge: false` when appropriate. Pass both through existing public SDK validation, rendering and export paths; the SDK owns color resolution and action semantics. Keep palette guidance in the installed document/timeline references and visual judgments in actual viewing.
 
