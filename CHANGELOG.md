@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Harden WorkBuddy packaging so release inputs match committed files; validate the selected semantic version, keep it authoritative, bind the Skill name to its install directory, reject symlinks and non-regular install files, package only files from `HEAD`, record the packager digest, and add punctuation-safe WorkBuddy `@references/` directives to the generated Skill copy while preserving source links. Add release-packager regression coverage and document the current platform reference syntax.
+
 - Add the AI-assisted, Skill-authored order-fulfillment example to the installed complete-example library. Record hy4 flash and the Flow Diagram Skill as its source workflow, pin the installed JSON digest, include it in the copied-install and gallery checks, and describe upstream and local source kinds accurately.
 
 - Upgrade the exact registry runtime to `flowsvg@0.4.2`, synchronizing the package, manifest integrity, npm lockfile and report identity assertions. Consume the SDK fixes for stable horizontal edge-label anchors and clip identities across unchanged animation frames.

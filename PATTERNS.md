@@ -4,6 +4,8 @@
 
 `skills/flow-diagram/` is the complete distributable Skill. Installed instructions, references, examples, metadata, scripts, and runtime resources resolve within that directory. Repository-level development tests, acceptance tools, and human guides belong outside the installation unit.
 
+WorkBuddy release archives are derived from committed regular installation files. The packager refuses dirty install and metadata inputs, binds `name` to the install directory, validates and keeps the selected CLI/package version authoritative, also checks `package.json` when it supplies the version, records both the candidate commit and packager digest, and emits punctuation-safe platform `@references/` directives only in the copied `SKILL.md`; source links remain unchanged.
+
 Repository-only Agent workflows live under `.agents/skills/`. The manually invoked `test-flow-diagram` uses a fresh-context subagent to exercise the globally installed production Skill with a user-supplied task. Each run keeps its request, decisions, problems and results under `.scratch/skill-generation-test/runs/`, outside the production Skill's temporary authoring workspace. It does not install or repair global skills. These workflow files ship with repository source, not the production Skill archive; Agent visual observations remain separate from user acceptance.
 
 The parent task records installed-resource identities before and after execution, including relative file paths and SHA-256 values. It reports changed content or incomplete identity checks separately; version strings and symlink paths alone do not identify an uncommitted development copy. The test Skill owns the collection rules.

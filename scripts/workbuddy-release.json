@@ -1,5 +1,5 @@
 {
-  "$comment": "WorkBuddy 开放平台发布元数据。由 scripts/package-workbuddy-skill.mjs 读取并注入发布副本的 SKILL.md frontmatter；name/description/version 默认取自源文件与根 package.json，此处字段覆盖或补齐平台必填项。发布前逐项确认。字段定义见 docs/releasing.md §5.1 与 https://open.workbuddy.cn/docs/skill。示例 3 需要一份电商订单流程图（示例 1 可直接承接），单独点击时会追问或先建图。",
+  "$comment": "WorkBuddy 开放平台发布元数据。由 scripts/package-workbuddy-skill.mjs 读取并注入发布副本的 SKILL.md frontmatter。name 必须与源 Skill 标识和安装目录 flow-diagram 一致；version 取 --version 或根 package.json，配置不能覆盖；description 默认继承源文件，可在此覆盖。其他展示字段和案例由本配置补齐，发布前逐项确认，尤其确认 author 为预期发布主体。字段定义见 docs/releasing.md §5.1 与 https://open.workbuddy.cn/docs/skill。示例 3 需要一份电商订单流程图（示例 1 可直接承接），单独点击时会追问或先建图。",
   "display_name": "流程图解",
   "display_name_en": "Flow Diagram",
   "description_zh": "创建流程图、架构图、时序图和流程动画演示；可验证、诊断已有图解，导出 JSON、离线 HTML、SVG、PNG 或 GIF，并管理项目图解偏好。",

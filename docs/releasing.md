@@ -91,24 +91,24 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 
 | 字段 | 官方要求 | 本项目准备方式 |
 | --- | --- | --- |
-| `name` | 必填，技能标识 | 使用发布时确认的技能标识 |
+| `name` | 必填，技能标识 | 固定与安装目录 `flow-diagram/` 一致；配置覆盖不一致时拒绝打包 |
 | `display_name` | 必填，中文展示名称 | 在发布副本中补齐 |
 | `display_name_en` | 必填，英文展示名称 | 在发布副本中补齐 |
 | `description` | 必填，说明用途和触发词 | 写清图解创作、修订、验证、导出等触发场景 |
 | `description_zh` | 必填，中文详情介绍 | 根据平台展示长度编写 |
 | `description_en` | 必填，英文详情介绍 | 根据平台展示长度编写 |
-| `version` | 必填，技能版本 | 与本次发布的 Skill 分发版本一致 |
+| `version` | 必填，技能版本 | 以 `--version` 或根 `package.json` 为准，配置文件不能覆盖 |
 | `author` | 必填，合作方名称 | 使用已确认的发布主体名称 |
 | `examples_zh` / `examples_en` | 选填，使用案例 | 建议提供真实可演示的中英文案例 |
 | `allowed-tools` | 选填，工具白名单 | 只有平台要求且已验证时填写 |
 
-本仓库当前 `SKILL.md` 的 frontmatter 面向通用 Skill 宿主。发布 WorkBuddy 时，在发布副本中补齐平台字段，保留正文、脚本和参考资料的相对关系；不要为了平台字段直接改写源文件，除非维护者另行确认源合同也要改变。平台字段由 `scripts/package-workbuddy-skill.mjs` 在生成发布副本时注入，取值来自 `scripts/workbuddy-release.json`；发布前逐项核对该配置。
+本仓库当前 `SKILL.md` 面向通用 Skill 宿主。发布 WorkBuddy 时，在副本中补齐平台字段，并在每个指向 `references/` 的 Markdown 相对链接后加入官方 `@references/<文件>.md` 加载指令；原链接和源文件保持不变。平台字段由 `scripts/package-workbuddy-skill.mjs` 从 `scripts/workbuddy-release.json` 注入。打包前核对发布主体、名称、描述、案例和版本。
 
 官方示例中的 YAML 拼写和格式问题不应照抄：冒号后保留空格，字段名以平台字段表和实际解析结果为准。
 
 #### 规范对照审查记录
 
-本节把官方页面要求逐项映射到 `pnpm release:workbuddy` 的发布产物，便于每次发布直接对照复审。审查日期 2026-11-20，对照页面 <https://open.workbuddy.cn/docs/skill>；页面未来变化以每次发布前实际打开为准，不在本节固化。
+本节把官方页面要求逐项映射到 `pnpm release:workbuddy` 的发布产物，便于每次发布直接对照复审。审查日期 2026-11-24，对照页面 <https://open.workbuddy.cn/docs/skill>；页面未来变化以每次发布前实际打开为准，不在本节固化。
 
 | 官方要求 | 发布产物现状 | 结论 |
 | --- | --- | --- |
@@ -121,9 +121,9 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 | 包根目录为 `{skill-name}/` | zip 内全部路径以 `flow-diagram/` 开头 | ✅ 合规 |
 | `references/`、`scripts/` 可选子资源 | 均存在且被 `SKILL.md` 引用；打包前脚本校验引用的相对路径全部在包内 | ✅ 合规 |
 | `templates/` 可选子资源 | 本技能无模板目录（属可选） | ✅ 合规 |
-| 子资源引用方式 `@references/xxx.md` | 本技能使用 Markdown 相对链接；官方措辞为示例性，未确认平台是否要求 `@` 语法 | ❓ 待平台解析确认 |
+| 子资源引用方式 `@references/xxx.md` | 发布副本在 `references/` Markdown 链接后生成对应 `@references/<文件>.md` 指令；源 `SKILL.md` 保持通用链接 | ✅ 符合官方文档用法；首次上传仍须确认平台实际加载 |
 | 额外顶层目录（`runtime/`、`examples/`、`resources/`、`agents/`） | 官方目录说明只列三类子资源；页面未禁止其他目录，平台解析结果未验证 | ❓ 待平台解析确认 |
-| zip 内无 `node_modules`、缓存、任务工作区、私人证据 | `git ls-files` 枚举版本化文件；产物与源安装单元 diff 仅 `SKILL.md` 一处预期差异 | ✅ 合规 |
+| zip 内无 `node_modules`、缓存、任务工作区、私人证据 | 仅从 `HEAD` 枚举安装单元文件；安装单元、发布配置值必须与 `HEAD` 一致；默认版本来源有未提交改动时拒绝打包 | ✅ 合规 |
 
 复审要点：
 
@@ -134,8 +134,8 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 ### 5.2 打包和提交
 
 1. 核对安装 `examples/` 仅含已选成品源及简短教学说明，`resources/` 仅含必需辅助资源与对应来源记录；候选、开发练习、截图、运行日志和过程版本留在安装包之外。
-2. 运行 `node scripts/package-workbuddy-skill.mjs`（或 `pnpm release:workbuddy`）生成发布副本与 zip。脚本读取 `scripts/workbuddy-release.json` 中的平台元数据，只在副本中重写 `SKILL.md` frontmatter（源文件不变）；通过 git 枚举安装单元的版本化文件，自动排除 `node_modules`、缓存和未跟踪内容；校验副本 `SKILL.md` 引用的相对路径全部在包内；产物为根层级 `flow-diagram/` 的 zip、副本 `SKILL.md` 和 `release-manifest.json`（候选提交、文件清单、大小、sha256）。可用 `--version`、`--config`、`--output` 覆盖默认值。
-3. 在仓库外解压 zip，重新运行安装单元的 `doctor`、浏览器无关 `author` 和 `finalize`，核对 `release-manifest.json` 与 §5.1 字段、候选提交和校验值一致；平台解析前的本地预检不通过时不出包。
+2. 运行 `node scripts/package-workbuddy-skill.mjs`（或 `pnpm release:workbuddy`）生成发布副本与 zip。脚本要求安装单元已提交且干净，`scripts/workbuddy-release.json` 的发布字段与 `HEAD` 相同（注释可本地更新）；默认读取版本时，也要求 `package.json` 已提交且干净。技能 `name` 必须匹配安装目录，配置不能覆盖；版本以 `--version` 或 `package.json` 为准，配置不能覆盖。只从 `HEAD` 枚举普通文件，拒绝未跟踪文件和符号链接；只改写副本的 frontmatter 和 `@references/` 指令。产物为 `{name}/` 根目录的 zip、副本 `SKILL.md` 和 `release-manifest.json`（候选提交、打包器 SHA-256、文件清单、大小、zip SHA-256）。可用 `--config`、`--output` 覆盖其他默认值。
+3. 在仓库外解压 zip，重新运行安装单元的 `doctor`、浏览器无关 `author` 和 `finalize`，核对 `release-manifest.json`、候选提交、打包器摘要和 zip 校验值一致；平台解析前的本地预检不通过时不出包。
 4. 记录 zip 文件名、候选提交、WorkBuddy 元数据变更、文件清单和校验值。
 5. 在开放平台的技能资产入口上传 zip，按当期页面填写展示信息、能力配置和其他表单项。
 6. 等待平台解析结果。解析失败时，先检查 `SKILL.md`、zip 内层级、引用路径和子资源，再按平台联系渠道反馈。

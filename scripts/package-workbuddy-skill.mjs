@@ -17,15 +17,16 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   existsSync,
+  lstatSync,
   mkdirSync,
+  realpathSync,
   readFileSync,
-  statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), ".."));
 const defaultSkillDir = join(repoRoot, "skills", "flow-diagram");
 const defaultConfigPath = join(repoRoot, "scripts", "workbuddy-release.json");
 
@@ -54,6 +55,7 @@ const REQUIRED_FIELDS = [
   "author",
 ];
 const LIST_FIELDS = new Set(["examples_zh", "examples_en", "allowed-tools"]);
+const VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 
 function fail(message) {
   console.error(`package-workbuddy-skill: ${message}`);
@@ -88,6 +90,15 @@ function readFrontmatter(markdown) {
   return { fields, body: markdown.slice(match[0].length) };
 }
 
+/** Preserve Markdown navigation while exposing WorkBuddy's reference loader syntax. */
+function addWorkBuddyReferenceDirectives(markdown) {
+  return markdown.replace(/\]\((references\/[^)\s]+)\)([.,!?;:，。；：！？])?/g, (link, target, punctuation = "") => {
+    const reference = target.split("#", 1)[0];
+    const markdownLink = link.slice(0, link.length - punctuation.length);
+    return `${markdownLink}${punctuation} @${reference}`;
+  });
+}
+
 function yamlScalar(value) {
   return `"${String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
@@ -114,20 +125,98 @@ function emitFrontmatter(fields) {
   return lines.join("\n");
 }
 
-/** Enumerate versioned install-unit files through git so ignored junk never ships. */
-function listSkillFiles(skillDir) {
-  const prefix = relative(repoRoot, skillDir);
+function candidateTreeEntries(pathspec) {
   let stdout;
   try {
-    stdout = execFileSync("git", ["-C", repoRoot, "ls-files", "--cached", "--others", "--exclude-standard", "--", prefix], { encoding: "utf8" });
+    stdout = execFileSync("git", ["-C", repoRoot, "ls-tree", "-r", "-z", "HEAD", "--", pathspec], { encoding: "utf8" });
   } catch {
-    fail("git ls-files failed; run from the repository checkout");
+    fail("git ls-tree failed; run from the repository checkout");
   }
-  const files = stdout
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.startsWith(prefix + sep) && existsSync(join(repoRoot, line)) && statSync(join(repoRoot, line)).isFile())
-    .sort();
+  return stdout.split("\0").filter(Boolean).map((entry) => {
+    const separator = entry.indexOf("\t");
+    const [mode, type, object] = entry.slice(0, separator).split(" ");
+    return { mode, type, object, path: entry.slice(separator + 1) };
+  });
+}
+
+function assertCommittedRegularFile(file) {
+  const gitPath = file.split(sep).join("/");
+  const entry = candidateTreeEntries(gitPath).find((candidate) => candidate.path === gitPath);
+  if (!entry) fail(`release input must be committed in HEAD: ${gitPath}`);
+  if (entry.type !== "blob" || !["100644", "100755"].includes(entry.mode)) {
+    fail(`release input must be a committed regular file: ${gitPath}`);
+  }
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function releaseConfigValues(config) {
+  const { $comment, ...values } = config;
+  return values;
+}
+
+function assertReleaseConfigMatchesCandidate(configPath) {
+  const gitPath = relative(repoRoot, configPath).split(sep).join("/");
+  let candidateConfig;
+  try {
+    candidateConfig = JSON.parse(execFileSync("git", ["-C", repoRoot, "show", `HEAD:${gitPath}`], { encoding: "utf8" }));
+  } catch {
+    fail(`release config must be valid JSON committed in HEAD: ${gitPath}`);
+  }
+  const currentConfig = JSON.parse(readFileSync(configPath, "utf8"));
+  if (stableJson(releaseConfigValues(currentConfig)) !== stableJson(releaseConfigValues(candidateConfig))) {
+    fail(`release config metadata values must match HEAD; commit intended changes before packaging: ${gitPath}`);
+  }
+}
+
+function assertCleanReleaseInputs(skillDir, configPath, usesPackageVersion) {
+  const skillPrefix = relative(repoRoot, skillDir);
+  const configFile = relative(repoRoot, configPath);
+  if (!skillPrefix || skillPrefix === ".." || skillPrefix.startsWith(`..${sep}`) || configFile.startsWith(`..${sep}`)) {
+    fail("skill directory and release config must be inside the repository");
+  }
+
+  assertCommittedRegularFile(configFile);
+  assertReleaseConfigMatchesCandidate(configPath);
+  if (usesPackageVersion) assertCommittedRegularFile("package.json");
+
+  let changes;
+  try {
+    changes = execFileSync("git", [
+      "-C", repoRoot, "status", "--porcelain", "--untracked-files=all", "--",
+      skillPrefix.split(sep).join("/"), ...(usesPackageVersion ? ["package.json"] : []),
+    ], { encoding: "utf8" });
+  } catch {
+    fail("git status failed; run from the repository checkout");
+  }
+  if (changes.trim()) {
+    fail(`release inputs must be committed and clean before packaging:\n${changes.trimEnd()}`);
+  }
+}
+
+/** Enumerate only files present in the clean candidate commit. */
+function listSkillFiles(skillDir) {
+  const prefix = relative(repoRoot, skillDir).split(sep).join("/");
+  const entries = candidateTreeEntries(prefix).filter((entry) => entry.path.startsWith(prefix + "/"));
+  for (const entry of entries) {
+    if (entry.type !== "blob" || !["100644", "100755"].includes(entry.mode)) {
+      fail(`unsupported symlink or non-regular file in candidate installation: ${entry.path}`);
+    }
+    try {
+      if (!lstatSync(join(repoRoot, entry.path)).isFile()) {
+        fail(`unsupported symlink or non-regular file in candidate installation: ${entry.path}`);
+      }
+    } catch {
+      fail(`candidate installation file is missing: ${entry.path}`);
+    }
+  }
+  const files = entries.map((entry) => entry.path).sort();
   if (!files.length) fail(`no files found under ${prefix}`);
   if (!files.some((f) => f === join(prefix, "SKILL.md"))) fail("install unit has no SKILL.md");
   return files;
@@ -143,6 +232,15 @@ function validateSkillLinks(markdown, shippedPaths, skillDir) {
     if (!shippedPaths.has(resolved)) problems.push(target);
   }
   if (problems.length) fail(`SKILL.md references paths missing from the package: ${[...new Set(problems)].join(", ")}`);
+}
+
+function validateWorkBuddyReferences(markdown, shippedPaths, skillDir) {
+  const missing = [];
+  for (const match of markdown.matchAll(/@references\/([^\s]+)/g)) {
+    const target = match[1].replace(/[.,!?;:，。；：！？）】]+$/u, "");
+    if (!shippedPaths.has(resolve(skillDir, `references/${target}`))) missing.push(target);
+  }
+  if (missing.length) fail(`WorkBuddy reference directives point to files missing from the package: ${[...new Set(missing)].join(", ")}`);
 }
 
 /* ---- minimal store-only ZIP writer (no dependency, UTF-8 names) ---- */
@@ -211,32 +309,50 @@ function buildZip(entries) {
 
 function main() {
   const options = parseArgs(process.argv.slice(2));
-  const skillDir = resolve(options["skill-dir"] ?? defaultSkillDir);
-  const configPath = resolve(options.config ?? defaultConfigPath);
+  const skillInputPath = resolve(options["skill-dir"] ?? defaultSkillDir);
+  if (!lstatSync(skillInputPath).isDirectory()) fail(`skill directory must be a regular directory: ${skillInputPath}`);
+  const skillDir = realpathSync(skillInputPath);
+  const configInputPath = resolve(options.config ?? defaultConfigPath);
+  if (!existsSync(configInputPath)) fail(`config not found: ${configInputPath}`);
+  if (!lstatSync(configInputPath).isFile()) fail(`release config must be a regular file: ${configInputPath}`);
+  const configPath = realpathSync(configInputPath);
+  const usesPackageVersion = options.version === undefined;
+  assertCleanReleaseInputs(skillDir, configPath, usesPackageVersion);
   const version = options.version ?? JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf8")).version;
+  if (typeof version !== "string" || !VERSION_PATTERN.test(version)) {
+    fail(`version must be a valid semantic version: ${version}`);
+  }
   const outputDir = resolve(options.output ?? join(repoRoot, "outputs", "workbuddy-release", version));
 
-  if (!existsSync(configPath)) fail(`config not found: ${configPath}`);
   const config = JSON.parse(readFileSync(configPath, "utf8"));
   delete config.$comment;
 
   const sourcePath = join(skillDir, "SKILL.md");
   const { fields: sourceFields, body } = readFrontmatter(readFileSync(sourcePath, "utf8"));
-  const merged = { ...sourceFields, version, ...config };
+  const skillName = sourceFields.name;
+  if (skillName !== basename(skillDir)) {
+    fail(`source Skill name must match its install directory: ${basename(skillDir)}`);
+  }
+  if (config.name !== undefined && config.name !== sourceFields.name) {
+    fail(`release config name must match source Skill name: ${sourceFields.name}`);
+  }
+  const merged = { ...sourceFields, ...config, version };
   const missing = REQUIRED_FIELDS.filter((key) => !merged[key]);
   if (missing.length) fail(`missing required WorkBuddy fields: ${missing.join(", ")} (set them in ${relative(repoRoot, configPath)})`);
 
-  const rewritten = emitFrontmatter(merged) + body;
+  const workbuddyBody = addWorkBuddyReferenceDirectives(body);
+  const rewritten = emitFrontmatter(merged) + workbuddyBody;
   const files = listSkillFiles(skillDir);
   const shipped = new Set(files.map((f) => resolve(repoRoot, f)));
   validateSkillLinks(rewritten, shipped, skillDir);
+  validateWorkBuddyReferences(rewritten, shipped, skillDir);
 
   const entries = files.map((file) => {
     const rel = relative(skillDir, resolve(repoRoot, file));
     const data = file === relative(repoRoot, sourcePath)
       ? Buffer.from(rewritten, "utf8")
       : readFileSync(join(repoRoot, file));
-    return { name: `flow-diagram/${rel.split(sep).join("/")}`, data };
+    return { name: `${skillName}/${rel.split(sep).join("/")}`, data };
   });
   const zip = buildZip(entries);
   const sha256 = createHash("sha256").update(zip).digest("hex");
@@ -247,9 +363,10 @@ function main() {
     commit = "unknown (not a git checkout)";
   }
   const runtime = JSON.parse(readFileSync(join(skillDir, "runtime", "manifest.json"), "utf8"));
+  const packagerSha256 = createHash("sha256").update(readFileSync(fileURLToPath(import.meta.url))).digest("hex");
 
   mkdirSync(outputDir, { recursive: true });
-  const zipName = `flow-diagram-skill-${version}.zip`;
+  const zipName = `${skillName}-skill-${version}.zip`;
   writeFileSync(join(outputDir, zipName), zip);
   writeFileSync(join(outputDir, "SKILL.md"), rewritten);
   writeFileSync(join(outputDir, "release-manifest.json"), JSON.stringify({
@@ -257,6 +374,7 @@ function main() {
     candidateCommit: commit,
     skillDistributionVersion: version,
     sdkBaseline: runtime.sdk?.version ?? null,
+    packagerSha256,
     config: relative(repoRoot, configPath),
     fileCount: entries.length,
     sizeBytes: zip.length,
