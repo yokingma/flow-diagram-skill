@@ -6,6 +6,7 @@
 
 - [English user guide](guides/flow-diagram-guide.md) and [中文用户指南](guides/flow-diagram-guide.zh-CN.md): installation, creation, revisions, exports, and recovery.
 - [Teaching examples](../skills/flow-diagram/examples/README.md): runnable diagrams with composition notes and export tips.
+- [Skill-generated README images](images/skill-examples/README.md): source identities, tool attribution and export details for local static examples.
 - [FlowSVG showcase previews](images/flowsvg/README.md): sources and licenses for the README animations.
 
 ## Skill developers

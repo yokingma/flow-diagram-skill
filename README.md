@@ -1,12 +1,12 @@
 # Flow Diagram
 
-An Agent Skill built on [FlowSVG](https://github.com/yokingma/FlowSVG) for creating editable system and process diagrams from descriptions, documents, or code. Deliver a static explanation or an animated walkthrough as a self-contained offline HTML page, with editable JSON and check reports. Export SVG, PNG, or GIF when requested.
+Create editable system and process diagrams from text, documents, or code. Deliver static visuals or animated offline HTML with [FlowSVG](https://github.com/yokingma/FlowSVG).
 
 [简体中文](README.zh-CN.md) · [Install](#install) · [User guide](docs/guides/flow-diagram-guide.md) · [Examples](skills/flow-diagram/examples/README.md) · [Contributing](CONTRIBUTING.md)
 
 ## Examples
 
-Request flows, deployment architecture and model inference, animated with FlowSVG. [Image credits](docs/images/flowsvg/README.md).
+Request flows, deployment architecture and model inference, animated with FlowSVG. See [FlowSVG image credits](docs/images/flowsvg/README.md) and [Skill-authored image details](docs/images/skill-examples/README.md).
 
 <p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="Animated request and response between a client and service" width="700"></p>
 
@@ -19,6 +19,16 @@ Request flows, deployment architecture and model inference, animated with FlowSV
 <p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="LLM inference with Transformer layers and KV Cache reuse" width="700"></p>
 
 <p align="center"><em>LLM inference with Transformer layers and KV Cache reuse.</em></p>
+
+### Static examples created with this Skill
+
+<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.png" alt="Fictional enterprise LLM platform layers and cross-cutting governance" width="900"></p>
+
+<p align="center"><em>Fictional LLM platform · Tencent WorkBuddy · hy4 flash · Flow Diagram Skill.</em></p>
+
+<p align="center"><img src="docs/images/skill-examples/order-fulfillment.png" alt="Order fulfillment from checkout through delivery, including early exits" width="600"></p>
+
+<p align="center"><em>Order fulfillment · Tencent WorkBuddy · hy4 flash · Flow Diagram Skill.</em></p>
 
 ## Install
 

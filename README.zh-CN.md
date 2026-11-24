@@ -1,12 +1,12 @@
 # Flow Diagram
 
-基于 [FlowSVG（流形）](https://github.com/yokingma/FlowSVG)，从自然语言、文档或代码创作可编辑系统与流程图解的 Agent Skill。将静态说明或动画演示交付为自包含离线 HTML，同时保留可编辑 JSON 与检查报告；按需导出 SVG、PNG 或 GIF。
+基于 [FlowSVG（流形）](https://github.com/yokingma/FlowSVG)，从描述、文档或代码创作可编辑的系统与流程图解，交付静态图或离线动画页面。
 
 [English](README.md) · [安装](#安装) · [用户指南](docs/guides/flow-diagram-guide.zh-CN.md) · [示例](skills/flow-diagram/examples/README.md) · [贡献说明](CONTRIBUTING.md)
 
 ## 典型示例
 
-用 FlowSVG 动画展示请求流程、部署架构与模型推理。[图片来源](docs/images/flowsvg/README.md)。
+用 FlowSVG 动画展示请求流程、部署架构与模型推理。另见 [FlowSVG 图片来源](docs/images/flowsvg/README.md)和[本 Skill 创作图片信息](docs/images/skill-examples/README.md)。
 
 <p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/request-response.gif" alt="客户端与服务之间的请求和响应动画" width="700"></p>
 
@@ -19,6 +19,16 @@
 <p align="center"><img src="https://raw.githubusercontent.com/yokingma/FlowSVG/952826129edb0a8e0ff9704e7bbd10df6fc1bec3/packages/flowsvg/docs/images/llm-inference.gif" alt="包含 Transformer 层与 KV Cache 复用的 LLM 推理过程" width="700"></p>
 
 <p align="center"><em>LLM 推理：展示 Transformer 层与 KV Cache 复用。</em></p>
+
+### 使用本 Skill 创作的静态示例
+
+<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.png" alt="虚构企业大模型平台的分层架构与横切治理" width="900"></p>
+
+<p align="center"><em>虚构大模型平台 · 腾讯 WorkBuddy · hy4 flash · Flow Diagram Skill。</em></p>
+
+<p align="center"><img src="docs/images/skill-examples/order-fulfillment.png" alt="订单从下单到送达的履约流程及提前退出路径" width="600"></p>
+
+<p align="center"><em>订单履约 · 腾讯 WorkBuddy · hy4 flash · Flow Diagram Skill。</em></p>
 
 ## 安装
 
