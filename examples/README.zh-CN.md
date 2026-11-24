@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-预览和维护[图解示例库](../skills/flow-diagram/examples/README.md)。完整案例来自 FlowSVG，专项练习展示单项创作能力。
+预览和维护[图解示例库](../skills/flow-diagram/examples/README.md)。完整案例包含固定来源的 FlowSVG 快照和 Skill 自创案例；专项练习展示单项创作能力。
 
 ## 预览示例库
 
@@ -27,8 +27,10 @@ pnpm examples:preview
 
 ## 导入或修订候选
 
-先区分来源：完整案例保持为上游快照；缺少合适上游素材的必要能力可采用小型 Skill 自有练习。自有练习以 JSON 为创作源，记录教学假设与参考资料，不声明上游字节一致性。
+先区分来源：导入的 FlowSVG 完整案例保持为固定上游快照；独立教学主题可采用 Skill 自创完整案例，尚未覆盖的 SDK 功能可采用专项练习。自创案例以 JSON 为创作源，记录教学假设与参考资料，不声明上游来源或字节一致性。
 
 导入上游快照时，固定提交并从其 TypeScript 创作定义生成独立 JSON。来源提交、JSON 哈希、展示覆盖值、来源链接和许可先随候选说明保存，并链接[共用执行与查看条件](../skills/flow-diagram/examples/README.md#run-and-inspect)。上游宿主设置在 JSON 外，需显式核对主题。保留完整语义，再用 Skill 运行时校验并查看结果。
 
-在 `examples/<name>/` 保留一份临时候选源、当前预览和精简英文说明，不混入已发布画廊。实质性发现集中记入一个临时 `issues.md`，生成预览和过程记录保持忽略。验证、选入、发布及后续快照更新遵循[示例维护流程](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance)，并应用已有用户授权。选定后再发布源文件和简短说明，将来源提交、JSON 哈希和展示覆盖值转入 `skills/flow-diagram/resources/teaching-sources.json`；所选源文件与元数据一致、安装链接可解析后完成。为用户图解改编时，使用[任务内草稿](../skills/flow-diagram/examples/README.md#adapt-an-example)。
+Skill 自创案例需在说明和来源元数据中记录创作方式、AI 辅助时使用的模型/工具、虚构假设、许可和 JSON 哈希。不得将其描述为上游快照或暗示字节一致性。链接共用查看条件，明确深色展示，并使用 Skill 运行时验证和查看结果。
+
+在 `examples/<name>/` 保留一份临时候选源、当前预览和精简英文说明，不混入已发布画廊。实质性发现集中记入一个临时 `issues.md`，生成预览和过程记录保持忽略。验证、选入、发布及后续快照更新遵循[示例维护流程](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance)，并应用已有用户授权。选定后再发布源文件和简短说明，将适用的来源身份、JSON 哈希和展示覆盖值转入 `skills/flow-diagram/resources/teaching-sources.json`；所选源文件与元数据一致、安装链接可解析后完成。为用户图解改编时，使用[任务内草稿](../skills/flow-diagram/examples/README.md#adapt-an-example)。

@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-Preview and maintain the [diagram examples](../skills/flow-diagram/examples/README.md). Complete examples come from FlowSVG; focused exercises demonstrate individual authoring features.
+Preview and maintain the [diagram examples](../skills/flow-diagram/examples/README.md). Complete examples include pinned FlowSVG snapshots and Skill-authored stories; focused exercises demonstrate individual authoring features.
 
 ## Preview the example library
 
@@ -27,8 +27,10 @@ The generator uses the installed CLI's exact isolated SDK baseline; the first ru
 
 ## Import or revise a candidate
 
-Choose the source kind first: preserve complete stories as upstream snapshots; use a small Skill-authored capability exercise only when no suitable focused upstream example exists. For a local exercise, keep the JSON as the author source and record its teaching assumptions and reference material without claiming upstream byte identity.
+Choose the source kind first: preserve imported FlowSVG stories as pinned upstream snapshots; use Skill-authored complete stories for distinct teaching questions and focused capability exercises for uncovered SDK features. For local examples, keep the JSON as the author source and record teaching assumptions and reference material without claiming upstream identity.
 
 For an upstream snapshot, pin a commit and generate standalone JSON from its TypeScript author definitions. Keep the source commit, JSON hash, presentation overrides, source links and license attribution with the candidate note. Link the [shared execution and viewing conditions](../skills/flow-diagram/examples/README.md#run-and-inspect). Check default theme explicitly: upstream host settings are outside the JSON. Preserve the complete document semantics, then validate and view it with the Skill's runtime.
 
-Keep one temporary candidate source, current preview and concise English note under `examples/<name>/`, outside the published gallery. Record material findings in one temporary `issues.md`; generated previews and process records stay ignored. Follow [example maintenance](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance) for verification, selection, publication and later snapshot updates, applying any existing user authorization. After selection, publish the source and short note, and transfer its source commit, JSON hash and presentation overrides to `skills/flow-diagram/resources/teaching-sources.json`. Finish when the selected source matches its metadata and installed links resolve. For a user's diagram, use [task-local adaptation](../skills/flow-diagram/examples/README.md#adapt-an-example).
+For a Skill-authored example, record its authoring workflow, any AI model/tool used, fictional assumptions, license and JSON hash in the note and scoped source metadata. Do not present it as an upstream snapshot or imply byte identity. Link the shared viewing conditions, use the intended dark presentation and verify the rendered output with the Skill's runtime.
+
+Keep one temporary candidate source, current preview and concise English note under `examples/<name>/`, outside the published gallery. Record material findings in one temporary `issues.md`; generated previews and process records stay ignored. Follow [example maintenance](../docs/development/flow-diagram-maintenance.md#teaching-example-maintenance) for verification, selection, publication and later snapshot updates, applying any existing user authorization. After selection, publish the source and short note, and transfer its applicable source identity, JSON hash and presentation overrides to `skills/flow-diagram/resources/teaching-sources.json`. Finish when the selected source matches its metadata and installed links resolve. For a user's diagram, use [task-local adaptation](../skills/flow-diagram/examples/README.md#adapt-an-example).

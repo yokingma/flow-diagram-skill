@@ -15,7 +15,7 @@ const MAX_COMMAND_OUTPUT_BYTES = 4 * 1024 * 1024;
 const GROUPS = [
   {
     id: "complete", title: "Complete examples",
-    description: "Pinned SDK showcase documents. Read each note for its question, static reading stage and animation.",
+    description: "Full compositions and animations. Read each note for its question, source, static reading stage and animation.",
     directory: join(ROOT, "skills/flow-diagram/examples/complete")
   },
   {

@@ -24,6 +24,12 @@
     "description": "Definition rag-workflow; packages/showcase/src/examples/rag-workflow.ts; MIT (c) 2026 zac_ma. JSON SHA-256 bc996b1d2867e4405d40ea7b61f16f0b22c41d7202a8960e749e4e8e291a764b. Host defaults: dark, speed 1, reducedMotion false. Explore RAG ingestion and online queries: share an embedding model, retrieve five candidates, optionally rerank to keep two, and generate a cited answer. The handbook, question and answer are fictional. No live model or database is used; chunk counts are teaching choices."
   },
   {
+    "kind": "prompt",
+    "reference": "AI-assisted Skill-authored complete example created with hy4 flash using the Flow Diagram Skill",
+    "scope": "examples/complete/order-fulfillment.json",
+    "description": "Original teaching example, not an upstream FlowSVG snapshot. Fictional e-commerce phases, validation/payment/risk decisions, exception policy and wording are teaching assumptions; no live order or service is represented. MIT (c) 2026 zac_ma. JSON SHA-256 ed0d216f6cf89d7f86f88ee5e5235ab0d9d7b7abe83c258dacee85c85f59ebb9. Host defaults: dark, speed 1, reducedMotion false. Reader question: how an order moves from checkout to delivery and where it can stop early."
+  },
+  {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
     "scope": "examples/complete/job-lifecycle.json",

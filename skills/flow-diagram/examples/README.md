@@ -30,4 +30,4 @@ Keep the installed JSON unchanged while adapting the task draft. [Execution reso
 
 ## Source provenance
 
-FlowSVG examples retain their MIT attribution and links to the original definitions. [Source records](../resources/teaching-sources.json) contain source commits, JSON hashes and scenario descriptions. The Skill runs installed JSON directly; no SDK source checkout or showcase build is required.
+Upstream FlowSVG examples retain their MIT attribution and links to original definitions. Skill-authored examples identify their authoring workflow, including any AI model/tool used, and their fictional teaching assumptions. [Source records](../resources/teaching-sources.json) scope these identities and scenario descriptions to installed JSON files. The Skill runs installed JSON directly; no SDK source checkout or showcase build is required.

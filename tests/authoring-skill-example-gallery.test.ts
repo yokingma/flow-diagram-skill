@@ -61,6 +61,7 @@ test("builds a portable gallery with separate complete and capability sources wi
   expect(result.code, result.stderr + result.stdout).toBe(0);
   const html = await readFile(join(root, "examples/.preview/index.html"), "utf8");
   expect(html).toContain("Complete examples");
+  expect(html).toContain("Full compositions and animations");
   expect(html).toContain("SDK capabilities");
   expect(html).toContain("A &lt; B &amp; C");
   expect(html).toContain('src="complete/selected/current/diagram.html"');

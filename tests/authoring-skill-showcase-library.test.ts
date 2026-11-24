@@ -1,6 +1,7 @@
-/** Consume the actual published snapshots through a copied installation, without the upstream workspace. */
+/** Consume the selected installed examples through a copied installation, without the authoring workspace. */
 import { afterAll, beforeAll, expect, test } from "vitest";
 import { execFile } from "node:child_process";
+import { createHash } from "node:crypto";
 import { cp, mkdtemp, readFile, realpath, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -14,6 +15,7 @@ const CASES = [
   { group: "capabilities", id: "emphasis-flow", text: "Data link" },
   { group: "complete", id: "project-architecture", text: "FlowSVG" },
   { group: "complete", id: "rag-workflow", text: "RAG:" },
+  { group: "complete", id: "order-fulfillment", text: "订单校验" },
   { group: "complete", id: "job-lifecycle", text: "Queued" },
   { group: "complete", id: "order-event-pipeline", text: "Event queue" },
   { group: "complete", id: "web-service-deployment", text: "HTTPS" },
@@ -59,3 +61,16 @@ test.each(CASES)("copied $id delivers its real source and reconstructs its initi
   expect(await readFile(input)).toEqual(original);
   expect(await readFile(join(back.revision.directory, "diagram.json"))).toEqual(original);
 }, 90_000);
+
+test("records order fulfillment provenance against its installed source bytes", async () => {
+  const input = await readFile(join(skill, "examples/complete/order-fulfillment.json"));
+  const digest = createHash("sha256").update(input).digest("hex");
+  const records = JSON.parse(await readFile(join(skill, "resources/teaching-sources.json"), "utf8")) as Array<{
+    kind: string; reference: string; scope: string; description: string;
+  }>;
+  const source = records.find((record) => record.scope === "examples/complete/order-fulfillment.json");
+  expect(source).toMatchObject({ kind: "prompt" });
+  expect(source?.reference).toContain("hy4 flash");
+  expect(source?.reference).toContain("Flow Diagram Skill");
+  expect(source?.description).toContain(`JSON SHA-256 ${digest}`);
+});
