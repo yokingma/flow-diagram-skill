@@ -12,12 +12,12 @@ From the repository root, use Node 20+, npm and pnpm `10.12.1`:
 pnpm examples:preview
 ```
 
-Open `examples/.preview/index.html` in a browser. The command scans two explicit directories without recursion:
+Open `examples/.preview/index.html` in a browser. The command scans installed `examples/` without recursion and selects sources by filename prefix:
 
 | Gallery section | Source files |
 | --- | --- |
-| Complete examples | `skills/flow-diagram/examples/complete/*.json` |
-| SDK capabilities | `skills/flow-diagram/examples/capabilities/*.json` |
+| Complete examples | `skills/flow-diagram/examples/complete-*.json` |
+| SDK capabilities | `skills/flow-diagram/examples/capabilities-*.json` |
 
 Each card links to its source, adjacent note when present and full offline player. The complete documents also supply static reading states; consult the note and current compilation before exporting a later frame. Players start paused with the upstream dark theme, speed 1 and reduced motion off. Narrow windows can scroll each diagram horizontally.
 

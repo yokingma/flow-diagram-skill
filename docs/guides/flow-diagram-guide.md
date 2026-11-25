@@ -262,7 +262,7 @@ You can also use the CLI directly. Replace `<skill-directory>` with the absolute
 
 ```sh
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
-node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --name project-architecture --theme dark --output ".diagrams/.work/project-architecture/<task-id>/history" --browser none
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete-project-architecture.json" --name project-architecture --theme dark --output ".diagrams/.work/project-architecture/<task-id>/history" --browser none
 node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/project-architecture/<task-id>" --name project-architecture
 ```
 

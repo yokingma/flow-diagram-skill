@@ -1,8 +1,8 @@
 # Visibility, focus and restoration
 
-[Diagram JSON](visibility-camera.json) · [Capability index](README.md)
+[Diagram JSON](capabilities-visibility-camera.json) · [Capability index](capabilities-README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** How do visibility, camera changes and edge updates persist and restore?
 
@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 800 × 260 diagram units. The group reserves space for its title above the detail card, with 40 units on either side and 30 below. Uses the shared dark presentation. The focused state intentionally crops the overview card.
 
-**Source:** Original Skill capability exercise, MIT, Copyright (c) 2026 zac_ma. Public mechanisms are illustrated in [FlowSVG inherited-transition-composition.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/flowsvg/tests/fixtures/inherited-transition-composition.ts). See the scoped [teaching record](../../resources/teaching-sources.json).
+**Source:** Original Skill capability exercise, MIT, Copyright (c) 2026 zac_ma. Public mechanisms are illustrated in [FlowSVG inherited-transition-composition.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/flowsvg/tests/fixtures/inherited-transition-composition.ts). See the scoped [teaching record](../resources/teaching-sources.json).

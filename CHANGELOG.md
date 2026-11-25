@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Flatten the installed example source layout into `examples/complete-*` and `examples/capabilities-*`, preserving all eleven diagram JSON files byte for byte. Update installed references, commands, source scopes, bilingual guides and copied-install tests. Select gallery groups by filename prefix while retaining existing preview locations. Remove release-time path and resource rewriting; copy source paths and bytes directly and reject nested source directories before output creation. Replace transformation tests with byte-preservation and depth-rejection coverage; gallery behavior tests fail first against the previous directory scanner.
+
+- Fix WorkBuddy directory-depth rejection by flattening nested example categories into prefixed filenames in the release copy. Rewrite relative Markdown links, installed example command paths and teaching-source scopes, preserve diagram JSON bytes, reject filename collisions, and record each original `sourcePath` in the manifest. Add regression coverage for executable paths, provenance and collision failure.
+
 - Harden WorkBuddy packaging so release inputs match committed files; validate the selected semantic version, keep it authoritative, bind the Skill name to its install directory, reject symlinks and non-regular install files, package only files from `HEAD`, record the packager digest, and add punctuation-safe WorkBuddy `@references/` directives to the generated Skill copy while preserving source links. Add release-packager regression coverage and document the current platform reference syntax.
 
 - Add the AI-assisted, Skill-authored order-fulfillment example to the installed complete-example library. Record hy4 flash and the Flow Diagram Skill as its source workflow, pin the installed JSON digest, include it in the copied-install and gallery checks, and describe upstream and local source kinds accurately.

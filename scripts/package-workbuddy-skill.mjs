@@ -6,9 +6,11 @@
  * frontmatter by contract (docs/releasing.md §5.1). This tool produces a release
  * copy: it injects the WorkBuddy-required frontmatter fields from
  * scripts/workbuddy-release.json, packages the unit as a deterministic zip whose
- * root is `flow-diagram/`, validates links inside the rewritten SKILL.md, and
- * writes a release manifest with the candidate commit, file list, size and
- * sha256. It never modifies the source install unit.
+ * root is `flow-diagram/`. Source paths must already fit WorkBuddy's
+ * root/subdirectory/file limit; deeper paths fail before output creation.
+ * Resource paths and bytes are preserved; only SKILL.md metadata and reference
+ * directives are adapted. The manifest records paths, commit, sizes and sha256.
+ * It never modifies the source install unit.
  *
  * Usage: node scripts/package-workbuddy-skill.mjs [--config <json>] [--output <dir>]
  *        [--version <x.y.z>] [--skill-dir <path>]
@@ -23,7 +25,7 @@ import {
   readFileSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, posix, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), ".."));
@@ -56,6 +58,7 @@ const REQUIRED_FIELDS = [
 ];
 const LIST_FIELDS = new Set(["examples_zh", "examples_en", "allowed-tools"]);
 const VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
+const MAX_PACKAGE_PATH_PARTS = 3;
 
 function fail(message) {
   console.error(`package-workbuddy-skill: ${message}`);
@@ -243,6 +246,31 @@ function validateWorkBuddyReferences(markdown, shippedPaths, skillDir) {
   if (missing.length) fail(`WorkBuddy reference directives point to files missing from the package: ${[...new Set(missing)].join(", ")}`);
 }
 
+/** Package source paths unchanged so tests exercise the published layout. */
+function createReleaseEntries(files, skillDir, skillName, skillMarkdown) {
+  return files.map((file) => {
+    const sourcePath = relative(skillDir, resolve(repoRoot, file)).split(sep).join("/");
+    const name = `${skillName}/${sourcePath}`;
+    if (name.split("/").length > MAX_PACKAGE_PATH_PARTS) {
+      fail(`source directory depth exceeds root/subdirectory/file: ${sourcePath}`);
+    }
+    const data = sourcePath === "SKILL.md" ? Buffer.from(skillMarkdown, "utf8") : readFileSync(join(repoRoot, file));
+    return { name, sourcePath, data };
+  });
+}
+
+function validateReleaseEntries(entries) {
+  const names = new Set(entries.map((entry) => entry.name));
+  for (const entry of entries.filter((item) => item.name.endsWith(".md"))) {
+    for (const match of entry.data.toString("utf8").matchAll(/\]\(([^)\s]+)\)/g)) {
+      const target = match[1];
+      if (/^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(target)) continue;
+      const resolved = posix.normalize(posix.join(posix.dirname(entry.name), target.split("#", 1)[0]));
+      if (!names.has(resolved)) fail(`packaged Markdown link target missing: ${entry.name} -> ${target}`);
+    }
+  }
+}
+
 /* ---- minimal store-only ZIP writer (no dependency, UTF-8 names) ---- */
 const crcTable = new Uint32Array(256).map((_, n) => {
   let c = n;
@@ -347,13 +375,9 @@ function main() {
   validateSkillLinks(rewritten, shipped, skillDir);
   validateWorkBuddyReferences(rewritten, shipped, skillDir);
 
-  const entries = files.map((file) => {
-    const rel = relative(skillDir, resolve(repoRoot, file));
-    const data = file === relative(repoRoot, sourcePath)
-      ? Buffer.from(rewritten, "utf8")
-      : readFileSync(join(repoRoot, file));
-    return { name: `${skillName}/${rel.split(sep).join("/")}`, data };
-  });
+  const entries = createReleaseEntries(files, skillDir, skillName, rewritten);
+  validateReleaseEntries(entries);
+  const packagedSkill = entries.find((entry) => entry.sourcePath === "SKILL.md").data;
   const zip = buildZip(entries);
   const sha256 = createHash("sha256").update(zip).digest("hex");
   let commit = null;
@@ -368,7 +392,7 @@ function main() {
   mkdirSync(outputDir, { recursive: true });
   const zipName = `${skillName}-skill-${version}.zip`;
   writeFileSync(join(outputDir, zipName), zip);
-  writeFileSync(join(outputDir, "SKILL.md"), rewritten);
+  writeFileSync(join(outputDir, "SKILL.md"), packagedSkill);
   writeFileSync(join(outputDir, "release-manifest.json"), JSON.stringify({
     package: zipName,
     candidateCommit: commit,
@@ -379,7 +403,7 @@ function main() {
     fileCount: entries.length,
     sizeBytes: zip.length,
     sha256,
-    files: entries.map((e) => ({ path: e.name, sizeBytes: e.data.length })),
+    files: entries.map((e) => ({ path: e.name, sourcePath: e.sourcePath, sizeBytes: e.data.length })),
     builtAt: new Date().toISOString(),
   }, null, 2));
 

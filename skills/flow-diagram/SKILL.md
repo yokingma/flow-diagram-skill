@@ -28,7 +28,7 @@ Start with the reader's question: what should this diagram explain? Read the use
 
 Use known display conditions and requested formats. For missing conditions, adopt and state the [existing defaults](references/delivery-contexts.md#preferences-and-missing-context); known PPT use remains PPT use. A clear brief can proceed directly to creation. Clarify factual gaps that change meaning, key relationships, boundaries or scope; explain SDK limits that prevent faithful expression before choosing an alternative.
 
-Use [complete upstream examples](examples/complete/README.md) for composition and animation, or [SDK capabilities](examples/capabilities/README.md) for focused syntax. Read only the relevant source and adjacent note.
+Use [complete upstream examples](examples/complete-README.md) for composition and animation, or [SDK capabilities](examples/capabilities-README.md) for focused syntax. Read only the relevant source and adjacent note.
 
 Before arranging nodes and edges, use [diagram selection](references/semantic-patterns.md#choose-by-the-readers-question) to match the reader's question and source relationships to a diagram type. Read the matched semantic pattern; use free composition when no listed type covers the main question.
 

@@ -2,67 +2,67 @@
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/capabilities/basic-shapes.json",
+    "scope": "examples/capabilities-basic-shapes.json",
     "description": "Definition basic-shapes; packages/showcase/src/examples/basic-shapes.ts; MIT (c) 2026 zac_ma. JSON SHA-256 52ff12abe431830edd4a618b5dc314674f52e22cedf0d0738c8cf72030096f55. Host defaults: dark, speed 1, reducedMotion false. Start here to see every public node shape in one executable flow. The story also demonstrates measured preset labels, a group, orthogonal connections, highlights, label replacement and playback controls."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/capabilities/emphasis-flow.json",
+    "scope": "examples/capabilities-emphasis-flow.json",
     "description": "Definition emphasis-flow; packages/showcase/src/examples/emphasis-flow.ts; MIT (c) 2026 zac_ma. JSON SHA-256 bd674a10b361782e7882cd624086965431bdda0eae05cd1df8b901a85c88b013. Host defaults: dark, speed 1, reducedMotion false. Compare three sender-to-receiver transfers: automatic highlights, preserved relationship colors, and marker-only motion. A document palette supplies mint fills, teal highlights and white marker text across themes and exports."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/project-architecture.json",
+    "scope": "examples/complete-project-architecture.json",
     "description": "Definition project-architecture; packages/showcase/src/examples/project-architecture.ts; MIT (c) 2026 zac_ma. JSON SHA-256 98ac6a04b100bb24cc1e79c3e28c0c16a4046652d3b24fe74e4eb1e700ea1630. Host defaults: dark, speed 1, reducedMotion false. Explore FlowSVG's responsibility layers: a platform-independent core, browser integration and Node tools inside the public SDK, with showcase apps outside it. Arrows point from consumers to providers. Playback highlights each layer while keeping the complete architecture visible."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/rag-workflow.json",
+    "scope": "examples/complete-rag-workflow.json",
     "description": "Definition rag-workflow; packages/showcase/src/examples/rag-workflow.ts; MIT (c) 2026 zac_ma. JSON SHA-256 bc996b1d2867e4405d40ea7b61f16f0b22c41d7202a8960e749e4e8e291a764b. Host defaults: dark, speed 1, reducedMotion false. Explore RAG ingestion and online queries: share an embedding model, retrieve five candidates, optionally rerank to keep two, and generate a cited answer. The handbook, question and answer are fictional. No live model or database is used; chunk counts are teaching choices."
   },
   {
     "kind": "prompt",
     "reference": "AI-assisted Skill-authored complete example created with hy4 flash using the Flow Diagram Skill",
-    "scope": "examples/complete/order-fulfillment.json",
+    "scope": "examples/complete-order-fulfillment.json",
     "description": "Original teaching example, not an upstream FlowSVG snapshot. Fictional e-commerce phases, validation/payment/risk decisions, exception policy and wording are teaching assumptions; no live order or service is represented. MIT (c) 2026 zac_ma. JSON SHA-256 ed0d216f6cf89d7f86f88ee5e5235ab0d9d7b7abe83c258dacee85c85f59ebb9. Host defaults: dark, speed 1, reducedMotion false. Reader question: how an order moves from checkout to delivery and where it can stop early."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/job-lifecycle.json",
+    "scope": "examples/complete-job-lifecycle.json",
     "description": "Definition job-lifecycle; packages/showcase/src/examples/job-lifecycle.ts; MIT (c) 2026 zac_ma. JSON SHA-256 4416f551ce24c1ee716bb8b2a1b3e76c64f83a773f9ebe824685af74ae4897ab. Host defaults: dark, speed 1, reducedMotion false. Watch task events and state transitions: A completes after retry, independent B reaches its retry limit, and C is cancelled while queued. Exactly one state is current. Retry counts are teaching choices; no live tasks run."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/order-event-pipeline.json",
+    "scope": "examples/complete-order-event-pipeline.json",
     "description": "Definition order-event-pipeline; packages/showcase/src/examples/order-event-pipeline.ts; MIT (c) 2026 zac_ma. JSON SHA-256 ed4b33985074f1c57ea976477e7980c7cf631446a2d83d202054706057c7a287. Host defaults: dark, speed 1, reducedMotion false. Follow four fictional order events through a queue, validation, deduplication, valid/invalid routing and window aggregation. Two valid orders total CNY 200. IDs, counts and amounts remain traceable; no live message or data service is used."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/web-service-deployment.json",
+    "scope": "examples/complete-web-service-deployment.json",
     "description": "Definition web-service-deployment; packages/showcase/src/examples/web-service-deployment.ts; MIT (c) 2026 zac_ma. JSON SHA-256 c48826616fa852de1b9ac26d00b5a583eb1d23f2d81198fad1f6c64a4038ce77. Host defaults: dark, speed 1, reducedMotion false. Explore the public entry, two private app replicas and the data tier. Queries use the load balancer, cache and primary; replication and health checks are separate. After A becomes unhealthy, later requests go to B. No live infrastructure is used."
   },
   {
     "kind": "repository",
     "reference": "https://github.com/yokingma/FlowSVG/tree/2eda6e4172ad8c3c1383290e107b53bf0ea0c985",
-    "scope": "examples/complete/cache-aside-sequence.json",
+    "scope": "examples/complete-cache-aside-sequence.json",
     "description": "Definition cache-aside-sequence; packages/showcase/src/examples/cache-aside-sequence.ts; MIT (c) 2026 zac_ma. JSON SHA-256 74a7b0aec1f49cc8a2dac208aa4b749964020fab049825673b6562d66c9be81c. Host defaults: dark, speed 1, reducedMotion false. Follow seven message rows between the client, API, cache and database: request, miss, record and cache fill. Lanes identify participants; vertical position indicates message order. Straight arrows and default styling keep this teaching sequence simple."
   },
   {
     "kind": "prompt",
     "reference": "Skill-authored capability exercise: content-layout",
-    "scope": "examples/capabilities/content-layout.json",
+    "scope": "examples/capabilities-content-layout.json",
     "description": "Invented visual exercise: two related content views demonstrate styled text, numbered list fields, a separate rounded-rectangle badge, local undirected entity relationships and a horizontal straight connection. Ada, Team and Topic are illustrative labels. No runtime data transfer, business facts or execution order is asserted. This JSON is a local author source, not an upstream snapshot."
   },
   {
     "kind": "prompt",
     "reference": "Skill-authored capability exercise: visibility-camera",
-    "scope": "examples/capabilities/visibility-camera.json",
+    "scope": "examples/capabilities-visibility-camera.json",
     "description": "Invented visual exercise: hide/show a group and its connected geometry, focus the camera, restore the full view, update and explicitly restore an edge. These are player state changes, not a service lifecycle. Final SVG geometry/styles/text restore the baseline; captions differ. This JSON is a local author source, not an upstream snapshot."
   }
 ]

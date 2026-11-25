@@ -231,3 +231,55 @@ test("WorkBuddy package rejects symlinks in the committed install tree", async (
   expect(result.stderr).toContain("symlink");
   expect(result.stderr).toContain("skills/flow-diagram/references/guide.md");
 });
+
+test("WorkBuddy preserves flat example paths, Markdown and provenance bytes", async () => {
+  const directory = await createReleaseRepository();
+  const skill = join(directory, "skills/flow-diagram");
+  await mkdir(join(skill, "examples"));
+  await mkdir(join(skill, "resources"));
+  const diagram = '{"version":1,"nodes":[],"edges":[],"scenes":[]}\n';
+  const note = "[JSON](complete-story.json) · [Guide](../references/guide.md#run)\n";
+  const index = '[Story](complete-story.md)\nnode "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete-story.json"\n';
+  const sources = JSON.stringify([
+    { kind: "prompt", reference: "Fixture", scope: "examples/complete-story.json", description: "Keep source identity." },
+  ]);
+  await Promise.all([
+    writeFile(join(skill, "examples/complete-story.json"), diagram),
+    writeFile(join(skill, "examples/complete-story.md"), note),
+    writeFile(join(skill, "examples/README.md"), index),
+    writeFile(join(skill, "resources/teaching-sources.json"), sources),
+    writeFile(join(skill, "references/guide.md"), "[Story](../examples/complete-story.md#purpose)\n"),
+  ]);
+  execFileSync("git", ["add", "skills"], { cwd: directory });
+  execFileSync("git", ["commit", "--quiet", "-m", "add flat teaching examples"], { cwd: directory });
+  const output = join(directory, "output");
+  const result = runPackager(directory, output);
+  expect(result.status, result.stderr).toBe(0);
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  const entries = readStoredZipEntries(await readFile(join(output, manifest.package)));
+  expect([...entries.keys()].filter((path) => path.split("/").length > 3)).toEqual([]);
+  for (const file of manifest.files as Array<{ path: string; sourcePath: string }>) {
+    expect(file.path).toBe(`flow-diagram/${file.sourcePath}`);
+    if (file.sourcePath === "SKILL.md") continue;
+    expect(entries.get(file.path)).toEqual(await readFile(join(skill, file.sourcePath)));
+  }
+  expect(entries.get("flow-diagram/examples/complete-story.json")?.toString()).toBe(diagram);
+  expect(entries.get("flow-diagram/examples/complete-story.md")?.toString()).toBe(note);
+  expect(entries.get("flow-diagram/examples/README.md")?.toString()).toBe(index);
+  expect(entries.get("flow-diagram/resources/teaching-sources.json")?.toString()).toBe(sources);
+});
+
+test("WorkBuddy rejects nested source directories before writing release outputs", async () => {
+  const directory = await createReleaseRepository();
+  const examples = join(directory, "skills/flow-diagram/examples");
+  await mkdir(join(examples, "complete"), { recursive: true });
+  await writeFile(join(examples, "complete/story.json"), "{}\n");
+  execFileSync("git", ["add", "skills"], { cwd: directory });
+  execFileSync("git", ["commit", "--quiet", "-m", "add unsupported nested source"], { cwd: directory });
+  const output = join(directory, "output");
+  const result = runPackager(directory, output);
+  expect(result.status).not.toBe(0);
+  expect(result.stderr).toContain("directory depth");
+  expect(result.stderr).toContain("examples/complete/story.json");
+  expect(existsSync(output)).toBe(false);
+});

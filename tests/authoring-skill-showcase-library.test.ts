@@ -39,7 +39,7 @@ beforeAll(async () => {
 afterAll(async () => { if (root) await rm(root, { recursive: true, force: true }); });
 
 test.each(CASES)("copied $id delivers its real source and reconstructs its initial and final exports", async ({ group, id, text }) => {
-  const input = join(skill, "examples", group, `${id}.json`);
+  const input = join(skill, "examples", `${group}-${id}.json`);
   const original = await readFile(input);
   async function author(time: number): Promise<AuthorReport> {
     const { stdout } = await runFile(process.execPath, [join(skill, "scripts/flowsvg.mjs"), "author",
@@ -63,12 +63,12 @@ test.each(CASES)("copied $id delivers its real source and reconstructs its initi
 }, 90_000);
 
 test("records order fulfillment provenance against its installed source bytes", async () => {
-  const input = await readFile(join(skill, "examples/complete/order-fulfillment.json"));
+  const input = await readFile(join(skill, "examples/complete-order-fulfillment.json"));
   const digest = createHash("sha256").update(input).digest("hex");
   const records = JSON.parse(await readFile(join(skill, "resources/teaching-sources.json"), "utf8")) as Array<{
     kind: string; reference: string; scope: string; description: string;
   }>;
-  const source = records.find((record) => record.scope === "examples/complete/order-fulfillment.json");
+  const source = records.find((record) => record.scope === "examples/complete-order-fulfillment.json");
   expect(source).toMatchObject({ kind: "prompt" });
   expect(source?.reference).toContain("hy4 flash");
   expect(source?.reference).toContain("Flow Diagram Skill");

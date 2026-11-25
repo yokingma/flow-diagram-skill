@@ -28,7 +28,7 @@ afterAll(async () => { if (root) await rm(root, { recursive: true, force: true }
 
 async function author(id: string, time = 0): Promise<AuthorReport> {
   const { stdout } = await runFile(process.execPath, [join(skill, "scripts/flowsvg.mjs"), "author",
-    "--input", join(skill, "examples/capabilities", `${id}.json`), "--name", id,
+    "--input", join(skill, "examples", `capabilities-${id}.json`), "--name", id,
     "--output", join(root, "output"), "--theme", "dark", "--svg", "--time", String(time), "--browser", "none"
   ], { cwd: root, maxBuffer: MAX_OUTPUT_BYTES });
   return await readCommandReport(stdout);
@@ -73,7 +73,7 @@ async function expectHorizontalLink(link: Locator) {
 }
 
 test("content-layout delivers rich text and local graph entities as a static document", async () => {
-  const input = join(skill, "examples/capabilities/content-layout.json");
+  const input = join(skill, "examples/capabilities-content-layout.json");
   const report = await author("content-layout");
   expect(report.checks).toMatchObject({ validation: "passed", compilation: "passed" });
   expect(report.completion.delivery).toBe("complete");
@@ -163,6 +163,6 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("visibility-camera hides connecte
     await seekScene(slider, report, "overview");
     expect(await readSvgState(svg)).toEqual(initial);
     expect(await readFile(join(report.revision.directory, "diagram.json")))
-      .toEqual(await readFile(join(skill, "examples/capabilities/visibility-camera.json")));
+      .toEqual(await readFile(join(skill, "examples/capabilities-visibility-camera.json")));
   } finally { await browser.close(); }
 }, 60_000);

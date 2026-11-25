@@ -12,12 +12,12 @@
 pnpm examples:preview
 ```
 
-在浏览器打开 `examples/.preview/index.html`。命令仅扫描两个明确目录，不递归：
+在浏览器打开 `examples/.preview/index.html`。命令仅扫描安装单元的 `examples/` 目录，按文件名前缀选择源，不递归：
 
 | 画廊分区 | 源文件 |
 | --- | --- |
-| 完整案例 | `skills/flow-diagram/examples/complete/*.json` |
-| SDK 必要能力 | `skills/flow-diagram/examples/capabilities/*.json` |
+| 完整案例 | `skills/flow-diagram/examples/complete-*.json` |
+| SDK 必要能力 | `skills/flow-diagram/examples/capabilities-*.json` |
 
 每张卡片链接源文件、相邻说明（如有）和完整离线播放器。完整文档也提供静态阅读阶段；导出后续画面前先阅读说明与当前编译结果。播放器按上游默认深色、速度 1、减少动效关闭启动，初始暂停；窄窗口可横向滚动图解。
 

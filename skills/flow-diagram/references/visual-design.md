@@ -54,7 +54,7 @@ Use when the reader needs to compare capabilities or ownership rather than follo
 
 Choose a shared title position, body hierarchy and card rhythm. Name the basis of grouping. Use explicit text for proposed, available and unknown states, including access or authorization that remains undecided. Add an edge only when this page must explain a source-supported relationship; a row of cards supplies no execution order.
 
-Study the parallel core module cards in [SDK architecture](../examples/complete/project-architecture.md): they have no internal execution arrows. The surrounding architecture has sourced dependencies. For a pure inventory, apply this recipe to the actual responsibilities and draw no unsupported edges.
+Study the parallel core module cards in [SDK architecture](../examples/complete-project-architecture.md): they have no internal execution arrows. The surrounding architecture has sourced dependencies. For a pure inventory, apply this recipe to the actual responsibilities and draw no unsupported edges.
 
 #### Source mapping and service cards
 
@@ -66,7 +66,7 @@ Use when the page must connect a compact account of sources or transformed needs
 
 For short labels whose shape safe area prevents the intended reading edge, consider a border group with a separate borderless text rect. Measure its actual typography, account for parent-local coordinates and inspect the result. Ordinary structured cards remain suitable when their safe area fits the design; this composition is an option, not a replacement for all rounded nodes.
 
-This recipe expresses an aggregate mapping, not a runtime call. Use group endpoints when the source supports a collective relation. No standalone source/service JSON is installed; keep this composition distinct from the runtime transfers in [order-event pipeline](../examples/complete/order-event-pipeline.md).
+This recipe expresses an aggregate mapping, not a runtime call. Use group endpoints when the source supports a collective relation. No standalone source/service JSON is installed; keep this composition distinct from the runtime transfers in [order-event pipeline](../examples/complete-order-event-pipeline.md).
 
 #### Layered architecture and sidebar
 
@@ -78,7 +78,7 @@ Use for comparing layers with repeated columns and governance or explanatory not
 
 Choose column widths from content and display width. Apply the [spacing system](#spacing-and-spatial-hierarchy) to heading areas, padding and channels. Recompute affected layers when widths, labels or sidebar content change. Preserve layer order without inventing call timing.
 
-Design starting point: [SDK architecture](../examples/complete/project-architecture.md). Its nested responsibility groups and persistent dependencies are sourced at the recorded commit. A governance sidebar is a separate composition option; it is not part of that source diagram.
+Design starting point: [SDK architecture](../examples/complete-project-architecture.md). Its nested responsibility groups and persistent dependencies are sourced at the recorded commit. A governance sidebar is a separate composition option; it is not part of that source diagram.
 
 #### Process with branches and returns
 
@@ -90,7 +90,7 @@ Use for a source-supported process with conditional branches or a return path. S
 
 Choose forward and return paths using [connection design](#connections-and-relationship-labels). Adjust ports and channels together if a stage moves. A return does not imply a retry count, delay or guarantee of success. The static recipe can also organize key paused states in an animated explanation.
 
-Study [task lifecycle](../examples/complete/job-lifecycle.md) for event triggers, return routing and terminal states. Its independent task cases are not a generic approval process or a three-total-attempt policy. Use [basic shapes](../examples/capabilities/basic-shapes.md) for labelled decision branches.
+Study [task lifecycle](../examples/complete-job-lifecycle.md) for event triggers, return routing and terminal states. Its independent task cases are not a generic approval process or a three-total-attempt policy. Use [basic shapes](../examples/capabilities-basic-shapes.md) for labelled decision branches.
 
 #### Repeated cards and longer content
 
@@ -102,7 +102,7 @@ After [content placement](delivery-contexts.md#content-placement) assigns necess
 
 Use numbered lists for sequences and bullets for parallel points. Keep tags short, near their content and less prominent than titles. Equal heights are a comparison choice, not a reason to shrink text, remove facts or enforce a fixed height-difference threshold.
 
-Study [RAG workflow](../examples/complete/rag-workflow.md) for titles, explanatory text, list blocks and native tags across content replacements. Its stages have actual teaching transfers; a horizontal comparison of unrelated objects need not have edges.
+Study [RAG workflow](../examples/complete-rag-workflow.md) for titles, explanatory text, list blocks and native tags across content replacements. Its stages have actual teaching transfers; a horizontal comparison of unrelated objects need not have edges.
 
 #### Parameter choices and scale
 

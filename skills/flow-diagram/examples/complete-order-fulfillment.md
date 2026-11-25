@@ -1,8 +1,8 @@
 # E-commerce order: From checkout to delivery
 
-[Diagram JSON](order-fulfillment.json) · [Example index](../README.md)
+[Diagram JSON](complete-order-fulfillment.json) · [Example index](README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** How does an order move from submission to delivery, and where can it stop early?
 

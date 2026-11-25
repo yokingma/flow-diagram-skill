@@ -1,8 +1,8 @@
 # Background task lifecycle
 
-[Diagram JSON](job-lifecycle.json) · [Example index](README.md)
+[Diagram JSON](complete-job-lifecycle.json) · [Example index](complete-README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** Which events change the current task state?
 
@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 868 × 416 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/job-lifecycle.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/job-lifecycle.ts). See [source metadata](../../resources/teaching-sources.json).
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/job-lifecycle.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/job-lifecycle.ts). See [source metadata](../resources/teaching-sources.json).

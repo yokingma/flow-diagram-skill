@@ -258,7 +258,7 @@ GIF 需要 Chrome/Chromium。可以指定尺寸、帧率和时间区间，限制
 
 ```sh
 node "<skill-directory>/scripts/flowsvg.mjs" doctor
-node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --name project-architecture --theme dark --output ".diagrams/.work/project-architecture/<task-id>/history" --browser none
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete-project-architecture.json" --name project-architecture --theme dark --output ".diagrams/.work/project-architecture/<task-id>/history" --browser none
 node "<skill-directory>/scripts/flowsvg.mjs" finalize --workspace ".diagrams/.work/project-architecture/<task-id>" --name project-architecture
 ```
 

@@ -1,8 +1,8 @@
 # FlowSVG: SDK architecture
 
-[Diagram JSON](project-architecture.json) · [Example index](README.md)
+[Diagram JSON](complete-project-architecture.json) · [Example index](complete-README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** Which layer owns each FlowSVG responsibility?
 
@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 1080 × 736 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/project-architecture.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/project-architecture.ts). See [source metadata](../../resources/teaching-sources.json).
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/project-architecture.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/project-architecture.ts). See [source metadata](../resources/teaching-sources.json).

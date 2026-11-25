@@ -34,7 +34,7 @@ These four kinds accept plain `label` only and reject structured `content`, incl
 
 Complete-draft measurement includes the initial label and every `updateNode.value.label` replacement for these kinds. Empty or omitted initial text still reserves contour clearance. Width diagnostics remain actionable after increasing height: widen the node or obtain authorization for a text change. Visible overflowing text is clipped rather than shrunk. Existing ordinary-label whole-word wrapping does not describe these presets, which may split overwide words between complete graphemes.
 
-For runnable preset shapes, use [basic-shapes.json](../examples/capabilities/basic-shapes.json) and its [note](../examples/capabilities/basic-shapes.md). For a full workflow, study [RAG](../examples/complete/rag-workflow.md). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all label/content versions and inspect playback and requested images separately.
+For runnable preset shapes, use [basic-shapes.json](../examples/capabilities-basic-shapes.json) and its [note](../examples/capabilities-basic-shapes.md). For a full workflow, study [RAG](../examples/complete-rag-workflow.md). `layout` accepts static drafts only; establish geometry before adding scenes, then measure all label/content versions and inspect playback and requested images separately.
 
 
 ## Node content and measurement
@@ -50,7 +50,7 @@ Structured content is supported by `rect`, `roundedRect` and `cylinder`. It repl
 
 Title/paragraph text is a string or ordered array of `{text, style?}` spans. Text style supports positive `fontSize`, integer `fontWeight` from 100–900 and hexadecimal `color`; block styles also support `align: "left"|"center"|"right"`. A list item can contain `body`, `auxiliary`, `status`, `tags: [{text, style?}]`. Items can override `style`, `auxiliaryStyle`, `statusStyle`; tag style supports typography, hexadecimal `fill` and `shape: "rounded"|"pill"`. List style also accepts nonnegative `itemGap` and `tagGap`. Content style supports nonnegative `padding` and `blockGap`.
 
-For a runnable static example of styled spans, list fields and local graphs, read [content and layout](../examples/capabilities/content-layout.md).
+For a runnable static example of styled spans, list fields and local graphs, read [content and layout](../examples/capabilities-content-layout.md).
 
 Graph nodes have `id`, `label`, center offsets `x`/`y` relative to the block's top left, and optional `highlighted`. Graph edges use `from`/`to` local IDs and are undirected. This block has fixed height and no independent player hit targets. It is not a nested diagram or a general statistical chart.
 
@@ -60,4 +60,4 @@ Content clips to the shape's safe area and never resizes its node. Measure text 
 
 Use `scenes: []` for a static diagram. Before adding animation actions, read [animation authoring](timeline.md) for the scene/beat schema, inherited state, content replacement and effective timing. Select export times from `compilation.beats` and `totalDurationMs` in the report.
 
-The CLI reports field/reference and derived compilation errors separately. See [diagnosis](diagnostics-and-revisions.md). Complete documents in [the library](../examples/complete/README.md) supply both animation and static reading states from one source; choose the intended stage from the current compilation report.
+The CLI reports field/reference and derived compilation errors separately. See [diagnosis](diagnostics-and-revisions.md). Complete documents in [the library](../examples/complete-README.md) supply both animation and static reading states from one source; choose the intended stage from the current compilation report.

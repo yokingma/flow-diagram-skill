@@ -33,11 +33,11 @@ Selection is complete when a primary type and its applicable guidance are identi
 
 Use for goals, resources, capabilities, responsibilities or functions that the reader needs to survey or compare. Establish the scope, the objects, the basis of grouping or comparison, and any supplied ownership or status. Organize comparable objects as parallel cards or a matrix; name matrix axes and shared capabilities. Distinguish available, proposed and unknown states. An edge requires a source-supported relationship; card order or membership alone supplies no execution order. The overview is ready when the reader can identify the comparison basis, object membership and material status or ownership differences.
 
-For capability cards, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges). The parallel core module cards in [SDK architecture](../examples/complete/project-architecture.md) demonstrate responsibilities without internal execution arrows; the complete architecture also contains explicitly sourced dependencies.
+For capability cards, read [the no-edge recipe](visual-design.md#capability-inventory-without-runtime-edges). The parallel core module cards in [SDK architecture](../examples/complete-project-architecture.md) demonstrate responsibilities without internal execution arrows; the complete architecture also contains explicitly sourced dependencies.
 
 ## Data flow and source mapping
 
-Use when the reader needs to connect sources or inputs to transformations and uses. Establish each source, the mapped or transferred object, the destination, and any supplied transformation. Arrange source and destination regions around labelled mapping channels; distinguish an explanatory mapping from runtime data transfer. The diagram is ready when each important channel identifies what crosses it and how the destination uses or changes it. Read [source/service composition](visual-design.md#source-mapping-and-service-cards) or [staged data processing](#staged-data-processing). The [order pipeline](../examples/complete/order-event-pipeline.md) demonstrates actual teaching transfers, not aggregate source/service mapping.
+Use when the reader needs to connect sources or inputs to transformations and uses. Establish each source, the mapped or transferred object, the destination, and any supplied transformation. Arrange source and destination regions around labelled mapping channels; distinguish an explanatory mapping from runtime data transfer. The diagram is ready when each important channel identifies what crosses it and how the destination uses or changes it. Read [source/service composition](visual-design.md#source-mapping-and-service-cards) or [staged data processing](#staged-data-processing). The [order pipeline](../examples/complete-order-event-pipeline.md) demonstrates actual teaching transfers, not aggregate source/service mapping.
 
 ## Relationship scope and endpoints
 
@@ -70,7 +70,7 @@ These invented cases illustrate the decision; they supply no facts about a user'
 
 Use for business or logic flows whose main question concerns work steps and outcomes. Establish the entry, step order, source-supported branches, their conditions and destinations, and the supplied outcomes. Arrange a main reading direction with distinct branch and return paths. The flow is ready when the reader can trace each important path from its entry or condition to its stated outcome; preserve unspecified continuation as unknown. Use [the process recipe](visual-design.md#process-with-branches-and-returns) for geometry.
 
-For source-supported conditions, use a decision node and name each outgoing condition; a shape alone does not define the rule. [Basic shapes](../examples/capabilities/basic-shapes.md) demonstrates input/output, decision, defined subprocess and report shapes with ordinary labels. Its branches teach shape use, not a real approval policy. [Task lifecycle](../examples/complete/job-lifecycle.md) gives a full event-driven state explanation; do not replace a decision process with state transitions unless the source supports that meaning. Follow [preset labels](document-model.md#preset-labels) before authoring.
+For source-supported conditions, use a decision node and name each outgoing condition; a shape alone does not define the rule. [Basic shapes](../examples/capabilities-basic-shapes.md) demonstrates input/output, decision, defined subprocess and report shapes with ordinary labels. Its branches teach shape use, not a real approval policy. [Task lifecycle](../examples/complete-job-lifecycle.md) gives a full event-driven state explanation; do not replace a decision process with state transitions unless the source supports that meaning. Follow [preset labels](document-model.md#preset-labels) before authoring.
 
 ## Request and response
 
@@ -79,7 +79,7 @@ Use this pattern when the reader must distinguish an initiating request from its
 - **Required input:** requester, receiver, request direction and payload, response direction and result. Ask whether failures or unsolicited events belong in scope. Keep an unspecified failure unknown.
 - **Common misrepresentation:** a single forward arrow labelled “request/response” hides the return direction. A reverse flow marker does not reverse the edge's arrow; use distinct directed edges when both relations must remain readable while paused.
 - **Static frame:** select the state that matches the explanation. An overview establishes the request and response directions; a static image alone does not establish that either transfer occurred. For the cache-aside example, check that the final overview retains all seven numbered messages, including the API-to-client response and its order result. For other sources, verify the supplied response direction and result; require content changes only when the source defines them.
-- **Runnable JSON:** [cache-aside-sequence.json](../examples/complete/cache-aside-sequence.json). A cache miss leads to database retrieval, cache population and a response through seven ordered messages. The [note](../examples/complete/cache-aside-sequence.md) explains its static overview and unknown cache-hit/error behavior.
+- **Runnable JSON:** [cache-aside-sequence.json](../examples/complete-cache-aside-sequence.json). A cache miss leads to database retrieval, cache population and a response through seven ordered messages. The [note](../examples/complete-cache-aside-sequence.md) explains its static overview and unknown cache-hit/error behavior.
 
 ## Retry and state transition
 
@@ -88,7 +88,7 @@ Use this pattern when a reader needs to understand an object's states and the co
 - **Required input:** states, transition direction, triggering conditions, attempt counting convention, retry limit, success exit, exhausted exit, and any stated delay or cancellation. If a limit or delay is absent, label it unknown rather than inventing it.
 - **Common misrepresentation:** an unlabelled loop implies endless retry; “3 retries” and “3 total attempts” have different limits. An animated arrow does not execute a retry policy or prove that a runtime can reach a state.
 - **Static frame:** show the relevant outgoing conditions and terminal states together. A failure-only crop that hides the success branch needs an explicit narrower scope. For an animated instance, pair its selected state with the policy overview if one image cannot explain both.
-- **Runnable JSON:** [job-lifecycle.json](../examples/complete/job-lifecycle.json). Task A succeeds after retry, independent B exhausts its example limit, and independent C is cancelled while queued. Read its [note](../examples/complete/job-lifecycle.md). Do not apply an unrelated three-total-attempt policy to these distinct teaching cases.
+- **Runnable JSON:** [job-lifecycle.json](../examples/complete-job-lifecycle.json). Task A succeeds after retry, independent B exhausts its example limit, and independent C is cancelled while queued. Read its [note](../examples/complete-job-lifecycle.md). Do not apply an unrelated three-total-attempt policy to these distinct teaching cases.
 
 ## Fan-in and bottleneck
 
@@ -106,7 +106,7 @@ Use this pattern when the reader needs to follow how an input becomes a differen
 - **Required input:** stage order, input and output at each boundary, transformation, and any supplied branch or error destination. Keep control dependencies distinct from transferred data.
 - **Common misrepresentation:** stage names alone conceal the changing data; ordering drawn as a guarantee of success; missing error destinations silently filled with a reject store or retry path.
 - **Static frame:** show adjacent stage inputs and outputs together. An intermediate-state export must identify which transformation has happened; a moving marker alone is insufficient explanation.
-- **Runnable JSON:** [order-event-pipeline.json](../examples/complete/order-event-pipeline.json). Four fictional inputs become two valid orders worth CNY 200, one discarded duplicate and one quarantined invalid record. The [note](../examples/complete/order-event-pipeline.md) identifies the complete static result. This replaces the earlier raw-record/date-count illustration with a different, explicitly sourced dataset.
+- **Runnable JSON:** [order-event-pipeline.json](../examples/complete-order-event-pipeline.json). Four fictional inputs become two valid orders worth CNY 200, one discarded duplicate and one quarantined invalid record. The [note](../examples/complete-order-event-pipeline.md) identifies the complete static result. This replaces the earlier raw-record/date-count illustration with a different, explicitly sourced dataset.
 
 ## System architecture with boundaries
 
@@ -115,7 +115,7 @@ Use this pattern when ownership or another explicitly named boundary determines 
 - **Required input:** components, boundary meaning, component membership, external participants and cross-boundary relationship direction. Distinguish logical ownership, deployment location and trust boundary; use the meaning actually supplied.
 - **Common misrepresentation:** a group interpreted as a host, network or security boundary without evidence; proximity mistaken for membership; a database arrow interpreted as a response or replication relation.
 - **Static frame:** include the boundary heading, contained components and necessary external endpoints. A focus on the API alone omits ownership context. Check crossing arrows and titles at the intended display size.
-- **Inline teaching case:** a client submits an order to an API inside a logical order-service group, and the API writes to storage in that group. This establishes membership and two directed relations, not hosts, replicas, trust or return traffic. [SDK architecture](../examples/complete/project-architecture.md) demonstrates responsibility/dependency boundaries; [web deployment](../examples/complete/web-service-deployment.md) separately demonstrates explicit runtime locations and replicas.
+- **Inline teaching case:** a client submits an order to an API inside a logical order-service group, and the API writes to storage in that group. This establishes membership and two directed relations, not hosts, replicas, trust or return traffic. [SDK architecture](../examples/complete-project-architecture.md) demonstrates responsibility/dependency boundaries; [web deployment](../examples/complete-web-service-deployment.md) separately demonstrates explicit runtime locations and replicas.
 
 ## Layered architecture with teaching boundaries
 
@@ -124,14 +124,14 @@ Use this teaching pattern when a reader needs to compare layers, several columns
 - **Required input:** layer names and their intended reading relationship, the objects in each column, explicit cross-layer relation directions, heading space, and the meaning of any governance annotation. Choose [relationship scope and endpoints](#relationship-scope-and-endpoints) before placing cross-layer edges. Keep the layer order separate from execution order.
 - **Common misrepresentation:** a top-to-bottom layer order is read as call timing; a group is read as a deployment, network or trust boundary; a governance edge is read as an undeclared runtime dependency. Use labels such as “非调用依赖” when the relation is explanatory only.
 - **Static frame:** leave heading space inside each group, keep columns on a shared row, and route labelled edges through the gaps between groups. Measure structured content at the document's actual typography before increasing heights. Choose row heights, column gaps and label clearance for the actual content and display width; these are not general SDK layout parameters.
-- **Runnable JSON:** [project-architecture.json](../examples/complete/project-architecture.json). The upstream SDK architecture separates platform-independent core, browser integration, Node tools and external showcase consumers. Topic highlights keep all geometry and dependencies visible. Arrows point from consumers to providers, not from an earlier execution stage to a later stage. Use its [source note](../examples/complete/project-architecture.md) for the actual boundaries. The fictional layered/governance teaching setup above remains an inline method example, not the facts of this SDK diagram.
+- **Runnable JSON:** [project-architecture.json](../examples/complete-project-architecture.json). The upstream SDK architecture separates platform-independent core, browser integration, Node tools and external showcase consumers. Topic highlights keep all geometry and dependencies visible. Arrows point from consumers to providers, not from an earlier execution stage to a later stage. Use its [source note](../examples/complete-project-architecture.md) for the actual boundaries. The fictional layered/governance teaching setup above remains an inline method example, not the facts of this SDK diagram.
 
 ## Run the installed examples
 
 Read the [example index](../examples/README.md#run-and-inspect) for absolute installed paths, task workspaces, dark presentation defaults, static-stage selection and viewing limits. The library has six complete upstream stories and four focused capability examples; additional content and scene-state methods reuse the complete sources.
 
 ```text
-node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete/project-architecture.json" --theme dark --sources "<skill-directory>/resources/teaching-sources.json" --name project-architecture --svg --time 0 --output "<task-workspace>/history"
+node "<skill-directory>/scripts/flowsvg.mjs" author --input "<skill-directory>/examples/complete-project-architecture.json" --theme dark --sources "<skill-directory>/resources/teaching-sources.json" --name project-architecture --svg --time 0 --output "<task-workspace>/history"
 node "<skill-directory>/scripts/flowsvg.mjs" measure --input "<skill-directory>/resources/content-measurement.json"
 ```
 

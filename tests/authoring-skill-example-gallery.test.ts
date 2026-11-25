@@ -29,14 +29,11 @@ beforeEach(async () => {
   await Promise.all([
     rm(join(root, "skills/flow-diagram/examples"), { recursive: true })
   ]);
+  await mkdir(join(root, "skills/flow-diagram/examples"), { recursive: true });
   await Promise.all([
-    mkdir(join(root, "skills/flow-diagram/examples/complete"), { recursive: true }),
-    mkdir(join(root, "skills/flow-diagram/examples/capabilities"), { recursive: true })
-  ]);
-  await Promise.all([
-    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.json"), JSON.stringify(DOCUMENT_DRAFT)),
-    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.md"), "# Selected note\n"),
-    writeFile(join(root, "skills/flow-diagram/examples/capabilities/exercise.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Capability exercise" }))
+    writeFile(join(root, "skills/flow-diagram/examples/complete-selected.json"), JSON.stringify(DOCUMENT_DRAFT)),
+    writeFile(join(root, "skills/flow-diagram/examples/complete-selected.md"), "# Selected note\n"),
+    writeFile(join(root, "skills/flow-diagram/examples/capabilities-exercise.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Capability exercise" }))
   ]);
 });
 
@@ -54,8 +51,8 @@ function preview() {
   });
 }
 
-test("builds a portable gallery with separate complete and capability sources without changing inputs", async () => {
-  const source = join(root, "skills/flow-diagram/examples/complete/selected.json");
+test("builds a portable gallery from flat category-prefixed sources without changing inputs", async () => {
+  const source = join(root, "skills/flow-diagram/examples/complete-selected.json");
   const original = await readFile(source, "utf8");
   const result = await preview();
   expect(result.code, result.stderr + result.stdout).toBe(0);
@@ -66,11 +63,13 @@ test("builds a portable gallery with separate complete and capability sources wi
   expect(html).toContain("A &lt; B &amp; C");
   expect(html).toContain('src="complete/selected/current/diagram.html"');
   expect(html).toContain('src="capabilities/exercise/current/diagram.html"');
-  expect(html).toContain("../../skills/flow-diagram/examples/complete/selected.md");
+  expect(html).toContain("../../skills/flow-diagram/examples/complete-selected.md");
   const player = await readFile(join(root, "examples/.preview/complete/selected/current/diagram.html"), "utf8");
   expect(player).toContain("flowsvg-data");
   expect(await readFile(source, "utf8")).toBe(original);
-  expect((await readdir(join(root, "skills/flow-diagram/examples/complete"))).sort()).toEqual(["selected.json", "selected.md"]);
+  expect((await readdir(join(root, "skills/flow-diagram/examples"))).sort()).toEqual([
+    "capabilities-exercise.json", "complete-selected.json", "complete-selected.md"
+  ]);
 }, 60_000);
 
 test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps the embedded diagram and playback controls visible without vertical player scrolling", async () => {
@@ -99,8 +98,8 @@ test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps the embedded diagram and p
 test("rebuilds current bytes and removes deleted examples instead of accumulating previews", async () => {
   expect((await preview()).code).toBe(0);
   await Promise.all([
-    writeFile(join(root, "skills/flow-diagram/examples/complete/selected.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Changed title" })),
-    rm(join(root, "skills/flow-diagram/examples/capabilities/exercise.json"))
+    writeFile(join(root, "skills/flow-diagram/examples/complete-selected.json"), JSON.stringify({ ...DOCUMENT_DRAFT, title: "Changed title" })),
+    rm(join(root, "skills/flow-diagram/examples/capabilities-exercise.json"))
   ]);
   const result = await preview();
   expect(result.code, result.stderr + result.stdout).toBe(0);
@@ -115,7 +114,7 @@ test("rebuilds current bytes and removes deleted examples instead of accumulatin
 
 test("reports invalid input and leaves no stale successful index after a failed rebuild", async () => {
   expect((await preview()).code).toBe(0);
-  const source = join(root, "skills/flow-diagram/examples/complete/selected.json");
+  const source = join(root, "skills/flow-diagram/examples/complete-selected.json");
   await writeFile(source, "{");
   const result = await preview();
   expect(result.code).not.toBe(0);
@@ -125,8 +124,8 @@ test("reports invalid input and leaves no stale successful index after a failed 
 }, 60_000);
 
 test.skipIf(!process.env.FLOWSVG_TEST_BROWSER)("keeps a real sequence caption and controls inside the narrow gallery player", async () => {
-  await cp(resolve("skills/flow-diagram/examples/complete/cache-aside-sequence.json"),
-    join(root, "skills/flow-diagram/examples/complete/selected.json"));
+  await cp(resolve("skills/flow-diagram/examples/complete-cache-aside-sequence.json"),
+    join(root, "skills/flow-diagram/examples/complete-selected.json"));
   const result = await preview();
   expect(result.code, result.stderr + result.stdout).toBe(0);
   const browser = await chromium.launch({ executablePath: process.env.FLOWSVG_TEST_BROWSER, headless: true });

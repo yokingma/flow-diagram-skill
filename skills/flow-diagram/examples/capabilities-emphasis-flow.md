@@ -1,8 +1,8 @@
 # Emphasis colors and flow highlighting
 
-[Diagram JSON](emphasis-flow.json) · [Example index](README.md)
+[Diagram JSON](capabilities-emphasis-flow.json) · [Example index](capabilities-README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** How do palette and automatic flow highlights interact?
 
@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 920 × 420 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/emphasis-flow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/emphasis-flow.ts). See [source metadata](../../resources/teaching-sources.json).
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/emphasis-flow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/emphasis-flow.ts). See [source metadata](../resources/teaching-sources.json).

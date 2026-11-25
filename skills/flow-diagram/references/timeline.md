@@ -1,6 +1,6 @@
 # Animation authoring
 
-Use animation when order, transfer or state change explains the user's material. Keep architecture and deployment static when the whole structure is the main message. Animation does not supply missing business facts. [Cache-aside sequence](../examples/complete/cache-aside-sequence.md) demonstrates ordered communication; [task lifecycle](../examples/complete/job-lifecycle.md) demonstrates distinct outcomes and persistent state.
+Use animation when order, transfer or state change explains the user's material. Keep architecture and deployment static when the whole structure is the main message. Animation does not supply missing business facts. [Cache-aside sequence](../examples/complete-cache-aside-sequence.md) demonstrates ordered communication; [task lifecycle](../examples/complete-job-lifecycle.md) demonstrates distinct outcomes and persistent state.
 
 This reference carries the SDK timeline rules needed by the installed skill, plus authoring and report checks. Keep these rules aligned with the pinned SDK baseline in `runtime/manifest.json`; the installed skill must remain usable without this repository.
 
@@ -12,7 +12,7 @@ This reference carries the SDK timeline rules needed by the installed skill, plu
 | Guide the speaker's attention | Keep context visible; use local emphasis | Emphasis identifies a topic without asserting a transfer or business state |
 | Explain order or changing state | Reveal or update objects when the source supports that sequence | Conditions, identity, continuity and reading time |
 
-For “flowing lines,” keep context visible unless staged disclosure serves the explanation. [emphasis-flow.json](../examples/capabilities/emphasis-flow.json) compares three highlighting policies and plays distinct transfers together. Read its [note](../examples/capabilities/emphasis-flow.md) for source and display conditions. Inspect compiled boundaries, simultaneous motion and paused states; flow repetition does not establish throughput or a player loop.
+For “flowing lines,” keep context visible unless staged disclosure serves the explanation. [emphasis-flow.json](../examples/capabilities-emphasis-flow.json) compares three highlighting policies and plays distinct transfers together. Read its [note](../examples/capabilities-emphasis-flow.md) for source and display conditions. Inspect compiled boundaries, simultaneous motion and paused states; flow repetition does not establish throughput or a player loop.
 
 ## Scenes and inherited state
 
@@ -32,7 +32,7 @@ Actions use the following objects:
 
 `updateNode.value.content` replaces the complete structured content at beat start. Text does not interpolate. `value.label` switches to simple-label mode; `value.content` switches to structured content. `content: null` clears content. Choose one label/content mode per node in a beat and avoid competing assignments to that node's fields. Size the node for every content version with the measurement command before layout; replacement does not resize the node. See [the content model](document-model.md#node-content-and-measurement).
 
-For a runnable hide/show, camera and edge-update sequence, read [visibility and camera](../examples/capabilities/visibility-camera.md). Its final state explicitly restores the baseline; backward seeking reconstructs earlier states.
+For a runnable hide/show, camera and edge-update sequence, read [visibility and camera](../examples/capabilities-visibility-camera.md). Its final state explicitly restores the baseline; backward seeking reconstructs earlier states.
 
 ## Transfer and emphasis
 

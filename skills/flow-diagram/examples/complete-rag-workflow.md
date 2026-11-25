@@ -1,8 +1,8 @@
 # RAG: From sources to answers
 
-[Diagram JSON](rag-workflow.json) · [Example index](README.md)
+[Diagram JSON](complete-rag-workflow.json) · [Example index](complete-README.md)
 
-Before running or exporting, read the [shared execution and viewing conditions](../README.md#run-and-inspect).
+Before running or exporting, read the [shared execution and viewing conditions](README.md#run-and-inspect).
 
 **Reader's question:** How do sources become a cited answer?
 
@@ -16,4 +16,4 @@ Before running or exporting, read the [shared execution and viewing conditions](
 
 **Canvas:** 1120 × 789 diagram units.
 
-**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/rag-workflow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/rag-workflow.ts). See [source metadata](../../resources/teaching-sources.json).
+**Attribution:** FlowSVG, MIT, Copyright (c) 2026 zac_ma. Source: [packages/showcase/src/examples/rag-workflow.ts](https://github.com/yokingma/FlowSVG/blob/2eda6e4172ad8c3c1383290e107b53bf0ea0c985/packages/showcase/src/examples/rag-workflow.ts). See [source metadata](../resources/teaching-sources.json).

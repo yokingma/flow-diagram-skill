@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 const runFile = promisify(execFile);
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const OUTPUT = join(ROOT, "examples/.preview");
+const EXAMPLES = join(ROOT, "skills/flow-diagram/examples");
 const CLI = join(ROOT, "skills/flow-diagram/scripts/flowsvg.mjs");
 // Reserve room for wrapped controls and multi-line captions at the minimum iframe width.
 const CONTROL_SPACE_PX = 240;
@@ -16,12 +17,12 @@ const GROUPS = [
   {
     id: "complete", title: "Complete examples",
     description: "Full compositions and animations. Read each note for its question, source, static reading stage and animation.",
-    directory: join(ROOT, "skills/flow-diagram/examples/complete")
+    prefix: "complete-"
   },
   {
     id: "capabilities", title: "SDK capabilities",
     description: "Focused public-SDK examples. Use complete examples for full compositions.",
-    directory: join(ROOT, "skills/flow-diagram/examples/capabilities")
+    prefix: "capabilities-"
   }
 ];
 
@@ -36,8 +37,8 @@ function localUrl(path) {
 }
 
 async function renderExample(group, entry) {
-  const name = entry.name.slice(0, -".json".length);
-  const source = join(group.directory, entry.name);
+  const name = entry.name.slice(group.prefix.length, -".json".length);
+  const source = join(EXAMPLES, entry.name);
   const destination = join(OUTPUT, group.id);
   try {
     const { stdout } = await runFile(process.execPath, [
@@ -50,7 +51,7 @@ async function renderExample(group, entry) {
   }
   const current = join(destination, name, "current");
   const document = JSON.parse(await readFile(join(current, "diagram.json"), "utf8"));
-  const note = join(group.directory, `${name}.md`);
+  const note = join(EXAMPLES, `${group.prefix}${name}.md`);
   const hasNote = await access(note).then(() => true, (error) => {
     if (error.code === "ENOENT") return false;
     throw error;
@@ -76,8 +77,8 @@ function renderCard(group, example) {
 }
 
 async function renderGroup(group) {
-  const entries = (await readdir(group.directory, { withFileTypes: true }))
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+  const entries = (await readdir(EXAMPLES, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.startsWith(group.prefix) && entry.name.endsWith(".json"))
     .sort((first, second) => first.name.localeCompare(second.name, "en"));
   const examples = await Promise.all(entries.map((entry) => renderExample(group, entry)));
   return `<section id="${group.id}"><h2>${group.title} <span class="count">${examples.length}</span></h2>
