@@ -2,15 +2,15 @@
 
 ## Unreleased
 
-- Add tag-driven GitHub releases for the generic Skill installation unit. Validate the stable tag, main ancestry, distribution version and committed bilingual release notes; gate packaging and publication on the existing regression and consumer checks. Package committed installation bytes, verify the final ZIP checksum and extracted files, and run the extracted CLI's doctor/author/finalize sequence before publishing. Upload the ZIP and checksum, publish committed notes with a comparison link, and leave existing Releases unchanged. Keep WorkBuddy publication independent.
+## 0.2.1 — 2026-11-25
 
-- Build WorkBuddy packages from a single snapshot of current working-tree inputs without requiring a commit. Include tracked and non-ignored new installation files, omit deleted files, and retain regular-file, depth, link, name and version checks. Record the Git baseline, relevant uncommitted changes, per-input and per-artifact SHA-256 values, and an aggregate input digest in the manifest. Keep Git state untouched, reject output directories inside the installation source, enforce the platform's three-example limit per language, and retain only the first two Chinese and English market examples.
+- Add tag-driven GitHub releases with committed bilingual notes, regression and consumer gates, a generic Skill ZIP, SHA-256 checksums and extracted-install verification. Add a repository-only release Skill for preparation and explicitly authorized publication; keep WorkBuddy publication independent.
+- Flatten installed examples into `examples/complete-*` and `examples/capabilities-*`, preserving all eleven diagram JSON files byte for byte. Update references, bilingual guides, source scopes, preview selection and copied-install tests.
+- Build WorkBuddy packages from one snapshot of current working-tree inputs without requiring a commit. Validate source depth, links, file kinds, Skill name, version and per-language example limits; record the Git baseline, relevant uncommitted changes and input/artifact SHA-256 values. Add platform metadata and reference directives only to the release copy.
+- Clarify independent Skill triggers for resuming, validation, diagnosis, exports and project preferences. Refresh bilingual READMEs with a project logo and attributed Skill-authored static examples.
+- Retain the exact `flowsvg@0.4.2` runtime baseline and Node.js 20+ requirement.
 
-- Flatten the installed example source layout into `examples/complete-*` and `examples/capabilities-*`, preserving all eleven diagram JSON files byte for byte. Update installed references, commands, source scopes, bilingual guides and copied-install tests. Select gallery groups by filename prefix while retaining existing preview locations. Remove release-time path and resource rewriting; copy source paths and bytes directly and reject nested source directories before output creation. Replace transformation tests with byte-preservation and depth-rejection coverage; gallery behavior tests fail first against the previous directory scanner.
-
-- Fix WorkBuddy directory-depth rejection by flattening nested example categories into prefixed filenames in the release copy. Rewrite relative Markdown links, installed example command paths and teaching-source scopes, preserve diagram JSON bytes, reject filename collisions, and record each original `sourcePath` in the manifest. Add regression coverage for executable paths, provenance and collision failure.
-
-- Harden WorkBuddy packaging so release inputs match committed files; validate the selected semantic version, keep it authoritative, bind the Skill name to its install directory, reject symlinks and non-regular install files, package only files from `HEAD`, record the packager digest, and add punctuation-safe WorkBuddy `@references/` directives to the generated Skill copy while preserving source links. Add release-packager regression coverage and document the current platform reference syntax.
+## 0.2.0 — 2026-11-24
 
 - Add the AI-assisted, Skill-authored order-fulfillment example to the installed complete-example library. Record hy4 flash and the Flow Diagram Skill as its source workflow, pin the installed JSON digest, include it in the copied-install and gallery checks, and describe upstream and local source kinds accurately.
 

@@ -75,6 +75,8 @@ flow-diagram/
 
 ## 4. 发布到 GitHub
 
+可让 Agent 使用仓库内的 [github-release Skill](../.agents/skills/github-release/SKILL.md)，按本文准备版本、撰写中英文说明并跟进发布。请求“使用 github-release 准备 vX.Y.Z”交付候选供审阅；请求“使用 github-release 发布 vX.Y.Z”按本次发布授权执行提交、main 同步、标签推送和结果核对。将 `X.Y.Z` 替换为实际版本。宿主可使用自己的技能调用语法，也可直接读取该文件；未明确要求发布时只准备候选。
+
 ### 自动发布流程
 
 [发布工作流](../.github/workflows/release.yml)按以下规则执行，并复用现有回归和消费者验收工作流。配置存在不等于某个版本已经执行或发布成功；正式发布后查看对应 Actions 运行和公开下载结果。
