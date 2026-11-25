@@ -133,6 +133,8 @@ For documentation changes, check local paths and Markdown anchors from both root
 
 ## CI and platform evidence
 
+Formal `vX.Y.Z` tag pushes use the [release workflow](../../.github/workflows/release.yml): validate the tag/version and committed bilingual notes, call the existing acceptance workflow, then build and verify the generic Skill ZIP before publishing. Only the final publishing job has repository write permission. PR/branch checks retain their current scope; tag checks run through the release workflow. See the [release procedure](../releasing.md#4-发布到-github) for preparation, artifacts and failure handling. WorkBuddy remains an independent release process.
+
 [The workflow](../../.github/workflows/authoring-skill.yml) runs on Ubuntu with Node 20 and 22. Node 20 retains a real Node 18 executable for rejection checks, prepares Chrome at the runner level, runs every regression discovered under `tests/`, and exercises the external installed-CLI consumer gate. Node 22 runs a focused installed-CLI smoke. Changes to installation resources, tests/fixtures, guides, scripts, root configurations/locks, maintenance records, and workflows trigger these checks. JSON evidence is uploaded even when a gate fails. Other operating systems are not covered by this CI workflow.
 
 Use CI results for the exact candidate when claiming verified platforms. A configured matrix or a local pass does not establish results for other platforms, runtimes, or later commits. Record failures, skips, and incomplete gates in the pull request and release notes.

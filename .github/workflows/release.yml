@@ -1,0 +1,98 @@
+name: Publish generic Skill release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skill-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.ref_name }}
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Validate stable tag, main ancestry, version and release notes
+        run: node scripts/package-github-skill.mjs --tag "$RELEASE_TAG" --check
+
+  acceptance:
+    needs: preflight
+    uses: ./.github/workflows/authoring-skill.yml
+
+  package:
+    needs: acceptance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Package the committed generic installation
+        run: node scripts/package-github-skill.mjs --tag "$RELEASE_TAG" --output "$RUNNER_TEMP/skill-release"
+      - name: Verify ZIP bytes and exercise the extracted installation
+        run: node scripts/verify-github-package.mjs --tag "$RELEASE_TAG" --directory "$RUNNER_TEMP/skill-release"
+      - uses: actions/upload-artifact@v6
+        with:
+          name: generic-skill-release
+          path: |
+            ${{ runner.temp }}/skill-release/*.zip
+            ${{ runner.temp }}/skill-release/SHA256SUMS
+            ${{ runner.temp }}/skill-release/release-notes.md
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: generic-skill-package-evidence
+          path: ${{ runner.temp }}/skill-release/verification.json
+          if-no-files-found: warn
+
+  publish:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      GH_SERVER_URL: ${{ github.server_url }}
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: generic-skill-release
+          path: release
+      - name: Verify downloaded package checksum
+        working-directory: release
+        run: sha256sum --check SHA256SUMS
+      - name: Create the Release with all assets before making it public
+        shell: bash
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          actual_commit=$(gh api "repos/$GH_REPO/commits/$RELEASE_TAG" --jq '.sha')
+          test "$actual_commit" = "$EXPECTED_COMMIT"
+          previous=$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName --jq '.[0].tagName // empty')
+          if [ -n "$previous" ]; then
+            printf '\n\n**Full Changelog**: %s/%s/compare/%s...%s\n' "$GH_SERVER_URL" "$GH_REPO" "$previous" "$RELEASE_TAG" >> release/release-notes.md
+          else
+            printf '\n\n**Full history**: %s/%s/commits/%s\n' "$GH_SERVER_URL" "$GH_REPO" "$RELEASE_TAG" >> release/release-notes.md
+          fi
+          version="${RELEASE_TAG#v}"
+          gh release create "$RELEASE_TAG" "release/flow-diagram-skill-$version.zip" release/SHA256SUMS \
+            --verify-tag --draft --title "Flow Diagram Skill $RELEASE_TAG" --notes-file release/release-notes.md
+          gh release edit "$RELEASE_TAG" --draft=false

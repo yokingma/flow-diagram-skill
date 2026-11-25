@@ -19,6 +19,8 @@ on:
       - '.gitignore'
       - '.github/workflows/**'
   push:
+    branches:
+      - '**'
     paths:
       - 'skills/**'
       - 'tests/**'
@@ -36,6 +38,7 @@ on:
       - '.gitignore'
       - '.github/workflows/**'
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

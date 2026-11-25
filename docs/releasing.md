@@ -75,8 +75,35 @@ flow-diagram/
 
 ## 4. 发布到 GitHub
 
+### 自动发布流程
+
+[发布工作流](../.github/workflows/release.yml)按以下规则执行，并复用现有回归和消费者验收工作流。配置存在不等于某个版本已经执行或发布成功；正式发布后查看对应 Actions 运行和公开下载结果。
+
+维护者推送 `vX.Y.Z` 正式版本标签即授权公开发布。标签须指向 `main` 历史中的提交，且去掉 `v` 后与该提交的根 `package.json` 版本一致。自动流程先支持正式版本标签。
+
+1. 校验标签、版本和该提交中的 `docs/releases/vX.Y.Z.md`。文件须包含维护者提前撰写的 `## 中文` 和 `## English` 段落，两个段落正文均须非空；缺失时停止发布。格式见[版本说明规范](releases/README.md)。
+2. 对标签提交执行现有 Node 20 完整回归、Node 22 冒烟测试和独立安装消费者验收；所有任务通过后才进入构包。
+3. 从标签提交的 `skills/flow-diagram/` 生成通用 Skill ZIP，包内以 `flow-diagram/` 为根目录，保留完整安装单元的路径和文件内容。生成后解包，按第 3 节验证安装与运行行为，再为最终 ZIP 生成 SHA-256 校验文件。
+4. 校验和验收全部通过后创建公开 GitHub Release，使用已提交的版本说明作为正文，并补充版本间的完整提交对比链接。上传通用 Skill ZIP 和 SHA-256 校验文件；验收记录保留在对应 Actions 运行中。
+
+任一步失败都停止后续公开发布。发布任务先核对远程标签仍指向本次验收提交，再创建草稿并上传附件，全部成功后公开；上传失败可能留下草稿，需维护者检查后处理。已有同标签 Release（含草稿）保持不变，不自动覆盖。只有发布任务获得 `contents: write` 权限；同标签发布串行执行。GitHub 自动提供的整个仓库源码压缩包与通用 Skill 安装包分别展示。WorkBuddy 使用第 5 节的独立发布流程，GitHub 自动发布不生成或上传 WorkBuddy 包。
+
+通用附件名为 `flow-diagram-skill-X.Y.Z.zip`，校验文件为 `SHA256SUMS`。发布说明文件只用于 Release 正文；测试结果和解包验证记录保留在 Actions artifacts，不进入 Skill 包。构包从标签提交读取文件，忽略本地未提交内容；原始 `SKILL.md` 不注入 WorkBuddy 字段。符号链接、子模块和缺失的必需安装文件会阻止构包。解包验证还检查包内路径和文件字节与标签提交完全一致，并执行 `doctor`、浏览器无关的 `author --svg` 和 `finalize`。
+
+准备新版本时，先提交版本号、变更记录和版本说明，再在最终提交上创建标签。现有正式版本使用新版本号继续发布，不移动已发布标签。创建本地标签后，可以先检查并构包；以下命令本身不会推送标签或创建 Release：
+
+```sh
+pnpm release:github --tag vX.Y.Z --check
+pnpm release:github --tag vX.Y.Z
+node scripts/verify-github-package.mjs --tag vX.Y.Z --directory outputs/github-release/X.Y.Z
+```
+
+将 `X.Y.Z` 替换为实际版本。执行时 `HEAD` 须与标签指向同一提交，本地 `origin/main` 须包含该提交，Git 和 `unzip` 须可用；解包运行检查还需要 npm registry 访问。推送前先核对远程地址，再刷新 `origin/main`。只有维护者决定正式发布后，才推送该标签。
+
+### 发布前后检查
+
 1. 确认候选提交、验收记录、变更说明和已知限制已经审阅。
-2. 按项目约定创建 `v<Skill 分发版本>` 标签，确认标签指向完成验收的最终候选提交，再创建 GitHub Release。Release notes 写明安装目录、Node/npm 要求、SDK 基线、主要变化、已验证环境、未完成检查和证据链接。
+2. 按项目约定创建 `v<Skill 分发版本>` 标签，确认标签指向完成验收的最终候选提交。推送标签触发上述自动流程；Release notes 写明安装目录、Node/npm 要求、SDK 基线、主要变化、已验证环境、未完成检查和证据链接。
 3. 只有经过同样验收的独立压缩包才能作为 Release 附件，并记录其校验值。
 4. 发布后在退出登录的浏览器中检查公开仓库、标签、Release 页面和下载链接。用干净项目重演 README 中的安装命令，确认默认分支或标签包含预期安装单元。
 5. 发布状态确认后，核对 README、用户指南、维护指南和 CHANGELOG 中的版本、标签和下载说明与正式发布一致；后续修订不得覆盖已发布记录。

@@ -2,6 +2,10 @@
 
 ## Installation unit and repository tools
 
+GitHub release inputs come from the exact stable tag commit, with matching HEAD, `origin/main` ancestry, root distribution version and committed bilingual release notes. The generic archive preserves the installation unit under `flow-diagram/`; local edits and WorkBuddy metadata adaptation do not enter this archive. Tag publication requires the existing regression/consumer gates, extracted-package verification and a ZIP checksum. Release notes and checksums remain repository release artifacts, outside the installation unit.
+
+The release workflow calls the existing acceptance workflow after preflight. Packaging runs with read permission, uses Git's ZIP archiver and checks extracted membership and every file against the tag before running the extracted CLI outside the repository. Publishing downloads only the verified artifacts, rechecks the ZIP digest and remote tag commit, creates a draft with its assets, then makes it public. Same-tag runs are serialized. Existing Releases, including drafts left by a failed upload, are never replaced automatically.
+
 `skills/flow-diagram/` is the complete distributable Skill. Installed instructions, references, examples, metadata, scripts, and runtime resources resolve within that directory. Repository-level development tests, acceptance tools, and human guides belong outside the installation unit.
 
 WorkBuddy release archives use one in-memory snapshot of current working-tree inputs. Enumerate tracked and non-ignored new installation files through Git, omit deleted paths, and reject symlinks and non-regular files including symlink ancestors. Read the selected metadata config, packager and default-version `package.json` into the same snapshot. Bind `name` to the install directory, keep the selected CLI/package version authoritative, and enforce at most three examples per language. Emit punctuation-safe platform `@references/` directives only in the copied `SKILL.md`; source files remain unchanged. Packaging leaves the Git index and history untouched.
