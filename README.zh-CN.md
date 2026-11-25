@@ -1,8 +1,31 @@
-# Flow Diagram
+<p align="center">
+  <img src="docs/images/logo.png" alt="Flow Diagram 项目标志" width="320" height="320">
+</p>
 
-基于 [FlowSVG（流形）](https://github.com/yokingma/FlowSVG)，从描述、文档或代码创作可编辑的系统与流程图解，交付静态图或离线动画页面。
+<h1 align="center">Flow Diagram</h1>
 
-[English](README.md) · [安装](#安装) · [用户指南](docs/guides/flow-diagram-guide.zh-CN.md) · [示例](skills/flow-diagram/examples/README.md) · [贡献说明](CONTRIBUTING.md)
+<p align="center">
+  <strong>将描述、文档与代码转化为可编辑的图解。</strong><br>
+  基于 <a href="https://github.com/yokingma/FlowSVG">FlowSVG（流形）</a>，创作静态图与离线动画页面。
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="许可证：MIT"></a>
+  <a href="#安装"><img src="https://img.shields.io/badge/Node.js-%3E%3D20-339933" alt="Node.js 20 或更高版本"></a>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> ·
+  <a href="#典型示例">典型示例</a> ·
+  <a href="#安装">安装</a> ·
+  <a href="#开始使用">快速开始</a> ·
+  <a href="docs/guides/flow-diagram-guide.zh-CN.md">用户指南</a> ·
+  <a href="CONTRIBUTING.md">贡献说明</a>
+</p>
+
+Flow Diagram 是一个让 AI 助手帮你画图的 Skill（技能）。安装到 Codex、Claude Code 等支持 Skill 的助手后，你可以直接说“画出订单从下单到发货的流程”，也可以提供允许读取的文档和代码，让助手据此制作流程图、系统架构图、时序图等图解。
+
+你可以用静态图说明系统组成，也可以用逐步动画解释请求如何流转、状态如何变化。助手会生成可继续修改的图解数据，以及可在浏览器中离线打开的 HTML 页面；需要放入文档或演示材料时，还可以要求导出 SVG、PNG 或 GIF。
 
 ## 典型示例
 
@@ -22,7 +45,7 @@
 
 ### 使用本 Skill 创作的静态示例
 
-<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.png" alt="虚构企业大模型平台的分层架构与横切治理" width="900"></p>
+<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.svg" alt="虚构企业大模型平台的分层架构与横切治理" width="900"></p>
 
 <p align="center"><em>虚构大模型平台 · 腾讯 WorkBuddy · hy4 flash · Flow Diagram Skill。</em></p>
 

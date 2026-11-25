@@ -1,8 +1,31 @@
-# Flow Diagram
+<p align="center">
+  <img src="docs/images/logo.png" alt="Flow Diagram logo" width="320" height="320">
+</p>
 
-Create editable system and process diagrams from text, documents, or code. Deliver static visuals or animated offline HTML with [FlowSVG](https://github.com/yokingma/FlowSVG).
+<h1 align="center">Flow Diagram</h1>
 
-[简体中文](README.zh-CN.md) · [Install](#install) · [User guide](docs/guides/flow-diagram-guide.md) · [Examples](skills/flow-diagram/examples/README.md) · [Contributing](CONTRIBUTING.md)
+<p align="center">
+  <strong>Turn text, documents, and code into editable diagrams.</strong><br>
+  Create static visuals and animated offline HTML with <a href="https://github.com/yokingma/FlowSVG">FlowSVG</a>.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/Node.js-%3E%3D20-339933" alt="Node.js 20 or newer"></a>
+</p>
+
+<p align="center">
+  <a href="README.zh-CN.md">简体中文</a> ·
+  <a href="#examples">Examples</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#use-it">Quick start</a> ·
+  <a href="docs/guides/flow-diagram-guide.md">User guide</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+Flow Diagram is a drawing Skill for AI assistants. Install it in Codex, Claude Code, or another assistant that supports Skills, then describe what you want to explain. For example, ask it to draw an order from checkout to shipment, or provide documents and code it may read to create a flowchart, system architecture diagram, or sequence diagram.
+
+Use a static diagram to show how a system is organized, or a step-by-step animation to explain how requests move and states change. The assistant produces editable diagram data and an HTML page you can open offline in a browser. You can also request SVG, PNG, or GIF exports for documents and presentations.
 
 ## Examples
 
@@ -22,7 +45,7 @@ Request flows, deployment architecture and model inference, animated with FlowSV
 
 ### Static examples created with this Skill
 
-<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.png" alt="Fictional enterprise LLM platform layers and cross-cutting governance" width="900"></p>
+<p align="center"><img src="docs/images/skill-examples/llm-platform-layers.svg" alt="Fictional enterprise LLM platform layers and cross-cutting governance" width="900"></p>
 
 <p align="center"><em>Fictional LLM platform · Tencent WorkBuddy · hy4 flash · Flow Diagram Skill.</em></p>
 
