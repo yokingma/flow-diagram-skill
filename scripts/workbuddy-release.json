@@ -1,20 +1,20 @@
 {
-  "$comment": "WorkBuddy 开放平台发布元数据。由 scripts/package-workbuddy-skill.mjs 读取并注入发布副本的 SKILL.md frontmatter。name 必须与源 Skill 标识和安装目录 flow-diagram 一致；version 取 --version 或根 package.json，配置不能覆盖；description 默认继承源文件，可在此覆盖。其他展示字段和案例由本配置补齐，发布前逐项确认，尤其确认 author 为预期发布主体。字段定义见 docs/releasing.md §5.1 与 https://open.workbuddy.cn/docs/skill。示例 3 需要一份电商订单流程图（示例 1 可直接承接），单独点击时会追问或先建图。",
+  "$comment": "WorkBuddy 开放平台发布元数据。由 scripts/package-workbuddy-skill.mjs 读取并注入发布副本的 SKILL.md frontmatter。name 必须与源 Skill 标识和安装目录 flow-diagram 一致；version 取 --version 或根 package.json，配置不能覆盖；description 默认继承源文件的 Agent 触发条件，可在此覆盖。description_zh/description_en 用于中英文市场详情介绍；examples_zh/examples_en 是可独立发起的案例。发布前逐项确认，尤其确认 author 为预期发布主体。字段定义见 docs/releasing.md §5.1 与 https://open.workbuddy.cn/docs/skill。",
   "display_name": "流程图解",
   "display_name_en": "Flow Diagram",
-  "description_zh": "创建流程图、架构图、时序图和流程动画演示；可验证、诊断已有图解，导出 JSON、离线 HTML、SVG、PNG 或 GIF，并管理项目图解偏好。",
-  "description_en": "Create flowcharts, architecture diagrams, sequence diagrams and animated process explanations; validate or diagnose existing diagrams; export JSON, offline HTML, SVG, PNG or GIF; and manage project diagram preferences.",
+  "description_zh": "创建流程图、架构图、时序图和流程动画演示；验证、诊断已有图解，导出 JSON、离线 HTML、SVG、PNG 或 GIF，并管理项目图解偏好。需要 Node.js 20+ 和 npm；首次准备运行时需联网下载依赖，PNG/GIF 导出还需 Chrome/Chromium。",
+  "description_en": "Create flowcharts, architecture diagrams, sequence diagrams and animated process explanations; validate or diagnose diagrams; export JSON, offline HTML, SVG, PNG or GIF; and manage project diagram preferences. Requires Node.js 20+ and npm, network access for initial runtime setup, and Chrome/Chromium for PNG/GIF export.",
   "author": "zac_ma",
   "examples_zh": [
     "画一个电商订单从提交到履约的流程图，用动画演示订单流转过程",
     "画一个电商系统的分层架构图，标出接入层、服务层和数据层的职责与依赖方向",
-    "把电商订单流程图导出为 GIF 动图",
+    "画一个电商订单从提交到履约的流程图，并导出为 GIF 动图",
     "画一个带异常分支的电商退款流程图，画完后验证草稿，报告发现的问题"
   ],
   "examples_en": [
     "Draw an animated flowchart of an e-commerce order from submission to fulfillment",
     "Draw a layered architecture diagram of an e-commerce system, showing the responsibilities and dependency direction of its presentation, service, and data layers",
-    "Export the e-commerce order flowchart as an animated GIF",
+    "Draw a flowchart of an e-commerce order from submission to fulfillment and export it as an animated GIF",
     "Draw an e-commerce refund flowchart with exception branches, then validate the draft and report the findings"
   ]
 }

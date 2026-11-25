@@ -94,12 +94,12 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 | `name` | 必填，技能标识 | 固定与安装目录 `flow-diagram/` 一致；配置覆盖不一致时拒绝打包 |
 | `display_name` | 必填，中文展示名称 | 在发布副本中补齐 |
 | `display_name_en` | 必填，英文展示名称 | 在发布副本中补齐 |
-| `description` | 必填，说明用途和触发词 | 写清图解创作、修订、验证、导出等触发场景 |
-| `description_zh` | 必填，中文详情介绍 | 根据平台展示长度编写 |
-| `description_en` | 必填，英文详情介绍 | 根据平台展示长度编写 |
+| `description` | 必填，说明用途和触发词 | 面向 Agent，覆盖创作、修订、继续任务、验证、诊断、导出和项目偏好管理的独立请求 |
+| `description_zh` | 必填，市场详情页中文介绍 | 面向用户，简述能力和运行前提 |
+| `description_en` | 必填，市场详情页英文介绍 | 与中文介绍的能力、运行前提一致 |
 | `version` | 必填，技能版本 | 以 `--version` 或根 `package.json` 为准，配置文件不能覆盖 |
 | `author` | 必填，合作方名称 | 使用已确认的发布主体名称 |
-| `examples_zh` / `examples_en` | 选填，使用案例 | 建议提供真实可演示的中英文案例 |
+| `examples_zh` / `examples_en` | 选填，详情页“试试这样用”的案例 | 中英文案例逐项对应；每条包含新对话发起任务所需的请求，不依赖前一条案例 |
 | `allowed-tools` | 选填，工具白名单 | 只有平台要求且已验证时填写 |
 
 本仓库当前 `SKILL.md` 面向通用 Skill 宿主。发布 WorkBuddy 时，在副本中补齐平台字段，并在每个指向 `references/` 的 Markdown 相对链接后加入官方 `@references/<文件>.md` 加载指令；原链接和源文件保持不变。平台字段由 `scripts/package-workbuddy-skill.mjs` 从 `scripts/workbuddy-release.json` 注入。打包前核对发布主体、名称、描述、案例和版本。
