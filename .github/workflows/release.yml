@@ -18,6 +18,11 @@ env:
 jobs:
   preflight:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      acceptance_reused: ${{ steps.acceptance.outputs.reused }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -27,13 +32,21 @@ jobs:
           node-version: 20
       - name: Validate stable tag, main ancestry, version and release notes
         run: node scripts/package-github-skill.mjs --tag "$RELEASE_TAG" --check
+      - name: Reuse or wait for main acceptance of the exact commit
+        id: acceptance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ github.sha }}
+        run: node scripts/check-github-acceptance.mjs --sha "$CANDIDATE_SHA"
 
   acceptance:
     needs: preflight
+    if: needs.preflight.outputs.acceptance_reused != 'true'
     uses: ./.github/workflows/authoring-skill.yml
 
   package:
-    needs: acceptance
+    needs: [preflight, acceptance]
+    if: ${{ !cancelled() && needs.preflight.result == 'success' && (needs.acceptance.result == 'success' || (needs.acceptance.result == 'skipped' && needs.preflight.outputs.acceptance_reused == 'true')) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

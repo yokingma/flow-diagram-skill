@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reuse successful main-push acceptance for the exact GitHub release commit, including both Node jobs; wait for an active run before falling back to fresh acceptance. Preserve final ZIP verification and publication gates.
+
 ## 0.2.1 — 2026-11-25
 
 - Add tag-driven GitHub releases with committed bilingual notes, regression and consumer gates, a generic Skill ZIP, SHA-256 checksums and extracted-install verification. Add a repository-only release Skill for preparation and explicitly authorized publication; keep WorkBuddy publication independent.
