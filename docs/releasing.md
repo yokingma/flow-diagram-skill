@@ -2,7 +2,7 @@
 
 [项目说明](../README.md) · [中文用户指南](guides/flow-diagram-guide.zh-CN.md) · [维护指南](development/flow-diagram-maintenance.md) · [文档索引](README.md)
 
-本文说明如何向 GitHub 和腾讯 WorkBuddy 开放平台发布 Flow Diagram Skill。两种发布共用候选提交、验收记录和安装单元。发布到 WorkBuddy 前，需要完成平台要求的入驻、主体认证和开发者资料。
+本文说明如何向 GitHub 和腾讯 WorkBuddy 开放平台发布 Flow Diagram Skill。两种发布共用安装单元和验收方法。WorkBuddy 可先从未提交的工作区构包，清单记录基线提交与实际输入身份；GitHub 正式发布仍绑定候选提交。发布到 WorkBuddy 前，需要完成平台要求的入驻、主体认证和开发者资料。
 
 ## 发布边界
 
@@ -13,7 +13,7 @@
 
 ## 1. 准备候选版本
 
-1. 在干净的候选提交上工作。检查 `git status --short`、`git remote -v` 和当前分支，确认远程仓库和目标提交正确。如果本地已有同名版本标签，检查其目标提交、SDK 基线、远程标签和 Release 状态。仅本地且尚未发布的标签可以在记录原标签对象和目标提交后校正；已发布标签保持不变，后续修订使用新版本。
+1. GitHub 正式发布使用干净的候选提交；WorkBuddy 可先从当前工作区构包验收。检查 `git status --short`、`git remote -v` 和当前分支，确认远程仓库和目标提交正确。如果本地已有同名版本标签，检查其目标提交、SDK 基线、远程标签和 Release 状态。仅本地且尚未发布的标签可以在记录原标签对象和目标提交后校正；已发布标签保持不变，后续修订使用新版本。
 2. 更新根目录 `package.json` 和 `CHANGELOG.md` 中的 Skill 分发版本，核对 README 与用户指南中的安装和下载说明。Skill 分发版本、工具版本、图解格式版本和 SDK 运行时基线分别管理，只有对应合同变化时才修改。
 3. 检查根目录 `LICENSE` 与 `skills/flow-diagram/LICENSE`，并核对第三方包的许可证和来源说明。
 4. 检查安装单元内部的相对链接、脚本导入、元数据、示例和 runtime 资源。复制到独立目录后，安装单元必须脱离本仓库运行。
@@ -69,7 +69,7 @@ flow-diagram/
   runtime/
 ```
 
-从已审查的候选提交构造副本或压缩包，不直接修改 `skills/flow-diagram/`。包含安装单元中的全部受版本控制文件，尤其是 `runtime/package-lock.json`、`runtime/manifest.json`、`agents/openai.yaml`、参考文档、示例和脚本。排除 `node_modules`、运行时缓存、`.diagrams/`、`.scratch/`、本地日志、浏览器截图和私人证据。
+从已审查的候选提交或 WorkBuddy 待验收工作区构造副本与压缩包，不直接修改 `skills/flow-diagram/`。WorkBuddy 打包读取当前工作区中受版本控制及未被 Git 忽略的新增安装文件，省略已删除文件；未提交改动不阻止构包。包含 `runtime/package-lock.json`、`runtime/manifest.json`、`agents/openai.yaml`、参考文档、示例和脚本。排除 `node_modules`、运行时缓存、`.diagrams/`、`.scratch/`、本地日志、浏览器截图和私人证据。
 
 在仓库外解压或复制发布包，重新运行安装单元的 `doctor`、浏览器无关 `author` 和 `finalize`，再计算压缩包校验值。记录包名、候选提交、文件清单、大小、校验值和验证结果。只有经过同样验证的压缩包才能上传或附加到发布页。
 
@@ -99,7 +99,7 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 | `description_en` | 必填，市场详情页英文介绍 | 与中文介绍的能力、运行前提一致 |
 | `version` | 必填，技能版本 | 以 `--version` 或根 `package.json` 为准，配置文件不能覆盖 |
 | `author` | 必填，合作方名称 | 使用已确认的发布主体名称 |
-| `examples_zh` / `examples_en` | 选填，详情页“试试这样用”的案例 | 中英文案例逐项对应；每条包含新对话发起任务所需的请求，不依赖前一条案例 |
+| `examples_zh` / `examples_en` | 选填，详情页“试试这样用”的案例 | 每种语言最多 3 条（2026-11-25 上传解析反馈）；当前各保留前 2 条，中英文逐项对应，案例可独立发起 |
 | `allowed-tools` | 选填，工具白名单 | 只有平台要求且已验证时填写 |
 
 本仓库当前 `SKILL.md` 面向通用 Skill 宿主。发布 WorkBuddy 时，在副本中补齐平台字段，并在每个指向 `references/` 的 Markdown 相对链接后加入官方 `@references/<文件>.md` 加载指令；原链接和源文件保持不变。平台字段由 `scripts/package-workbuddy-skill.mjs` 从 `scripts/workbuddy-release.json` 注入。打包前核对发布主体、名称、描述、案例和版本。
@@ -116,7 +116,7 @@ WorkBuddy 上传解析器在 2026-11-25 返回了目录限制：Skill 包仅支�
 | --- | --- | --- |
 | `SKILL.md` 必须 | zip 根层级 `flow-diagram/SKILL.md` | ✅ 合规 |
 | frontmatter 8 个必填字段 | 脚本合并源字段与 `scripts/workbuddy-release.json` 后逐项校验，缺一即失败；产物经独立 YAML 解析复核无缺失 | ✅ 合规 |
-| `examples_zh` / `examples_en`（选填） | 各 4 条，`- "..."` 列表格式与官方示例一致 | ✅ 合规 |
+| `examples_zh` / `examples_en`（选填） | 首次使用各 4 条被解析器拒绝（2026-11-25），平台提示每种语言最多 3 条；当前配置各保留前 2 条 | 数量已修正；本地打包器也校验每种语言最多 3 条，待上传确认 |
 | `allowed-tools`（选填） | 不输出；技能经 Bash 执行 `node`，平台若要求工具白名单需在配置中补充并实测 | ⚠️ 决策点 |
 | YAML 格式（冒号后空格、无拼写错误） | 生成器统一 `key: "value"` 双引号标量、官方字段序；官方示例中 `display_name_en:切…`、`exmaple` 等拼写问题不照抄 | ✅ 合规 |
 | `version` 与发布版本一致 | 默认取根 `package.json`，可 `--version` 覆盖；`release-manifest.json` 记录实际值 | ✅ 合规 |
@@ -126,7 +126,7 @@ WorkBuddy 上传解析器在 2026-11-25 返回了目录限制：Skill 包仅支�
 | 子资源引用方式 `@references/xxx.md` | 发布副本在 `references/` Markdown 链接后生成对应 `@references/<文件>.md` 指令；源 `SKILL.md` 保持通用链接 | ✅ 符合官方文档用法；首次上传仍须确认平台实际加载 |
 | 额外顶层目录（`runtime/`、`examples/`、`resources/`、`agents/`） | 官方目录说明只列三类子资源；页面未禁止其他目录。首次上传因更深的示例目录被拒绝，尚未确认修正包的整体解析结果 | ❓ 待重新上传确认 |
 | 上传解析反馈：仅支持 `根目录/二级目录/文件`（2026-11-25） | 原包有 24 个示例路径超限；现安装源文件直接使用分类前缀，打包器保留路径并拒绝超限目录 | 本地预检通过；待重新上传 |
-| zip 内无 `node_modules`、缓存、任务工作区、私人证据 | 仅从 `HEAD` 枚举安装单元文件；安装单元、发布配置值必须与 `HEAD` 一致；默认版本来源有未提交改动时拒绝打包 | ✅ 合规 |
+| zip 内无 `node_modules`、缓存、任务工作区、私人证据 | 通过 Git 枚举当前受跟踪及未忽略的新增安装文件，省略已删除文件；缓存和私人证据须放在安装单元外或由 Git 忽略；构包前核对清单 | ✅ 合规 |
 
 复审要点：
 
@@ -137,9 +137,9 @@ WorkBuddy 上传解析器在 2026-11-25 返回了目录限制：Skill 包仅支�
 ### 5.2 打包和提交
 
 1. 核对安装 `examples/` 仅含已选成品源及简短教学说明，`resources/` 仅含必需辅助资源与对应来源记录；候选、开发练习、截图、运行日志和过程版本留在安装包之外。
-2. 运行 `node scripts/package-workbuddy-skill.mjs`（或 `pnpm release:workbuddy`）生成发布副本与 zip。脚本要求安装单元已提交且干净，`scripts/workbuddy-release.json` 的发布字段与 `HEAD` 相同（注释可本地更新）；默认读取版本时，也要求 `package.json` 已提交且干净。技能 `name` 必须匹配安装目录，配置不能覆盖；版本以 `--version` 或 `package.json` 为准，配置不能覆盖。只从 `HEAD` 枚举普通文件，拒绝未跟踪文件和符号链接；按 §5.1 改写副本 `SKILL.md` 的元数据与引用指令，保留其他文件的路径和字节。产物为 `{name}/` 根目录的 zip、副本 `SKILL.md` 和 `release-manifest.json`（候选提交、打包器 SHA-256、文件清单、大小、zip SHA-256）。文件清单同时记录包内 `path` 和安装单元内原始 `sourcePath`。可用 `--config`、`--output` 覆盖其他默认值。
+2. 运行 `node scripts/package-workbuddy-skill.mjs`（或 `pnpm release:workbuddy`）从当前工作区生成发布副本与 zip，无需先提交。脚本将安装文件、发布配置、打包器及默认版本来源一次读入内存，实际使用和摘要记录共享这些字节。技能 `name` 必须匹配安装目录，配置不能覆盖；版本以 `--version` 或当前 `package.json` 为准，配置不能覆盖。每种语言的案例最多 3 条。脚本拒绝符号链接、非普通文件、超限目录和失效的包内 Markdown 链接，并按 §5.1 仅改写副本 `SKILL.md`。输出目录必须在安装单元外。产物为 `{name}/` 根目录的 zip、副本 `SKILL.md` 和 `release-manifest.json`；可用 `--config`、`--output` 覆盖默认路径。打包不会暂存文件、创建提交或推送。
 3. 在仓库外解压 zip，确认每条文件路径最多为 `{name}/子目录/文件`。使用与源目录相同的示例路径运行 `doctor`、浏览器无关 `author` 和 `finalize`；核对包内链接、来源 `scope`、图解 JSON 字节、manifest 文件清单、候选提交、打包器摘要和 zip 校验值。本地预检不通过时不要上传。
-4. 记录 zip 文件名、候选提交、WorkBuddy 元数据变更、文件清单和校验值。
+4. 核对并保留 `release-manifest.json`。`candidateCommit` 仅标识构包时的 Git 基线；未提交状态见 `releaseInputs.hasUncommittedChanges` 和 `changes`。`releaseInputs.files` 列出实际读取的安装文件、配置、打包器及默认版本文件的路径、大小和 SHA-256；`releaseInputs.sha256` 是这个按路径排序的清单的紧凑 JSON 字节摘要。显式 `--version` 时不读取根 `package.json`，`versionSource` 记录版本来源。包内文件清单另有每个生成文件的 SHA-256，ZIP 与打包器也各有摘要。与发布输入无关的 README 改动不计入发布输入状态；忽略的缓存不进入包，显式指定的忽略配置仍记录为输入及 `!!` 状态。
 5. 在开放平台的技能资产入口上传 zip，按当期页面填写展示信息、能力配置和其他表单项。
 6. 等待平台解析结果。解析失败时，先检查 `SKILL.md`、zip 内层级、引用路径和子资源，再按平台联系渠道反馈。
 7. 审核通过并上线后，使用公开入口安装技能，在对话中调用一个最小示例，记录安装、调用和结果页面的实际状态。
@@ -148,7 +148,7 @@ WorkBuddy 上传解析器在 2026-11-25 返回了目录限制：Skill 包仅支�
 
 ## 6. 更新和失败处理
 
-- **源代码或 Skill 内容更新**：创建新的候选提交，重新执行验收、构包和校验；不要覆盖已发布包的证据。
+- **源代码或 Skill 内容更新**：重新执行验收、构包和校验；WorkBuddy 可从工作区构包并保留输入摘要，GitHub 正式发布前再整理候选提交。不要覆盖已发布包的证据。
 - **运行时或 SDK 更新**：先完成维护指南中的 [SDK 升级流程](development/flow-diagram-maintenance.md#sdk-baseline-upgrade)，再按本文准备发布候选。
 - **压缩包解析失败**：保留失败包和平台提示，逐项检查必需文件、YAML、引用路径、目录层级和不支持的资源；修复后生成新包并重新计算校验值。
 - **平台审核退回**：记录退回原因和页面状态，先判断是展示资料、技能元数据、内容合规还是运行行为，再在发布副本或源项目中按授权修正。

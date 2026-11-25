@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Build WorkBuddy packages from a single snapshot of current working-tree inputs without requiring a commit. Include tracked and non-ignored new installation files, omit deleted files, and retain regular-file, depth, link, name and version checks. Record the Git baseline, relevant uncommitted changes, per-input and per-artifact SHA-256 values, and an aggregate input digest in the manifest. Keep Git state untouched, reject output directories inside the installation source, enforce the platform's three-example limit per language, and retain only the first two Chinese and English market examples.
+
 - Flatten the installed example source layout into `examples/complete-*` and `examples/capabilities-*`, preserving all eleven diagram JSON files byte for byte. Update installed references, commands, source scopes, bilingual guides and copied-install tests. Select gallery groups by filename prefix while retaining existing preview locations. Remove release-time path and resource rewriting; copy source paths and bytes directly and reject nested source directories before output creation. Replace transformation tests with byte-preservation and depth-rejection coverage; gallery behavior tests fail first against the previous directory scanner.
 
 - Fix WorkBuddy directory-depth rejection by flattening nested example categories into prefixed filenames in the release copy. Rewrite relative Markdown links, installed example command paths and teaching-source scopes, preserve diagram JSON bytes, reject filename collisions, and record each original `sourcePath` in the manifest. Add regression coverage for executable paths, provenance and collision failure.

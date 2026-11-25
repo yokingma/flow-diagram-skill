@@ -85,6 +85,14 @@ test("WorkBuddy package is built from a clean committed installation tree", asyn
   const zip = await readFile(join(output, manifest.package));
   const entries = readStoredZipEntries(zip);
   expect(manifest.candidateCommit).toBe(candidate);
+  expect(manifest.releaseInputs).toMatchObject({ source: "working-tree", hasUncommittedChanges: false, changes: [] });
+  const inputFiles = manifest.releaseInputs.files as Array<{ path: string; sizeBytes: number; sha256: string }>;
+  for (const input of inputFiles) {
+    const data = await readFile(join(directory, input.path));
+    expect(input.sizeBytes).toBe(data.length);
+    expect(input.sha256).toBe(createHash("sha256").update(data).digest("hex"));
+  }
+  expect(manifest.releaseInputs.sha256).toBe(createHash("sha256").update(JSON.stringify(inputFiles)).digest("hex"));
   expect(manifest.sha256).toBe(createHash("sha256").update(zip).digest("hex"));
   expect(manifest.sizeBytes).toBe(zip.length);
   expect(manifest.fileCount).toBe(entries.size);
@@ -104,43 +112,69 @@ test("WorkBuddy package is built from a clean committed installation tree", asyn
   expect(await readFile(join(directory, "skills/flow-diagram/SKILL.md"), "utf8")).toContain("[Guide](references/guide.md).");
 });
 
-test("WorkBuddy package rejects untracked files in the install unit", async () => {
+test("WorkBuddy packages new and modified working files, omits deleted files and ignores local caches", async () => {
   const directory = await createReleaseRepository();
-  await writeFile(join(directory, "skills/flow-diagram/unreviewed.txt"), "Unreviewed content.\n");
+  await writeFile(join(directory, ".gitignore"), "skills/flow-diagram/cache/\n");
+  await mkdir(join(directory, "skills/flow-diagram/cache"));
+  await writeFile(join(directory, "skills/flow-diagram/cache/local.txt"), "Private cache.\n");
+  await writeFile(join(directory, "skills/flow-diagram/new.txt"), "New content.\n");
+  await writeFile(join(directory, "skills/flow-diagram/references/guide.md"), "Modified content.\n");
+  await rm(join(directory, "skills/flow-diagram/LICENSE"));
   const output = join(directory, "output");
   const result = runPackager(directory, output);
-
-  expect(result.status).not.toBe(0);
-  expect(result.stderr).toContain("skills/flow-diagram/unreviewed.txt");
-  expect(existsSync(join(output, "flow-diagram-skill-1.2.3.zip"))).toBe(false);
+  expect(result.status, result.stderr).toBe(0);
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  const entries = readStoredZipEntries(await readFile(join(output, manifest.package)));
+  expect(entries.get("flow-diagram/new.txt")?.toString()).toBe("New content.\n");
+  expect(entries.get("flow-diagram/references/guide.md")?.toString()).toBe("Modified content.\n");
+  expect(entries.has("flow-diagram/LICENSE")).toBe(false);
+  expect([...entries.keys()].some((path) => path.includes("cache"))).toBe(false);
+  expect(manifest.releaseInputs.hasUncommittedChanges).toBe(true);
+  expect(manifest.releaseInputs.changes).toEqual(expect.arrayContaining([
+    { status: "??", path: "skills/flow-diagram/new.txt" },
+    { status: " M", path: "skills/flow-diagram/references/guide.md" },
+    { status: " D", path: "skills/flow-diagram/LICENSE" },
+  ]));
+  for (const sourcePath of ["new.txt", "references/guide.md"]) {
+    expect(manifest.releaseInputs.files).toContainEqual(expect.objectContaining({
+      path: `skills/flow-diagram/${sourcePath}`,
+      sha256: createHash("sha256").update(await readFile(join(directory, "skills/flow-diagram", sourcePath))).digest("hex"),
+    }));
+  }
 });
 
-test("WorkBuddy package rejects modified tracked files in the install unit", async () => {
-  const directory = await createReleaseRepository();
-  await writeFile(join(directory, "skills/flow-diagram/references/guide.md"), "Modified content.\n");
-  const result = runPackager(directory, join(directory, "output"));
-
-  expect(result.status).not.toBe(0);
-  expect(result.stderr).toContain("skills/flow-diagram/references/guide.md");
-});
-
-test("WorkBuddy package allows unrelated working-tree edits outside its release inputs", async () => {
+test("WorkBuddy ignores unrelated working-tree edits when reporting release input changes", async () => {
   const directory = await createReleaseRepository();
   await writeFile(join(directory, "README.md"), "Unrelated working copy change.\n");
   const output = join(directory, "output");
   const result = runPackager(directory, output);
-
   expect(result.status, result.stderr).toBe(0);
-  expect(await readFile(join(output, "release-manifest.json"), "utf8")).toContain("candidateCommit");
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  expect(manifest.releaseInputs.hasUncommittedChanges).toBe(false);
+  expect(manifest.releaseInputs.files.some((file: { path: string }) => file.path === "README.md")).toBe(false);
 });
 
-test("WorkBuddy package rejects changed release metadata inputs", async () => {
+test("WorkBuddy packages uncommitted metadata and reports its actual identity without changing Git state", async () => {
   const directory = await createReleaseRepository();
-  await writeFile(join(directory, "scripts/workbuddy-release.json"), JSON.stringify({ author: "unconfirmed-author" }));
-  const result = runPackager(directory, join(directory, "output"));
-
-  expect(result.status).not.toBe(0);
-  expect(result.stderr).toContain("scripts/workbuddy-release.json");
+  const configPath = join(directory, "scripts/workbuddy-release.json");
+  const config = JSON.parse(await readFile(configPath, "utf8"));
+  await writeFile(configPath, JSON.stringify({ ...config, examples_zh: ["案例一", "案例二"], examples_en: ["Example one", "Example two"] }));
+  const head = execFileSync("git", ["rev-parse", "HEAD"], { cwd: directory, encoding: "utf8" });
+  const before = execFileSync("git", ["status", "--porcelain"], { cwd: directory, encoding: "utf8" });
+  const output = join(tmpdir(), `release-metadata-${directory.split(/[\\/]/).pop()}`);
+  repositories.push(output);
+  const result = runPackager(directory, output);
+  expect(result.status, result.stderr).toBe(0);
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  const entries = readStoredZipEntries(await readFile(join(output, manifest.package)));
+  expect(entries.get("flow-diagram/SKILL.md")?.toString()).toContain('examples_zh:\n- "案例一"\n- "案例二"');
+  expect(manifest.releaseInputs.hasUncommittedChanges).toBe(true);
+  expect(manifest.releaseInputs.changes).toContainEqual({ status: " M", path: "scripts/workbuddy-release.json" });
+  expect(manifest.releaseInputs.files).toContainEqual(expect.objectContaining({
+    path: "scripts/workbuddy-release.json", sha256: createHash("sha256").update(await readFile(configPath)).digest("hex"),
+  }));
+  expect(execFileSync("git", ["rev-parse", "HEAD"], { cwd: directory, encoding: "utf8" })).toBe(head);
+  expect(execFileSync("git", ["status", "--porcelain"], { cwd: directory, encoding: "utf8" })).toBe(before);
 });
 
 test("WorkBuddy package allows comment-only release-config edits", async () => {
@@ -203,18 +237,23 @@ test("WorkBuddy package rejects a version that could escape the output directory
   expect(existsSync(join(directory, "escape.zip"))).toBe(false);
 });
 
-test("WorkBuddy package rejects ignored, untracked metadata configs", async () => {
+test.each([false, true])("WorkBuddy packages a new explicit config and records its identity (ignored: %s)", async (ignored) => {
   const directory = await createReleaseRepository();
-  await writeFile(join(directory, ".gitignore"), "ignored-config.json\n");
-  execFileSync("git", ["add", ".gitignore"], { cwd: directory });
-  execFileSync("git", ["commit", "--quiet", "-m", "ignore local release config"], { cwd: directory });
-  const config = join(directory, "ignored-config.json");
-  await writeFile(config, JSON.stringify({ author: "untracked-author" }));
-  const result = spawnSync(process.execPath, [join(directory, "scripts/package-workbuddy-skill.mjs"), "--config", config,
-    "--output", join(directory, "output")], { cwd: directory, encoding: "utf8" });
-
-  expect(result.status).not.toBe(0);
-  expect(result.stderr).toContain("must be committed");
+  const config = JSON.parse(await readFile(join(directory, "scripts/workbuddy-release.json"), "utf8"));
+  if (ignored) {
+    await mkdir(join(directory, ".local-release"));
+    await writeFile(join(directory, ".gitignore"), ".local-release/\n");
+  }
+  const configFile = ignored ? ".local-release/new-config.json" : "new-config.json";
+  const configPath = join(directory, configFile);
+  await writeFile(configPath, JSON.stringify({ ...config, author: "selected-author" }));
+  const output = join(directory, "output");
+  const result = runPackager(directory, output, ["--config", configPath]);
+  expect(result.status, result.stderr).toBe(0);
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  expect(manifest.releaseInputs.hasUncommittedChanges).toBe(true);
+  expect(manifest.releaseInputs.changes).toContainEqual({ status: ignored ? "!!" : "??", path: configFile });
+  expect(await readFile(join(output, "SKILL.md"), "utf8")).toContain('author: "selected-author"');
 });
 
 test("WorkBuddy package rejects symlinks in the committed install tree", async () => {
@@ -281,5 +320,46 @@ test("WorkBuddy rejects nested source directories before writing release outputs
   expect(result.status).not.toBe(0);
   expect(result.stderr).toContain("directory depth");
   expect(result.stderr).toContain("examples/complete/story.json");
+  expect(existsSync(output)).toBe(false);
+});
+
+test("WorkBuddy uses an uncommitted default package version and records changed packager input", async () => {
+  const directory = await createReleaseRepository();
+  await writeFile(join(directory, "package.json"), JSON.stringify({ version: "2.3.4" }));
+  const script = join(directory, "scripts/package-workbuddy-skill.mjs");
+  await writeFile(script, (await readFile(script, "utf8")) + "\n// Local build input.\n");
+  const output = join(directory, "output");
+  const result = runPackager(directory, output);
+  expect(result.status, result.stderr).toBe(0);
+  const manifest = JSON.parse(await readFile(join(output, "release-manifest.json"), "utf8"));
+  expect(manifest.skillDistributionVersion).toBe("2.3.4");
+  expect(manifest.releaseInputs.changes).toEqual(expect.arrayContaining([
+    { status: " M", path: "package.json" },
+    { status: " M", path: "scripts/package-workbuddy-skill.mjs" },
+  ]));
+});
+
+test.each(["examples_zh", "examples_en"])("WorkBuddy enforces the three-example limit for %s", async (field) => {
+  const directory = await createReleaseRepository();
+  const configPath = join(directory, "scripts/workbuddy-release.json");
+  const config = JSON.parse(await readFile(configPath, "utf8"));
+  await writeFile(configPath, JSON.stringify({ ...config, [field]: ["One", "Two", "Three"] }));
+  const output = join(directory, "output");
+  const accepted = runPackager(directory, output);
+  expect(accepted.status, accepted.stderr).toBe(0);
+  await rm(output, { recursive: true });
+  await writeFile(configPath, JSON.stringify({ ...config, [field]: ["One", "Two", "Three", "Four"] }));
+  const rejected = runPackager(directory, output);
+  expect(rejected.status).not.toBe(0);
+  expect(rejected.stderr).toContain(`${field} supports at most 3 examples`);
+  expect(existsSync(output)).toBe(false);
+});
+
+test("WorkBuddy rejects an output directory inside the installation source", async () => {
+  const directory = await createReleaseRepository();
+  const output = join(directory, "skills/flow-diagram/output");
+  const result = runPackager(directory, output);
+  expect(result.status).not.toBe(0);
+  expect(result.stderr).toContain("output directory");
   expect(existsSync(output)).toBe(false);
 });

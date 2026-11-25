@@ -7,14 +7,10 @@
   "author": "zac_ma",
   "examples_zh": [
     "画一个电商订单从提交到履约的流程图，用动画演示订单流转过程",
-    "画一个电商系统的分层架构图，标出接入层、服务层和数据层的职责与依赖方向",
-    "画一个电商订单从提交到履约的流程图，并导出为 GIF 动图",
-    "画一个带异常分支的电商退款流程图，画完后验证草稿，报告发现的问题"
+    "画一个电商系统的分层架构图，标出接入层、服务层和数据层的职责与依赖方向"
   ],
   "examples_en": [
     "Draw an animated flowchart of an e-commerce order from submission to fulfillment",
-    "Draw a layered architecture diagram of an e-commerce system, showing the responsibilities and dependency direction of its presentation, service, and data layers",
-    "Draw a flowchart of an e-commerce order from submission to fulfillment and export it as an animated GIF",
-    "Draw an e-commerce refund flowchart with exception branches, then validate the draft and report the findings"
+    "Draw a layered architecture diagram of an e-commerce system, showing the responsibilities and dependency direction of its presentation, service, and data layers"
   ]
 }
