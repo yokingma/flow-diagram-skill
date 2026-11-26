@@ -41,10 +41,14 @@ Skill 不会下载浏览器，也不会修改应用依赖。助手找不到 Chro
 
 ## 2. 安装到宿主
 
+选择一种安装方式。同时安装插件和独立 Skill 副本可能重复显示技能。命令不可用时，更新对应客户端，或使用 Skills CLI。
+
+### Skills CLI
+
 在需要使用 Skill 的项目中执行：
 
 ```sh
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
+npx skills add yokingma/flow-diagram-skill
 ```
 
 Skills CLI 根据环境识别或询问目标助手，默认安装到当前项目。通过 GitHub 安装需要 Git。
@@ -53,10 +57,10 @@ Skills CLI 根据环境识别或询问目标助手，默认安装到当前项目
 
 ```sh
 # Codex
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --global --agent codex --yes
+npx skills add yokingma/flow-diagram-skill --global --agent codex --yes
 
 # Claude Code
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --global --agent claude-code --yes
+npx skills add yokingma/flow-diagram-skill --global --agent claude-code --yes
 ```
 
 项目级安装使用 `npx skills list` 查看，用 `npx skills update flow-diagram` 更新。全局安装请明确指定范围：
@@ -67,6 +71,61 @@ npx skills update flow-diagram --global
 ```
 
 更新跟随仓库默认分支。需要固定版本时，使用下方的手动安装方式。
+
+### Codex Plugin
+
+使用支持 `codex plugin` 的 Codex 版本，在终端执行：
+
+```sh
+codex plugin marketplace add yokingma/flow-diagram-skill
+codex plugin add flow-diagram@yokingma
+codex plugin list --marketplace yokingma
+```
+
+确认 `flow-diagram` 已安装，再打开新的 Codex 会话，使用 `$flow-diagram` 调用。更新时，刷新 marketplace 并安装其中的当前插件：
+
+```sh
+codex plugin marketplace upgrade yokingma
+codex plugin add flow-diagram@yokingma
+```
+
+### Claude Code Plugin
+
+使用支持插件的 Claude Code 版本，在 Claude Code 内执行：
+
+```text
+/plugin marketplace add yokingma/flow-diagram-skill
+/plugin install flow-diagram@yokingma
+/reload-plugins
+```
+
+打开 `/plugin`，确认 `flow-diagram@yokingma` 已安装并启用。需要自动更新时，选择 `yokingma` marketplace 并启用 AutoUpdate。更新后重新加载插件。插件安装使用 `/flow-diagram:flow-diagram` 调用；直接安装 Skill 时使用 `/flow-diagram`。
+
+### Kimi Code Plugin
+
+使用支持插件的 Kimi Code 版本，在 Kimi Code 内执行：
+
+```text
+/plugins install https://github.com/yokingma/flow-diagram-skill
+```
+
+仓库中的 `kimi.plugin.json` 指定安装 `skills/flow-diagram/`。Kimi Code 确认安装成功后，要求它使用 flow-diagram skill。`/plugins` 不可用时，更新 Kimi Code，或使用 Skills CLI 并选择 Kimi Code。
+
+### GitHub CLI
+
+使用支持 [`gh skill install`](https://cli.github.com/manual/gh_skill_install) 的 GitHub CLI 版本：
+
+```sh
+gh skill install yokingma/flow-diagram-skill
+```
+
+按提示选择目标助手。非交互安装时，明确指定 Skill 和助手，默认安装到当前项目：
+
+```sh
+gh skill install yokingma/flow-diagram-skill flow-diagram --agent codex
+```
+
+Claude Code 将 `codex` 换成 `claude-code`。需要跨项目使用时，增加 `--scope user`。在所选助手中确认技能可用，使用 `gh skill update flow-diagram` 更新。未固定版本时，GitHub CLI 优先选择最新标签发布版本，其次才是默认分支；可用 `--pin <tag-or-commit>` 固定版本。
 
 ### 手动安装与固定源码
 
@@ -129,7 +188,7 @@ API 与数据库属于“订单平台”，客户端位于该边界之外。
 交付 JSON、离线 HTML，另外导出 SVG。
 ```
 
-Claude Code 将第一行换为 `/flow-diagram`。支持自动选择的宿主中，也可以直接说“使用 flow-diagram skill”。
+Claude Code 直接安装 Skill 时，将第一行换为 `/flow-diagram`；通过插件安装时，换为 `/flow-diagram:flow-diagram`。支持自动选择的宿主中，也可以直接说“使用 flow-diagram skill”。
 
 说明对象、关系方向、分组边界和讲解目标。助手会询问影响含义的缺失信息；请求的效果不受支持时，会说明限制并请你选择替代方式。
 

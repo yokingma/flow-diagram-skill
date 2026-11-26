@@ -58,18 +58,69 @@ Flow Diagram 是一个让 AI 助手帮你画图的 Skill（技能）。安装到
 在需要使用 Skill 的项目中执行：
 
 ```sh
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
+npx skills add yokingma/flow-diagram-skill
 ```
 
 [Skills CLI](https://github.com/vercel-labs/skills) 根据环境识别或询问目标助手，默认安装到当前项目。如果希望当前用户在多个项目中使用，选择以下一条命令：
 
 ```sh
 # Codex
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent codex --global
+npx skills add yokingma/flow-diagram-skill --agent codex --global
 
 # Claude Code
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent claude-code --global
+npx skills add yokingma/flow-diagram-skill --agent claude-code --global
 ```
+
+也可以选择以下一种安装方式：
+
+<details>
+<summary>Codex Plugin</summary>
+
+```sh
+codex plugin marketplace add yokingma/flow-diagram-skill
+codex plugin add flow-diagram@yokingma
+```
+
+需要支持 `codex plugin` 的 Codex 版本。
+
+</details>
+
+<details>
+<summary>Claude Code Plugin</summary>
+
+在 Claude Code 内执行：
+
+```text
+/plugin marketplace add yokingma/flow-diagram-skill
+/plugin install flow-diagram@yokingma
+/reload-plugins
+```
+
+需要自动更新时，打开 `/plugin`，选择 `yokingma` marketplace 并启用 AutoUpdate。插件中的 Skill 使用 `/flow-diagram:flow-diagram` 调用。
+
+</details>
+
+<details>
+<summary>Kimi Code Plugin</summary>
+
+在支持插件的 Kimi Code 版本中执行：
+
+```text
+/plugins install https://github.com/yokingma/flow-diagram-skill
+```
+
+</details>
+
+<details>
+<summary>GitHub CLI</summary>
+
+```sh
+gh skill install yokingma/flow-diagram-skill
+```
+
+需要支持 `gh skill` 的 GitHub CLI 版本。按提示选择目标助手。
+
+</details>
 
 需要 **Node.js 20+ 与 npm**，通过 GitHub 安装还需要 Git。助手须支持 Skill 和本地 Node 命令。首次制作图解会将锁定的运行时包安装到隔离缓存，需要访问 npm registry；缓存完整后可离线复用，不改变用户应用的依赖。
 
@@ -91,7 +142,7 @@ API 与数据库属于“订单平台”，客户端位于该边界之外。
 交付默认 JSON、离线 HTML，另外导出 SVG。
 ```
 
-Claude Code 将第一行换为 `/flow-diagram`。
+Claude Code 直接安装 Skill 时，将第一行换为 `/flow-diagram`；通过插件安装时，换为 `/flow-diagram:flow-diagram`。
 
 需要动画时，说明先后顺序与状态变化，例如：
 

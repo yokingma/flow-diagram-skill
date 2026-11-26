@@ -58,18 +58,69 @@ Request flows, deployment architecture and model inference, animated with FlowSV
 Run in the project where you want to use the Skill:
 
 ```sh
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
+npx skills add yokingma/flow-diagram-skill
 ```
 
 The [Skills CLI](https://github.com/vercel-labs/skills) selects a detected assistant or asks you to choose one. Installation is project-local by default. To install for the current user across projects, choose one of these commands:
 
 ```sh
 # Codex
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent codex --global
+npx skills add yokingma/flow-diagram-skill --agent codex --global
 
 # Claude Code
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --agent claude-code --global
+npx skills add yokingma/flow-diagram-skill --agent claude-code --global
 ```
+
+Alternatively, choose one of these installation methods:
+
+<details>
+<summary>Codex Plugin</summary>
+
+```sh
+codex plugin marketplace add yokingma/flow-diagram-skill
+codex plugin add flow-diagram@yokingma
+```
+
+Requires a Codex version with `codex plugin` support.
+
+</details>
+
+<details>
+<summary>Claude Code Plugin</summary>
+
+Run inside Claude Code:
+
+```text
+/plugin marketplace add yokingma/flow-diagram-skill
+/plugin install flow-diagram@yokingma
+/reload-plugins
+```
+
+For automatic updates, open `/plugin`, select the `yokingma` marketplace and enable AutoUpdate. Invoke the plugin Skill with `/flow-diagram:flow-diagram`.
+
+</details>
+
+<details>
+<summary>Kimi Code Plugin</summary>
+
+Run inside a Kimi Code version with plugin support:
+
+```text
+/plugins install https://github.com/yokingma/flow-diagram-skill
+```
+
+</details>
+
+<details>
+<summary>GitHub CLI</summary>
+
+```sh
+gh skill install yokingma/flow-diagram-skill
+```
+
+Requires a GitHub CLI version with `gh skill` support. Follow the prompts to select your assistant.
+
+</details>
 
 You need **Node.js 20+ and npm**, and Git for the GitHub installation. Your assistant must support skills and local Node commands. The first diagram task installs locked runtime packages into an isolated cache and needs access to the npm registry; a complete cache can be reused offline. Your application's dependencies are not changed.
 
@@ -92,7 +143,7 @@ Use English labels and a light theme. Name it order-platform.
 Deliver the default JSON and offline HTML, and also export SVG.
 ```
 
-In Claude Code, replace the first line with `/flow-diagram`.
+In Claude Code, replace the first line with `/flow-diagram` for a direct Skill installation, or `/flow-diagram:flow-diagram` for a plugin installation.
 
 For animation, describe the sequence and state changes, for example:
 

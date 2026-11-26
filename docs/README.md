@@ -13,6 +13,7 @@
 
 - [Contribution guide](../CONTRIBUTING.md): setup, bug reports, validation, pull requests, and source attribution.
 - [Maintenance guide](development/flow-diagram-maintenance.md): installation boundaries, [SDK upgrades](development/flow-diagram-maintenance.md#sdk-baseline-upgrade), verification methods, and platform limits.
+- [Plugin distribution maintenance](development/flow-diagram-maintenance.md#plugin-distribution-maintenance): host manifests, shared metadata, release synchronization and installation checks.
 - [Manual generation test Skill](../.agents/skills/test-flow-diagram/SKILL.md): user-specified tasks through the globally installed Skill, with a fresh-context subagent and local decision/problem records.
 - [GitHub release Skill](../.agents/skills/github-release/SKILL.md): prepare version metadata and bilingual notes, publish an authorized candidate, or revise an existing Release body on request.
 - [Example workshop](../examples/README.md) and [中文说明](../examples/README.zh-CN.md): local gallery coverage and rebuild instructions; candidate selection follows [teaching-example maintenance](development/flow-diagram-maintenance.md#teaching-example-maintenance).

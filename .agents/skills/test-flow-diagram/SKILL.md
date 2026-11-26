@@ -1,5 +1,7 @@
 ---
 name: test-flow-diagram
+metadata:
+  internal: true
 description: 手动运行已安装的 Flow Diagram Skill，使用干净上下文子代理完成指定任务，记录关键决策、问题与辅助查看结果，供用户检查和回溯修正。
 disable-model-invocation: true
 ---

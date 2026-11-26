@@ -14,7 +14,7 @@
 ## 1. 准备候选版本
 
 1. GitHub 正式发布使用干净的候选提交；WorkBuddy 可先从当前工作区构包验收。检查 `git status --short`、`git remote -v` 和当前分支，确认远程仓库和目标提交正确。如果本地已有同名版本标签，检查其目标提交、SDK 基线、远程标签和 Release 状态。仅本地且尚未发布的标签可以在记录原标签对象和目标提交后校正；已发布标签保持不变，代码和安装包修订使用新版本，正文编辑按[正文修订流程](#修订已发布-release-正文)执行。
-2. 更新根目录 `package.json` 和 `CHANGELOG.md` 中的 Skill 分发版本，核对 README 与用户指南中的安装和下载说明。Skill 分发版本、工具版本、图解格式版本和 SDK 运行时基线分别管理，只有对应合同变化时才修改。
+2. 更新根目录 `package.json` 和 `CHANGELOG.md` 中的 Skill 分发版本，按[插件分发维护](development/flow-diagram-maintenance.md#plugin-distribution-maintenance)同步全部插件及 marketplace 条目，完成元数据、发现和受影响宿主安装检查，并记录未执行项。核对 README 与用户指南中的安装和下载说明。Skill 分发版本、工具版本、图解格式版本和 SDK 运行时基线分别管理，只有对应合同变化时才修改。
 3. 检查根目录 `LICENSE` 与 `skills/flow-diagram/LICENSE`，并核对第三方包的许可证和来源说明。
 4. 检查安装单元内部的相对链接、脚本导入、元数据、示例和 runtime 资源。复制到独立目录后，安装单元必须脱离本仓库运行。
 5. 在验收记录中写入候选提交、分发版本、运行时基线、操作系统、Node/npm、浏览器和未执行的检查。

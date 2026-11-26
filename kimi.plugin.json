@@ -1,0 +1,12 @@
+{
+  "name": "flow-diagram",
+  "description": "Create editable diagrams and animated offline explanations from text, documents and code.",
+  "version": "0.2.1",
+  "author": {
+    "name": "zac_ma"
+  },
+  "license": "MIT",
+  "skills": [
+    "./skills/flow-diagram/"
+  ]
+}

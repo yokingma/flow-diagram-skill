@@ -30,6 +30,7 @@ Read [AGENTS.md](AGENTS.md), [PATTERNS.md](PATTERNS.md), and the [maintenance gu
 ## Validation
 
 - Documentation changes: check relative links and heading fragments, copy paths and CLI examples, and keep English/Chinese READMEs and user guides aligned by task, requirements, defaults, failures, and examples. `pnpm test:guides` exercises the existing guide/example contracts.
+- Plugin or distribution-version changes: follow [plugin distribution maintenance](docs/development/flow-diagram-maintenance.md#plugin-distribution-maintenance) for shared metadata, host discovery and installation checks. Record host checks separately from generic Skill ZIP acceptance.
 - Behavior changes: add or update behavior tests, demonstrate failure before implementation, then run the affected tests and required regressions. Bug fixes need a reproducing regression case. Tests should observe CLI results and side effects rather than mirror internal functions.
 - Browser coverage: set `FLOWSVG_TEST_BROWSER` to a separately prepared Chrome/Chromium executable. Tests skip dependent cases when it is absent; report those skips. Tests never download a browser.
 - Consumer acceptance: follow the [maintainer verification procedure](docs/development/flow-diagram-maintenance.md#maintainer-verification), using a prepared browser and real Node 18 executable for unsupported-runtime rejection.

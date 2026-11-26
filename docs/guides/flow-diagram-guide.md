@@ -41,10 +41,14 @@ The Skill never downloads a browser or changes your application's dependencies. 
 
 ## 2. Install in a host
 
+Choose one installation method. Installing both a plugin and a direct copy can expose the Skill twice. If a command is unavailable, update that client or use the Skills CLI method.
+
+### Skills CLI
+
 Run in the project where you want to use the Skill:
 
 ```sh
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram
+npx skills add yokingma/flow-diagram-skill
 ```
 
 The Skills CLI selects a detected assistant or asks you to choose one. Installation is project-local by default. Git is required for installation from GitHub.
@@ -53,10 +57,10 @@ To install for the current user across projects, choose your host:
 
 ```sh
 # Codex
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --global --agent codex --yes
+npx skills add yokingma/flow-diagram-skill --global --agent codex --yes
 
 # Claude Code
-npx skills add https://github.com/yokingma/flow-diagram-skill --skill flow-diagram --global --agent claude-code --yes
+npx skills add yokingma/flow-diagram-skill --global --agent claude-code --yes
 ```
 
 For a project installation, use `npx skills list` to list skills and `npx skills update flow-diagram` to update this Skill. For a global installation:
@@ -67,6 +71,61 @@ npx skills update flow-diagram --global
 ```
 
 Updates follow the repository's default branch. To keep a fixed version, use the manual installation below.
+
+### Codex Plugin
+
+Use a Codex version that supports `codex plugin`. Run in a terminal:
+
+```sh
+codex plugin marketplace add yokingma/flow-diagram-skill
+codex plugin add flow-diagram@yokingma
+codex plugin list --marketplace yokingma
+```
+
+Confirm that `flow-diagram` is installed, then open a new Codex session and invoke `$flow-diagram`. To update, refresh the marketplace and install its current plugin:
+
+```sh
+codex plugin marketplace upgrade yokingma
+codex plugin add flow-diagram@yokingma
+```
+
+### Claude Code Plugin
+
+Use a Claude Code version with plugin support. Run inside Claude Code:
+
+```text
+/plugin marketplace add yokingma/flow-diagram-skill
+/plugin install flow-diagram@yokingma
+/reload-plugins
+```
+
+Open `/plugin` and confirm that `flow-diagram@yokingma` is installed and enabled. Select the `yokingma` marketplace and enable AutoUpdate if you want automatic updates. Reload plugins after an update. Invoke this installation with `/flow-diagram:flow-diagram`; a direct Skill installation uses `/flow-diagram`.
+
+### Kimi Code Plugin
+
+Use a Kimi Code version with plugin support. Run inside Kimi Code:
+
+```text
+/plugins install https://github.com/yokingma/flow-diagram-skill
+```
+
+The repository's `kimi.plugin.json` selects `skills/flow-diagram/`. After Kimi Code confirms installation, ask it to use the flow-diagram skill. If `/plugins` is unavailable, update Kimi Code or use the Skills CLI method and select Kimi Code.
+
+### GitHub CLI
+
+Use a GitHub CLI version that supports [`gh skill install`](https://cli.github.com/manual/gh_skill_install):
+
+```sh
+gh skill install yokingma/flow-diagram-skill
+```
+
+Follow the prompts to choose your assistant. To install non-interactively, specify the Skill and assistant; the default scope is the current project:
+
+```sh
+gh skill install yokingma/flow-diagram-skill flow-diagram --agent codex
+```
+
+For Claude Code, replace `codex` with `claude-code`. Add `--scope user` for installation across projects. Verify installation in the selected assistant and use `gh skill update flow-diagram` for updates. Without a pin, GitHub CLI selects the latest tagged release before the default branch; use `--pin <tag-or-commit>` to fix a version.
 
 ### Manual installation and fixed checkouts
 
@@ -130,7 +189,7 @@ Use English labels and a light theme. Name it order-platform.
 Deliver JSON and offline HTML, and also export SVG.
 ```
 
-In Claude Code, replace the first line with `/flow-diagram`. You can also say “use the flow-diagram skill” in a host that supports automatic selection.
+In Claude Code, replace the first line with `/flow-diagram` for a direct Skill installation, or `/flow-diagram:flow-diagram` for a plugin installation. You can also say “use the flow-diagram skill” in a host that supports automatic selection.
 
 Include the objects, relationship directions, group boundaries and explanation goal. The assistant asks about missing information that affects meaning. If a requested effect is unsupported, it explains the limit and asks you to choose an alternative.
 

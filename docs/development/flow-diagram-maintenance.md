@@ -91,11 +91,66 @@ For quicker iteration, reuse prepared executables, run focused checks before the
 
 ## Installation boundary
 
+Repository-level plugin manifests adapt this installation unit for their hosts. Their ownership, synchronization and checks are defined in [plugin distribution maintenance](#plugin-distribution-maintenance).
+
 The standalone installation unit is `skills/flow-diagram/`. Preserve `LICENSE`, `SKILL.md`, `agents/`, `scripts/`, `references/`, `examples/`, `resources/` and `runtime/`, including the runtime manifest and lockfile. `agents/openai.yaml` supplies optional Codex UI metadata; it does not add runtime or tool dependencies. Automatic skill selection remains enabled by default. See [official skill metadata](https://developers.openai.com/codex/skills/#optional-metadata) for the host configuration. The tools run through Node 20+ and npm without source-workspace dependencies. See [ADR 0006](../adr/0006-authoring-skill-uses-public-sdk.md) for the integration decision.
 
 An installed skill needs no repository README or full human user guide. Keep its concise teaching index and notes inside the installation unit. Installed `examples/` keeps JSON and adjacent notes in one flat directory. Filenames begin with `complete-` for pinned upstream documents and Skill-authored complete stories, or `capabilities-` for focused SDK examples. Category indexes use the same prefixes. Keep installation paths within `root/subdirectory/file`; the WorkBuddy packager rejects deeper paths and preserves resource paths and bytes. `resources/` holds required execution helpers and scoped source/scenario records. Repository `examples/` owns temporary candidates and generated previews; regression inputs stay in `tests/fixtures/`. All bundled document references, module imports, metadata assets, examples and runtime resources must resolve within the copied installation unit. Do not reference source-repository files or sibling skills. User-selected inputs, output directories, the isolated dependency cache and prepared browser executables are external runtime locations, not bundled resources. Keep runtime instructions and required examples inside the unit. The CLI's actual commands, cache behavior and report contract are defined in [the tool contract](../../skills/flow-diagram/references/tool-contract.md).
 
 Keep repository conventions in [PATTERNS](../../PATTERNS.md), CLI conventions in [skill patterns](flow-diagram-patterns.md), and new release history in [CHANGELOG](../../CHANGELOG.md), all outside the installation unit. The installed skill contains its license, Agent contract, host metadata and task resources. When executable implementation or source structure changes, review and update these project maintenance documents under the project conventions. Pure documentation changes do not require an implementation history entry.
+
+## Plugin distribution maintenance
+
+Use this procedure when changing plugin metadata, marketplace entries, installation instructions or the Skill distribution version. User-facing commands belong in the [English installation guide](../guides/flow-diagram-guide.md#2-install-in-a-host) and [中文安装指南](../guides/flow-diagram-guide.zh-CN.md#2-安装到宿主).
+
+### Manifest ownership
+
+| File | Responsibility |
+| --- | --- |
+| [`plugin.json`](../../plugin.json) | Agent Plugins metadata for hosts that support its declared schema |
+| [`.codex-plugin/plugin.json`](../../.codex-plugin/plugin.json) | Codex metadata, Skill discovery path and interface assets |
+| [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json) | Codex marketplace identity, source, policy and plugin entry |
+| [`.claude-plugin/plugin.json`](../../.claude-plugin/plugin.json) | Claude Code metadata and Skill paths |
+| [`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json) | Claude Code marketplace identity, source and plugin entry |
+| [`kimi.plugin.json`](../../kimi.plugin.json) | Kimi Code metadata and Skill paths for direct repository installation |
+
+Each host reads its own manifest. Root `plugin.json` does not generate or override the others. Preserve host-specific field types, source formats, policies and interface fields when synchronizing shared values; the generic schema applies only to the root manifest. Read current host documentation before adding a host or changing those fields. The [GoogleChrome example](https://github.com/GoogleChrome/modern-web-guidance) demonstrates a multi-host layout; it is not this project's metadata authority or acceptance evidence.
+
+### Update the affected fields
+
+1. For a distribution release, use root `package.json.version` as the version authority. Update `version` in all four plugin manifests and every production plugin entry in both marketplaces. Follow the [release procedure](../releasing.md) for version selection, changelog and release notes. The installed SDK manifest and lockfile retain their separate baseline.
+2. For shared metadata changes, edit root `plugin.json`, then synchronize `name`, `description`, `author` and `license` wherever those fields occur in host manifests. Keep `homepage` and `repository` aligned where supported. Marketplace entry names and descriptions identify the same plugin; owner names and Codex interface attribution must remain consistent with the author. Root package name, plugin name and marketplace name are separate identifiers. Changing a public name also requires reviewing install selectors, invocation examples and existing-install migration.
+3. For discovery or source changes, preserve `skills/flow-diagram/` as the complete production installation unit. Codex's `skills` directory must expose only the production Skill; Claude Code and Kimi Code select it explicitly. Marketplace sources resolve from the repository root. Repository-only `.agents/skills/` workflows keep `metadata.internal: true` and their existing invocation policy. This flag controls Skills CLI distribution discovery; it does not establish a universal host exclusion rule.
+4. For installation changes, update both READMEs and both user guides together. Check client prerequisites, command location (terminal or host session), scope, invocation, updates and unavailable-command handling. Add a new host to the ownership table only with its actual manifest and installation instructions.
+
+Complete the update when all affected manifests agree on their shared values and distribution version, production paths and interface assets resolve, and both languages describe the same installation behavior. Root manifests remain repository distribution metadata; standalone Skill ZIPs continue to contain only the installation unit.
+
+### Verify the candidate
+
+Check the current working files, including new untracked manifests. Parse all six JSON files, compare the fields above, and validate root `plugin.json` against the schema URL in its `$schema` field. Use a JSON Schema validator that supports the schema's declared draft; JSON parsing alone is not schema validation. If the schema cannot be retrieved, report schema validation as unperformed. Confirm selected Skill paths, marketplace sources and assets exist within the plugin source.
+
+Run default and internal discovery from the repository root:
+
+```sh
+npx skills add . --list
+INSTALL_INTERNAL_SKILLS=1 npx skills add . --list
+```
+
+Default discovery must expose only `flow-diagram`; internal discovery must also expose the repository maintenance skills. Then install the candidate into a disposable project with `npx skills add <absolute-candidate-path> --agent codex --yes`. Confirm that only the production Skill was installed and its resources match the candidate installation unit. Use project scope for this check.
+
+For Codex marketplace discovery, use a command-local configuration override, replacing the source with the candidate's real absolute path:
+
+```sh
+codex -c 'marketplaces.yokingma={source_type="local",source="/absolute/candidate/path",auto_update=false}' plugin list --marketplace yokingma --available --json
+```
+
+Confirm that the available entry's identity and version match the candidate. This reads the local marketplace without adding it to the user's saved configuration; listing an entry does not verify installation or Skill invocation.
+
+For each changed host integration, use the documented install and invocation steps in a disposable host profile or test environment. Record the client version, source commit or candidate file identity, selected Skill, result and any update/reload check. Repository shorthand commands fetch published sources, so they cannot verify unpushed candidate files. After publication, verify the intended remote source separately; installers may choose different refs as documented in the user guides.
+
+Run `git diff --check` and check changed links and heading fragments. Use `pnpm test:guides` when guide/example contracts change, and the existing regression and consumer gates when executable behavior changes. The current release packager and CI gates do not enforce plugin metadata synchronization or host installation. A successful generic Skill ZIP check does not establish plugin acceptance.
+
+Complete verification when results distinguish metadata/schema checks, discovery, actual installation and invocation, and unperformed host checks. Keep candidate-specific evidence under `.scratch/` or in release acceptance records. Missing clients, unsupported commands or unperformed interface viewing remain explicit gaps; preserve prior working integrations while reporting the affected host as unverified.
 
 ## Acceptance scope
 

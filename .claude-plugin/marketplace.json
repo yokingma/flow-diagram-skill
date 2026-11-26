@@ -1,0 +1,15 @@
+{
+  "name": "yokingma",
+  "description": "Flow Diagram skills for editable diagrams and offline explanations.",
+  "owner": {
+    "name": "zac_ma"
+  },
+  "plugins": [
+    {
+      "name": "flow-diagram",
+      "source": "./",
+      "description": "Create editable diagrams and animated offline explanations from text, documents and code.",
+      "version": "0.2.1"
+    }
+  ]
+}

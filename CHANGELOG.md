@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add an Agent Plugins 1.0.0 root manifest, Codex and Claude Code plugin marketplaces for `flow-diagram@yokingma`, and a Kimi Code plugin manifest. Document GitHub CLI and Kimi Code installation, and simplify the Skills CLI command. Mark repository maintenance skills internal so default Skills CLI discovery exposes only the production Skill.
 - Reuse successful main-push acceptance for the exact GitHub release commit, including both Node jobs; wait for an active run before falling back to fresh acceptance. Preserve final ZIP verification and publication gates.
 
 ## 0.2.1 — 2026-11-25
