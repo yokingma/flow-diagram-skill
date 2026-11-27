@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="Flow Diagram 项目标志" width="320" height="320">
+  <img src="docs/images/logo.png" alt="Flow Diagram 项目标志" width="240" height="240">
 </p>
 
 <h1 align="center">Flow Diagram</h1>
