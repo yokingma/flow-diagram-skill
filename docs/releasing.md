@@ -142,14 +142,16 @@ WorkBuddy 官方技能规范明确要求 `SKILL.md`，并给出以下 frontmatte
 | `display_name` | 必填，中文展示名称 | 在发布副本中补齐 |
 | `display_name_en` | 必填，英文展示名称 | 在发布副本中补齐 |
 | `description` | 必填，说明用途和触发词 | 面向 Agent，覆盖创作、修订、继续任务、验证、诊断、导出和项目偏好管理的独立请求 |
-| `description_zh` | 必填，市场详情页中文介绍 | 面向用户，简述能力和运行前提 |
-| `description_en` | 必填，市场详情页英文介绍 | 与中文介绍的能力、运行前提一致 |
+| `description_zh` | 必填，市场详情页中文简介 | 面向用户，突出功能能力、使用场景和交付形式 |
+| `description_en` | 必填，市场详情页英文简介 | 与中文简介的能力、场景和交付形式一致 |
 | `version` | 必填，技能版本 | 以 `--version` 或根 `package.json` 为准，配置文件不能覆盖 |
 | `author` | 必填，合作方名称 | 使用已确认的发布主体名称 |
 | `examples_zh` / `examples_en` | 选填，详情页“试试这样用”的案例 | 每种语言最多 3 条（2026-11-25 上传解析反馈）；当前各保留前 2 条，中英文逐项对应，案例可独立发起 |
 | `allowed-tools` | 选填，工具白名单 | 只有平台要求且已验证时填写 |
 
 本仓库当前 `SKILL.md` 面向通用 Skill 宿主。发布 WorkBuddy 时，在副本中补齐平台字段，并在每个指向 `references/` 的 Markdown 相对链接后加入官方 `@references/<文件>.md` 加载指令；原链接和源文件保持不变。平台字段由 `scripts/package-workbuddy-skill.mjs` 从 `scripts/workbuddy-release.json` 注入。打包前核对发布主体、名称、描述、案例和版本。
+
+市场页“概述”的取材来源尚未确认，待确认平台支持的输入方式后再维护该区域。名称和简介调整后，上传时核对实际展示、换行与截断效果。
 
 WorkBuddy 上传解析器在 2026-11-25 返回了目录限制：Skill 包仅支持 `根目录/二级目录/文件`。此限制来自实际上传反馈，官方技能页面未明确列出。安装源目录直接遵循此限制：示例与说明都位于 `examples/`，使用 `complete-`、`capabilities-` 文件名前缀保留分类，分类索引为 `complete-README.md` 和 `capabilities-README.md`。发布包使用相同路径；打包器仅调整 `SKILL.md` 的平台元数据与引用指令，逐字节复制其他文件。源路径超限或包内 Markdown 链接失效时，打包器在写出产物前失败。
 
